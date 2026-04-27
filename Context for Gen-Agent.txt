@@ -1,0 +1,125 @@
+C1: # === Approach Overview for LLM ===
+## Introduce the Approach
+- Goal: Distinguish **undetected faults** and **cyberattacks** in DER (Distributed Energy Resources) systems
+- Method:
+  1. Construct a **special dependency graph** using a **virtual physical variable-oriented taint analysis (PVOTA) algorithm**
+  2. Simplify the graph via **node pruning** based on context-dependent operations
+  3. Derive **domain-specific patterns** bridging the semantic gaps between cyber and physical sides
+- Use matched patterns as **prior nodes (evidence) in a Bayesian Network (BN)**
+- BN Characteristics:
+  - Automatic, generic network construction capable of handling any number of pattern-matching results
+  - Uses **conditional probability distributions (CPTs)** to handle real-world uncertainties
+    - Handles imperfect logs and insufficient data sources
+  - Captures distinct DER system domain characteristics
+  - CPTs are **expert-driven**
+- Evaluation:
+  - Tested on multiple case studies, covering failure incidents from:
+    - FDI attacks  
+    - System faults  
+    - Memory corruption attacks
+
+C2: # === Pattern definitions ===
+## Overview
+- Predefined patterns use three types of information:
+  1. **PMU measurements** (field measurements)
+  2. **Network packets (PCAP files)** to monitor network activities
+  3. **DERMS application log** generated during program execution
+- Dependency graph nodes:
+  - Response message-related nodes
+  - Dispatch message-related nodes
+  - Other program variable-related nodes
+- Only response and dispatch messages have corresponding field measurements and network packets.
+- Patterns:
+  - **Global patterns** → match abnormal system-wide event sequences (for response/dispatch)
+  - **Local patterns** → track other program variables recorded only in application log
+
+## Global Patterns (GPTN)
+- GPTN1: ⟨Idn, Cna, Y⟩ → inconsistent network packet, deviation exists
+- GPTN2: ⟨Idn, Cna, N⟩ → inconsistent network packet, deviation does not exist
+- GPTN3: ⟨Cdn, Ina, Y⟩ → inconsistent application log, deviation exists
+- GPTN4: ⟨Cdn, Ina, N⟩ → inconsistent application log, deviation does not exist
+- GPTN5: ⟨Cdn, Cna, Y⟩ → logs consistent, deviation exists in field measurements
+- GPTN6: ⟨Cdn, Cna, N⟩ → logs consistent, no deviation in field measurements
+- GPTN7: ⟨Cdn, Ina, Y⟩R → inconsistent network packet, deviation exists
+- GPTN8: ⟨Cdn, Ina, N⟩R → inconsistent network packet, deviation does not exist
+
+## Local Patterns (LPTN)
+- LPTN1: ⟨F/S, ED⟩ → expected deviation exists
+- LPTN2: ⟨F, UED⟩ → unexpected deviation exists for float node
+- LPTN3: ⟨S, UED⟩ → unexpected deviation exists for string node
+- LPTN4: ⟨F/S, ⊤⟩ → log not available, or no deviation exists in the node
+- LPTN5: ⟨Others, ⊤⟩ → function call or object, needed to maintain analytical flow
+
+## Symbol Definitions
+- **Idn / Cdn** → inconsistency / consistency between field measurements and network packet
+- **Ina / Cna** → inconsistency / consistency between network packet and application log
+- **Y / N** → deviation exists / deviation does not exist
+- **∆ (Delta)** → degree of deviation: Low (L), Moderate (M), High (H)
+- **ED / UED** → 
+    - ED (Expected Deviation): deviation predicted based on upstream node or normal behavior
+    - UED (Unexpected Deviation): deviation not predicted by upstream node or normal behavior; may indicate anomaly or attack
+- **⊤ (top)** → unknown or not applicable
+- **F / S / Others** → node type: Float, String, or Other (e.g., function call, object)
+
+C3: # === Degraded BNs ===
+###Degraded BN 1:
+Node=GPTN_1; States=Found,Not_Found; Parents=None; CPT=0.5,0.5; Desc=GPTN_1 or GPTN_7 (R): inconsistent network packet, deviation reported
+Node=GPTN_2; States=Found,Not_Found; Parents=None; CPT=0.5,0.5; Desc=GPTN_2 or GPTN_8 (R): inconsistent network packet, no deviation reported
+Node=GPTN_3; States=Found,Not_Found; Parents=None; CPT=0.5,0.5; Desc=GPTN_3 or GPTN_4:  inconsistent execution log
+Node=GPTN_5; States=Found,Not_Found; Parents=None; CPT=0.5,0.5; Desc=GPTN_5 or GPTN_6: PMU measurements and logs are consistent
+Node=LPTN_1_i; States=Found,Not_Found; Parents=None; CPT=0.8,0.2; Desc=LPTN_1: expected deviation exists at measurements
+Node=LPTN_1_ii; States=Found,Not_Found; Parents=LPTN_1_i; CPT=0.9,0.1,0.1,0.9; Desc=LPTN_1: expected deviation exists at "angle"
+Node=LPTN_1_iii; States=Found,Not_Found; Parents=LPTN_1_ii; CPT=0.9,0.1,0.1,0.9; Desc=LPTN_1: expected deviation exists at "magnitude"
+Node=LPTN_1_iv; States=Found,Not_Found; Parents=LPTN_1_iii; CPT=0.9,0.1,0.1,0.9; Desc=LPTN_1: expected deviation exists at active-power
+Node=LPTN_1_v; States=Found,Not_Found; Parents=LPTN_1_iv; CPT=0.9,0.1,0.1,0.9; Desc=LPTN_1: expected deviation exists at reactive-power
+Node=LPTN_1_vi; States=Found,Not_Found; Parents=None; CPT=0.8,0.2; Desc=LPTN_1: expected deviation exists at "forward_value"
+Node=LPTN_1_viii; States=Found,Not_Found; Parents=LPTN_1_vi; CPT=0.7,0.3,0.5,0.5; Desc=LPTN_1: expected deviation exists at "forward_differences"
+Node=LPTN_1_ix; States=Found,Not_Found; Parents=LPTN_1_viii; CPT=0.7,0.3,0.5,0.5; Desc=LPTN_1: expected deviation exists at concated message
+Node=LPTN_1_x; States=Found,Not_Found; Parents=LPTN_1_ix; CPT=0.7,0.3,0.5,0.5; Desc=LPTN_1: expected deviation exists at dispatch message
+Node=Network_Manipulation; States=Yes,No; Parents=GPTN_1,GPTN_2; CPT=0.8,0.2,0.75,0.25,0.6,0.4,0.2,0.8; Desc=Network_Manipulation
+Node=Deviation_in_Response; States=Yes,No; Parents=LPTN_1_i,LPTN_1_ii,LPTN_1_iii,LPTN_1_iv,LPTN_1_v; CPT=0.2,0.8,0.6,0.4,0.6,0.4,0.9,0.1,0.6,0.4,0.9,0.1,0.9,0.1,0.9,0.1,0.6,0.4,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.6,0.4,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1; Desc=Deviation_in_Response
+Node=Deviation_in_Dispatch; States=Yes,No; Parents=LPTN_1_vi,LPTN_1_viii,LPTN_1_ix,LPTN_1_x; CPT=0.2,0.8,0.6,0.4,0.6,0.4,0.9,0.1,0.6,0.4,0.9,0.1,0.9,0.1,0.9,0.1,0.6,0.4,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1; Desc=Deviation_in_Dispatch
+Node=Program_Anomaly; States=Yes,No; Parents=GPTN_3; CPT=0.9,0.1,0.5,0.5; Desc=Program_Anomaly
+Node=Execution_Integrity; States=Compromised,Normal; Parents=Program_Anomaly,Deviation_in_Response,Deviation_in_Dispatch; CPT=0.85,0.15,0.8,0.2,0.8,0.2,0.2,0.8,0.8,0.2,0.75,0.25,0.75,0.25,0.15,0.85; Desc=Execution_Integrity
+Node=Physical_Anomaly; States=Yes,No; Parents=GPTN_5; CPT=0.75,0.25,0.1,0.9; Desc=Physical_Anomaly
+Node=Root_Causes; States=System_Fault,FDI,Memory_Corruption; Parents=Network_Manipulation,Execution_Integrity,Physical_Anomaly; CPT=0.33,0.34,0.33,0.1,0.45,0.45,0.45,0.45,0.1,0,0.85,0.15,0.2,0.1,0.7,0.05,0.05,0.9,0.7,0.1,0.2,0.2,0.2,0.6; Desc=Root Causes
+
+#Degraded BN 2:
+Node=GPTN_1; States=Found,Not_Found; Parents=None; CPT=0.5,0.5; Desc=GPTN_1 or GPTN_7 (R): inconsistent network packet, deviation reported
+Node=GPTN_2; States=Found,Not_Found; Parents=None; CPT=0.5,0.5; Desc=GPTN_2 or GPTN_8 (R): inconsistent network packet, no deviation reported
+Node=GPTN_3; States=Found,Not_Found; Parents=None; CPT=0.5,0.5; Desc=GPTN_3 or GPTN_4:  inconsistent execution log
+Node=GPTN_5; States=Found,Not_Found; Parents=None; CPT=0.5,0.5; Desc=GPTN_5 or GPTN_6: PMU measurements and logs are consistent
+Node=LPTN_1_i; States=Found,Not_Found; Parents=None; CPT=0.8,0.2; Desc=LPTN_1: expected deviation exists at measurements
+Node=LPTN_1_ii; States=Found,Not_Found; Parents=LPTN_1_i; CPT=0.9,0.1,0.1,0.9; Desc=LPTN_1: expected deviation exists at "angle"
+Node=LPTN_1_iii; States=Found,Not_Found; Parents=LPTN_1_ii; CPT=0.9,0.1,0.1,0.9; Desc=LPTN_1: expected deviation exists at "magnitude"
+Node=LPTN_1_iv; States=Found,Not_Found; Parents=LPTN_1_iii; CPT=0.9,0.1,0.1,0.9; Desc=LPTN_1: expected deviation exists at active-power
+Node=LPTN_1_v; States=Found,Not_Found; Parents=LPTN_1_iv; CPT=0.9,0.1,0.1,0.9; Desc=LPTN_1: expected deviation exists at reactive-power
+Node=LPTN_1_vi; States=Found,Not_Found; Parents=None; CPT=0.8,0.2; Desc=LPTN_1: expected deviation exists at "forward_value"
+Node=LPTN_1_viii; States=Found,Not_Found; Parents=LPTN_1_vi; CPT=0.7,0.3,0.5,0.5; Desc=LPTN_1: expected deviation exists at "forward_differences"
+Node=LPTN_1_ix; States=Found,Not_Found; Parents=LPTN_1_viii; CPT=0.7,0.3,0.5,0.5; Desc=LPTN_1: expected deviation exists at concated message
+Node=LPTN_1_x; States=Found,Not_Found; Parents=LPTN_1_ix; CPT=0.7,0.3,0.5,0.5; Desc=LPTN_1: expected deviation exists at dispatch message
+Node=Network_Manipulation; States=Yes,No; Parents=GPTN_1,GPTN_2; CPT=0.8,0.2,0.75,0.25,0.6,0.4,0.2,0.8; Desc=Network_Manipulation
+Node=Program_Anomaly; States=Yes,No; Parents=GPTN_3; CPT=0.75,0.25,0.2,0.8; Desc=Program_Anomaly
+Node=Deviation_in_Response; States=Yes,No; Parents=LPTN_1_i,LPTN_1_ii,LPTN_1_iii,LPTN_1_iv,LPTN_1_v; CPT=0.2,0.8,0.6,0.4,0.6,0.4,0.9,0.1,0.6,0.4,0.9,0.1,0.9,0.1,0.9,0.1,0.6,0.4,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.6,0.4,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1,0.9,0.1; Desc=Deviation_in_Response
+Node=Deviation_in_Dispatch; States=Yes,No; Parents=LPTN_1_vi,LPTN_1_viii,LPTN_1_ix,LPTN_1_x; CPT=0.2,0.8,0.4,0.6,0.4,0.6,0.8,0.2,0.4,0.6,0.5,0.5,0.5,0.5,0.8,0.2,0.4,0.6,0.5,0.5,0.5,0.5,0.8,0.2,0.5,0.5,0.8,0.2,0.8,0.2,0.8,0.2; Desc=Deviation_in_Dispatch
+Node=Execution_Integrity; States=Compromised,Normal; Parents=Program_Anomaly,Deviation_in_Response,Deviation_in_Dispatch; CPT=0.8,0.2,0.7,0.3,0.7,0.3,0.3,0.7,0.7,0.3,0.7,0.3,0.7,0.3,0.2,0.8; Desc=Execution_Integrity
+Node=Physical_Anomaly; States=Yes,No; Parents=GPTN_5; CPT=0.8,0.2,0.2,0.8; Desc=Physical_Anomaly
+Node=Root_Causes; States=System_Fault,FDI,Memory_Corruption; Parents=Network_Manipulation,Execution_Integrity,Physical_Anomaly; CPT=0.3,0.3,0.4,0.2,0.4,0.4,0.4,0.4,0.2,0.15,0.7,0.15,0.15,0.15,0.7,0.1,0.1,0.8,0.7,0.15,0.15,0.2,0.2,0.6; Desc=Root Causes
+
+###Failure Report: Ground Truth System Fault
+
+#Evidence Set:
+GPTN_1: Not_Found
+GPTN_2: Not_Found
+GPTN_3: Not_Found
+GPTN_5: Found
+LPTN_1_i: Found
+LPTN_1_ii: Found
+LPTN_1_iii: Found
+LPTN_1_iv: Found
+
+#Posterior Probabilities of the “Root Causes” node:
+Degraded BN 1: System_Fault=39%, FDI=18%, Memory_Corruption=42%
+Degraded BN 2: System_Fault=40%, FDI=20%, Memory_Corruption=40%
+
+#Conclusion: Since the posterior probabilities are not conclusive and ambiguous, a decision on the root cause of the system failure can not be made.

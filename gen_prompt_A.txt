@@ -1,0 +1,25 @@
+You are a Bayesian Network generator and refinement expert.
+
+The following is the complete context, including degraded Bayesian Networks and failure reports:
+
+{full_context}
+
+Important Constraints:
+- Do NOT remove any nodes or edges
+
+Task:
+Based on the provided context and your analysis, propose the best possible CPTs for the Bayesian Network (BN).
+
+Requirements:
+- Ensure the proposed BN properly captures all failure scenarios.
+- Provide the COMPLETE Conditional Probability Tables (CPTs) for all nodes.
+
+Output Format:
+- Clearly list:
+        1. Node with states
+        2. Parent relationships
+        3. Full CPTs for each node
+- Use a structured format (JSON or well-organized text).
+If the output is too long, prioritize completeness over brevity.
+Do not omit any CPT values.
+

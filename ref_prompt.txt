@@ -1,0 +1,84 @@
+---------------------------------------------------
+REFLEXION FEEDBACK (CRITICAL INPUT)
+---------------------------------------------------
+You are also given feedback from previous Bayesian Network evaluations.
+
+This feedback contains:
+- Failure cases (incorrect predictions)
+- Success cases (correct predictions)
+- CPT issues identified by an evaluation agent
+- Suggested directions for improving CPT calibration
+
+This is the most recent BN that produced the above failures:
+
+{previous_bn}
+
+Provided anaysis:
+
+{analysis_memory}
+
+---------------------------------------------------
+HOW TO USE FEEDBACK (VERY IMPORTANT)
+---------------------------------------------------
+You MUST use this feedback to improve the CPTs. You MUST ensure that previously failed scenarios would now be more likely to be classified correctly under the updated CPTs.
+
+Follow these rules:
+
+1. PRIORITIZE FAILURES
+   - Identify patterns where predictions were incorrect
+   - Adjust CPTs to correct these misclassifications
+
+2. PRESERVE SUCCESS BEHAVIOR
+   - Do NOT degrade CPT behavior that already produces correct predictions
+   - Maintain patterns that lead to correct outputs
+
+3. APPLY CPT FIX DIRECTIONS
+   - Interpret "increase", "decrease", "rebalance", "smooth" as:
+     → relative probability adjustments (NOT exact values)
+   - Apply changes consistent with probabilistic reasoning
+
+4. RESPECT TARGET SCOPE
+   - If target_scope = local_cpt_row:
+       → Modify ONLY the CPT columns corresponding to the specified parent configuration
+   - If target_scope = full_cpt_node:
+       → Adjust ALL probability values in the node’s CPT
+
+5. FIX SYSTEMATIC BIASES
+   - If a class (e.g., Memory_Corruption) is underpredicted:
+       → increase its probability in relevant conditions
+   - Reduce dominance of overpredicted classes
+
+6. AVOID OVERCORRECTION
+   - Do NOT make CPTs overly deterministic
+   - Avoid extreme probabilities unless strongly justified
+
+7. MAINTAIN PROBABILISTIC CONSISTENCY
+   - Ensure smooth transitions across similar parent configurations
+   - Avoid abrupt or illogical probability jumps
+
+8. MANDATORY CPT MODIFICATION
+   - For every node listed in CPT_ISSUES:
+       → You MUST modify its CPT
+   - You are NOT allowed to leave flagged CPTs unchanged
+
+9. START FROM PREVIOUS CPTs
+   - Use the CPT values in {previous_bn} as the baseline
+   - Apply incremental adjustments based on feedback
+   - Do NOT completely rewrite CPTs unless necessary
+
+10. PRIORITIZE BY SEVERITY
+   - HIGH severity issues → must be strongly corrected
+   - MEDIUM → moderate adjustment
+   - LOW → minor smoothing only
+
+11. DO NOT BREAK PGMPY COMPATIBILITY
+   - All CPT columns must sum to 1
+   - Maintain correct CPT dimensions
+   - Maintain parent ordering consistency
+
+---------------------------------------------------
+IMPORTANT REFLEXION RULES
+---------------------------------------------------
+- You are NOT guessing CPTs from scratch
+- You are REFINING them using feedback
+- Treat feedback as high-priority signal over initial intuition

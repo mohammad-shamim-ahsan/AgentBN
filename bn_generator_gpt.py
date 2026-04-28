@@ -23,12 +23,12 @@ def read_file(filename):
     with open(filename, "r", encoding="utf-8") as f:
         return f.read()
 
-full_context = read_file("Context for Gen-Agent.txt")
+full_context = read_file("context_gen_agent.txt")
 
 # -------------------------------
 # 3️⃣ Prompt Template (from file)
 # -------------------------------
-prompt_template_text = read_file("gen_prompt_A_2.txt")
+prompt_template_text = read_file("gen_prompt.txt")
 
 prompt_gen_template = PromptTemplate(
     input_variables=["full_context"],

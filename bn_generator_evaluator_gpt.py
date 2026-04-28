@@ -105,150 +105,142 @@ def run_inference(model, query, evidence=None):
     return result
 
 # -----------------------------
-# RUN
+# RUN (Dynamic from CSV)
 # -----------------------------
-model = build_model(bn_json)
-evidence = {
-    "GPTN_1": "Not_Found",
-    "GPTN_2": "Not_Found",
-    "GPTN_3": "Not_Found",
-    "GPTN_5": "Found",
-    "LPTN_1_i": "Found",
-    "LPTN_1_ii": "Found",
-    "LPTN_1_iii": "Found",
-    "LPTN_1_iv": "Found",
-    "LPTN_1_v": "Found",
-    "LPTN_1_vi": "Found",
-    "LPTN_1_viii": "Found",
-    "LPTN_1_ix": "Found",
-    "LPTN_1_x": "Found"
-}
+import pandas as pd
 
-result = run_inference(
-    model,
-    query="Root_Causes",
-    evidence=evidence
+model = build_model(bn_json)
+
+# Load scenarios
+df = pd.read_csv("Scenarios.csv")
+df.columns = df.columns.str.strip()
+
+results = []
+
+# -----------------------------
+# INFERENCE LOOP
+# -----------------------------
+for _, row in df.iterrows():
+
+    evidence = {}
+
+    for col in df.columns:
+        if col in ["Scenario #", "Ground Truth"]:
+            continue
+
+        val = row[col]
+
+        if pd.isna(val):
+            continue
+
+        evidence[col] = val.strip()
+
+    print("Running inference for scenario:", row["Scenario #"])
+    print(evidence)
+
+    # -----------------------------
+    # Run inference
+    # -----------------------------
+    result = run_inference(
+        model,
+        query="Root_Causes",
+        evidence=evidence
+    )
+
+    print(result)
+
+    # Extract prediction
+    pred_idx = result.values.argmax()
+    pred_state = result.state_names["Root_Causes"][pred_idx]
+    confidence = result.values.max()
+
+    # Store results
+    results.append({
+        "Scenario": row["Scenario #"],
+        "Prediction": pred_state,
+        "Confidence": float(confidence),
+        "Ground Truth": row["Ground Truth"]
+    })
+
+# -----------------------------
+# RESULTS DF
+# -----------------------------
+results_df = pd.DataFrame(results)
+print(results_df)
+
+# -----------------------------
+# ACCURACY
+# -----------------------------
+accuracy = (results_df["Prediction"] == results_df["Ground Truth"]).mean()
+print(f"Accuracy: {accuracy:.3f}")
+
+def format_results_for_llm(results_df, original_df):
+
+    lines = []
+
+    for i, row in results_df.iterrows():
+
+        original_row = original_df.iloc[i].to_dict()
+
+        # remove metadata fields
+        original_row.pop("Scenario #", None)
+        original_row.pop("Ground Truth", None)
+
+        status = "CORRECT" if row["Prediction"] == row["Ground Truth"] else "WRONG"
+
+        lines.append(
+            f"Scenario {row['Scenario']}:\n"
+            f"- Evidence: {original_row}\n"
+            f"- Prediction: {row['Prediction']} (confidence={row['Confidence']:.3f})\n"
+            f"- Ground Truth: {row['Ground Truth']}\n"
+            f"- Status: {status}\n"
+        )
+
+    return "\n".join(lines)
+
+def read_file(filename):
+    with open(filename, "r", encoding="utf-8") as f:
+        return f.read()
+    
+failures = results_df[results_df["Prediction"] != results_df["Ground Truth"]]
+successes = results_df[results_df["Prediction"] == results_df["Ground Truth"]]
+failure_text = format_results_for_llm(failures, df)
+success_text = format_results_for_llm(successes, df)
+
+print(failure_text)
+print(success_text)
+
+context = read_file("context_eval_agent.txt")
+base_prompt = read_file("eval_prompt.txt")
+
+final_prompt = base_prompt.format(
+    context=context,
+    bn_json=bn_json,
+    failure_text=failure_text,
+    success_text=success_text
 )
 
-print(result)
+analysis = llm(final_prompt)
+print(analysis)
 
-###
+from datetime import datetime
 
-# ### --- Evaluator Agent
-# bn_json = subtask_A(full_context)
-# reports = failure_reports
+def clean_text(text):
+    return (
+        text.replace("\\n", " ")
+            .replace("\n", " ")
+            .replace("- ", "")
+            .strip()
+    )
 
-# # --- STEP 1 — VALIDATE BN
-# def validate_bn(bn):
-#     required_keys = ["nodes", "edges"]
-#     return all(k in bn for k in required_keys)
+bn_number = 1
+record = {
+    "timestamp": str(datetime.now()),
+    "bn_number": bn_number,
+    "failure_text": clean_text(failure_text),
+    "success_text": clean_text(success_text),
+    "analysis": clean_text(analysis)
+}
 
-# # --- STEP 2 — SUBTASK A (Failure Coverage Evaluation)
-# def evaluate_failure_coverage(bn, reports):
-
-#     prompt = f"""
-# You are evaluating a Bayesian Network for failure coverage.
-
-# TASK:
-# Check whether the BN can represent ALL failure scenarios in the reports.
-
-# BN:
-# {json.dumps(bn, indent=2)}
-
-# Reports:
-# {reports}
-
-# Return:
-# - missing failure modes
-# - weak dependencies
-# - incorrect probabilistic assumptions
-
-# Be strict and precise.
-# """
-#     return call_llm(prompt, temperature=0.2)
-
-# # - STEP 3 — SUBTASK B (Consistency Check)
-# def evaluate_consistency(bn, reports):
-
-#     prompt = f"""
-# You are evaluating whether the Bayesian Network is consistent with previously correctly reasoned cases.
-
-# BN:
-# {json.dumps(bn, indent=2)}
-
-# Reports:
-# {reports}
-
-# Identify:
-# - contradictions
-# - overconfident CPTs
-# - incorrect independence assumptions
-# """
-#     return call_llm(prompt, temperature=0.1)
-
-# # - BN TOOL INFERENCE
-# from pgmpy.models import BayesianNetwork
-# from pgmpy.inference import VariableElimination
-
-# def run_bn_inference(bn):
-
-#     model = BayesianNetwork()
-
-#     # edges
-#     for e in bn["edges"]:
-#         model.add_edge(e[0], e[1])
-
-#     # NOTE: CPT mapping depends on your encoding
-#     # You must adapt this to your CPT structure
-
-#     infer = VariableElimination(model)
-
-#     return infer
-
-# # - SUBTASK C (Feedback Fusion)
-# def generate_feedback(eval_a, eval_b, inference_results):
-
-#     prompt = f"""
-# You are a Bayesian Network critic and optimizer.
-
-# Combine all signals:
-
-# Evaluation A:
-# {eval_a}
-
-# Evaluation B:
-# {eval_b}
-
-# Inference Results:
-# {inference_results}
-
-# Generate structured feedback:
-
-# {
-#   "issues": [...],
-#   "fixes": [...],
-#   "priority": "high/medium/low"
-# }
-# """
-#     return call_llm(prompt, temperature=0.2)
-
-# # - FULL AGENT 2 PIPELINE
-# def agent2_pipeline(bn, reports):
-
-#     if not validate_bn(bn):
-#         raise ValueError("Invalid BN format")
-
-#     print("=== Subtask A ===")
-#     eval_a = evaluate_failure_coverage(bn, reports)
-
-#     print("=== Subtask B ===")
-#     eval_b = evaluate_consistency(bn, reports)
-
-#     print("=== BN Inference ===")
-#     inference_results = "RUN_INFERENCE_HERE"  # plug pgmpy output
-
-#     print("=== Subtask C ===")
-#     feedback = generate_feedback(eval_a, eval_b, inference_results)
-
-#     return feedback
-
+with open("bn_analysis.json", "a", encoding="utf-8") as f:
+    f.write(json.dumps(record) + "\n")

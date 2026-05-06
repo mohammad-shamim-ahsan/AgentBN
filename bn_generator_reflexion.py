@@ -4,9 +4,6 @@ import json
 
 client = OpenAI(api_key="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")
 
-# -------------------------------
-# 🔌 Unified LLM Call
-# -------------------------------
 def llm(prompt, temperature=0.3, max_tokens=4000):
     response = client.responses.create(
         model="gpt-5.4",
@@ -17,17 +14,51 @@ def llm(prompt, temperature=0.3, max_tokens=4000):
     
     return response.output[0].content[0].text.strip()
 
-def read_analysis_memory(filename="bn_analysis.json", max_records=5):
+###-----------------------------
+bn_analysis_filename="bn_analysis.json"
+max_records=5
+proposed_bn_filename="last_proposed_bn.jsonl"
+
+def read_file(filename):
+    with open(filename, "r", encoding="utf-8") as f:
+        return f.read()
+    
+full_context = read_file("context_gen_agent.txt")
+prompt_template_text = read_file("ref_prompt.txt")
+CONSTRAINTS = {
+    "correctness": [
+        "All CPT entries must be valid probabilities (0 ≤ p ≤ 1)",
+        "Each CPT column must sum to 1 (±1e-6 tolerance)"
+    ],
+    "formatting": [
+        "Output must be valid JSON",
+        "Must follow schema: {node: {parents: [...], cpt: {...}}}"
+    ]
+}
+
+### -----------------------------
+def read_analysis_memory(filename=bn_analysis_filename, max_records=max_records):
     records = []
 
     with open(filename, "r", encoding="utf-8") as f:
         for line in f:
             try:
-                records.append(json.loads(line))
+                record = json.loads(line)
+
+                # Keep only useful fields for refinement
+                filtered_record = {
+                    "bn_number": record.get("bn_number"),
+                    "failure_text": record.get("failure_text"),
+                    "success_text": record.get("success_text"),
+                    "analysis": record.get("analysis")
+                }
+
+                records.append(filtered_record)
+
             except:
                 continue
 
-    # Keep only most recent N records (important to avoid prompt explosion)
+    # Keep only recent records
     records = records[-max_records:]
 
     return records
@@ -53,10 +84,13 @@ FIXES:
 
     return "\n\n---\n\n".join(formatted)
 
-def read_last_bn(filename="proposed_bn.json"):
+def read_last_bn(filename=proposed_bn_filename, bn_number=1):
     try:
         with open(filename, "r", encoding="utf-8") as f:
-            return json.load(f)
+            for line in f:
+                record = json.loads(line)
+                if record["bn_number"] == bn_number:
+                    return record["bn"]
     except:
         return None
     
@@ -66,44 +100,23 @@ def format_last_bn(bn_json):
 
     return json.dumps(bn_json, indent=2)
 
-# -------------------------------
-# 2️⃣ Read Single Context File
-# -------------------------------
-def read_file(filename):
-    with open(filename, "r", encoding="utf-8") as f:
-        return f.read()
-
-full_context = read_file("context_gen_agent.txt")
-prompt_template_text = read_file("ref_prompt.txt")
-
-prompt_gen_template = PromptTemplate(
-    input_variables=["full_context", "analysis_memory", "previous_bn"],
-    template=prompt_template_text
-)
-
-CONSTRAINTS = {
-    "correctness": [
-        "All CPT entries must be valid probabilities (0 ≤ p ≤ 1)",
-        "Each CPT column must sum to 1 (±1e-6 tolerance)"
-    ],
-    "formatting": [
-        "Output must be valid JSON",
-        "Must follow schema: {node: {parents: [...], cpt: {...}}}"
-    ]
-}
-
 def format_constraints():
     return "\n".join(
         f"{k.upper()}:\n- " + "\n- ".join(v)
         for k, v in CONSTRAINTS.items()
     )
 
-def draft_model(full_context):
-    analysis_records = read_analysis_memory()
+def generate_refined_bn(full_context, last_bn_number=1, proposed_bn_filename=proposed_bn_filename, bn_analysis_filename=bn_analysis_filename, max_records=max_records):
+    analysis_records = read_analysis_memory(bn_analysis_filename, max_records)
     analysis_memory = format_analysis_memory(analysis_records)
 
-    last_bn = read_last_bn()
+    last_bn = read_last_bn(proposed_bn_filename, bn_number=last_bn_number)
     previous_bn = format_last_bn(last_bn)
+
+    prompt_gen_template = PromptTemplate(
+        input_variables=["full_context", "analysis_memory", "previous_bn"],
+        template=prompt_template_text
+    )
 
     prompt = prompt_gen_template.format(
         full_context=full_context,
@@ -114,15 +127,20 @@ def draft_model(full_context):
 
     return llm(prompt)
 
-bn_new = draft_model(full_context)
-print(bn_new)
+def store_new_bn(bn_number, bn_new):
+    record = {
+        "bn_number": bn_number,
+        "bn": bn_new
+    }
 
-bn_new = json.loads(bn_new)
-bn_number = 2
-record = {
-    "bn_number": bn_number,
-    "bn": bn_new
-}
+    with open("last_proposed_bn.jsonl", "a", encoding="utf-8") as f:
+        f.write(json.dumps(record) + "\n")
 
-with open("last_proposed_bn.jsonl", "a", encoding="utf-8") as f:
-    f.write(json.dumps(record) + "\n")
+if __name__ == "__main__":
+    last_bn_number = 1
+    bn_new = generate_refined_bn(full_context, last_bn_number, proposed_bn_filename, bn_analysis_filename, max_records)
+    print(bn_new)
+    
+    bn_new = json.loads(bn_new)
+    new_bn_number = 2
+    store_new_bn(new_bn_number, bn_new)

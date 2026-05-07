@@ -16,7 +16,7 @@ def llm(prompt, temperature=0.3, max_tokens=4000):
 
 ###-----------------------------
 bn_analysis_filename="bn_analysis.json"
-max_records=5
+max_records=3
 proposed_bn_filename="last_proposed_bn.jsonl"
 
 def read_file(filename):
@@ -84,21 +84,66 @@ FIXES:
 
     return "\n\n---\n\n".join(formatted)
 
-def read_last_bn(filename=proposed_bn_filename, bn_number=1):
+# def read_last_bn(filename=proposed_bn_filename, bn_number=1):
+#     try:
+#         with open(filename, "r", encoding="utf-8") as f:
+#             for line in f:
+#                 record = json.loads(line)
+#                 if record["bn_number"] == bn_number:
+#                     return record["bn"]
+#     except:
+#         return None
+    
+# def format_last_bn(bn_json):
+#     if not bn_json:
+#         return "No previous BN available."
+
+#     return json.dumps(bn_json, indent=2)
+
+def read_bn_memory(filename=proposed_bn_filename, max_records=max_records):
+    records = []
+
     try:
         with open(filename, "r", encoding="utf-8") as f:
             for line in f:
-                record = json.loads(line)
-                if record["bn_number"] == bn_number:
-                    return record["bn"]
-    except:
-        return None
-    
-def format_last_bn(bn_json):
-    if not bn_json:
-        return "No previous BN available."
+                try:
+                    record = json.loads(line)
 
-    return json.dumps(bn_json, indent=2)
+                    filtered_record = {
+                        "bn_number": record.get("bn_number"),
+                        "bn": record.get("bn")
+                    }
+
+                    records.append(filtered_record)
+
+                except:
+                    continue
+
+    except:
+        return []
+
+    # Keep only recent records
+    records = records[-max_records:]
+
+    return records
+
+
+def format_bn_memory(records):
+    if not records:
+        return "No previous BNs available."
+
+    formatted = []
+
+    for r in records:
+        formatted.append(
+            f"""
+BN #{r['bn_number']}:
+
+{json.dumps(r['bn'], indent=2)}
+"""
+        )
+
+    return "\n\n---\n\n".join(formatted)
 
 def format_constraints():
     return "\n".join(
@@ -110,18 +155,41 @@ def generate_refined_bn(full_context, last_bn_number=1, proposed_bn_filename=pro
     analysis_records = read_analysis_memory(bn_analysis_filename, max_records)
     analysis_memory = format_analysis_memory(analysis_records)
 
-    last_bn = read_last_bn(proposed_bn_filename, bn_number=last_bn_number)
-    previous_bn = format_last_bn(last_bn)
+    # last_bn = read_last_bn(proposed_bn_filename, bn_number=last_bn_number)
+    # previous_bn = format_last_bn(last_bn)
+
+    # prompt_gen_template = PromptTemplate(
+    #     input_variables=["full_context", "analysis_memory", "previous_bn"],
+    #     template=prompt_template_text
+    # )
+
+    # prompt = prompt_gen_template.format(
+    #     full_context=full_context,
+    #     analysis_memory=analysis_memory,
+    #     previous_bn=previous_bn,
+    #     constraints=format_constraints()
+    # )
+
+    bn_records = read_bn_memory(
+        proposed_bn_filename,
+        max_records
+    )
+
+    previous_bns = format_bn_memory(bn_records)
 
     prompt_gen_template = PromptTemplate(
-        input_variables=["full_context", "analysis_memory", "previous_bn"],
+        input_variables=[
+            "full_context",
+            "analysis_memory",
+            "previous_bns"
+        ],
         template=prompt_template_text
     )
 
     prompt = prompt_gen_template.format(
         full_context=full_context,
         analysis_memory=analysis_memory,
-        previous_bn=previous_bn,
+        previous_bns=previous_bns,
         constraints=format_constraints()
     )
 

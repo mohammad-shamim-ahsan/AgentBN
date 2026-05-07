@@ -9,18 +9,18 @@ This feedback contains:
 - CPT issues identified by an evaluation agent
 - Suggested directions for improving CPT calibration
 
-This is the most recent BN that produced the above failures:
+Previous Bayesian Networks associated with these evaluations:
 
-{previous_bn}
+{previous_bns}
 
-Provided anaysis:
+Evaluation analysis and refinement guidance:
 
 {analysis_memory}
 
 ---------------------------------------------------
 HOW TO USE FEEDBACK (VERY IMPORTANT)
 ---------------------------------------------------
-You MUST use this feedback to improve the CPTs. You MUST ensure that previously failed scenarios would now be more likely to be classified correctly under the updated CPTs.
+You MUST use this feedback to improve the CPTs. You MUST adjust CPTs so that previously failed scenarios become more likely to be classified correctly under probabilistic inference.
 
 Follow these rules:
 
@@ -31,6 +31,9 @@ Follow these rules:
 2. PRESERVE SUCCESS BEHAVIOR
    - Do NOT degrade CPT behavior that already produces correct predictions
    - Maintain patterns that lead to correct outputs
+   - If a parent configuration consistently produces correct predictions:
+    → preserve its relative probability distribution
+    → only apply minimal smoothing if necessary
 
 3. APPLY CPT FIX DIRECTIONS
    - Interpret "increase", "decrease", "rebalance", "smooth" as:
@@ -62,9 +65,15 @@ Follow these rules:
    - You are NOT allowed to leave flagged CPTs unchanged
 
 9. START FROM PREVIOUS CPTs
-   - Use the CPT values in {previous_bn} as the baseline
+   - Use the CPT values in {previous_bns} as the baseline
    - Apply incremental adjustments based on feedback
    - Do NOT completely rewrite CPTs unless necessary
+   
+9.5 APPLY MINIMAL NECESSARY CHANGES
+   - Prefer small incremental probability adjustments
+   - Preserve the overall shape of the original CPT whenever possible
+   - Only make large probability shifts when failures are severe and repeated
+   - Maintain relative ordering unless feedback strongly suggests reversal
 
 10. PRIORITIZE BY SEVERITY
    - HIGH severity issues → must be strongly corrected
@@ -75,10 +84,20 @@ Follow these rules:
    - All CPT columns must sum to 1
    - Maintain correct CPT dimensions
    - Maintain parent ordering consistency
+   
+11.5 NORMALIZE AFTER MODIFICATION
+   - After every CPT adjustment:
+       → ensure each probability column is normalized
+       → verify probabilities remain within [0,1]
+      
+12. LIMIT UNNECESSARY GLOBAL DRIFT
+   - Do not modify unrelated CPT regions that are not implicated by feedback
+   - Keep unaffected probability regions stable across iterations
 
 ---------------------------------------------------
 IMPORTANT REFLEXION RULES
 ---------------------------------------------------
 - You are NOT guessing CPTs from scratch
 - You are REFINING them using feedback
-- Treat feedback as high-priority signal over initial intuition
+- Treat repeated failure patterns as stronger evidence than isolated failures
+- Use evaluation feedback to refine probabilities, not to completely override domain structure

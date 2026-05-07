@@ -8,7 +8,7 @@ from bn_generator_reflexion import generate_refined_bn, store_new_bn
 
 MAX_ITER = 3
 bn_analysis_filename = "bn_analysis.json"
-max_records = 5
+max_records = 3
 proposed_bn_filename = "last_proposed_bn.jsonl"
 
 # -----------------------------
@@ -27,7 +27,6 @@ def safe_json_loads(text):
         return json.loads(text)
     except json.JSONDecodeError:
         return None
-
 
 # -----------------------------
 # CLEAR OLD FILES
@@ -98,7 +97,14 @@ for i in range(MAX_ITER):
 
     bn_number += 1
     store_new_bn(bn_number, new_bn_json)
+    print(f"\nRefinement completed. BN#{bn_number} stored.")
 
-    print("\nRefinement completed. New BN stored.")
+    if bn_number >= MAX_ITER:
+        print(f"\nReached maximum iterations ({MAX_ITER}). Storing Analysis and Stopping.")
+        
+        prev_bn_json = find_proposed_bn(bn_number, proposed_bn_filename)
+        failure_text, success_text, analysis, results = run_evaluation(prev_bn_json)
+        store_analysis(bn_number, failure_text, success_text, analysis, results)
+        break
 
 print(f"\nPipeline completed. Final BN number: {bn_number}")

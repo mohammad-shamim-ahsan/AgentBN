@@ -11,9 +11,6 @@ bn_analysis_filename = "bn_analysis.json"
 max_records = 3
 proposed_bn_filename = "last_proposed_bn.jsonl"
 
-# -----------------------------
-# SAFE JSON LOADER
-# -----------------------------
 def safe_json_loads(text):
     if not text or not text.strip():
         return None
@@ -28,9 +25,6 @@ def safe_json_loads(text):
     except json.JSONDecodeError:
         return None
 
-# -----------------------------
-# CLEAR OLD FILES
-# -----------------------------
 for filename in [bn_analysis_filename, proposed_bn_filename]:
     if os.path.exists(filename):
         open(filename, "w").close()

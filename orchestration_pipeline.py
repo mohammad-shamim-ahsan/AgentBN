@@ -5,7 +5,7 @@ import re
 from bn_generator import generate_bn, store_bn_proposal
 from bn_generator_evaluator import find_proposed_bn, run_evaluation, store_analysis
 from bn_generator_reflexion import generate_refined_bn, store_new_bn
-# from bn_validator import compare_all_cpts
+from bn_validator import compare_all_cpts
 
 MAX_ITER = 5
 bn_analysis_filename = "bn_analysis.json"
@@ -247,4 +247,8 @@ while restart_count < MAX_RESTARTS:
     print("\nPipeline solved successfully.")
     break
 
+# -----------------------------
+# VALIDATION
+# -----------------------------
+compare_all_cpts()
 print("\nPipeline finished.")

@@ -5,11 +5,13 @@ import re
 from bn_generator import generate_bn, store_bn_proposal
 from bn_generator_evaluator import find_proposed_bn, run_evaluation, store_analysis
 from bn_generator_reflexion import generate_refined_bn, store_new_bn
+# from bn_validator import compare_all_cpts
 
-MAX_ITER = 3
+MAX_ITER = 5
 bn_analysis_filename = "bn_analysis.json"
 max_records = 3
 proposed_bn_filename = "last_proposed_bn.jsonl"
+MAX_RESTARTS = 3
 
 # -----------------------------
 # SAFE JSON LOADER
@@ -40,71 +42,209 @@ def read_file(filename):
     with open(filename, "r", encoding="utf-8") as f:
         return f.read()
 
+def keep_only_last_jsonl_record(filename):
+    last_line = None
+
+    with open(filename, "r", encoding="utf-8") as f:
+        for line in f:
+            if line.strip():
+                last_line = line.strip()
+
+    if last_line is not None:
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(last_line + "\n")
+
+
+def keep_only_last_analysis_record(filename):
+    with open(filename, "r", encoding="utf-8") as f:
+        content = f.read().strip()
+
+    if not content:
+        return
+
+    # Case 1: JSONL-style analysis file
+    lines = [line.strip() for line in content.splitlines() if line.strip()]
+    if len(lines) > 1:
+        try:
+            json.loads(lines[-1])
+            with open(filename, "w", encoding="utf-8") as f:
+                f.write(lines[-1] + "\n")
+            return
+        except json.JSONDecodeError:
+            pass
+
+    # Case 2: normal JSON list
+    try:
+        data = json.loads(content)
+
+        if isinstance(data, list) and data:
+            data = [data[-1]]
+
+        with open(filename, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+
+    except json.JSONDecodeError:
+        print(f"Warning: Could not trim {filename}; invalid JSON format.")
+
 # -----------------------------
-# STEP 1: INITIAL BN
-# -----------------------------
-bn_number = 0
-full_context = read_file("context_gen_agent.txt")
-gen_prompt_template_text = read_file("gen_prompt.txt")
+restart_count = 0
 
-bn_text = generate_bn(full_context, gen_prompt_template_text)
+while restart_count < MAX_RESTARTS:
 
-bn_json = safe_json_loads(bn_text)
-if bn_json is None:
-    raise ValueError("Initial BN generation failed: invalid JSON")
+    print(f"\n==============================")
+    print(f"PIPELINE RESTART #{restart_count}")
+    print(f"==============================")
 
-store_bn_proposal(bn_json, bn_number, proposed_bn_filename)
+    # -----------------------------
+    # CLEAR OLD FILES
+    # -----------------------------
+    for filename in [bn_analysis_filename, proposed_bn_filename]:
+        if os.path.exists(filename):
+            open(filename, "w").close()
+            print(f"Cleared: {filename}")
 
-print("\nInitial BN generated")
+    # -----------------------------
+    # STEP 1: INITIAL BN
+    # -----------------------------
+    bn_number = 0
 
-# -----------------------------
-# STEP 2 & 3: LOOP
-# -----------------------------
-for i in range(MAX_ITER):
-    print(f"\n===== ITERATION {i+1} =====")
+    full_context = read_file("context_gen_agent.txt")
+    gen_prompt_template_text = read_file("gen_prompt.txt")
 
-    ### Evaluate
-    prev_bn_json = find_proposed_bn(bn_number, proposed_bn_filename)
+    bn_text = generate_bn(full_context, gen_prompt_template_text)
 
-    failure_text, success_text, analysis, results = run_evaluation(prev_bn_json)
+    bn_json = safe_json_loads(bn_text)
 
-    store_analysis(bn_number, failure_text, success_text, analysis, results)
+    if bn_json is None:
+        print("\nInitial BN generation failed.")
+        restart_count += 1
+        continue
 
-    print("\nEvaluation completed. Analysis stored.")
+    store_bn_proposal(bn_json, bn_number, proposed_bn_filename)
 
-    # STOP CONDITION: no failures
-    if not failure_text or not failure_text.strip():
-        print(f"\nNo failure cases found for BN {bn_number}. Stopping iterations.")
-        break
+    print("\nInitial BN generated")
 
-    ### Reflexion (BN refinement)
-    new_bn = generate_refined_bn(
-        full_context,
+    solved = False
+
+    # -----------------------------
+    # STEP 2 & 3: ITERATIONS
+    # -----------------------------
+    for i in range(MAX_ITER):
+
+        print(f"\n===== ITERATION {i+1} =====")
+
+        ### Evaluate
+        prev_bn_json = find_proposed_bn(
+            bn_number,
+            proposed_bn_filename
+        )
+
+        failure_text, success_text, analysis, results = run_evaluation(
+            prev_bn_json
+        )
+
+        store_analysis(
+            bn_number,
+            failure_text,
+            success_text,
+            analysis,
+            results
+        )
+
+        print("\nEvaluation completed. Analysis stored.")
+
+        # -----------------------------
+        # SUCCESS CONDITION
+        # -----------------------------
+        if not failure_text or not failure_text.strip():
+
+            print(
+                f"\nNo failure cases found for BN {bn_number}. "
+                f"Stopping iterations."
+            )
+
+            solved = True
+            break
+
+        # -----------------------------
+        # REFLEXION
+        # -----------------------------
+        new_bn = generate_refined_bn(
+            full_context,
+            bn_number,
+            proposed_bn_filename,
+            bn_analysis_filename,
+            max_records
+        )
+
+        new_bn_json = safe_json_loads(new_bn)
+
+        if new_bn_json is None:
+
+            print("\nInvalid JSON from LLM during Reflexion.")
+            print("Stopping safely.")
+
+            break
+
+        bn_number += 1
+
+        store_new_bn(
+            bn_number,
+            new_bn_json
+        )
+
+        print(f"\nReflexion completed. BN#{bn_number} stored.")
+
+    # -----------------------------
+    # FINAL CHECK AFTER MAX ITER
+    # -----------------------------
+    prev_bn_json = find_proposed_bn(
         bn_number,
-        proposed_bn_filename,
-        bn_analysis_filename,
-        max_records
+        proposed_bn_filename
     )
 
-    new_bn_json = safe_json_loads(new_bn)
+    failure_text, success_text, analysis, results = run_evaluation(
+        prev_bn_json
+    )
 
-    if new_bn_json is None:
-        print("\nInvalid JSON from LLM during refinement.")
-        print("Raw output (truncated):")
-        print(new_bn[:1000])
-        print("\nStopping iteration safely.")
-        break
+    store_analysis(
+        bn_number,
+        failure_text,
+        success_text,
+        analysis,
+        results
+    )
 
-    bn_number += 1
-    store_new_bn(bn_number, new_bn_json)
-    print(f"\nRefinement completed. BN#{bn_number} stored.")
+    # -----------------------------
+    # KEEP ONLY FINAL RECORDS
+    # -----------------------------
+    keep_only_last_jsonl_record(
+        proposed_bn_filename
+    )
 
-    if bn_number >= MAX_ITER:
-        print(f"\nReached maximum iterations ({MAX_ITER}). Storing Analysis and Stopping.")
-        
-        prev_bn_json = find_proposed_bn(bn_number, proposed_bn_filename)
-        failure_text, success_text, analysis, results = run_evaluation(prev_bn_json)
-        store_analysis(bn_number, failure_text, success_text, analysis, results)
-        break
+    keep_only_last_analysis_record(
+        bn_analysis_filename
+    )
 
-print(f"\nPipeline completed. Final BN number: {bn_number}")
+    # -----------------------------
+    # IF STILL FAILING → RESTART
+    # -----------------------------
+    if failure_text and failure_text.strip():
+
+        print(
+            "\nFailure cases still remain after "
+            f"{MAX_ITER} iterations."
+        )
+
+        print("\nRestarting pipeline from STEP 1...\n")
+
+        restart_count += 1
+        continue
+
+    # -----------------------------
+    # SUCCESS
+    # -----------------------------
+    print("\nPipeline solved successfully.")
+    break
+
+print("\nPipeline finished.")

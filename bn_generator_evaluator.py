@@ -114,7 +114,7 @@ def call_bn_inference(model, df):
 
             evidence[col] = val.strip()
 
-        print("Running inference for scenario:", row["Scenario #"])
+        # print("Running inference for scenario:", row["Scenario #"])
         # print(evidence)
 
         result = run_inference(
@@ -190,7 +190,7 @@ def find_proposed_bn(bn_number_to_find, filename=proposed_bn_filename):
                 return record["bn"]
     return None
 
-df = pd.read_csv("Scenarios.csv")
+df = pd.read_csv("final_validated_dataset.csv")
 df.columns = df.columns.str.strip()
 
 context = read_file("context_eval_agent.txt")

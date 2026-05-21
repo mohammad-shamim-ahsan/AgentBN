@@ -1,0 +1,29 @@
+You are generating synthetic Bayesian-network test scenarios.
+
+Use this domain context:
+
+{full_context}
+
+Use the following Bayesian Network definition:
+
+{latest_bn}
+
+Use the following existing CSV scenarios as examples:
+
+{examples_csv}
+
+Generate as many new valid scenarios as possible.
+
+Rules:
+1. Output CSV only.
+2. Do not wrap output in markdown.
+3. Use exactly this header:
+{columns}
+4. Do not add spaces after commas.
+5. Evidence values must be only Found or Not_Found.
+6. Ground Truth must be one of the Root_Causes states in the BN.
+7. Ground Truth should match the most likely posterior Root_Causes label implied by the evidence.
+8. Preserve realistic probabilistic dependencies implied by the BN.
+9. Keep the same structure and style as the examples.
+10. Do not repeat existing scenarios exactly.
+11. Generate diverse combinations of evidence values.

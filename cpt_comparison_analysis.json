@@ -5,18 +5,18 @@
       "same_cpt_shape": true,
       "valid_probability_range": true,
       "columns_sum_to_one": true,
-      "max_abs_error": 0.9,
-      "mean_abs_error": 0.265,
+      "max_abs_error": 0.915,
+      "mean_abs_error": 0.387188,
       "close_count": 0,
-      "moderate_count": 12,
-      "severe_count": 20,
-      "cpt_accuracy_assessment": "The CPT is structurally valid: it matches the ground-truth shape, all probabilities are within range, and every column sums to one. However, parameter accuracy is poor. There are no close parameters, the mean absolute error is 0.265, and 20 of 32 parameters have severe error. The largest deviation is 0.9, indicating major mismatch from the ground-truth CPT values.",
+      "moderate_count": 8,
+      "severe_count": 24,
+      "cpt_accuracy_assessment": "The CPT is structurally valid: it matches the ground-truth shape, all probabilities are within range, and every column sums to one. However, parameter accuracy is poor. There are no close parameters, the mean absolute error is high at 0.387188, and 24 of 32 parameters have severe error. The largest deviation is 0.915, indicating major mismatch from the ground-truth CPT values.",
       "main_cpt_issues": [
-        "Although the CPT is valid numerically, its parameter values differ substantially from ground truth.",
+        "Although the CPT is valid in form, its parameter values differ substantially from ground truth.",
         "No parameters fall within the close-error threshold.",
-        "Most parameters are inaccurate, with 20 of 32 classified as severe.",
-        "The maximum absolute error of 0.9 indicates at least one parameter is drastically misestimated.",
-        "The mean absolute error of 0.265 is above the severe threshold, showing overall poor parameter fidelity."
+        "Most parameters are severely inaccurate (24 of 32 exceed 0.20 absolute error).",
+        "The maximum absolute error of 0.915 indicates at least one parameter is almost completely misestimated.",
+        "The overall mean absolute error of 0.387188 is too large for the CPT to be considered accurate."
       ],
       "verdict": "poor"
     },
@@ -25,18 +25,18 @@
       "same_cpt_shape": true,
       "valid_probability_range": true,
       "columns_sum_to_one": true,
-      "max_abs_error": 0.91,
-      "mean_abs_error": 0.187188,
-      "close_count": 20,
-      "moderate_count": 20,
-      "severe_count": 24,
-      "cpt_accuracy_assessment": "The CPT is valid in form: it has the correct shape, all probabilities are within range, and every column sums to one. However, parameter accuracy is weak. The mean absolute error is 0.187188, which is near the severe threshold, and the maximum absolute error is 0.91, indicating at least one extremely incorrect parameter. Only 20 of 64 parameters are close, while 24 are severe and 20 are moderate. Overall, the CPT is numerically valid but poorly matched to the ground-truth parameters.",
+      "max_abs_error": 0.925,
+      "mean_abs_error": 0.367031,
+      "close_count": 0,
+      "moderate_count": 10,
+      "severe_count": 54,
+      "cpt_accuracy_assessment": "The CPT is structurally valid: it has the correct shape, all probabilities are within range, and every column sums to one. However, parameter accuracy is very poor. There are no close parameters, the mean absolute error is high at 0.367031, and 54 of 64 parameters are severe errors. The maximum absolute error of 0.925 indicates at least one parameter is almost completely mismatched relative to the ground truth.",
       "main_cpt_issues": [
-        "24 of 64 parameters have severe error greater than 0.20.",
-        "The maximum absolute error of 0.91 indicates a major mismatch in at least one parameter.",
-        "The mean absolute error of 0.187188 shows substantial overall deviation from the ground truth.",
-        "Only 20 parameters are close to the ground truth, so accurate entries are a minority.",
-        "Errors are widespread across the CPT rather than isolated to a small number of parameters."
+        "Although the CPT shape is correct, the parameter values are largely inaccurate relative to the ground truth.",
+        "Most parameters are severe mismatches (54 out of 64), with only 10 moderate differences and 0 close matches.",
+        "The mean absolute error of 0.367031 is high, indicating broad miscalibration across the table.",
+        "The maximum absolute error of 0.925 shows at least one parameter is extremely far from the ground-truth value.",
+        "Errors are widespread across the CPT rather than isolated to a small subset of parameters."
       ],
       "verdict": "poor"
     },
@@ -45,34 +45,34 @@
       "same_cpt_shape": true,
       "valid_probability_range": true,
       "columns_sum_to_one": true,
-      "max_abs_error": 0.05,
-      "mean_abs_error": 0.021875,
-      "close_count": 16,
-      "moderate_count": 0,
-      "severe_count": 0,
-      "cpt_accuracy_assessment": "The CPT is valid and highly accurate relative to the ground truth. The shape matches exactly, all probability values are within the valid range, and every column sums to one. All 16 parameters fall within the close-error threshold, with no moderate or severe deviations. The maximum absolute error is 0.05 and the mean absolute error is 0.021875, indicating only minor parameter-level differences.",
+      "max_abs_error": 0.28,
+      "mean_abs_error": 0.10125,
+      "close_count": 8,
+      "moderate_count": 4,
+      "severe_count": 4,
+      "cpt_accuracy_assessment": "The CPT is structurally valid and normalized, with all 16 parameters present, all probabilities within range, and every column summing to one. Parameter accuracy is mixed: 8 parameters are close to ground truth, 4 show moderate deviation, and 4 show severe deviation. The mean absolute error of 0.10125 indicates noticeable overall mismatch, and the maximum absolute error of 0.28 is substantial. Overall, the CPT is valid but only moderately accurate relative to the ground truth.",
       "main_cpt_issues": [
-        "No CPT validity issues detected.",
-        "All parameter deviations are small and within the close threshold.",
-        "Largest parameter discrepancies are limited to absolute error 0.05."
+        "Four parameters have severe errors greater than 0.20, with the largest deviations equal to 0.26 and 0.28.",
+        "Four additional parameters have moderate errors between 0.09 and 0.10, indicating several nontrivial mismatches beyond the severe cases.",
+        "Although half of the parameters are close, the error distribution is uneven and includes multiple large deviations, reducing overall CPT fidelity."
       ],
-      "verdict": "excellent"
+      "verdict": "fair"
     },
     "Network_Manipulation": {
       "node": "Network_Manipulation",
       "same_cpt_shape": true,
       "valid_probability_range": true,
       "columns_sum_to_one": true,
-      "max_abs_error": 0.24,
-      "mean_abs_error": 0.11375,
+      "max_abs_error": 0.39,
+      "mean_abs_error": 0.14,
       "close_count": 2,
       "moderate_count": 4,
       "severe_count": 2,
-      "cpt_accuracy_assessment": "The CPT is structurally valid: it matches the ground-truth shape, all probabilities are within range, and every column sums to one. However, parameter accuracy is only fair. The mean absolute error is 0.11375, with 6 of 8 parameters showing more than close deviation and 2 parameters having severe errors of 0.24. This indicates the CPT is normalized and usable, but several entries differ materially from the ground truth.",
+      "cpt_accuracy_assessment": "The CPT is valid in form: it has the correct shape, all probabilities are within range, and every column sums to one. However, parameter accuracy is only fair. The mean absolute error of 0.14 indicates noticeable overall deviation from the ground truth, and the maximum absolute error of 0.39 is large. Only 2 of 8 parameters are close, while 4 are moderately inaccurate and 2 are severely inaccurate.",
       "main_cpt_issues": [
-        "Two parameters have severe absolute error (0.24), indicating substantial mismatch from the ground-truth CPT.",
-        "Four additional parameters have moderate errors between 0.06 and 0.135.",
-        "Only two of eight parameters are close to the ground truth, so most CPT entries require adjustment despite valid normalization."
+        "Two parameters have severe errors of 0.39, indicating major mismatch in at least one column pair.",
+        "Four additional parameters have moderate errors between 0.06 and 0.09, so inaccuracies are spread across much of the CPT.",
+        "Only two parameters are close to ground truth, meaning most entries require adjustment despite the CPT being mathematically valid."
       ],
       "verdict": "fair"
     },
@@ -81,73 +81,73 @@
       "same_cpt_shape": true,
       "valid_probability_range": true,
       "columns_sum_to_one": true,
-      "max_abs_error": 0.05,
-      "mean_abs_error": 0.035,
-      "close_count": 4,
-      "moderate_count": 0,
-      "severe_count": 0,
-      "cpt_accuracy_assessment": "The CPT is valid and closely matches the ground-truth parameters. The shape matches exactly, all probabilities are within the valid range, and each column sums to one. All 4 parameter differences are in the close range, with a maximum absolute error of 0.05 and a mean absolute error of 0.035.",
+      "max_abs_error": 0.21,
+      "mean_abs_error": 0.13,
+      "close_count": 1,
+      "moderate_count": 1,
+      "severe_count": 2,
+      "cpt_accuracy_assessment": "The CPT is structurally valid: it matches the ground-truth shape, all probabilities are within range, and each column sums to one. However, parameter accuracy is weak overall. Two of the four parameters have severe errors (0.21), one is moderate, and only one is close to the ground truth. With a mean absolute error of 0.13 and a maximum absolute error of 0.21, the CPT shows notable deviation from the reference values despite being a valid probability table.",
       "main_cpt_issues": [
-        "No validity issues detected in the CPT.",
-        "All parameter deviations are minor and fall within the close threshold.",
-        "The largest parameter discrepancy is 0.05, which is still within the close range."
+        "Two parameters exceed the severe-error threshold with absolute error 0.21.",
+        "Only one of four parameters is close to the ground truth.",
+        "Mean absolute error of 0.13 indicates substantial overall parameter mismatch."
       ],
-      "verdict": "excellent"
+      "verdict": "poor"
     },
     "Program_Anomaly": {
       "node": "Program_Anomaly",
       "same_cpt_shape": true,
       "valid_probability_range": true,
       "columns_sum_to_one": true,
-      "max_abs_error": 0.06,
-      "mean_abs_error": 0.045,
-      "close_count": 2,
-      "moderate_count": 2,
+      "max_abs_error": 0.03,
+      "mean_abs_error": 0.025,
+      "close_count": 4,
+      "moderate_count": 0,
       "severe_count": 0,
-      "cpt_accuracy_assessment": "The CPT is valid and well-formed: it matches the ground-truth shape, all probabilities are within range, and each column sums to one. Parameter accuracy is generally good, with a low mean absolute error of 0.045 and no severe deviations. Two parameters are close to the ground truth, while two show moderate error at 0.06, indicating small but noticeable discrepancies.",
+      "cpt_accuracy_assessment": "The CPT is valid and closely matches the ground-truth parameters. The shape matches exactly, all probabilities are within range, and each column sums to one. All 4 parameter differences are in the close range, with no moderate or severe deviations.",
       "main_cpt_issues": [
-        "Two of the four CPT parameters have moderate absolute error (0.06), slightly above the close threshold.",
-        "The largest parameter deviation is 0.06, indicating minor but noticeable mismatch from the ground truth.",
-        "Although overall error is low, only half of the parameters fall within the close threshold."
+        "Minor parameter deviations only, with absolute errors between 0.02 and 0.03.",
+        "No normalization or probability-range issues detected."
       ],
-      "verdict": "good"
+      "verdict": "excellent"
     },
     "Root_Causes": {
       "node": "Root_Causes",
       "same_cpt_shape": true,
       "valid_probability_range": true,
       "columns_sum_to_one": true,
-      "max_abs_error": 0.72,
-      "mean_abs_error": 0.300833,
-      "close_count": 8,
-      "moderate_count": 3,
+      "max_abs_error": 0.8,
+      "mean_abs_error": 0.240833,
+      "close_count": 6,
+      "moderate_count": 5,
       "severe_count": 13,
-      "cpt_accuracy_assessment": "The CPT is structurally valid: it matches the ground-truth shape, all probabilities are within range, and every column sums to one. However, parameter accuracy is poor. The mean absolute error is 0.300833 and the maximum absolute error is 0.72, indicating large deviations from the ground truth. Only 8 of 24 parameters are close, while 13 are severe errors, so most entries are not accurately estimated.",
+      "cpt_accuracy_assessment": "The CPT is structurally valid and normalized, with all parameters in range and all columns summing to one. However, parameter accuracy is poor relative to the ground truth: the mean absolute error is 0.240833 and the maximum absolute error is 0.8. Only 6 of 24 parameters are close, while 13 of 24 are severe deviations, indicating that most entries are materially inaccurate despite the CPT being formally valid.",
       "main_cpt_issues": [
-        "Although the CPT is valid, parameter agreement with the ground truth is weak overall.",
-        "More than half of the parameters (13 of 24) have severe error greater than 0.20.",
-        "The largest parameter deviations are very high, with maximum absolute error reaching 0.72.",
-        "The average parameter deviation is substantial (mean absolute error 0.300833), indicating systematic mismatch rather than isolated mistakes.",
-        "Only 8 of 24 parameters fall within the close threshold, so accurate entries are in the minority."
+        "Although the CPT shape matches and normalization is correct, overall parameter agreement with the ground truth is weak.",
+        "A majority of parameters are severe errors (13 of 24), which dominates the comparison.",
+        "The largest discrepancies are very large, including absolute errors of 0.8 and 0.77, indicating major misestimation in some entries.",
+        "The mean absolute error of 0.240833 exceeds the severe threshold, showing substantial overall deviation across the CPT.",
+        "Only 6 parameters are close to ground truth, so accurate entries are in the minority."
       ],
       "verdict": "poor"
     }
   },
   "overall_cpt_analysis": {
     "overall_verdict": "poor",
-    "summary": "Overall CPT quality is poor. While the evaluated node CPTs are structurally valid, accuracy is highly uneven: 2 nodes are excellent, 1 is good, and 1 is fair, but 3 important nodes are rated poor with large parameter mismatches and many severe errors. The concentration of poor verdicts outweighs the stronger performance on the smaller set of well-estimated nodes.",
+    "summary": "Overall CPT quality is poor. While all assessed node CPTs are structurally valid, most nodes have weak parameter accuracy relative to ground truth. Four nodes are rated poor, two are fair, one is excellent, and none are good or invalid. The strongest problems come from widespread severe parameter errors in Deviation_in_Dispatch, Deviation_in_Response, and Root_Causes, which outweigh the single excellent result for Program_Anomaly.",
     "main_reasons": [
-      "Three nodes are rated poor: Deviation_in_Dispatch, Deviation_in_Response, and Root_Causes.",
-      "The poor nodes show substantial parameter error, including high mean absolute errors and very large maximum errors up to 0.91.",
-      "Severe inaccuracies are widespread in the poor nodes, with many parameters classified as severe rather than isolated mistakes.",
-      "Only a minority of nodes achieve strong quality, with 2 excellent and 1 good verdicts.",
-      "Although all listed CPTs are numerically valid in shape, range, and normalization, overall parameter fidelity to ground truth is not adequate."
+      "Most node-level verdicts are poor: 4 of 7 assessed nodes.",
+      "Two additional nodes are only fair, so 6 of 7 nodes fall below good quality.",
+      "Deviation_in_Dispatch and Deviation_in_Response show very high mean errors and many severe parameter mismatches.",
+      "Root_Causes also has substantial inaccuracy, with a majority of parameters severely wrong.",
+      "Only Program_Anomaly is excellent, which is not enough to offset the broader pattern of poor CPT accuracy.",
+      "No assessed nodes are invalid in structure, so the main issue is parameter misestimation rather than CPT format."
     ],
     "node_verdict_counts": {
-      "excellent": 2,
-      "good": 1,
-      "fair": 1,
-      "poor": 3,
+      "excellent": 1,
+      "good": 0,
+      "fair": 2,
+      "poor": 4,
       "invalid": 0
     }
   }

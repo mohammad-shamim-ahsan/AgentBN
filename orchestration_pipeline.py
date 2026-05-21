@@ -7,11 +7,8 @@ from bn_generator_evaluator import find_proposed_bn, run_evaluation, store_analy
 from bn_generator_reflexion import generate_refined_bn, store_new_bn
 from bn_validator import compare_all_cpts
 
-MAX_ITER = 5
 bn_analysis_filename = "bn_analysis.json"
-max_records = 3
 proposed_bn_filename = "last_proposed_bn.jsonl"
-MAX_RESTARTS = 3
 
 # -----------------------------
 # SAFE JSON LOADER
@@ -41,6 +38,25 @@ for filename in [bn_analysis_filename, proposed_bn_filename]:
 def read_file(filename):
     with open(filename, "r", encoding="utf-8") as f:
         return f.read()
+
+# -----------------------------
+FAILURE_RATIO_THRESHOLD = 0.05  # stop if failed cases <= X%
+
+def compute_failure_ratio_from_results(results):
+    total = len(results)
+
+    if total == 0:
+        return 0.0, 0, 0, 0
+
+    failed = sum(
+        1 for r in results
+        if r["Prediction"] != r["Ground Truth"]
+    )
+
+    succeeded = total - failed
+
+    return failed / total, failed, succeeded, total
+
 
 def keep_only_last_jsonl_record(filename):
     last_line = None
@@ -87,9 +103,13 @@ def keep_only_last_analysis_record(filename):
         print(f"Warning: Could not trim {filename}; invalid JSON format.")
 
 # -----------------------------
+MAX_ITER = 7
+max_records = 3
+MAX_RESTARTS = 0
+
 restart_count = 0
 
-while restart_count < MAX_RESTARTS:
+while restart_count <= MAX_RESTARTS:
 
     print(f"\n==============================")
     print(f"PIPELINE RESTART #{restart_count}")
@@ -156,10 +176,30 @@ while restart_count < MAX_RESTARTS:
         # -----------------------------
         # SUCCESS CONDITION
         # -----------------------------
-        if not failure_text or not failure_text.strip():
+        # if not failure_text or not failure_text.strip():
+
+        #     print(
+        #         f"\nNo failure cases found for BN {bn_number}. "
+        #         f"Stopping iterations."
+        #     )
+
+        #     solved = True
+        #     break
+
+        failure_ratio, failed, succeeded, total = compute_failure_ratio_from_results(
+            results
+        )
+
+        print(
+            f"\nFailure ratio: {failure_ratio:.4f} "
+            f"({failed}/{total} failed)"
+        )
+
+        if failure_ratio <= FAILURE_RATIO_THRESHOLD:
 
             print(
-                f"\nNo failure cases found for BN {bn_number}. "
+                f"\nFailure ratio is below threshold "
+                f"({failure_ratio:.4f} <= {FAILURE_RATIO_THRESHOLD}). "
                 f"Stopping iterations."
             )
 
@@ -229,10 +269,30 @@ while restart_count < MAX_RESTARTS:
     # -----------------------------
     # IF STILL FAILING → RESTART
     # -----------------------------
-    if failure_text and failure_text.strip():
+    # if failure_text and failure_text.strip():
 
+    #     print(
+    #         "\nFailure cases still remain after "
+    #         f"{MAX_ITER} iterations."
+    #     )
+
+    #     print("\nRestarting pipeline from STEP 1...\n")
+
+    #     restart_count += 1
+    #     continue
+
+    failure_ratio, failed, succeeded, total = compute_failure_ratio_from_results(
+        results
+    )
+
+    print(
+        f"\nFinal failure ratio: {failure_ratio:.4f} "
+        f"({failed}/{total} failed)"
+    )
+
+    if failure_ratio > FAILURE_RATIO_THRESHOLD:
         print(
-            "\nFailure cases still remain after "
+            "\nFailure ratio still above threshold after "
             f"{MAX_ITER} iterations."
         )
 
@@ -244,7 +304,11 @@ while restart_count < MAX_RESTARTS:
     # -----------------------------
     # SUCCESS
     # -----------------------------
-    print("\nPipeline solved successfully.")
+    print(
+        "\nPipeline solved successfully "
+        f"with failure ratio {failure_ratio:.4f}."
+    )
+    
     break
 
 # -----------------------------

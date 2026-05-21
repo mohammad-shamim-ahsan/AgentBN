@@ -108,6 +108,7 @@ max_records = 3
 MAX_RESTARTS = 0
 
 restart_count = 0
+# previous_failure_ratio = 100
 
 while restart_count <= MAX_RESTARTS:
 
@@ -195,6 +196,11 @@ while restart_count <= MAX_RESTARTS:
             f"({failed}/{total} failed)"
         )
 
+        # if failure_ratio > previous_failure_ratio:
+        #     continue
+
+        # previous_failure_ratio = failure_ratio
+        
         if failure_ratio <= FAILURE_RATIO_THRESHOLD:
 
             print(

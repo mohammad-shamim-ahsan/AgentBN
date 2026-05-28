@@ -40,8 +40,6 @@ def read_file(filename):
         return f.read()
 
 # -----------------------------
-FAILURE_RATIO_THRESHOLD = 0.05  # stop if failed cases <= X%
-
 def compute_failure_ratio_from_results(results):
     total = len(results)
 
@@ -110,6 +108,8 @@ MAX_RESTARTS = 0
 restart_count = 0
 # previous_failure_ratio = 100
 
+FAILURE_RATIO_THRESHOLD = 0.03  # stop if failed cases <= X%
+
 while restart_count <= MAX_RESTARTS:
 
     print(f"\n==============================")
@@ -130,9 +130,11 @@ while restart_count <= MAX_RESTARTS:
     bn_number = 0
 
     full_context = read_file("context_gen_agent.txt")
+    scenario_dataset = read_file("final_validated_dataset.csv")
+    failure_report = read_file("flawed_failure_results.json")
     gen_prompt_template_text = read_file("gen_prompt.txt")
 
-    bn_text = generate_bn(full_context, gen_prompt_template_text)
+    bn_text = generate_bn(full_context, scenario_dataset, failure_report,gen_prompt_template_text)
 
     bn_json = safe_json_loads(bn_text)
 
@@ -217,6 +219,8 @@ while restart_count <= MAX_RESTARTS:
         # -----------------------------
         new_bn = generate_refined_bn(
             full_context,
+            scenario_dataset,
+            failure_report,
             bn_number,
             proposed_bn_filename,
             bn_analysis_filename,

@@ -204,45 +204,315 @@ def clean_text(text):
             .strip()
     )
 
+###-----------------------------
+PARAMETER_RISK_FILE = "failure_cpt_parameter_risks.jsonl"
+CPT_DANGER_REPORT_FILE = "dangerous_cpt_report.json"
+
+def safe_json_loads(text):
+    if not text:
+        return None
+
+    text = str(text).strip()
+    text = text.replace("```json", "").replace("```", "").strip()
+
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        return None
+    
+def analyze_failure_parameters_with_llm(bn_json, failure_scenario_text):
+    prompt = f"""
+You are analyzing a Bayesian Network failure case.
+
+Domain context:
+The Bayesian Network is used to distinguish undetected faults and cyberattacks
+in DER systems.
+
+GPTN nodes represent global cyber-physical consistency/deviation patterns.
+LPTN nodes represent local program-variable deviation patterns.
+
+GPTN/LPTN nodes are evidence/prior nodes in the BN.
+CPTs are expert-driven and model uncertainty from imperfect logs, packets,
+measurements, and insufficient data sources.
+
+Your task:
+Identify the conditional CPT paths activated by this failure scenario.
+A conditional CPT path means the sequence of CPT rows/parameters used or influenced
+by the scenario evidence, from observed evidence nodes through intermediate nodes
+to the predicted/root-cause node.
+
+Important:
+- Do not assume there is only one path.
+- Include paths supporting the wrong prediction.
+- Include paths that should have supported the ground truth but appear weak.
+
+A CPT parameter means:
+- CPT name / node name
+- parent condition values
+- target state probability that may be wrong
+
+Return ONLY valid JSON.
+
+Required JSON format:
+{{
+  "failure_scenario": "",
+  "identified_cpt_parameters": [
+    {{
+      "cpt": "",
+      "target_state": "",
+      "parent_conditions": {{}},
+      "suspected_issue": "",
+      "reason": ""
+    }}
+  ]
+}}
+
+Bayesian Network JSON:
+{json.dumps(bn_json, indent=2)}
+
+Failure scenario:
+{failure_scenario_text}
+"""
+
+    response = llm(prompt)
+    parsed = safe_json_loads(response)
+
+    if parsed is None:
+        return {
+            "failure_scenario": "unknown",
+            "identified_cpt_parameters": [],
+            "raw_response": str(response)
+        }
+
+    return parsed
+
+def check_parameter_against_successes_with_llm(
+    bn_json,
+    parameter_record,
+    success_text
+):
+    prompt = f"""
+You are checking whether a suspicious CPT parameter from a failed scenario is also strongly involved in successful scenarios.
+
+Decision rule:
+- If this CPT parameter appears necessary for many/all success scenarios, mark it as PROTECTED.
+- If it is not clearly involved in successes, mark it as NOT PROTECTED.
+- If uncertain, mark it as NOT PROTECTED.
+
+Return ONLY valid JSON.
+
+Required JSON format:
+{{
+  "cpt": "",
+  "target_state": "",
+  "parent_conditions": {{}},
+  "protected_by_successes": true,
+  "success_involvement_summary": "",
+  "should_store_as_risky": false
+}}
+
+Suspicious CPT parameter:
+{json.dumps(parameter_record, indent=2)}
+
+Bayesian Network JSON:
+{json.dumps(bn_json, indent=2)}
+
+Successful scenarios:
+{success_text}
+"""
+
+    response = llm(prompt)
+    parsed = safe_json_loads(response)
+
+    if parsed is None:
+        return {
+            **parameter_record,
+            "protected_by_successes": False,
+            "success_involvement_summary": "Could not parse LLM response; storing as risky by default.",
+            "should_store_as_risky": True,
+            "raw_response": str(response)
+        }
+
+    return parsed
+
+def append_risky_failure_record(record, filename=PARAMETER_RISK_FILE):
+    with open(filename, "a", encoding="utf-8") as f:
+        f.write(json.dumps(record) + "\n")
+
+def generate_cpt_danger_report(bn_json, risk_file=PARAMETER_RISK_FILE):
+    risky_records = []
+
+    try:
+        with open(risk_file, "r", encoding="utf-8") as f:
+            for line in f:
+                if line.strip():
+                    risky_records.append(json.loads(line))
+    except FileNotFoundError:
+        risky_records = []
+
+    prompt = f"""
+You are analyzing risky CPT parameters found across failed Bayesian Network scenarios.
+
+Domain context:
+The BN is designed to distinguish undetected faults and cyberattacks in DER systems.
+GPTN/LPTN pattern nodes bridge cyber-side observations and physical-side observations.
+Repeated risky CPTs may indicate unstable expert-driven probability assumptions.
+
+Your task:
+Identify which CPTs are most dangerous overall.
+
+A dangerous CPT is one that:
+- appears repeatedly in failure scenarios
+- contains multiple suspicious parameters
+- may strongly affect wrong predictions
+- is not strongly protected by successful scenarios
+
+Return ONLY valid JSON.
+
+Required JSON format:
+{{
+  "dangerous_cpts": [
+    {{
+      "cpt": "",
+      "risk_level": "high/medium/low",
+      "number_of_failure_scenarios": 0,
+      "main_problem": "",
+      "summary": "",
+      "recommended_action": ""
+    }}
+  ],
+  "overall_summary": ""
+}}
+
+Bayesian Network JSON:
+{json.dumps(bn_json, indent=2)}
+
+Risky CPT parameter records:
+{json.dumps(risky_records, indent=2)}
+"""
+
+    response = llm(prompt)
+    parsed = safe_json_loads(response)
+
+    if parsed is None:
+        parsed = {
+            "dangerous_cpts": [],
+            "overall_summary": "Could not parse final LLM report.",
+            "raw_response": str(response)
+        }
+
+    with open(CPT_DANGER_REPORT_FILE, "w", encoding="utf-8") as f:
+        json.dump(parsed, f, indent=2)
+
+    return parsed
+
 def run_evaluation(bn_json):
-    model = build_model(bn_json) # --- Step 1: Build the BN model from the generated JSON
-    results = call_bn_inference(model, df) # --- Step 2: Call the BN inference for each scenario and get predictions
+    # Step 1: Build BN model
+    model = build_model(bn_json)
+
+    # Step 2: Run BN inference
+    results = call_bn_inference(model, df)
     results_df = pd.DataFrame(results)
 
+    # Step 3: Split failures and successes
     failures = results_df[results_df["Prediction"] != results_df["Ground Truth"]]
     successes = results_df[results_df["Prediction"] == results_df["Ground Truth"]]
 
-    failure_text = format_results_for_llm(failures, df) # --- Step 3: Format the results for LLM analysis
+    # Step 4: Format successes once
     success_text = format_results_for_llm(successes, df)
 
-    final_prompt = base_prompt.format(
-        context=context,
-        bn_json=json.dumps(bn_json, indent=2),
-        failure_text=failure_text,
-        success_text=success_text
-    )
+    all_failure_records = []
 
-    analysis = llm(final_prompt)
+    total_failures = len(failures)
+    processed_failures = 0
 
-    return failure_text, success_text, analysis, results
+    # Step 5: Process one failure scenario at a time
+    for failure_index, failure_row in failures.iterrows():
+        single_failure_df = pd.DataFrame([failure_row])
+        failure_scenario_text = format_results_for_llm(single_failure_df, df)
 
-def store_analysis(bn_number, failure_text, success_text, analysis, results):
+        # Step 5.1: Identify CPT parameters involved in this failure
+        failure_parameter_analysis = analyze_failure_parameters_with_llm(
+            bn_json=bn_json,
+            failure_scenario_text=failure_scenario_text
+        )
+
+        risky_parameters = []
+
+        # Step 5.2: Check each parameter against success scenarios
+        for parameter_record in failure_parameter_analysis.get(
+            "identified_cpt_parameters", []
+        ):
+            checked_parameter = check_parameter_against_successes_with_llm(
+                bn_json=bn_json,
+                parameter_record=parameter_record,
+                success_text=success_text
+            )
+
+            if checked_parameter.get("should_store_as_risky", False):
+                risky_parameters.append(checked_parameter)
+
+        # Step 5.3: Store only if risky parameters exist
+        if risky_parameters:
+            failure_record = {
+                "timestamp": str(datetime.now()),
+                "failure_scenario_index": int(failure_index),
+                "failure_scenario_text": failure_scenario_text,
+                "identified_cpt_parameters": risky_parameters
+            }
+
+            append_risky_failure_record(failure_record)
+            all_failure_records.append(failure_record)
+
+            processed_failures += 1
+            
+            print(
+                f"Processed failure scenario "
+                f"{processed_failures}/{total_failures}"
+            )
+
+    # Step 6: Final CPT-level danger report
+    cpt_danger_report = generate_cpt_danger_report(bn_json)
+
+    print("\nFinal CPT-level danger report generated.")
+
+    return {
+        "results": results,
+        "failure_count": len(failures),
+        "success_count": len(successes),
+        "risky_failure_records": all_failure_records,
+        "cpt_danger_report": cpt_danger_report
+    }
+
+def store_analysis(bn_number, evaluation_output):
     record = {
         "timestamp": str(datetime.now()),
         "bn_number": bn_number,
-        "failure_text": failure_text,
-        "success_text": success_text,
-        "analysis": analysis,
-        "scenario_results": results
+        "failure_count": evaluation_output["failure_count"],
+        "success_count": evaluation_output["success_count"],
+        "risky_failure_records": evaluation_output["risky_failure_records"],
+        "cpt_danger_report": evaluation_output["cpt_danger_report"],
+        "scenario_results": evaluation_output["results"]
     }
 
     with open("bn_analysis.json", "a", encoding="utf-8") as f:
         f.write(json.dumps(record) + "\n")
-        print(f"\nAnalysis for BN #{bn_number} stored in bn_analysis.json")
+
+    print(f"\nNew workflow analysis for BN #{bn_number} stored in bn_analysis.json")
 
 if __name__ == "__main__":
-    bn_number = 1
-    bn_json = find_proposed_bn(bn_number, proposed_bn_filename)
-    failure_text, success_text, analysis, results = run_evaluation(bn_json)
-    print(analysis)
-    store_analysis(bn_number, failure_text, success_text, analysis, results)
+    bn_number = 7
+
+    bn_json = find_proposed_bn(
+        bn_number,
+        proposed_bn_filename
+    )
+
+    evaluation_output = run_evaluation(bn_json)
+
+    print(json.dumps(evaluation_output["cpt_danger_report"], indent=2))
+
+    store_analysis(
+        bn_number,
+        evaluation_output
+    )

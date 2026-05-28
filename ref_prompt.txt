@@ -1,21 +1,41 @@
 ---------------------------------------------------
-REFLEXION FEEDBACK (CRITICAL INPUT)
+REFLEXION FEEDBACK AND FAILURE-GUIDED INPUTS
 ---------------------------------------------------
-You are also given feedback from previous Bayesian Network evaluations.
+You are given multiple sources of feedback for refining the Bayesian Network.
 
-This feedback contains:
-- Failure cases (incorrect predictions)
-- Success cases (correct predictions)
-- CPT issues identified by an evaluation agent
-- Suggested directions for improving CPT calibration
+0. Full domain and reasoning context:
 
-Previous Bayesian Networks associated with these evaluations:
+{full_context}
+
+1. Full scenario dataset:
+
+{scenario_dataset}
+
+This contains the complete validated scenarios, including evidence variables and ground-truth labels.
+
+2. Failure report:
+
+{failure_report}
+
+This contains the scenarios where the previous Bayesian Network produced incorrect predictions.
+
+Use the failure report to identify which cases failed.
+Then cross-reference each failed case with the full scenario dataset to understand:
+- the original evidence pattern
+- the correct ground-truth root cause
+- which evidence variables distinguish the failed case from successful cases
+
+3. Previous Bayesian Networks:
 
 {previous_bns}
 
-Evaluation analysis and refinement guidance:
+These are Bayesian Networks generated in earlier iterations. Use them to avoid repeating failed CPT designs.
+
+4. Evaluation analysis and refinement guidance:
 
 {analysis_memory}
+
+This includes previous evaluation feedback, CPT issues, success/failure patterns, and suggested calibration directions.
 
 ---------------------------------------------------
 HOW TO USE FEEDBACK (VERY IMPORTANT)

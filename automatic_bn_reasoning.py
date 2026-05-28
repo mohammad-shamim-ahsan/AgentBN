@@ -149,7 +149,7 @@ def run_evaluation(bn_json):
 
     model = build_model(bn_json)
 
-    df = pd.read_csv("Scenarios.csv")
+    df = pd.read_csv("final_validated_dataset.csv")
     df.columns = df.columns.str.strip()
 
     results = call_bn_inference(model, df)
@@ -180,13 +180,23 @@ def run_evaluation(bn_json):
     else:
         print(failures)
 
+    # ====================================================
+    # STORE FAILURES TO JSON
+    # ====================================================
+    failures_json = failures.to_dict(orient="records")
+
+    with open("flawed_failure_results.json", "w") as f:
+        json.dump(failures_json, f, indent=4)
+
+    print("\nFailure results stored in flawed_failure_results.json")
+
     return failures, successes, accuracy, results
 
 # ============================================================
 # MAIN
 # ============================================================
-
 if __name__ == "__main__":
-    bn_json = load_bn("BN_gt.json")
+    # bn_json = load_bn("BN_gt.json")
+    bn_json = load_bn("flawed_BN_0.json")
     failures, successes, accuracy, results = run_evaluation(bn_json)
     print("\nReasoning Completed.")

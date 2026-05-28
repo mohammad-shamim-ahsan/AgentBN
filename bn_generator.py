@@ -20,6 +20,8 @@ def read_file(filename):
 
 proposed_bn_filename="last_proposed_bn.jsonl"
 full_context = read_file("context_gen_agent.txt")
+scenario_dataset = read_file("final_validated_dataset.csv")
+failure_report = read_file("flawed_failure_results.json")
 prompt_template_text = read_file("gen_prompt.txt")
 
 CONSTRAINTS = {
@@ -43,22 +45,28 @@ def format_constraints():
 # 1️⃣ Draft Stage (generation only)
 # -------------------------------
 
-def draft_model(full_context, prompt_template_text):
+def draft_model(full_context, scenario_dataset, failure_report, prompt_template_text):
     prompt_gen_template = PromptTemplate(
-        input_variables=["full_context"],
+        input_variables=[
+            "full_context",
+            "scenario_dataset",
+            "failure_report",
+        ],
         template=prompt_template_text
     )
 
     prompt = prompt_gen_template.format(
         full_context=full_context,
+        scenario_dataset=scenario_dataset,
+        failure_report=failure_report,
         constraints=format_constraints()
     )
 
     return llm(prompt)
 
-def generate_bn(full_context, prompt_template_text):
+def generate_bn(full_context, scenario_dataset, failure_report, prompt_template_text):
     # 1️⃣ Draft
-    draft = draft_model(full_context, prompt_template_text)
+    draft = draft_model(full_context, scenario_dataset, failure_report, prompt_template_text)
     return draft
 
 def store_bn_proposal(bn_new, bn_number, filename=proposed_bn_filename):
@@ -72,7 +80,7 @@ def store_bn_proposal(bn_new, bn_number, filename=proposed_bn_filename):
 
 ### -------------------------------
 if __name__ == "__main__":
-    bn_proposal = generate_bn(full_context, prompt_template_text)
+    bn_proposal = generate_bn(full_context, scenario_dataset, failure_report, prompt_template_text)
     print(bn_proposal)
     bn_json = json.loads(bn_proposal)
     store_bn_proposal(bn_json, bn_number=1)

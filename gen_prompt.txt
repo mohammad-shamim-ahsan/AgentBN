@@ -7,9 +7,21 @@ The output will be directly parsed into:
 ---------------------------------------------------
 CONTEXT
 ---------------------------------------------------
-The following is the full context including degraded Bayesian Networks and failure reports:
+The following is the full context including flawed Bayesian Networks and failure reports:
 
+1. Background Context and Flawed Bayesian Networks:
 {full_context}
+
+2. Scenario Dataset:
+{scenario_dataset}
+
+3. Failure Report:
+{failure_report}
+
+Use the scenario dataset to understand the original evidence, ground-truth labels, and scenario structure.
+Use the failure-results JSON file to identify only the scenarios where the Bayesian Network prediction failed.
+
+When analyzing failures, cross-reference each failed scenario from flawed_failure_results.json with its corresponding full scenario record in final_validated_dataset.csv.
 
 ---------------------------------------------------
 HARD CONSTRAINTS (NON-NEGOTIABLE)

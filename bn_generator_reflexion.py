@@ -24,6 +24,8 @@ def read_file(filename):
         return f.read()
     
 full_context = read_file("context_gen_agent.txt")
+scenario_dataset = read_file("final_validated_dataset.csv")
+failure_report = read_file("flawed_failure_results.json")
 prompt_template_text = read_file("ref_prompt.txt")
 CONSTRAINTS = {
     "correctness": [
@@ -63,22 +65,66 @@ def read_analysis_memory(filename=bn_analysis_filename, max_records=max_records)
 
     return records
 
+# def format_analysis_memory(records):
+#     formatted = []
+
+#     for r in records:
+#         formatted.append(
+#             f"""
+# BN #{r['bn_number']}:
+
+# SUMMARY:
+# {json.loads(r['analysis'])['summary']}
+
+# CPT ISSUES:
+# {json.dumps(json.loads(r['analysis'])['cpt_issues'], indent=2)}
+
+# FIXES:
+# {json.dumps(json.loads(r['analysis'])['fixes'], indent=2)}
+# """
+#         )
+
+#     return "\n\n---\n\n".join(formatted)
+
 def format_analysis_memory(records):
     formatted = []
 
     for r in records:
+
+        cpt_report = r.get("cpt_danger_report", {})
+
+        # handle stringified JSON if needed
+        if isinstance(cpt_report, str):
+            try:
+                cpt_report = json.loads(cpt_report)
+            except Exception:
+                cpt_report = {}
+
+        overall_summary = cpt_report.get(
+            "overall_summary",
+            "No overall summary available."
+        )
+
+        dangerous_cpts = cpt_report.get(
+            "dangerous_cpts",
+            []
+        )
+
         formatted.append(
             f"""
-BN #{r['bn_number']}:
+BN #{r.get('bn_number', 'unknown')}:
 
-SUMMARY:
-{json.loads(r['analysis'])['summary']}
+FAILURE COUNT:
+{r.get('failure_count', 'unknown')}
 
-CPT ISSUES:
-{json.dumps(json.loads(r['analysis'])['cpt_issues'], indent=2)}
+SUCCESS COUNT:
+{r.get('success_count', 'unknown')}
 
-FIXES:
-{json.dumps(json.loads(r['analysis'])['fixes'], indent=2)}
+OVERALL SUMMARY:
+{overall_summary}
+
+DANGEROUS CPTS:
+{json.dumps(dangerous_cpts, indent=2)}
 """
         )
 
@@ -151,7 +197,7 @@ def format_constraints():
         for k, v in CONSTRAINTS.items()
     )
 
-def generate_refined_bn(full_context, last_bn_number=1, proposed_bn_filename=proposed_bn_filename, bn_analysis_filename=bn_analysis_filename, max_records=max_records):
+def generate_refined_bn(full_context, scenario_dataset, failure_report, last_bn_number=1, proposed_bn_filename=proposed_bn_filename, bn_analysis_filename=bn_analysis_filename, max_records=max_records):
     analysis_records = read_analysis_memory(bn_analysis_filename, max_records)
     analysis_memory = format_analysis_memory(analysis_records)
 
@@ -180,6 +226,8 @@ def generate_refined_bn(full_context, last_bn_number=1, proposed_bn_filename=pro
     prompt_gen_template = PromptTemplate(
         input_variables=[
             "full_context",
+            "scenario_dataset",
+            "failure_report",
             "analysis_memory",
             "previous_bns"
         ],
@@ -188,6 +236,8 @@ def generate_refined_bn(full_context, last_bn_number=1, proposed_bn_filename=pro
 
     prompt = prompt_gen_template.format(
         full_context=full_context,
+        scenario_dataset=scenario_dataset,
+        failure_report=failure_report,
         analysis_memory=analysis_memory,
         previous_bns=previous_bns,
         constraints=format_constraints()
@@ -205,10 +255,10 @@ def store_new_bn(bn_number, bn_new):
         f.write(json.dumps(record) + "\n")
 
 if __name__ == "__main__":
-    last_bn_number = 1
-    bn_new = generate_refined_bn(full_context, last_bn_number, proposed_bn_filename, bn_analysis_filename, max_records)
+    last_bn_number = 7
+    bn_new = generate_refined_bn(full_context, scenario_dataset, failure_report, last_bn_number, proposed_bn_filename, bn_analysis_filename, max_records)
     print(bn_new)
     
     bn_new = json.loads(bn_new)
-    new_bn_number = 2
+    new_bn_number = 8
     store_new_bn(new_bn_number, bn_new)

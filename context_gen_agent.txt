@@ -61,8 +61,8 @@ C2: # === Pattern definitions ===
 - **⊤ (top)** → unknown or not applicable
 - **F / S / Others** → node type: Float, String, or Other (e.g., function call, object)
 
-C3: # === Degraded BN ===
-### Degraded BN :
+C3: # === Flawed BN ===
+### Flawed BN :
 Node=GPTN_1; States=Found,Not_Found; Parents=None; CPT=0.5,0.5; Desc=GPTN_1 or GPTN_7 (R): inconsistent network packet, deviation reported
 Node=GPTN_2; States=Found,Not_Found; Parents=None; CPT=0.5,0.5; Desc=GPTN_2 or GPTN_8 (R): inconsistent network packet, no deviation reported
 Node=GPTN_3; States=Found,Not_Found; Parents=None; CPT=0.5,0.5; Desc=GPTN_3 or GPTN_4:  inconsistent execution log
@@ -83,20 +83,3 @@ Node=Deviation_in_Dispatch; States=Yes,No; Parents=LPTN_1_vi,LPTN_1_viii,LPTN_1_
 Node=Execution_Integrity; States=Compromised,Normal; Parents=Program_Anomaly,Deviation_in_Response,Deviation_in_Dispatch; CPT=0.8,0.2,0.7,0.3,0.7,0.3,0.3,0.7,0.7,0.3,0.7,0.3,0.7,0.3,0.2,0.8; Desc=Execution_Integrity
 Node=Physical_Anomaly; States=Yes,No; Parents=GPTN_5; CPT=0.85,0.15,0.1,0.9; Desc=Physical_Anomaly
 Node=Root_Causes; States=System_Fault,FDI,Memory_Corruption; Parents=Network_Manipulation,Execution_Integrity,Physical_Anomaly; CPT=0.3,0.3,0.4,0.2,0.4,0.4,0.4,0.4,0.2,0.15,0.7,0.15,0.15,0.15,0.7,0.1,0.1,0.8,0.7,0.15,0.15,0.2,0.2,0.6; Desc=Root Causes
-
-### Failure Report: Ground Truth System Fault
-
-# Evidence Set:
-GPTN_1: Not_Found
-GPTN_2: Not_Found
-GPTN_3: Not_Found
-GPTN_5: Found
-LPTN_1_i: Found
-LPTN_1_ii: Found
-LPTN_1_iii: Found
-LPTN_1_iv: Found
-
-# Posterior Probabilities of the “Root Causes” node:
-Degraded BN: System_Fault=49%, FDI=17%, Memory_Corruption=34%
-
-# Conclusion: Since the posterior probabilities are not conclusive and ambiguous, a decision on the root cause of the system failure can not be made.

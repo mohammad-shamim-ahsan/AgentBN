@@ -1,61 +1,92 @@
 {
+  "reported_risk_level": "high",
   "dangerous_cpts": [
     {
       "cpt": "Root_Causes",
       "risk_level": "high",
-      "number_of_failure_scenarios": 22,
-      "main_problem": "Repeatedly implicated at the final decision node, especially the row with Network_Manipulation=No, Execution_Integrity=Compromised, Physical_Anomaly=No where System_Fault is favored over Memory_Corruption (0.58 vs 0.37), directly driving wrong class predictions.",
-      "summary": "This is the most dangerous CPT overall because it appears in the largest number of failures, often with multiple suspicious parameters in the same row, and it sits at the final output node so any bias here directly changes the predicted root cause. The strongest recurring issue is over-allocation to System_Fault in configurations that should often end as Memory_Corruption, plus weak support for FDI in network-manipulation-heavy failures.",
-      "recommended_action": "Re-estimate the full Root_Causes CPT with priority on rows involving Execution_Integrity=Compromised. In particular, reduce System_Fault and increase Memory_Corruption for (Network_Manipulation=No, Execution_Integrity=Compromised, Physical_Anomaly=No), and review FDI probabilities for rows with Network_Manipulation=Yes and Physical_Anomaly=No."
-    },
-    {
-      "cpt": "Physical_Anomaly",
-      "risk_level": "high",
-      "number_of_failure_scenarios": 21,
-      "main_problem": "The parameter P(Physical_Anomaly=No | GPTN_5=Not_Found)=0.76 appears across many failures and tends to suppress Physical_Anomaly, which then pushes the model into Root_Causes rows that overpredict System_Fault or under-support FDI.",
-      "summary": "This CPT is highly recurrent and weakly protected by successes. Because GPTN_5=Not_Found is common in failures, the CPT repeatedly channels inference toward Physical_Anomaly=No, which strongly affects downstream Root_Causes selection. Its impact is amplified because the downstream Root_Causes table is already problematic.",
-      "recommended_action": "Recalibrate the GPTN_5->Physical_Anomaly mapping, especially the Not_Found row. Test whether lowering P(Physical_Anomaly=No | GPTN_5=Not_Found) or increasing uncertainty improves Memory_Corruption and FDI discrimination."
+      "number_of_failure_scenarios": 17,
+      "main_problem": "The same parent configuration repeatedly appears in wrong Memory_Corruption vs System_Fault decisions, and this CPT contains multiple suspicious entries that directly control the final class choice.",
+      "suspicious_parameters": [
+        {
+          "rank": 1,
+          "parameter": "P(Root_Causes=System_Fault | Network_Manipulation=No, Execution_Integrity=Compromised, Physical_Anomaly=No)",
+          "failure_count": 17,
+          "success_count": 0,
+          "failure_to_success_ratio": 17.0,
+          "error_severity": "high",
+          "recommended_adjustment": "decrease",
+          "justification": "This entry recurs across many failed Memory_Corruption cases and directly favors the wrong class at the final decision node. Success summaries consistently say it is not strongly protected by successful scenarios."
+        },
+        {
+          "rank": 2,
+          "parameter": "P(Root_Causes=Memory_Corruption | Network_Manipulation=No, Execution_Integrity=Compromised, Physical_Anomaly=No)",
+          "failure_count": 15,
+          "success_count": 0,
+          "failure_to_success_ratio": 15.0,
+          "error_severity": "high",
+          "recommended_adjustment": "increase",
+          "justification": "The competing Memory_Corruption probability is repeatedly implicated in the same failure-dominant row and appears too weak relative to System_Fault. Because this row sits at the output CPT, modest rebalancing could strongly affect misclassifications."
+        },
+        {
+          "rank": 3,
+          "parameter": "P(Root_Causes=FDI | Network_Manipulation=Yes, Execution_Integrity=Compromised, Physical_Anomaly=No)",
+          "failure_count": 3,
+          "success_count": 0,
+          "failure_to_success_ratio": 3.0,
+          "error_severity": "high",
+          "recommended_adjustment": "increase",
+          "justification": "This parameter appears repeatedly in the FDI failure cases where the model instead predicts Memory_Corruption. It is not protected by successful scenarios and likely underweights FDI under a strongly cyber-compromised pattern."
+        }
+      ]
     },
     {
       "cpt": "Execution_Integrity",
       "risk_level": "high",
-      "number_of_failure_scenarios": 16,
-      "main_problem": "Multiple rows are suspicious, especially those making Compromised very likely under mixed anomaly/deviation patterns and those making Normal too likely in all-negative patterns, creating unstable routing into wrong Root_Causes rows.",
-      "summary": "This CPT appears in many failures with several different problematic parent combinations, indicating broad calibration issues rather than a single bad row. Since Execution_Integrity is a key mediator between anomaly evidence and final diagnosis, even moderate miscalibration here can flip the final class by activating the wrong Root_Causes row.",
-      "recommended_action": "Audit all rows jointly rather than patching one entry. Focus on separating Program_Anomaly effects from response/dispatch deviations, and verify whether Compromised probabilities are too high for mixed evidence and whether Normal is too strong when GPTN_3 is Not_Found."
-    },
-    {
-      "cpt": "Deviation_in_Response",
-      "risk_level": "medium",
-      "number_of_failure_scenarios": 13,
-      "main_problem": "Many different response-pattern rows are flagged, showing that the aggregate response-deviation CPT may be too aggressive or inconsistent across mixed LPTN patterns.",
-      "summary": "This CPT is dangerous because it appears often and with many distinct suspicious parent configurations, including both all-Not_Found and mixed Found/Not_Found chains. That suggests the aggregation logic from the five response indicators into a single deviation state may be poorly calibrated and can distort Execution_Integrity downstream.",
-      "recommended_action": "Revisit the monotonic structure of the 5-parent table. Check whether mixed patterns should produce smoother probabilities and whether some rows currently overstate or understate Deviation_in_Response."
-    },
-    {
-      "cpt": "Deviation_in_Dispatch",
-      "risk_level": "medium",
-      "number_of_failure_scenarios": 11,
-      "main_problem": "Several dispatch-pattern rows are suspicious, including all-Found, all-Not_Found, and mixed patterns, indicating unstable aggregation from dispatch indicators into the deviation node.",
-      "summary": "This CPT repeatedly contributes to failures and influences Execution_Integrity strongly. The fact that multiple very different parent configurations are flagged suggests the table may be too coarse or overly confident, causing dispatch evidence to push the model into the wrong execution state.",
-      "recommended_action": "Recalibrate the 4-parent dispatch table with emphasis on mixed patterns. Consider smoothing extreme probabilities and validating whether all-Found and all-Not_Found rows are too decisive."
-    },
-    {
-      "cpt": "Program_Anomaly",
-      "risk_level": "medium",
-      "number_of_failure_scenarios": 8,
-      "main_problem": "The row P(Program_Anomaly=No | GPTN_3=Not_Found)=0.94 is repeatedly implicated and may suppress compromise evidence too strongly in cases that should still end in Memory_Corruption or FDI.",
-      "summary": "Although this CPT has only one parent and fewer flagged scenarios than the top risks, it appears consistently in GPTN_3=Not_Found failures and can materially alter Execution_Integrity. Its strong confidence in No may be too rigid given downstream evidence from response and dispatch deviations.",
-      "recommended_action": "Reduce overconfidence in the GPTN_3=Not_Found row or increase uncertainty so downstream deviation evidence can more easily support compromise when appropriate."
-    },
-    {
-      "cpt": "Network_Manipulation",
-      "risk_level": "medium",
-      "number_of_failure_scenarios": 3,
-      "main_problem": "Rows with one or both GPTN indicators Found appear in FDI failures, suggesting the CPT may not be translating network evidence into a strong enough FDI pathway downstream.",
-      "summary": "This CPT appears in fewer failures, but when it does, the failures are important because they are FDI misses. Since Network_Manipulation is the main gateway for FDI evidence, under- or miscalibration here can prevent the model from selecting FDI even when network indicators are present.",
-      "recommended_action": "Review rows for (Found, Not_Found), (Not_Found, Found), and (Found, Found). Confirm that the induced posterior over Network_Manipulation is strong enough to support FDI once combined with Root_Causes."
+      "number_of_failure_scenarios": 14,
+      "main_problem": "Several recurrent rows push execution toward Compromised or Normal in ways that propagate strongly into the final Root_Causes decision, and multiple suspicious parameters recur across failures.",
+      "suspicious_parameters": [
+        {
+          "rank": 1,
+          "parameter": "P(Execution_Integrity=Compromised | Program_Anomaly=Yes, Deviation_in_Response=No, Deviation_in_Dispatch=No)",
+          "failure_count": 7,
+          "success_count": 0,
+          "failure_to_success_ratio": 7.0,
+          "error_severity": "high",
+          "recommended_adjustment": "decrease",
+          "justification": "This row recurs across multiple failed Memory_Corruption scenarios and may overstate compromise even when both deviation aggregates are low. That can route probability mass into the problematic Root_Causes row favoring System_Fault."
+        },
+        {
+          "rank": 2,
+          "parameter": "P(Execution_Integrity=Compromised | Program_Anomaly=Yes, Deviation_in_Response=Yes, Deviation_in_Dispatch=No)",
+          "failure_count": 6,
+          "success_count": 0,
+          "failure_to_success_ratio": 6.0,
+          "error_severity": "medium",
+          "recommended_adjustment": "slightly_decrease",
+          "justification": "This parameter appears repeatedly in failed scenarios and is not shown to be necessary for successful cases. It likely contributes to over-activating compromised execution in mixed evidence settings."
+        },
+        {
+          "rank": 3,
+          "parameter": "P(Execution_Integrity=Compromised | Program_Anomaly=Yes, Deviation_in_Response=No, Deviation_in_Dispatch=Yes)",
+          "failure_count": 6,
+          "success_count": 0,
+          "failure_to_success_ratio": 6.0,
+          "error_severity": "medium",
+          "recommended_adjustment": "slightly_decrease",
+          "justification": "This row is repeatedly flagged in failures and lacks strong success protection. It plausibly amplifies compromise too aggressively when only dispatch-side evidence is elevated."
+        },
+        {
+          "rank": 4,
+          "parameter": "P(Execution_Integrity=Compromised | Program_Anomaly=No, Deviation_in_Response=Yes, Deviation_in_Dispatch=Yes)",
+          "failure_count": 4,
+          "success_count": 0,
+          "failure_to_success_ratio": 4.0,
+          "error_severity": "high",
+          "recommended_adjustment": "decrease",
+          "justification": "This parameter appears in both Memory_Corruption and FDI failures and can strongly shape downstream root-cause selection. With Program_Anomaly absent, the compromise probability may be too high for the observed evidence mix."
+        }
+      ]
     }
   ],
-  "overall_summary": "The most dangerous CPTs are concentrated in the final causal path: Physical_Anomaly, Execution_Integrity, and especially Root_Causes. Root_Causes is the top risk because it is repeatedly implicated, contains multiple suspicious parameters, and directly determines the final class; its System_Fault bias under compromised/no-physical-anomaly conditions is the clearest recurring failure mechanism. Physical_Anomaly and Execution_Integrity are next because they repeatedly feed the model into those bad Root_Causes rows. Deviation_in_Response and Deviation_in_Dispatch are secondary but still important upstream aggregators with many suspicious mixed-pattern rows. Program_Anomaly and Network_Manipulation are narrower but still meaningful risks, especially for GPTN_3=Not_Found failures and missed FDI cases."
+  "overall_summary": "High-risk evidence concentrates on Root_Causes and Execution_Integrity. Root_Causes is the strongest concern because the same final-decision row repeatedly dominates failures with multiple suspicious class probabilities, while Execution_Integrity shows several recurrent upstream rows that likely feed those wrong final predictions."
 }

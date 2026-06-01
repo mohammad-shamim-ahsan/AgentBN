@@ -5,7 +5,7 @@ import re
 from bn_generator import generate_bn, store_bn_proposal
 from bn_generator_evaluator import find_proposed_bn, run_evaluation, store_analysis
 from bn_generator_reflexion import generate_refined_bn, store_new_bn
-from bn_validator import compare_all_cpts
+from bn_validator_old import compare_all_cpts
 
 bn_analysis_filename = "bn_analysis.json"
 proposed_bn_filename = "last_proposed_bn.jsonl"

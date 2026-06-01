@@ -1,123 +1,96 @@
----------------------------------------------------
-REFLEXION FEEDBACK AND FAILURE-GUIDED INPUTS
----------------------------------------------------
-You are given multiple sources of feedback for refining the Bayesian Network.
+---
 
-0. Full domain and reasoning context:
+## REFINEMENT CONTEXT
 
+You are refining an existing Bayesian Network.
+
+Domain context:
 {full_context}
 
-1. Full scenario dataset:
-
+Validated scenario dataset:
 {scenario_dataset}
 
-This contains the complete validated scenarios, including evidence variables and ground-truth labels.
-
-2. Failure report:
-
+Failed scenarios:
 {failure_report}
 
-This contains the scenarios where the previous Bayesian Network produced incorrect predictions.
-
-Use the failure report to identify which cases failed.
-Then cross-reference each failed case with the full scenario dataset to understand:
-- the original evidence pattern
-- the correct ground-truth root cause
-- which evidence variables distinguish the failed case from successful cases
-
-3. Previous Bayesian Networks:
-
+Previous Bayesian Networks:
 {previous_bns}
 
-These are Bayesian Networks generated in earlier iterations. Use them to avoid repeating failed CPT designs.
-
-4. Evaluation analysis and refinement guidance:
-
+CPT danger report:
 {analysis_memory}
 
-This includes previous evaluation feedback, CPT issues, success/failure patterns, and suggested calibration directions.
+---
 
----------------------------------------------------
-HOW TO USE FEEDBACK (VERY IMPORTANT)
----------------------------------------------------
-You MUST use this feedback to improve the CPTs. You MUST adjust CPTs so that previously failed scenarios become more likely to be classified correctly under probabilistic inference.
+## REFINEMENT OBJECTIVE
 
-Follow these rules:
+Make a few changes in the Bayesian Network so that previously failed scenarios become more likely to be classified correctly while preserving behavior on successful scenarios.
 
-1. PRIORITIZE FAILURES
-   - Identify patterns where predictions were incorrect
-   - Adjust CPTs to correct these misclassifications
+Use the previous Bayesian Network as the baseline.
 
-2. PRESERVE SUCCESS BEHAVIOR
-   - Do NOT degrade CPT behavior that already produces correct predictions
-   - Maintain patterns that lead to correct outputs
-   - If a parent configuration consistently produces correct predictions:
-    → preserve its relative probability distribution
-    → only apply minimal smoothing if necessary
+Do not redesign the network structure.
 
-3. APPLY CPT FIX DIRECTIONS
-   - Interpret "increase", "decrease", "rebalance", "smooth" as:
-     → relative probability adjustments (NOT exact values)
-   - Apply changes consistent with probabilistic reasoning
+Only refine CPT probabilities.
 
-4. RESPECT TARGET SCOPE
-   - If target_scope = local_cpt_row:
-       → Modify ONLY the CPT columns corresponding to the specified parent configuration
-   - If target_scope = full_cpt_node:
-       → Adjust ALL probability values in the node’s CPT
+---
 
-5. FIX SYSTEMATIC BIASES
-   - If a class (e.g., Memory_Corruption) is underpredicted:
-       → increase its probability in relevant conditions
-   - Reduce dominance of overpredicted classes
+## REFINEMENT RULES
 
-6. AVOID OVERCORRECTION
-   - Do NOT make CPTs overly deterministic
-   - Avoid extreme probabilities unless strongly justified
+1. START FROM THE PREVIOUS CPTS
+* Use the CPT values from {previous_bns} as the starting point.
+* Apply incremental modifications.
+* Do not rebuild CPTs from scratch.
 
-7. MAINTAIN PROBABILISTIC CONSISTENCY
-   - Ensure smooth transitions across similar parent configurations
-   - Avoid abrupt or illogical probability jumps
+2. FOLLOW THE CPT DANGER REPORT
 
-8. MANDATORY CPT MODIFICATION
-   - For every node listed in CPT_ISSUES:
-       → You MUST modify its CPT
-   - You are NOT allowed to leave flagged CPTs unchanged
+For each reported dangerous CPT:
+* Treat it as a priority target.
+* Focus on the suspicious parameters listed for that CPT.
+* Apply the recommended adjustment direction:
+  * increase
+  * decrease
+  * slightly_increase
+  * slightly_decrease
 
-9. START FROM PREVIOUS CPTs
-   - Use the CPT values in {previous_bns} as the baseline
-   - Apply incremental adjustments based on feedback
-   - Do NOT completely rewrite CPTs unless necessary
-   
-9.5 APPLY MINIMAL NECESSARY CHANGES
-   - Prefer small incremental probability adjustments
-   - Preserve the overall shape of the original CPT whenever possible
-   - Only make large probability shifts when failures are severe and repeated
-   - Maintain relative ordering unless feedback strongly suggests reversal
+Do not modify parameters that are not reported unless required for normalization.
 
-10. PRIORITIZE BY SEVERITY
-   - HIGH severity issues → must be strongly corrected
-   - MEDIUM → moderate adjustment
-   - LOW → minor smoothing only
+3. PRIORITIZE BY RISK
 
-11. DO NOT BREAK PGMPY COMPATIBILITY
-   - All CPT columns must sum to 1
-   - Maintain correct CPT dimensions
-   - Maintain parent ordering consistency
-   
-11.5 NORMALIZE AFTER MODIFICATION
-   - After every CPT adjustment:
-       → ensure each probability column is normalized
-       → verify probabilities remain within [0,1]
-      
-12. LIMIT UNNECESSARY GLOBAL DRIFT
-   - Do not modify unrelated CPT regions that are not implicated by feedback
-   - Keep unaffected probability regions stable across iterations
+Apply modifications in this order:
+1. High-risk CPTs
+2. Medium-risk CPTs
 
----------------------------------------------------
-IMPORTANT REFLEXION RULES
----------------------------------------------------
-- You are NOT guessing CPTs from scratch
-- You are REFINING them using feedback
-- Treat repeated failure patterns as stronger evidence than isolated failures
-- Use evaluation feedback to refine probabilities, not to completely override domain structure
+Within a CPT:
+1. Rank 1 suspicious parameter
+2. Rank 2 suspicious parameter
+3. Lower-ranked parameters
+
+Higher-ranked parameters should receive stronger adjustments.
+
+4. USE FAILURE EVIDENCE
+
+For each suspicious parameter:
+* Use its failure_count
+* Use its success_count
+* Use its failure_to_success_ratio
+* Use its justification
+
+Repeated failures are stronger evidence than isolated failures.
+
+5. PRESERVE SUCCESSFUL BEHAVIOR
+
+If a CPT region is not implicated by the danger report:
+* Leave it unchanged.
+* Avoid unnecessary drift.
+
+6. NORMALIZE AFTER EVERY CPT CHANGE
+
+Whenever a parameter is modified:
+* Rebalance the remaining probabilities in the same CPT column.
+* Ensure the column sums to exactly 1.
+
+---
+
+## OUTPUT REQUIREMENT
+
+Return a complete Bayesian Network JSON.
+Modify only the CPT probabilities necessary to address the reported dangerous CPTs and suspicious parameters.

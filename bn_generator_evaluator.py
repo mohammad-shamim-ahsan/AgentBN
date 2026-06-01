@@ -339,7 +339,10 @@ def append_risky_failure_record(record, filename=PARAMETER_RISK_FILE):
     with open(filename, "a", encoding="utf-8") as f:
         f.write(json.dumps(record) + "\n")
 
-def generate_cpt_danger_report(bn_json, risk_file=PARAMETER_RISK_FILE):
+def generate_cpt_danger_report(
+    bn_json,
+    risk_file=PARAMETER_RISK_FILE
+):
     risky_records = []
 
     try:
@@ -351,43 +354,117 @@ def generate_cpt_danger_report(bn_json, risk_file=PARAMETER_RISK_FILE):
         risky_records = []
 
     prompt = f"""
-You are analyzing risky CPT parameters found across failed Bayesian Network scenarios.
+You are analyzing candidate risky CPT parameters found across failed Bayesian Network scenarios.
 
 Domain context:
 The BN is designed to distinguish undetected faults and cyberattacks in DER systems.
 GPTN/LPTN pattern nodes bridge cyber-side observations and physical-side observations.
 Repeated risky CPTs may indicate unstable expert-driven probability assumptions.
 
-Your task:
-Identify which CPTs are most dangerous overall.
+Important:
+The parameter records below have already passed an initial deterministic statistical screening.
+However, do NOT assume every candidate parameter is truly suspicious.
+Your job is to identify the strongest evidence-supported risky CPTs and parameters.
 
-A dangerous CPT is one that:
-- appears repeatedly in failure scenarios
-- contains multiple suspicious parameters
-- may strongly affect wrong predictions
-- is not strongly protected by successful scenarios
+Your task:
+
+Step 1:
+Identify risky CPTs.
+
+Step 2:
+For each reported risky CPT, identify only the suspicious parameters inside that CPT.
+
+Priority rule:
+1. If at least one HIGH-RISK CPT exists, report ONLY HIGH-RISK CPTs.
+2. If no HIGH-RISK CPT exists, report ONLY MEDIUM-RISK CPTs.
+3. If neither exists, return an empty report.
+
+A CPT should be classified as HIGH RISK only if:
+- it appears repeatedly across failure scenarios
+- it contains multiple suspicious parameters
+- it likely has strong influence on incorrect predictions
+- it is not strongly protected by successful scenarios
+
+A CPT should be classified as MEDIUM RISK if:
+- it appears in some failure scenarios
+- it contains at least one suspicious parameter
+- it may contribute to wrong predictions, but evidence is weaker than high-risk CPTs
+
+Parameter-reporting rule:
+Do NOT blindly report all parameters inside a risky CPT.
+
+Report ONLY parameters that:
+- repeatedly appear in failed scenarios
+- are failure-dominant compared with successful scenarios
+- have medium or high error severity
+- plausibly contribute to incorrect predictions
+- The "justification" field must be short: 1–2 sentences maximum.
 
 Return ONLY valid JSON.
 
-Required JSON format:
+If HIGH-RISK CPTs exist:
 {{
+  "reported_risk_level": "high",
   "dangerous_cpts": [
     {{
       "cpt": "",
-      "risk_level": "high/medium/low",
+      "risk_level": "high",
       "number_of_failure_scenarios": 0,
       "main_problem": "",
-      "summary": "",
-      "recommended_action": ""
+      "suspicious_parameters": [
+        {{
+          "rank": 1,
+          "parameter": "",
+          "failure_count": 0,
+          "success_count": 0,
+          "failure_to_success_ratio": 0.0,
+          "error_severity": "medium/high",
+          "recommended_adjustment": "increase/decrease/slightly_increase/slightly_decrease",
+          "justification": ""
+        }}
+      ],
     }}
   ],
   "overall_summary": ""
 }}
 
+If no HIGH-RISK CPT exists, report MEDIUM-RISK CPTs only:
+{{
+  "reported_risk_level": "medium",
+  "dangerous_cpts": [
+    {{
+      "cpt": "",
+      "risk_level": "medium",
+      "number_of_failure_scenarios": 0,
+      "main_problem": "",
+      "suspicious_parameters": [
+        {{
+          "rank": 1,
+          "parameter": "",
+          "failure_count": 0,
+          "success_count": 0,
+          "failure_to_success_ratio": 0.0,
+          "error_severity": "medium/high",
+          "recommended_adjustment": "increase/decrease/slightly_increase/slightly_decrease",
+          "justification": ""
+        }}
+      ],
+    }}
+  ],
+  "overall_summary": ""
+}}
+
+If neither HIGH-RISK nor MEDIUM-RISK CPTs exist:
+{{
+  "reported_risk_level": "none",
+  "dangerous_cpts": [],
+  "overall_summary": "No high-risk or medium-risk CPTs identified."
+}}
+
 Bayesian Network JSON:
 {json.dumps(bn_json, indent=2)}
 
-Risky CPT parameter records:
+Candidate risky CPT parameter records:
 {json.dumps(risky_records, indent=2)}
 """
 
@@ -421,55 +498,55 @@ def run_evaluation(bn_json):
     # Step 4: Format successes once
     success_text = format_results_for_llm(successes, df)
 
-    all_failure_records = []
+    # all_failure_records = []
 
-    total_failures = len(failures)
-    processed_failures = 0
+    # total_failures = len(failures)
+    # processed_failures = 0
 
-    # Step 5: Process one failure scenario at a time
-    for failure_index, failure_row in failures.iterrows():
-        single_failure_df = pd.DataFrame([failure_row])
-        failure_scenario_text = format_results_for_llm(single_failure_df, df)
+    # # Step 5: Process one failure scenario at a time
+    # for failure_index, failure_row in failures.iterrows():
+    #     single_failure_df = pd.DataFrame([failure_row])
+    #     failure_scenario_text = format_results_for_llm(single_failure_df, df)
 
-        # Step 5.1: Identify CPT parameters involved in this failure
-        failure_parameter_analysis = analyze_failure_parameters_with_llm(
-            bn_json=bn_json,
-            failure_scenario_text=failure_scenario_text
-        )
+    #     # Step 5.1: Identify CPT parameters involved in this failure
+    #     failure_parameter_analysis = analyze_failure_parameters_with_llm(
+    #         bn_json=bn_json,
+    #         failure_scenario_text=failure_scenario_text
+    #     )
 
-        risky_parameters = []
+    #     risky_parameters = []
 
-        # Step 5.2: Check each parameter against success scenarios
-        for parameter_record in failure_parameter_analysis.get(
-            "identified_cpt_parameters", []
-        ):
-            checked_parameter = check_parameter_against_successes_with_llm(
-                bn_json=bn_json,
-                parameter_record=parameter_record,
-                success_text=success_text
-            )
+    #     # Step 5.2: Check each parameter against success scenarios
+    #     for parameter_record in failure_parameter_analysis.get(
+    #         "identified_cpt_parameters", []
+    #     ):
+    #         checked_parameter = check_parameter_against_successes_with_llm(
+    #             bn_json=bn_json,
+    #             parameter_record=parameter_record,
+    #             success_text=success_text
+    #         )
 
-            if checked_parameter.get("should_store_as_risky", False):
-                risky_parameters.append(checked_parameter)
+    #         if checked_parameter.get("should_store_as_risky", False):
+    #             risky_parameters.append(checked_parameter)
 
-        # Step 5.3: Store only if risky parameters exist
-        if risky_parameters:
-            failure_record = {
-                "timestamp": str(datetime.now()),
-                "failure_scenario_index": int(failure_index),
-                "failure_scenario_text": failure_scenario_text,
-                "identified_cpt_parameters": risky_parameters
-            }
+    #     # Step 5.3: Store only if risky parameters exist
+    #     if risky_parameters:
+    #         failure_record = {
+    #             "timestamp": str(datetime.now()),
+    #             "failure_scenario_index": int(failure_index),
+    #             "failure_scenario_text": failure_scenario_text,
+    #             "identified_cpt_parameters": risky_parameters
+    #         }
 
-            append_risky_failure_record(failure_record)
-            all_failure_records.append(failure_record)
+    #         append_risky_failure_record(failure_record)
+    #         all_failure_records.append(failure_record)
 
-            processed_failures += 1
+    #         processed_failures += 1
             
-            print(
-                f"Processed failure scenario "
-                f"{processed_failures}/{total_failures}"
-            )
+    #         print(
+    #             f"Processed failure scenario "
+    #             f"{processed_failures}/{total_failures}"
+    #         )
 
     # Step 6: Final CPT-level danger report
     cpt_danger_report = generate_cpt_danger_report(bn_json)
@@ -480,7 +557,7 @@ def run_evaluation(bn_json):
         "results": results,
         "failure_count": len(failures),
         "success_count": len(successes),
-        "risky_failure_records": all_failure_records,
+        # "risky_failure_records": all_failure_records,
         "cpt_danger_report": cpt_danger_report
     }
 
@@ -490,7 +567,7 @@ def store_analysis(bn_number, evaluation_output):
         "bn_number": bn_number,
         "failure_count": evaluation_output["failure_count"],
         "success_count": evaluation_output["success_count"],
-        "risky_failure_records": evaluation_output["risky_failure_records"],
+        # "risky_failure_records": evaluation_output["risky_failure_records"],
         "cpt_danger_report": evaluation_output["cpt_danger_report"],
         "scenario_results": evaluation_output["results"]
     }
@@ -500,6 +577,7 @@ def store_analysis(bn_number, evaluation_output):
 
     print(f"\nNew workflow analysis for BN #{bn_number} stored in bn_analysis.json")
 
+### ------------------------------MAIN--------------------------------------
 if __name__ == "__main__":
     bn_number = 7
 

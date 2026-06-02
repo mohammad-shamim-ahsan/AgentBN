@@ -1,10 +1,11 @@
 import json
 from collections import Counter
 
+from automatic_bn_reasoning import run_evaluation
+
 GT_FILE = "BN_gt.json"
 PROPOSED_FILE = "last_proposed_bn.jsonl"
 OUT_FILE = "cpt_comparison_analysis.json"
-
 
 # -----------------------------
 # FILE READERS
@@ -80,9 +81,12 @@ def column_sums(values):
 
 
 def classify_error(abs_error):
-    if abs_error <= 0.05:
+    close_threshold = 0.05
+    moderate_threshold = 0.15
+
+    if abs_error <= close_threshold:
         return "close"
-    elif abs_error <= 0.20:
+    elif abs_error <= moderate_threshold:
         return "moderate"
     return "severe"
 
@@ -97,16 +101,39 @@ def deterministic_verdict(result):
     if not result["columns_sum_to_one"]:
         return "invalid"
 
-    if result["severe_count"] > 0:
+    total = result.get("num_proposed_parameters", 0)
+
+    if total == 0:
+        return "invalid"
+
+    close_count = result.get("close_count", 0)
+    moderate_count = result.get("moderate_count", 0)
+    severe_count = result.get("severe_count", 0)
+
+    close_weight = 1
+    moderate_weight = 3
+    severe_weight = 6
+
+    impact_score = (
+        close_count * close_weight +
+        moderate_count * moderate_weight +
+        severe_count * severe_weight
+    )
+
+    impact_ratio = impact_score / total
+
+    impact_threshold = 3.0
+
+    if impact_ratio >= impact_threshold:
         return "poor"
 
-    if result["moderate_count"] > 0:
+    if impact_ratio >= impact_threshold/2:
         return "fair"
 
-    if result["mean_abs_error"] is not None and result["mean_abs_error"] <= 0.02:
-        return "excellent"
+    if impact_ratio >= impact_threshold/5:
+        return "good"
 
-    return "good"
+    return "excellent"
 
 
 # -----------------------------
@@ -201,16 +228,41 @@ def build_overall_analysis(results):
         if r.get("verdict") == "poor"
     ]
 
+    fair_nodes = [
+        node for node, r in results.items()
+        if r.get("verdict") == "fair"
+    ]
+
+    good_nodes = [
+        node for node, r in results.items()
+        if r.get("verdict") == "good"
+    ]
+
+    excellent_nodes = [
+        node for node, r in results.items()
+        if r.get("verdict") == "excellent"
+    ]
+
+    node_error_counts = {
+        node: {
+            "verdict": r.get("verdict", "unknown"),
+            "close_count": r.get("close_count", 0),
+            "moderate_count": r.get("moderate_count", 0),
+            "severe_count": r.get("severe_count", 0),
+        }
+        for node, r in results.items()
+    }
+
     if invalid_nodes:
-        overall_verdict = "invalid"
-    elif poor_nodes:
-        overall_verdict = "poor"
-    elif total_moderate > 0:
-        overall_verdict = "fair"
-    elif verdict_counts.get("good", 0) > 0:
-        overall_verdict = "good"
+        overall_verdict = "invalid" # If any node is invalid, the whole BN is invalid
+    elif verdict_counts.get("excellent", 0) == total_nodes:
+        overall_verdict = "excellent" # All nodes are excellent
+    elif verdict_counts.get("poor", 0) == 0 and verdict_counts.get("fair", 0) == 0:
+        overall_verdict = "good" # No poor or fair nodes, but not all excellent
+    elif verdict_counts.get("poor", 0) == 0:
+        overall_verdict = "fair" # No poor nodes, but some fair nodes
     else:
-        overall_verdict = "excellent"
+        overall_verdict = "poor" # At least one poor node
 
     return {
         "overall_verdict": overall_verdict,
@@ -221,7 +273,11 @@ def build_overall_analysis(results):
         "total_severe_parameters": total_severe,
         "node_verdict_counts": dict(verdict_counts),
         "invalid_nodes": invalid_nodes,
-        "poor_nodes": poor_nodes
+        "poor_nodes": poor_nodes,
+        "fair_nodes": fair_nodes,
+        "good_nodes": good_nodes,
+        "excellent_nodes": excellent_nodes,
+        "node_error_counts": node_error_counts
     }
 
 
@@ -268,5 +324,47 @@ def compare_all_cpts(bn_number=None):
 
     return final_output
 
+
+def get_best_bn_number(filename="last_proposed_bn.jsonl"):
+    best_bn_number = None
+    best_bn_accuracy = None
+    best_failure_count = float("inf")
+
+    with open(filename, "r", encoding="utf-8") as f:
+        for line in f:
+            if not line.strip():
+                continue
+
+            try:
+                record = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+
+            bn_number = record.get("bn_number")
+            bn_json = record.get("bn")
+
+            if not bn_json:
+                continue
+
+            failures, successes, accuracy, results = run_evaluation(
+                bn_json
+            )
+
+            failure_count = len(failures)
+
+            if failure_count < best_failure_count:
+                best_failure_count = failure_count
+                best_bn_number = bn_number
+                best_bn_accuracy = accuracy
+
+    return best_bn_number, best_bn_accuracy
+
+### ------------------------------
 if __name__ == "__main__":
-    compare_all_cpts(bn_number=8)
+    best_bn_number, best_bn_accuracy = get_best_bn_number(
+        "last_proposed_bn.jsonl"
+    )
+    print("Best BN Number:", best_bn_number)
+    print("Best BN Accuracy:", best_bn_accuracy)
+
+    compare_all_cpts(bn_number=best_bn_number)

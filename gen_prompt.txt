@@ -7,81 +7,45 @@ The output will be directly parsed into:
 ---------------------------------------------------
 CONTEXT
 ---------------------------------------------------
-The following is the full context including flawed Bayesian Networks and failure reports:
+The following is the full context including flawed Bayesian Networks, along with success and failure reports:
 
 1. Background Context and Flawed Bayesian Networks:
 {full_context}
 
-2. Scenario Dataset:
-{scenario_dataset}
+2. Flawed BN
+{flawed_bn}
+
+2. Success Report:
+{success_report}
 
 3. Failure Report:
 {failure_report}
 
-Use the scenario dataset to understand the original evidence, ground-truth labels, and scenario structure.
-Use the failure-results JSON file to identify only the scenarios where the Bayesian Network prediction failed.
-
-When analyzing failures, cross-reference each failed scenario from flawed_failure_results.json with its corresponding full scenario record in final_validated_dataset.csv.
-
----------------------------------------------------
-HARD CONSTRAINTS (NON-NEGOTIABLE)
----------------------------------------------------
-- DO NOT remove any nodes.
-- DO NOT add any new nodes.
-- DO NOT remove or modify any edges.
-- The graph structure (nodes + edges) is FIXED.
-- You are ONLY allowed to modify CPTs.
-
 ---------------------------------------------------
 TASK
 ---------------------------------------------------
-Recompute and improve the Conditional Probability Tables (CPTs) for ALL nodes in the Bayesian Network while preserving structure.
+Make minimal necessary changes to the Conditional Probability Tables (CPTs) in "flawed_bn".
+Only modify CPT "values" for nodes that are necessary to fix the failure scenarios.
+The failure scenarios MUST be fixed.
+The previous success scenarios MUST be preserved.
 
-You MUST output a COMPLETE Bayesian Network (not a patch).
+The graph structure (nodes + edges) is FIXED.
+Do NOT add/remove/rename nodes.
+Do NOT add/remove/modify edges.
+Do NOT change node states, parent lists, or parent_state_order.
+
+Only CPT values may be changed.
+
+You MUST output a COMPLETE Bayesian Network, not a patch.
 
 ---------------------------------------------------
-PGMPY COMPATIBILITY REQUIREMENTS (CRITICAL)
+CPT VALIDITY RULES
 ---------------------------------------------------
-
-This output MUST be directly usable in pgmpy without modification.
-
-1. CPT FORMAT (TabularCPD RULES)
-- Each CPT must follow pgmpy TabularCPD format.
-- CPT values must be COLUMN-STOCHASTIC:
-  → Each column must sum to 1.0 exactly (within floating tolerance).
-  → DO NOT normalize rows.
-
-2. CPT SHAPE RULE
-- Let:
-    X = target node
-    E = parent nodes
-- Then CPT shape must be:
-    (num_states_of_X, num_parent_configurations)
-
-- Parent configurations must follow lexicographic ordering of parent states.
-
-3. PARENT ORDERING RULE (VERY IMPORTANT)
-- The order of parents in "parents" MUST exactly match:
-  → parent_state_order
-  → CPT column ordering in "values"
-
-- No mismatches allowed.
-
-4. STATE CONSISTENCY RULE
-- The states listed in:
-    - "states"
-    - "parent_state_order"
-    - CPT encoding
-must be identical everywhere.
-
-5. COMPLETENESS RULE
-- Every node must include:
-    - name
-    - states
-    - parents
-    - cpt
-
-- No node can be omitted.
+- Each CPT column must sum to 1.0 (±1e-6 tolerance).
+- All probabilities must be between 0 and 1 inclusive.
+- CPT dimensions must match the number of parent-state combinations exactly.
+- Parent ordering must match parent_state_order exactly.
+- No missing or extra probability values.
 
 ---------------------------------------------------
 OUTPUT FORMAT (STRICT JSON ONLY)
@@ -114,33 +78,3 @@ Return ONLY valid JSON. No explanations. No markdown.
     ["Parent", "Child"]
   ]
 }}
-
----------------------------------------------------
-CPT VALIDATION RULES (MANDATORY INTERNAL CHECK)
----------------------------------------------------
-Before finalizing output, ensure:
-
-- Each CPT column sums to 1.0
-- CPT dimensions match parent combinations exactly
-- Parent ordering matches CPT column ordering
-- No missing or extra probability entries
-- No malformed arrays
-- No inconsistent state labels
-
----------------------------------------------------
-STRICT OUTPUT RULES
----------------------------------------------------
-- DO NOT output explanations
-- DO NOT output commentary
-- DO NOT output partial networks
-- DO NOT output "modified nodes"
-- ONLY output full JSON Bayesian Network
-- MUST be valid JSON parsable by Python json.loads()
-
----------------------------------------------------
-FINAL GOAL
----------------------------------------------------
-Generate a fully valid Bayesian Network that is:
-- structurally identical to input graph
-- probabilistically consistent
-- directly compatible with pgmpy without any manual fixes

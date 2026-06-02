@@ -193,7 +193,7 @@ def find_proposed_bn(bn_number_to_find, filename=proposed_bn_filename):
 df = pd.read_csv("final_validated_dataset.csv")
 df.columns = df.columns.str.strip()
 
-context = read_file("context_eval_agent.txt")
+context = read_file("context_agent.txt")
 base_prompt = read_file("eval_prompt.txt")
 
 def clean_text(text):

@@ -1,36 +1,42 @@
 ---
-
 ## REFINEMENT CONTEXT
 
 You are refining an existing Bayesian Network.
 
-Domain context:
+1. Domain context:
 {full_context}
 
-Validated scenario dataset:
-{scenario_dataset}
-
-Failed scenarios:
-{failure_report}
-
-Previous Bayesian Networks:
+2. Previous Bayesian Networks:
 {previous_bns}
 
-CPT danger report:
+3. Analysis memory:
 {analysis_memory}
 
 ---
 
 ## REFINEMENT OBJECTIVE
 
-Make a few changes in the Bayesian Network so that previously failed scenarios become more likely to be classified correctly while preserving behavior on successful scenarios.
+Use the most recent Bayesian Network in previous_bns as the baseline.
 
-Use the previous Bayesian Network as the baseline.
+Use the analysis memory to identify:
+- failure scenarios
+- success scenarios
+- dangerous CPTs
+- suspicious parameters
 
-Do not redesign the network structure.
+Make minimal necessary changes to CPT "values" only.
 
-Only refine CPT probabilities.
+The failure scenarios MUST be fixed.
+The previous success scenarios MUST be preserved.
 
+Do NOT redesign the network structure.
+Do NOT add/remove/rename nodes.
+Do NOT add/remove/modify edges.
+Do NOT change node states, parent lists, or parent_state_order.
+
+Only CPT values may be changed.
+
+You MUST output a COMPLETE Bayesian Network, not a patch.
 ---
 
 ## REFINEMENT RULES

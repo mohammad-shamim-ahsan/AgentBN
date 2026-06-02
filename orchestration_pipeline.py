@@ -5,7 +5,8 @@ import re
 from bn_generator import generate_bn, store_bn_proposal
 from bn_generator_evaluator import find_proposed_bn, run_evaluation, store_analysis
 from bn_generator_reflexion import generate_refined_bn, store_new_bn
-from bn_validator_old import compare_all_cpts
+from bn_validator import get_best_bn_number, compare_all_cpts
+from bn_generator_evaluator_old import run_evaluation as run_evaluation_final, store_analysis as store_analysis_final
 
 bn_analysis_filename = "bn_analysis.json"
 proposed_bn_filename = "last_proposed_bn.jsonl"
@@ -40,18 +41,14 @@ def read_file(filename):
         return f.read()
 
 # -----------------------------
-def compute_failure_ratio_from_results(results):
-    total = len(results)
+def compute_failure_ratio_from_results(evaluation_output):
+    failed = evaluation_output.get("failure_count", 0)
+    succeeded = evaluation_output.get("success_count", 0)
+
+    total = failed + succeeded
 
     if total == 0:
         return 0.0, 0, 0, 0
-
-    failed = sum(
-        1 for r in results
-        if r["Prediction"] != r["Ground Truth"]
-    )
-
-    succeeded = total - failed
 
     return failed / total, failed, succeeded, total
 
@@ -101,7 +98,7 @@ def keep_only_last_analysis_record(filename):
         print(f"Warning: Could not trim {filename}; invalid JSON format.")
 
 # -----------------------------
-MAX_ITER = 7
+MAX_ITER = 5
 max_records = 3
 MAX_RESTARTS = 0
 
@@ -127,14 +124,15 @@ while restart_count <= MAX_RESTARTS:
     # -----------------------------
     # STEP 1: INITIAL BN
     # -----------------------------
+    
     bn_number = 0
-
-    full_context = read_file("context_gen_agent.txt")
-    scenario_dataset = read_file("final_validated_dataset.csv")
+    full_context = read_file("context_agent.txt")
+    success_report = read_file("flawed_success_results.json")
     failure_report = read_file("flawed_failure_results.json")
     gen_prompt_template_text = read_file("gen_prompt.txt")
+    flawed_bn=read_file("flawed_BN_0.json")
 
-    bn_text = generate_bn(full_context, scenario_dataset, failure_report,gen_prompt_template_text)
+    bn_text = generate_bn(full_context, flawed_bn, success_report, failure_report, gen_prompt_template_text)
 
     bn_json = safe_json_loads(bn_text)
 
@@ -162,16 +160,18 @@ while restart_count <= MAX_RESTARTS:
             proposed_bn_filename
         )
 
-        failure_text, success_text, analysis, results = run_evaluation(
-            prev_bn_json
+        for filename in ["failure_cpt_parameter_risks.jsonl", "dangerous_cpt_report.json"]:
+            if os.path.exists(filename):
+                open(filename, "w").close()
+                print(f"Cleared: {filename}")
+
+        evaluation_output = run_evaluation(
+            prev_bn_json, bn_number=bn_number
         )
 
         store_analysis(
             bn_number,
-            failure_text,
-            success_text,
-            analysis,
-            results
+            evaluation_output
         )
 
         print("\nEvaluation completed. Analysis stored.")
@@ -179,29 +179,24 @@ while restart_count <= MAX_RESTARTS:
         # -----------------------------
         # SUCCESS CONDITION
         # -----------------------------
-        # if not failure_text or not failure_text.strip():
+        if not evaluation_output.get("failure_scenarios_text") or not evaluation_output.get("failure_scenarios_text").strip():
 
-        #     print(
-        #         f"\nNo failure cases found for BN {bn_number}. "
-        #         f"Stopping iterations."
-        #     )
+            print(
+                f"\nNo failure cases found for BN {bn_number}. "
+                f"Stopping iterations."
+            )
 
-        #     solved = True
-        #     break
+            solved = True
+            break
 
         failure_ratio, failed, succeeded, total = compute_failure_ratio_from_results(
-            results
+            evaluation_output
         )
 
         print(
             f"\nFailure ratio: {failure_ratio:.4f} "
             f"({failed}/{total} failed)"
         )
-
-        # if failure_ratio > previous_failure_ratio:
-        #     continue
-
-        # previous_failure_ratio = failure_ratio
         
         if failure_ratio <= FAILURE_RATIO_THRESHOLD:
 
@@ -219,8 +214,6 @@ while restart_count <= MAX_RESTARTS:
         # -----------------------------
         new_bn = generate_refined_bn(
             full_context,
-            scenario_dataset,
-            failure_report,
             bn_number,
             proposed_bn_filename,
             bn_analysis_filename,
@@ -245,6 +238,7 @@ while restart_count <= MAX_RESTARTS:
 
         print(f"\nReflexion completed. BN#{bn_number} stored.")
 
+
     # -----------------------------
     # FINAL CHECK AFTER MAX ITER
     # -----------------------------
@@ -253,16 +247,12 @@ while restart_count <= MAX_RESTARTS:
         proposed_bn_filename
     )
 
-    failure_text, success_text, analysis, results = run_evaluation(
+    failure_text, success_text, analysis, results = run_evaluation_final(
         prev_bn_json
     )
 
-    store_analysis(
-        bn_number,
-        failure_text,
-        success_text,
-        analysis,
-        results
+    store_analysis_final(
+        bn_number, failure_text, success_text, analysis, results
     )
 
     # -----------------------------
@@ -276,23 +266,8 @@ while restart_count <= MAX_RESTARTS:
         bn_analysis_filename
     )
 
-    # -----------------------------
-    # IF STILL FAILING → RESTART
-    # -----------------------------
-    # if failure_text and failure_text.strip():
-
-    #     print(
-    #         "\nFailure cases still remain after "
-    #         f"{MAX_ITER} iterations."
-    #     )
-
-    #     print("\nRestarting pipeline from STEP 1...\n")
-
-    #     restart_count += 1
-    #     continue
-
     failure_ratio, failed, succeeded, total = compute_failure_ratio_from_results(
-        results
+        evaluation_output
     )
 
     print(
@@ -324,5 +299,8 @@ while restart_count <= MAX_RESTARTS:
 # -----------------------------
 # VALIDATION
 # -----------------------------
-compare_all_cpts()
+best_bn_number, best_bn_accuracy = get_best_bn_number(proposed_bn_filename)
+print("Best BN Number:", best_bn_number)
+print("Best BN Accuracy:", best_bn_accuracy)
+compare_all_cpts(bn_number=best_bn_number)
 print("\nPipeline finished.")

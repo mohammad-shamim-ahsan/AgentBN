@@ -109,8 +109,8 @@ def call_bn_inference(model, df):
 
             evidence[col] = str(val).strip()
 
-        print(f"\nRunning inference for Scenario: {row['Scenario #']}")
-        print("Evidence:", evidence)
+        # print(f"\nRunning inference for Scenario: {row['Scenario #']}")
+        # print("Evidence:", evidence)
 
         result = run_inference(
             model,
@@ -141,6 +141,19 @@ def call_bn_inference(model, df):
 
     return results
 
+###
+import json
+
+proposed_bn_filename="last_proposed_bn.jsonl"
+
+def find_proposed_bn(bn_number_to_find, filename=proposed_bn_filename):
+    with open(filename, "r", encoding="utf-8") as f:
+        for line in f:
+            record = json.loads(line)
+            if record["bn_number"] == bn_number_to_find:
+                return record["bn"]
+    return None
+
 # ============================================================
 # Step 5: Run Evaluation
 # ============================================================
@@ -167,28 +180,34 @@ def run_evaluation(bn_json):
     accuracy = len(successes) / len(results_df)
 
     print("\n===================================================")
-    print("RESULTS")
+    # print("RESULTS")
     print("===================================================")
 
-    print(results_df)
+    # print(results_df)
 
     print("\nAccuracy:", round(accuracy * 100, 2), "%")
 
     print("\nFailures:")
+    
     if failures.empty:
         print("No failures!")
-    else:
-        print(failures)
+    # else:
+    #     print(failures)
 
     # ====================================================
     # STORE FAILURES TO JSON
     # ====================================================
-    failures_json = failures.to_dict(orient="records")
+    # failures_json = failures.to_dict(orient="records")
+    # with open("flawed_failure_results.json", "w") as f:
+    #     json.dump(failures_json, f, indent=4)
 
-    with open("flawed_failure_results.json", "w") as f:
-        json.dump(failures_json, f, indent=4)
+    # print("\nFailure results stored in flawed_failure_results.json")
 
-    print("\nFailure results stored in flawed_failure_results.json")
+    # successes_json = successes.to_dict(orient="records")
+    # with open("flawed_success_results.json", "w") as f:
+    #     json.dump(successes_json, f, indent=4)
+
+    # print("\nSuccess results stored in flawed_success_results.json")
 
     return failures, successes, accuracy, results
 
@@ -197,6 +216,13 @@ def run_evaluation(bn_json):
 # ============================================================
 if __name__ == "__main__":
     # bn_json = load_bn("BN_gt.json")
-    bn_json = load_bn("flawed_BN_0.json")
+    # bn_json = load_bn("flawed_BN_0.json")
+
+    bn_json = find_proposed_bn(
+        bn_number_to_find=1,
+        filename=proposed_bn_filename
+    )
+    
     failures, successes, accuracy, results = run_evaluation(bn_json)
+    
     print("\nReasoning Completed.")

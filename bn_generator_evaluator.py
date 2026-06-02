@@ -193,8 +193,8 @@ def find_proposed_bn(bn_number_to_find, filename=proposed_bn_filename):
 df = pd.read_csv("final_validated_dataset.csv")
 df.columns = df.columns.str.strip()
 
-context = read_file("context_eval_agent.txt")
-base_prompt = read_file("eval_prompt.txt")
+context = read_file("context_agent.txt")
+# base_prompt = read_file("eval_prompt.txt")
 
 def clean_text(text):
     return (
@@ -341,6 +341,7 @@ def append_risky_failure_record(record, filename=PARAMETER_RISK_FILE):
 
 def generate_cpt_danger_report(
     bn_json,
+    bn_number=None,
     risk_file=PARAMETER_RISK_FILE
 ):
     risky_records = []
@@ -473,90 +474,102 @@ Candidate risky CPT parameter records:
 
     if parsed is None:
         parsed = {
+            "bn_number": bn_number,
             "dangerous_cpts": [],
             "overall_summary": "Could not parse final LLM report.",
             "raw_response": str(response)
         }
+    else:
+        parsed["bn_number"] = bn_number
 
     with open(CPT_DANGER_REPORT_FILE, "w", encoding="utf-8") as f:
         json.dump(parsed, f, indent=2)
 
     return parsed
 
-def run_evaluation(bn_json):
+def run_evaluation(bn_json, bn_number=None):
     # Step 1: Build BN model
     model = build_model(bn_json)
 
     # Step 2: Run BN inference
     results = call_bn_inference(model, df)
+
     results_df = pd.DataFrame(results)
 
     # Step 3: Split failures and successes
     failures = results_df[results_df["Prediction"] != results_df["Ground Truth"]]
     successes = results_df[results_df["Prediction"] == results_df["Ground Truth"]]
 
+    accuracy = len(successes) / len(results_df) if len(results_df) > 0 else 0
+    print("\n===================================================")
+    print("\nAccuracy:", round(accuracy * 100, 2), "%")
+
     # Step 4: Format successes once
     success_text = format_results_for_llm(successes, df)
 
-    # all_failure_records = []
+    all_failure_records = []
 
-    # total_failures = len(failures)
-    # processed_failures = 0
+    total_failures = len(failures)
+    processed_failures = 0
 
-    # # Step 5: Process one failure scenario at a time
-    # for failure_index, failure_row in failures.iterrows():
-    #     single_failure_df = pd.DataFrame([failure_row])
-    #     failure_scenario_text = format_results_for_llm(single_failure_df, df)
+    # Step 5: Process one failure scenario at a time
+    for failure_index, failure_row in failures.iterrows():
+        single_failure_df = pd.DataFrame([failure_row])
+        failure_scenario_text = format_results_for_llm(single_failure_df, df)
 
-    #     # Step 5.1: Identify CPT parameters involved in this failure
-    #     failure_parameter_analysis = analyze_failure_parameters_with_llm(
-    #         bn_json=bn_json,
-    #         failure_scenario_text=failure_scenario_text
-    #     )
+        # Step 5.1: Identify CPT parameters involved in this failure
+        failure_parameter_analysis = analyze_failure_parameters_with_llm(
+            bn_json=bn_json,
+            failure_scenario_text=failure_scenario_text
+        )
 
-    #     risky_parameters = []
+        risky_parameters = []
 
-    #     # Step 5.2: Check each parameter against success scenarios
-    #     for parameter_record in failure_parameter_analysis.get(
-    #         "identified_cpt_parameters", []
-    #     ):
-    #         checked_parameter = check_parameter_against_successes_with_llm(
-    #             bn_json=bn_json,
-    #             parameter_record=parameter_record,
-    #             success_text=success_text
-    #         )
+        # Step 5.2: Check each parameter against success scenarios
+        for parameter_record in failure_parameter_analysis.get(
+            "identified_cpt_parameters", []
+        ):
+            checked_parameter = check_parameter_against_successes_with_llm(
+                bn_json=bn_json,
+                parameter_record=parameter_record,
+                success_text=success_text
+            )
 
-    #         if checked_parameter.get("should_store_as_risky", False):
-    #             risky_parameters.append(checked_parameter)
+            if checked_parameter.get("should_store_as_risky", False):
+                risky_parameters.append(checked_parameter)
 
-    #     # Step 5.3: Store only if risky parameters exist
-    #     if risky_parameters:
-    #         failure_record = {
-    #             "timestamp": str(datetime.now()),
-    #             "failure_scenario_index": int(failure_index),
-    #             "failure_scenario_text": failure_scenario_text,
-    #             "identified_cpt_parameters": risky_parameters
-    #         }
+        # Step 5.3: Store only if risky parameters exist
+        if risky_parameters:
+            failure_record = {
+                "timestamp": str(datetime.now()),
+                "failure_scenario_index": int(failure_index),
+                "failure_scenario_text": failure_scenario_text,
+                "identified_cpt_parameters": risky_parameters
+            }
 
-    #         append_risky_failure_record(failure_record)
-    #         all_failure_records.append(failure_record)
+            append_risky_failure_record(failure_record)
+            all_failure_records.append(failure_record)
 
-    #         processed_failures += 1
+            processed_failures += 1
             
-    #         print(
-    #             f"Processed failure scenario "
-    #             f"{processed_failures}/{total_failures}"
-    #         )
+            print(
+                f"Processed failure scenario "
+                f"{processed_failures}/{total_failures}"
+            )
 
     # Step 6: Final CPT-level danger report
-    cpt_danger_report = generate_cpt_danger_report(bn_json)
+    cpt_danger_report = generate_cpt_danger_report(bn_json, bn_number=bn_number)
 
     print("\nFinal CPT-level danger report generated.")
 
+    failures_text = format_results_for_llm(failures, df)
+
     return {
-        "results": results,
+        # "results": results,
         "failure_count": len(failures),
         "success_count": len(successes),
+        "failure_scenarios_text": failures_text,
+        "success_scenarios_text": success_text,
         # "risky_failure_records": all_failure_records,
         "cpt_danger_report": cpt_danger_report
     }
@@ -567,9 +580,11 @@ def store_analysis(bn_number, evaluation_output):
         "bn_number": bn_number,
         "failure_count": evaluation_output["failure_count"],
         "success_count": evaluation_output["success_count"],
+        "failure_scenarios_text": evaluation_output["failure_scenarios_text"],
+        "success_scenarios_text": evaluation_output["success_scenarios_text"],
         # "risky_failure_records": evaluation_output["risky_failure_records"],
         "cpt_danger_report": evaluation_output["cpt_danger_report"],
-        "scenario_results": evaluation_output["results"]
+        # "scenario_results": evaluation_output["results"]
     }
 
     with open("bn_analysis.json", "a", encoding="utf-8") as f:
@@ -579,16 +594,15 @@ def store_analysis(bn_number, evaluation_output):
 
 ### ------------------------------MAIN--------------------------------------
 if __name__ == "__main__":
-    bn_number = 7
+    bn_number = 1
 
     bn_json = find_proposed_bn(
         bn_number,
         proposed_bn_filename
     )
 
-    evaluation_output = run_evaluation(bn_json)
-
-    print(json.dumps(evaluation_output["cpt_danger_report"], indent=2))
+    evaluation_output = run_evaluation(bn_json, bn_number=bn_number)
+    # print(json.dumps(evaluation_output["cpt_danger_report"], indent=2))
 
     store_analysis(
         bn_number,

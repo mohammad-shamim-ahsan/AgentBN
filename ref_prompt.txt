@@ -24,7 +24,7 @@ Use the analysis memory to identify:
 - dangerous CPTs
 - suspicious parameters
 
-Make minimal necessary changes to CPT "values" only.
+Make a few changes necessary changes to CPT "values" only.
 
 The failure scenarios MUST be fixed.
 The previous success scenarios MUST be preserved.

@@ -24,7 +24,7 @@ The following is the full context including flawed Bayesian Networks, along with
 ---------------------------------------------------
 TASK
 ---------------------------------------------------
-Make minimal necessary changes to the Conditional Probability Tables (CPTs) in "flawed_bn".
+Make a few necessary changes to the Conditional Probability Tables (CPTs) in "flawed_bn".
 Only modify CPT "values" for nodes that are necessary to fix the failure scenarios.
 The failure scenarios MUST be fixed.
 The previous success scenarios MUST be preserved.

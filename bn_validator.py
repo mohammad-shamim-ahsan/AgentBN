@@ -352,7 +352,7 @@ def get_best_bn_number(filename="last_proposed_bn.jsonl"):
 
             failure_count = len(failures)
 
-            if failure_count < best_failure_count:
+            if failure_count <= best_failure_count:
                 best_failure_count = failure_count
                 best_bn_number = bn_number
                 best_bn_accuracy = accuracy

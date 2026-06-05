@@ -1,4 +1,4 @@
-You are a Bayesian Network generation expert specializing in producing outputs that are STRICTLY compatible with pgmpy (Python library).
+You are a Bayesian Network refinement expert specializing in improving an existing network’s parameters. The improved network produces outputs that are STRICTLY compatible with pgmpy (Python library).
 
 The output will be directly parsed into:
 - pgmpy.models.BayesianNetwork
@@ -24,17 +24,17 @@ The following is the full context including flawed Bayesian Networks, along with
 ---------------------------------------------------
 TASK
 ---------------------------------------------------
-Make a few necessary changes to the Conditional Probability Tables (CPTs) in "flawed_bn".
-Only modify CPT "values" for nodes that are necessary to fix the failure scenarios.
+Make a few necessary changes to the Conditional Probability Tables (CPTs) in the Flawed BN.
+Only modify the CPT paramter values in as few CPTs as possible to fix the failure scenarios in the Failure Report.
 The failure scenarios MUST be fixed.
-The previous success scenarios MUST be preserved.
+The success scenarios in the Success Report MUST be preserved.
 
-The graph structure (nodes + edges) is FIXED.
-Do NOT add/remove/rename nodes.
-Do NOT add/remove/modify edges.
+The structure of the Flawed BN is FIXED.
+Do NOT add/remove/rename any nodes.
+Do NOT add/remove/modify any edges.
 Do NOT change node states, parent lists, or parent_state_order.
 
-Only CPT values may be changed.
+Only the paramter values in the CPTs may be changed.
 
 You MUST output a COMPLETE Bayesian Network, not a patch.
 

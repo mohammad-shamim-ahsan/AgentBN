@@ -1,7 +1,7 @@
 ---
 ## REFINEMENT CONTEXT
 
-You are refining an existing Bayesian Network.
+You are refining an existing Bayesian Network. The following is the full context including previously proposed Bayesian Networks, along with success and failure reports stored in the analysis memory:
 
 1. Domain context:
 {full_context}
@@ -24,17 +24,17 @@ Use the analysis memory to identify:
 - dangerous CPTs
 - suspicious parameters
 
-Make a few changes necessary changes to CPT "values" only.
-
+Make a few necessary changes to the Conditional Probability Tables (CPTs) in the Previous Bayesian Networks.
+Only modify the CPT paramter values in as few CPTs as possible to fix the failure scenarios in the Analysis Memory.
 The failure scenarios MUST be fixed.
-The previous success scenarios MUST be preserved.
+The success scenarios in the the Analysis Memory MUST be preserved.
 
-Do NOT redesign the network structure.
-Do NOT add/remove/rename nodes.
-Do NOT add/remove/modify edges.
+The structure of the Flawed BN is FIXED.
+Do NOT add/remove/rename any nodes.
+Do NOT add/remove/modify any edges.
 Do NOT change node states, parent lists, or parent_state_order.
 
-Only CPT values may be changed.
+Only the paramter values in the CPTs may be changed.
 
 You MUST output a COMPLETE Bayesian Network, not a patch.
 ---

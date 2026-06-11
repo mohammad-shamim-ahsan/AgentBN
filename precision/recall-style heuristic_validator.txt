@@ -1,0 +1,75 @@
+PL Heuristic for Agent-Proposed BN Changes
+
+Let:
+
+E = set of expected flawed CPTs
+C = set of CPTs changed by the agent
+A = set of all compared CPTs
+
+Matched expected CPTs:
+M = C ∩ E
+
+Unexpected changed CPTs:
+U = C − E
+
+Missed expected CPTs:
+X = E − C
+
+Unflawed CPTs:
+F = A − E
+
+Untouched unflawed CPTs:
+T = F − C
+
+Metrics:
+
+expected_change_recall = |M| / |E|
+
+This measures how many expected flawed CPTs were correctly changed.
+
+unexpected_change_rate = |U| / |F|
+
+This measures how many unflawed CPTs were unnecessarily changed.
+
+unflawed_preservation_rate = |T| / |F|
+
+This measures how many unflawed CPTs were preserved.
+
+Verdict Rules:
+
+Excellent:
+- expected_change_recall = 1.0
+- unexpected_change_rate = 0.0
+
+Meaning:
+The agent changed all expected flawed CPTs and did not touch any unflawed CPTs.
+
+Very Good:
+- expected_change_recall = 1.0
+- unflawed_preservation_rate >= 0.80
+- unexpected_change_rate <= 0.20
+
+Meaning:
+The agent changed all expected flawed CPTs and preserved at least 80% of unflawed CPTs.
+
+Good:
+- expected_change_recall > 0
+- unexpected_change_rate <= 0.20
+
+Meaning:
+The agent changed at least one expected flawed CPT and did not make many unnecessary CPT changes.
+
+Fair:
+- expected_change_recall > 0
+- unexpected_change_rate > 0.20
+
+Meaning:
+The agent changed at least one expected flawed CPT, but also changed too many unflawed CPTs.
+
+Poor:
+- expected_change_recall = 0
+OR
+- unexpected_change_rate > 0.50
+
+Meaning:
+The agent failed to change any expected flawed CPT, or changed more than half of the unflawed CPTs.

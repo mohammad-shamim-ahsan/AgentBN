@@ -4,7 +4,7 @@ import json
 
 client = OpenAI(api_key="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")
 
-def llm(prompt, temperature=0.3, max_tokens=4000):
+def llm(prompt, temperature=0.2, max_tokens=4000):
     response = client.responses.create(
         model="gpt-5.4",
         input=prompt,
@@ -24,8 +24,9 @@ def read_file(filename):
         return f.read()
     
 full_context = read_file("context_agent.txt")
-# scenario_dataset = read_file("final_validated_dataset.csv")
-# failure_report = read_file("flawed_failure_results.json")
+flawed_bn = read_file("flawed_BN_0.json")
+original_success_report = read_file("flawed_success_results.json")
+original_failure_report = read_file("flawed_failure_results.json")
 prompt_template_text = read_file("ref_prompt.txt")
 
 ### -----------------------------
@@ -144,20 +145,28 @@ BN #{r['bn_number']}:
 
     return "\n\n---\n\n".join(formatted)
 
-def generate_refined_bn(full_context, last_bn_number=1, proposed_bn_filename=proposed_bn_filename, bn_analysis_filename=bn_analysis_filename, max_records=max_records):
+def generate_refined_bn(
+    full_context,
+    flawed_bn,
+    original_success_report,
+    original_failure_report,
+    last_bn_number=1,
+    proposed_bn_filename=proposed_bn_filename,
+    bn_analysis_filename=bn_analysis_filename,
+    max_records=max_records
+):
     analysis_records = read_analysis_memory(bn_analysis_filename, max_records)
     analysis_memory = format_analysis_memory(analysis_records)
 
-    bn_records = read_bn_memory(
-        proposed_bn_filename,
-        max_records
-    )
-
+    bn_records = read_bn_memory(proposed_bn_filename, max_records)
     previous_bns = format_bn_memory(bn_records)
 
     prompt_gen_template = PromptTemplate(
         input_variables=[
             "full_context",
+            "flawed_bn",
+            "original_success_report",
+            "original_failure_report",
             "previous_bns",
             "analysis_memory"
         ],
@@ -166,6 +175,9 @@ def generate_refined_bn(full_context, last_bn_number=1, proposed_bn_filename=pro
 
     prompt = prompt_gen_template.format(
         full_context=full_context,
+        flawed_bn=flawed_bn,
+        original_success_report=original_success_report,
+        original_failure_report=original_failure_report,
         previous_bns=previous_bns,
         analysis_memory=analysis_memory
     )
@@ -183,10 +195,20 @@ def store_new_bn(bn_number, bn_new):
 
 if __name__ == "__main__":
     last_bn_number = 1
-    bn_new = generate_refined_bn(full_context, last_bn_number, proposed_bn_filename, bn_analysis_filename, max_records)
+
+    bn_new = generate_refined_bn(
+        full_context=full_context,
+        flawed_bn=flawed_bn,
+        original_success_report=original_success_report,
+        original_failure_report=original_failure_report,
+        last_bn_number=last_bn_number,
+        proposed_bn_filename=proposed_bn_filename,
+        bn_analysis_filename=bn_analysis_filename,
+        max_records=max_records
+    )
+
     print(bn_new)
-    
     bn_new = json.loads(bn_new)
     new_bn_number = last_bn_number + 1
-    
+
     store_new_bn(new_bn_number, bn_new)

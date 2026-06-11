@@ -4,108 +4,80 @@
     {
       "cpt": "Root_Causes",
       "risk_level": "high",
-      "number_of_failure_scenarios": 13,
-      "main_problem": "The same parent configuration repeatedly appears in wrong FDI-vs-Memory_Corruption decisions, and multiple target-state probabilities in this CPT appear to bias the final diagnosis toward FDI or away from Memory_Corruption under influential upstream conditions.",
+      "number_of_failure_scenarios": 3,
+      "main_problem": "This CPT recurs in every failed FDI scenario and directly controls the final class decision, with repeated evidence that FDI is underweighted while Memory_Corruption is favored under the same parent settings.",
       "suspicious_parameters": [
         {
           "rank": 1,
-          "parameter": "P(Root_Causes=FDI | Network_Manipulation=Yes, Execution_Integrity=Compromised, Physical_Anomaly=No) = 0.65",
-          "failure_count": 9,
-          "success_count": 3,
+          "parameter": "P(Root_Causes=FDI | Network_Manipulation=Yes, Execution_Integrity=Compromised, Physical_Anomaly=No) = 0.30",
+          "failure_count": 3,
+          "success_count": 0,
+          "failure_to_success_ratio": 3.0,
+          "error_severity": "high",
+          "recommended_adjustment": "increase",
+          "justification": "This parameter appears in all three failed FDI cases and is consistently too weak relative to the competing Memory_Corruption mass under the same parent pattern."
+        },
+        {
+          "rank": 2,
+          "parameter": "P(Root_Causes=Memory_Corruption | Network_Manipulation=Yes, Execution_Integrity=Compromised, Physical_Anomaly=No) = 0.58",
+          "failure_count": 3,
+          "success_count": 0,
           "failure_to_success_ratio": 3.0,
           "error_severity": "high",
           "recommended_adjustment": "decrease",
-          "justification": "This parameter recurs across many wrong Memory_Corruption\u2192FDI cases and directly controls the final class decision. Success support exists but is limited to a small minority of scenarios."
-        },
-        {
-          "rank": 2,
-          "parameter": "P(Root_Causes=Memory_Corruption | Network_Manipulation=Yes, Execution_Integrity=Compromised, Physical_Anomaly=No) = 0.25",
-          "failure_count": 11,
-          "success_count": 3,
-          "failure_to_success_ratio": 3.67,
-          "error_severity": "high",
-          "recommended_adjustment": "increase",
-          "justification": "The same row repeatedly under-supports the true Memory_Corruption class in failed scenarios. It is failure-dominant and sits at the final diagnosis node, so its influence is strong."
-        }
-      ]
-    },
-    {
-      "cpt": "Network_Manipulation",
-      "risk_level": "high",
-      "number_of_failure_scenarios": 12,
-      "main_problem": "Mixed or fully positive GPTN network evidence repeatedly drives Network_Manipulation toward Yes, which then propagates into the risky Root_Causes row and contributes to false FDI predictions.",
-      "suspicious_parameters": [
-        {
-          "rank": 1,
-          "parameter": "P(Network_Manipulation=Yes | GPTN_1=Found, GPTN_2=Not_Found) = 0.85",
-          "failure_count": 5,
-          "success_count": 9,
-          "failure_to_success_ratio": 0.56,
-          "error_severity": "medium",
-          "recommended_adjustment": "slightly_decrease",
-          "justification": "This row appears repeatedly in failed Memory_Corruption\u2192FDI cases and plausibly over-activates network attack evidence. Success usage is substantial, so only a cautious reduction is supported."
-        },
-        {
-          "rank": 2,
-          "parameter": "P(Network_Manipulation=Yes | GPTN_1=Not_Found, GPTN_2=Found) = 0.85",
-          "failure_count": 5,
-          "success_count": 9,
-          "failure_to_success_ratio": 0.56,
-          "error_severity": "medium",
-          "recommended_adjustment": "slightly_decrease",
-          "justification": "This symmetric mixed-evidence row also recurs in wrong FDI predictions and likely pushes the model too easily toward attack interpretation. It is not strongly protected because most successes rely on other network rows."
+          "justification": "This parameter repeatedly dominates the failed scenarios and plausibly drives the wrong Memory_Corruption prediction instead of FDI."
         },
         {
           "rank": 3,
-          "parameter": "P(Network_Manipulation=Yes | GPTN_1=Found, GPTN_2=Found) = 0.95",
-          "failure_count": 4,
-          "success_count": 10,
-          "failure_to_success_ratio": 0.4,
+          "parameter": "P(Root_Causes=FDI | Network_Manipulation=Yes, Execution_Integrity=Normal, Physical_Anomaly=No) = 0.18",
+          "failure_count": 2,
+          "success_count": 0,
+          "failure_to_success_ratio": 2.0,
+          "error_severity": "medium",
+          "recommended_adjustment": "slightly_increase",
+          "justification": "This weaker FDI branch recurs across failed cases and may further suppress FDI when execution evidence is not strongly compromised."
+        },
+        {
+          "rank": 4,
+          "parameter": "P(Root_Causes=Memory_Corruption | Network_Manipulation=Yes, Execution_Integrity=Normal, Physical_Anomaly=No) = 0.64",
+          "failure_count": 2,
+          "success_count": 0,
+          "failure_to_success_ratio": 2.0,
           "error_severity": "medium",
           "recommended_adjustment": "slightly_decrease",
-          "justification": "This high-probability row is repeatedly present in failures and strongly feeds the downstream FDI-favoring path. However, it also appears in several successes, so evidence supports only a mild adjustment."
+          "justification": "This row also favors Memory_Corruption too strongly in failed FDI settings and likely reinforces the same misclassification tendency."
         }
       ]
     },
     {
       "cpt": "Execution_Integrity",
       "risk_level": "high",
-      "number_of_failure_scenarios": 11,
-      "main_problem": "Several Compromised rows recur across failures and can amplify cyber-side evidence into the final diagnosis, reinforcing the attack pathway even when the true class is Memory_Corruption.",
+      "number_of_failure_scenarios": 3,
+      "main_problem": "This CPT repeatedly appears upstream of the final error and may insufficiently convert combined anomaly/deviation evidence into Compromised execution, allowing downstream Root_Causes rows that favor Memory_Corruption.",
       "suspicious_parameters": [
         {
           "rank": 1,
-          "parameter": "P(Execution_Integrity=Compromised | Program_Anomaly=Yes, Deviation_in_Response=No, Deviation_in_Dispatch=No) = 0.88",
-          "failure_count": 6,
+          "parameter": "P(Execution_Integrity=Normal | Program_Anomaly=No, Deviation_in_Response=No, Deviation_in_Dispatch=No) = 0.40",
+          "failure_count": 3,
           "success_count": 0,
-          "failure_to_success_ratio": 6.0,
+          "failure_to_success_ratio": 3.0,
           "error_severity": "high",
           "recommended_adjustment": "decrease",
-          "justification": "This row is repeatedly failure-only in the candidate set and strongly elevates compromise despite both deviation aggregates being absent. That makes it a strong upstream contributor to the wrong final class."
+          "justification": "This Normal probability is repeatedly implicated in failed scenarios and can preserve a non-compromised path that weakens FDI support downstream."
         },
         {
           "rank": 2,
-          "parameter": "P(Execution_Integrity=Compromised | Program_Anomaly=Yes, Deviation_in_Response=Yes, Deviation_in_Dispatch=No) = 0.88",
-          "failure_count": 5,
+          "parameter": "P(Execution_Integrity=Compromised | Program_Anomaly=No, Deviation_in_Response=No, Deviation_in_Dispatch=No) = 0.60",
+          "failure_count": 2,
           "success_count": 0,
-          "failure_to_success_ratio": 5.0,
-          "error_severity": "high",
-          "recommended_adjustment": "slightly_decrease",
-          "justification": "This row recurs across several failed scenarios and continues to strongly favor compromise when only one deviation aggregate is active. It likely helps sustain the downstream FDI-favoring Root_Causes pattern."
-        },
-        {
-          "rank": 3,
-          "parameter": "P(Execution_Integrity=Compromised | Program_Anomaly=Yes, Deviation_in_Response=No, Deviation_in_Dispatch=Yes) = 0.88",
-          "failure_count": 4,
-          "success_count": 0,
-          "failure_to_success_ratio": 4.0,
-          "error_severity": "high",
-          "recommended_adjustment": "slightly_decrease",
-          "justification": "This row is also failure-dominant and repeatedly appears in wrong Memory_Corruption\u2192FDI cases. It likely over-propagates partial anomaly evidence into a strong compromise belief."
+          "failure_to_success_ratio": 2.0,
+          "error_severity": "medium",
+          "recommended_adjustment": "slightly_increase",
+          "justification": "This row is repeatedly involved in the failed cases and may still be too weak or unstable given the downstream FDI decision boundary."
         }
       ]
     }
   ],
-  "overall_summary": "High-risk evidence is concentrated in Root_Causes, Network_Manipulation, and Execution_Integrity. The strongest pattern is a repeated pathway where network evidence and compromise evidence activate Root_Causes(Network_Manipulation=Yes, Execution_Integrity=Compromised, Physical_Anomaly=No), causing FDI to be over-preferred over Memory_Corruption.",
+  "overall_summary": "High-risk evidence is strongest for Root_Causes and secondarily Execution_Integrity. Root_Causes is the clearest failure-dominant CPT because the same rows recur across all failed FDI scenarios and directly bias the final prediction toward Memory_Corruption.",
   "bn_number": 2
 }

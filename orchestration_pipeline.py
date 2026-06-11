@@ -1,6 +1,7 @@
 import os
 import json
 import re
+import copy
 
 from bn_generator import generate_bn, store_bn_proposal
 from bn_generator_evaluator import find_proposed_bn, run_evaluation, store_analysis
@@ -118,6 +119,8 @@ while restart_count <= MAX_RESTARTS:
     full_context = read_file("context_agent.txt")
     success_report = read_file("flawed_success_results.json")
     failure_report = read_file("flawed_failure_results.json")
+    original_success_report = read_file("flawed_success_results.json")
+    original_failure_report = read_file("flawed_failure_results.json")
     gen_prompt_template_text = read_file("gen_prompt.txt")
     flawed_bn=read_file("flawed_BN_0.json")
 
@@ -138,12 +141,19 @@ while restart_count <= MAX_RESTARTS:
     MAX_NO_IMPROVEMENT_RETRIES = 3
     no_improvement_retry = 0
 
+    best_retry_bn = None
+    best_retry_accuracy = float("-inf")
+
     # -----------------------------
     # STEP 2 & 3: ITERATIONS
     # -----------------------------
     while i <= MAX_ITER:
 
         print(f"\n===== ITERATION {i+1} =====")
+
+        if no_improvement_retry == 0:
+            best_retry_bn = None
+            best_retry_accuracy = float("-inf")
 
         if i == MAX_ITER: # no need to reflex if it's the last iteration
             
@@ -159,13 +169,33 @@ while restart_count <= MAX_RESTARTS:
                 prev_bn_json
             )
 
+            # Track best BN seen during retry cycle
+            if accuracy > best_retry_accuracy:
+                best_retry_accuracy = accuracy
+                best_retry_bn = copy.deepcopy(prev_bn_json)
+
             if accuracy <= previous_accuracy:
 
                 if no_improvement_retry >= MAX_NO_IMPROVEMENT_RETRIES:
                     print(
                         f"\nNo improvement after {MAX_NO_IMPROVEMENT_RETRIES} retries. "
-                        "Stopping this restart."
+                        f"Using best retry candidate "
+                        f"(accuracy={best_retry_accuracy:.2f}%)."
                     )
+
+                    remove_bn(
+                        bn_number,
+                        proposed_bn_filename
+                    )
+
+                    store_new_bn(
+                        bn_number,
+                        best_retry_bn
+                    )
+
+                    previous_accuracy = best_retry_accuracy
+                    no_improvement_retry = 0
+
                     break
                 
                 # Remove the unimproved BN before refinement so it is not included in previous_bns memory. 
@@ -174,6 +204,9 @@ while restart_count <= MAX_RESTARTS:
 
                 new_bn = generate_refined_bn(
                     full_context,
+                    flawed_bn,
+                    original_success_report,
+                    original_failure_report,
                     bn_number,
                     proposed_bn_filename,
                     bn_analysis_filename,
@@ -222,6 +255,11 @@ while restart_count <= MAX_RESTARTS:
             prev_bn_json
         )
 
+        # Track best BN seen during retry cycle
+        if accuracy > best_retry_accuracy:
+            best_retry_accuracy = accuracy
+            best_retry_bn = copy.deepcopy(prev_bn_json)
+
         ### ------------------------------
         # Check if accuracy has improved
         ### ------------------------------
@@ -233,6 +271,9 @@ while restart_count <= MAX_RESTARTS:
 
             new_bn = generate_refined_bn(
                 full_context,
+                flawed_bn,
+                original_success_report,
+                original_failure_report,
                 bn_number,
                 proposed_bn_filename,
                 bn_analysis_filename,
@@ -257,19 +298,34 @@ while restart_count <= MAX_RESTARTS:
 
             print(f"\nNo improvement, skip analysis and reflexion for this iteration BN#{bn_number} stored. New BN generated without analysis.")
 
-            continue
-        
+            continue   
         
         else:
 
             if accuracy <= previous_accuracy:
                 print(
                     f"\nNo improvement after {MAX_NO_IMPROVEMENT_RETRIES} retries. "
-                    "Proceeding with current BN to avoid infinite loop."
+                    f"Selecting best retry candidate "
+                    f"(accuracy={best_retry_accuracy:.2f}%)."
                 )
+
+                # Restore best BN found during retry cycle
+                remove_bn(bn_number, proposed_bn_filename)
+
+                store_new_bn(
+                    bn_number,
+                    best_retry_bn
+                )
+
+                prev_bn_json = best_retry_bn
+                accuracy = best_retry_accuracy
 
             previous_accuracy = accuracy
             no_improvement_retry = 0
+
+            # Reset tracker for next iteration
+            best_retry_bn = None
+            best_retry_accuracy = float("-inf")
 
             for filename in ["failure_cpt_parameter_risks.jsonl", "dangerous_cpt_report.json"]:
                 if os.path.exists(filename):
@@ -320,6 +376,9 @@ while restart_count <= MAX_RESTARTS:
             # -----------------------------
             new_bn = generate_refined_bn(
                 full_context,
+                flawed_bn,
+                original_success_report,
+                original_failure_report,
                 bn_number,
                 proposed_bn_filename,
                 bn_analysis_filename,
@@ -360,5 +419,6 @@ best_bn_number, best_bn_accuracy = get_best_bn_number(proposed_bn_filename)
 print("\n\nBest BN Number:", best_bn_number)
 print("Best BN Accuracy:", best_bn_accuracy)
 
-compare_all_cpts(bn_number=best_bn_number)
+final_output = compare_all_cpts(bn_number=best_bn_number)
+print(final_output)
 print("\nPipeline finished.")

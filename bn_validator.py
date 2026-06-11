@@ -49,282 +49,6 @@ def normalize_bn(bn_obj):
     return bn_obj
 
 
-# -----------------------------
-# CPT HELPERS
-# -----------------------------
-def is_evidence_node(node_name):
-    return node_name.startswith("GPTN_") or node_name.startswith("LPTN_")
-
-
-def flatten(values):
-    return [x for row in values for x in row]
-
-
-def same_shape(a, b):
-    return (
-        len(a) == len(b)
-        and all(len(row_a) == len(row_b) for row_a, row_b in zip(a, b))
-    )
-
-
-def column_sums(values):
-    if not values:
-        return []
-
-    rows = len(values)
-    cols = len(values[0])
-
-    return [
-        round(sum(values[r][c] for r in range(rows)), 6)
-        for c in range(cols)
-    ]
-
-
-def classify_error(abs_error):
-    close_threshold = 0.05
-    moderate_threshold = 0.15
-
-    if abs_error <= close_threshold:
-        return "close"
-    elif abs_error <= moderate_threshold:
-        return "moderate"
-    return "severe"
-
-
-def deterministic_verdict(result):
-    if not result["same_cpt_shape"]:
-        return "invalid"
-
-    if not result["valid_probability_range"]:
-        return "invalid"
-
-    if not result["columns_sum_to_one"]:
-        return "invalid"
-
-    total = result.get("num_proposed_parameters", 0)
-
-    if total == 0:
-        return "invalid"
-
-    close_count = result.get("close_count", 0)
-    moderate_count = result.get("moderate_count", 0)
-    severe_count = result.get("severe_count", 0)
-
-    close_weight = 1
-    moderate_weight = 3
-    severe_weight = 6
-
-    impact_score = (
-        close_count * close_weight +
-        moderate_count * moderate_weight +
-        severe_count * severe_weight
-    )
-
-    impact_ratio = impact_score / total
-
-    impact_threshold = 3.0
-
-    if impact_ratio >= impact_threshold:
-        return "poor"
-
-    if impact_ratio >= impact_threshold/2:
-        return "fair"
-
-    if impact_ratio >= impact_threshold/5:
-        return "good"
-
-    return "excellent"
-
-
-# -----------------------------
-# CPT COMPARISON
-# -----------------------------
-def compare_cpt_only(gt_node, proposed_node):
-    gt_values = gt_node["cpt"]["values"]
-    proposed_values = proposed_node["cpt"]["values"]
-
-    shape_ok = same_shape(gt_values, proposed_values)
-
-    gt_flat = flatten(gt_values)
-    proposed_flat = flatten(proposed_values)
-
-    diffs = []
-
-    if shape_ok:
-        pairs = zip(gt_flat, proposed_flat)
-    else:
-        pairs = zip(gt_flat[:min(len(gt_flat), len(proposed_flat))],
-                    proposed_flat[:min(len(gt_flat), len(proposed_flat))])
-
-    for i, (g, p) in enumerate(pairs):
-        abs_error = abs(g - p)
-        signed_error = p - g
-
-        diffs.append({
-            "parameter_index": i,
-            "ground_truth_value": round(g, 6),
-            "proposed_value": round(p, 6),
-            "absolute_error": round(abs_error, 6),
-            "signed_error": round(signed_error, 6),
-            "severity": classify_error(abs_error)
-        })
-
-    valid_probability_range = all(0 <= x <= 1 for x in proposed_flat)
-
-    proposed_sums = column_sums(proposed_values)
-
-    columns_sum_to_one = all(
-        abs(s - 1.0) <= 1e-6 for s in proposed_sums
-    )
-
-    result = {
-        "same_cpt_shape": shape_ok,
-        "num_ground_truth_parameters": len(gt_flat),
-        "num_proposed_parameters": len(proposed_flat),
-        "valid_probability_range": valid_probability_range,
-        "proposed_column_sums": proposed_sums,
-        "columns_sum_to_one": columns_sum_to_one,
-        "max_abs_error": round(max((d["absolute_error"] for d in diffs), default=0), 6),
-        "mean_abs_error": round(
-            sum(d["absolute_error"] for d in diffs) / len(diffs), 6
-        ) if diffs else None,
-        "close_count": sum(d["severity"] == "close" for d in diffs),
-        "moderate_count": sum(d["severity"] == "moderate" for d in diffs),
-        "severe_count": sum(d["severity"] == "severe" for d in diffs),
-        "parameter_differences": diffs
-    }
-
-    result["verdict"] = deterministic_verdict(result)
-
-    return result
-
-
-# -----------------------------
-# OVERALL SUMMARY
-# -----------------------------
-def build_overall_analysis(results):
-    verdict_counts = Counter(
-        r.get("verdict", "invalid")
-        for r in results.values()
-    )
-
-    total_nodes = len(results)
-    total_parameters = sum(
-        r.get("num_proposed_parameters", 0)
-        for r in results.values()
-    )
-
-    total_severe = sum(r.get("severe_count", 0) for r in results.values())
-    total_moderate = sum(r.get("moderate_count", 0) for r in results.values())
-    total_close = sum(r.get("close_count", 0) for r in results.values())
-
-    invalid_nodes = [
-        node for node, r in results.items()
-        if r.get("verdict") == "invalid"
-    ]
-
-    poor_nodes = [
-        node for node, r in results.items()
-        if r.get("verdict") == "poor"
-    ]
-
-    fair_nodes = [
-        node for node, r in results.items()
-        if r.get("verdict") == "fair"
-    ]
-
-    good_nodes = [
-        node for node, r in results.items()
-        if r.get("verdict") == "good"
-    ]
-
-    excellent_nodes = [
-        node for node, r in results.items()
-        if r.get("verdict") == "excellent"
-    ]
-
-    node_error_counts = {
-        node: {
-            "verdict": r.get("verdict", "unknown"),
-            "close_count": r.get("close_count", 0),
-            "moderate_count": r.get("moderate_count", 0),
-            "severe_count": r.get("severe_count", 0),
-        }
-        for node, r in results.items()
-    }
-
-    if invalid_nodes:
-        overall_verdict = "invalid" # If any node is invalid, the whole BN is invalid
-    elif verdict_counts.get("excellent", 0) == total_nodes:
-        overall_verdict = "excellent" # All nodes are excellent
-    elif verdict_counts.get("poor", 0) == 0 and verdict_counts.get("fair", 0) == 0:
-        overall_verdict = "good" # No poor or fair nodes, but not all excellent
-    elif verdict_counts.get("poor", 0) == 0:
-        overall_verdict = "fair" # No poor nodes, but some fair nodes
-    else:
-        overall_verdict = "poor" # At least one poor node
-
-    return {
-        "overall_verdict": overall_verdict,
-        "total_compared_nodes": total_nodes,
-        "total_compared_parameters": total_parameters,
-        "total_close_parameters": total_close,
-        "total_moderate_parameters": total_moderate,
-        "total_severe_parameters": total_severe,
-        "node_verdict_counts": dict(verdict_counts),
-        "invalid_nodes": invalid_nodes,
-        "poor_nodes": poor_nodes,
-        "fair_nodes": fair_nodes,
-        "good_nodes": good_nodes,
-        "excellent_nodes": excellent_nodes,
-        "node_error_counts": node_error_counts
-    }
-
-
-# -----------------------------
-# MAIN COMPARISON
-# -----------------------------
-def compare_all_cpts(bn_number=None):
-    gt_bn = normalize_bn(read_json(GT_FILE))
-    proposed_bn = normalize_bn(get_bn(PROPOSED_FILE, bn_number=bn_number))
-
-    results = {}
-
-    for node_name in sorted(gt_bn.keys()):
-        if is_evidence_node(node_name):
-            continue
-
-        if node_name not in proposed_bn:
-            results[node_name] = {
-                "node": node_name,
-                "status": "missing_in_proposed",
-                "same_cpt_shape": False,
-                "valid_probability_range": False,
-                "columns_sum_to_one": False,
-                "verdict": "invalid"
-            }
-            continue
-
-        comparison = compare_cpt_only(gt_bn[node_name], proposed_bn[node_name])
-        comparison["node"] = node_name
-        results[node_name] = comparison
-
-    final_output = {
-        "bn_number": bn_number,
-        "excluded_nodes": "Nodes starting with GPTN_ or LPTN_",
-        "node_level_cpt_analysis": results,
-        "overall_cpt_analysis": build_overall_analysis(results)
-    }
-
-    with open(OUT_FILE, "w", encoding="utf-8") as f:
-        json.dump(final_output, f, indent=2)
-
-    print(f"Saved deterministic CPT comparison to {OUT_FILE}")
-    print("Overall verdict:", final_output["overall_cpt_analysis"]["overall_verdict"])
-
-    return final_output
-
-
 def get_best_bn_number(filename="last_proposed_bn.jsonl"):
     best_bn_number = None
     best_bn_accuracy = None
@@ -359,6 +83,161 @@ def get_best_bn_number(filename="last_proposed_bn.jsonl"):
 
     return best_bn_number, best_bn_accuracy
 
+
+# -----------------------------
+# MAIN COMPARISON
+# -----------------------------
+def cpt_values_identical(gt_node, proposed_node, tol=1e-9):
+    gt_values = gt_node.get("cpt", {}).get("values")
+    proposed_values = proposed_node.get("cpt", {}).get("values")
+
+    if gt_values is None or proposed_values is None:
+        return False
+
+    if len(gt_values) != len(proposed_values):
+        return False
+
+    for gt_row, proposed_row in zip(gt_values, proposed_values):
+        if len(gt_row) != len(proposed_row):
+            return False
+
+        for g, p in zip(gt_row, proposed_row):
+            if abs(g - p) > tol:
+                return False
+
+    return True
+
+
+def evaluate_agent_cpt_change_policy(
+    all_cpts,
+    expected_changed_cpts,
+    actual_changed_cpts
+):
+    all_cpts = set(all_cpts)
+    expected_changed_cpts = set(expected_changed_cpts)
+    actual_changed_cpts = set(actual_changed_cpts)
+
+    matched_expected = actual_changed_cpts & expected_changed_cpts
+    unexpected_changed = actual_changed_cpts - expected_changed_cpts
+    missed_expected = expected_changed_cpts - actual_changed_cpts
+
+    unflawed_cpts = all_cpts - expected_changed_cpts
+    untouched_unflawed = unflawed_cpts - actual_changed_cpts
+
+    expected_change_recall = (
+        len(matched_expected) / len(expected_changed_cpts)
+        if expected_changed_cpts else 1.0
+    )
+
+    unexpected_change_rate = (
+        len(unexpected_changed) / len(unflawed_cpts)
+        if unflawed_cpts else 0.0
+    )
+
+    unflawed_preservation_rate = (
+        len(untouched_unflawed) / len(unflawed_cpts)
+        if unflawed_cpts else 1.0
+    )
+
+    if expected_change_recall == 1.0 and unexpected_change_rate == 0.0:
+        verdict = "excellent"
+
+    elif (
+        expected_change_recall == 1.0
+        and unflawed_preservation_rate >= 0.80
+        and unexpected_change_rate <= 0.20
+    ):
+        verdict = "very_good"
+
+    elif expected_change_recall > 0 and unexpected_change_rate <= 0.20:
+        verdict = "good"
+
+    elif expected_change_recall > 0 and unexpected_change_rate <= 0.50:
+        verdict = "fair"
+
+    else:
+        verdict = "poor"
+
+    return {
+        "verdict": verdict,
+
+        "total_cpts": len(all_cpts),
+
+        "expected_changed_count": len(expected_changed_cpts),
+        "expected_changed_cpts": sorted(expected_changed_cpts),
+
+        "actual_changed_count": len(actual_changed_cpts),
+        "actual_changed_cpts": sorted(actual_changed_cpts),
+
+        "matched_expected_count": len(matched_expected),
+        "matched_expected_cpts": sorted(matched_expected),
+
+        "missed_expected_count": len(missed_expected),
+        "missed_expected_cpts": sorted(missed_expected),
+
+        "unexpected_changed_count": len(unexpected_changed),
+        "unexpected_changed_cpts": sorted(unexpected_changed),
+
+        "unflawed_cpt_count": len(unflawed_cpts),
+        "untouched_unflawed_count": len(untouched_unflawed),
+        "untouched_unflawed_cpts": sorted(untouched_unflawed),
+
+        "expected_change_recall": round(expected_change_recall, 4),
+        "unexpected_change_rate": round(unexpected_change_rate, 4),
+        "unflawed_preservation_rate": round(unflawed_preservation_rate, 4),
+    }
+
+
+def compare_all_cpts(bn_number=None):
+    gt_bn = normalize_bn(read_json(GT_FILE))
+    proposed_bn = normalize_bn(get_bn(PROPOSED_FILE, bn_number=bn_number))
+
+    EXPECTED_CHANGED_CPTS = {
+        "Execution_Integrity",
+        "Root_Causes"
+    }
+
+    non_identical_cpts = []
+    missing_in_proposed = []
+
+    for node_name in sorted(gt_bn.keys()):
+        if node_name not in proposed_bn:
+            missing_in_proposed.append(node_name)
+            continue
+
+        if not cpt_values_identical(gt_bn[node_name], proposed_bn[node_name]):
+            non_identical_cpts.append(node_name)
+
+    agent_change_report = evaluate_agent_cpt_change_policy(
+        all_cpts=set(gt_bn.keys()),
+        expected_changed_cpts=EXPECTED_CHANGED_CPTS,
+        actual_changed_cpts=set(non_identical_cpts)
+    )
+
+    final_output = {
+        "bn_number": bn_number,
+
+        "non_identical_cpt_count": len(non_identical_cpts),
+        "non_identical_cpts": sorted(non_identical_cpts),
+
+        "missing_in_proposed": sorted(missing_in_proposed),
+
+        "agent_change_report": agent_change_report
+    }
+
+    with open(OUT_FILE, "w", encoding="utf-8") as f:
+        json.dump(final_output, f, indent=2)
+
+    print(f"Saved CPT identity comparison to {OUT_FILE}")
+    print("BN number:", bn_number)
+    print("Agent change verdict:", agent_change_report["verdict"])
+    print("Expected changed CPTs:", agent_change_report["expected_changed_cpts"])
+    print("Actual changed CPTs:", agent_change_report["actual_changed_cpts"])
+    print("Unexpected changed CPTs:", agent_change_report["unexpected_changed_cpts"])
+
+    return final_output
+
+
 ### ------------------------------
 if __name__ == "__main__":
     best_bn_number, best_bn_accuracy = get_best_bn_number(
@@ -367,4 +246,5 @@ if __name__ == "__main__":
     print("Best BN Number:", best_bn_number)
     print("Best BN Accuracy:", best_bn_accuracy)
 
-    compare_all_cpts(bn_number=best_bn_number)
+    final_output = compare_all_cpts(bn_number=best_bn_number)
+    print(final_output)

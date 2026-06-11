@@ -1,102 +1,64 @@
 ---
 ## REFINEMENT CONTEXT
 
-You are refining an existing Bayesian Network. The following is the full context including previously proposed Bayesian Networks, along with success and failure reports stored in the analysis memory:
+You are refining an existing Bayesian Network (BN). The following is the full context including previously proposed Bayesian Networks and the originally flawed BN, along with success and failure reports stored in the analysis memory:
 
 1. Domain context:
 {full_context}
 
-2. Previous Bayesian Networks:
+2. Original flawed BN:
+{flawed_bn}
+
+3. Original flawed BN success report:
+{original_success_report}
+
+4. Original flawed BN failure report:
+{original_failure_report}
+
+5. Previous Bayesian Networks:
 {previous_bns}
 
-3. Analysis memory:
+6. Analysis memory:
 {analysis_memory}
 
 ---
-
 ## REFINEMENT OBJECTIVE
 
-Use the most recent Bayesian Network in previous_bns as the baseline.
+Identify the Bayesian Network with the lowest failure count in the Analysis Memory and use it as the baseline for refinement.
 
-Use the analysis memory to identify:
-- failure scenarios
-- success scenarios
-- dangerous CPTs
-- suspicious parameters
+Other BNs and the original flawed BN are provided only as historical context.
 
-Make a few necessary changes to the Conditional Probability Tables (CPTs) in the Previous Bayesian Networks.
-Only modify the CPT paramter values in as few CPTs as possible to fix the failure scenarios in the Analysis Memory.
-The failure scenarios MUST be fixed.
-The success scenarios in the the Analysis Memory MUST be preserved.
+Do NOT use the flawed BN as the baseline.
+Do NOT revert CPT values toward the flawed BN.
 
-The structure of the Flawed BN is FIXED.
-Do NOT add/remove/rename any nodes.
-Do NOT add/remove/modify any edges.
-Do NOT change node states, parent lists, or parent_state_order.
+Make minimal necessary changes to the CPTs in the baseline BN.
 
-Only the paramter values in the CPTs may be changed.
+Only modify CPT parameter values in as few CPTs as possible.
 
-You MUST output a COMPLETE Bayesian Network, not a patch.
+The failure scenarios in the Analysis Memory MUST be fixed.
+The success scenarios in the Analysis Memory MUST be preserved.
+
+The graph structure, nodes, edges, states, parent lists, and parent_state_order are FIXED.
+
+Use the Analysis Memory to identify:
+- failure scenarios that must be corrected,
+- success scenarios that must be preserved,
+- dangerous CPTs that may be contributing to failures,
+- suspicious parameters that should be prioritized for modification.
+
+Dangerous CPTs and suspicious parameters are guidance only.
+Failure and success scenarios are the primary optimization targets.
+
 ---
+## CPT VALIDITY REQUIREMENTS
 
-## REFINEMENT RULES
-
-1. START FROM THE PREVIOUS CPTS
-* Use the CPT values from {previous_bns} as the starting point.
-* Apply incremental modifications.
-* Do not rebuild CPTs from scratch.
-
-2. FOLLOW THE CPT DANGER REPORT
-
-For each reported dangerous CPT:
-* Treat it as a priority target.
-* Focus on the suspicious parameters listed for that CPT.
-* Apply the recommended adjustment direction:
-  * increase
-  * decrease
-  * slightly_increase
-  * slightly_decrease
-
-Do not modify parameters that are not reported unless required for normalization.
-
-3. PRIORITIZE BY RISK
-
-Apply modifications in this order:
-1. High-risk CPTs
-2. Medium-risk CPTs
-
-Within a CPT:
-1. Rank 1 suspicious parameter
-2. Rank 2 suspicious parameter
-3. Lower-ranked parameters
-
-Higher-ranked parameters should receive stronger adjustments.
-
-4. USE FAILURE EVIDENCE
-
-For each suspicious parameter:
-* Use its failure_count
-* Use its success_count
-* Use its failure_to_success_ratio
-* Use its justification
-
-Repeated failures are stronger evidence than isolated failures.
-
-5. PRESERVE SUCCESSFUL BEHAVIOR
-
-If a CPT region is not implicated by the danger report:
-* Leave it unchanged.
-* Avoid unnecessary drift.
-
-6. NORMALIZE AFTER EVERY CPT CHANGE
-
-Whenever a parameter is modified:
+Whenever a CPT parameter is modified:
 * Rebalance the remaining probabilities in the same CPT column.
-* Ensure the column sums to exactly 1.
+* Ensure every CPT column sums to exactly 1.
+* Ensure all probabilities remain within [0,1].
 
 ---
-
 ## OUTPUT REQUIREMENT
 
 Return a complete Bayesian Network JSON.
-Modify only the CPT probabilities necessary to address the reported dangerous CPTs and suspicious parameters.
+Modify only the CPT probabilities necessary to fix the failure scenarios while preserving the success scenarios.

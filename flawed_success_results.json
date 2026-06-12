@@ -1,497 +1,838 @@
 [
     {
-        "Scenario": 2,
-        "Prediction": "Memory_Corruption",
-        "Confidence": 0.69163105,
-        "Ground Truth": "Memory_Corruption",
-        "Posterior": {
-            "System_Fault": 0.15579640000000006,
-            "FDI": 0.15257255000000003,
-            "Memory_Corruption": 0.69163105
-        }
-    },
-    {
         "Scenario": 3,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.6916310499999999,
+        "Confidence": 0.7592752700000001,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.15579640000000003,
-            "FDI": 0.15257255,
-            "Memory_Corruption": 0.6916310499999999
-        }
-    },
-    {
-        "Scenario": 4,
-        "Prediction": "Memory_Corruption",
-        "Confidence": 0.5875804,
-        "Ground Truth": "Memory_Corruption",
-        "Posterior": {
-            "System_Fault": 0.25649720000000004,
-            "FDI": 0.1559224,
-            "Memory_Corruption": 0.5875804
+            "System_Fault": 0.1215379775,
+            "FDI": 0.1191867525,
+            "Memory_Corruption": 0.7592752700000001
         }
     },
     {
         "Scenario": 5,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.71461585,
+        "Confidence": 0.79545868,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.14252280000000003,
-            "FDI": 0.14286135000000003,
-            "Memory_Corruption": 0.71461585
+            "System_Fault": 0.10093711000000001,
+            "FDI": 0.10360421,
+            "Memory_Corruption": 0.79545868
         }
     },
     {
         "Scenario": 6,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.7131793000000001,
+        "Confidence": 0.7882177800000001,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.14335240000000005,
-            "FDI": 0.14346830000000002,
-            "Memory_Corruption": 0.7131793000000001
+            "System_Fault": 0.10505968500000001,
+            "FDI": 0.10672253500000001,
+            "Memory_Corruption": 0.7882177800000001
         }
     },
     {
         "Scenario": 7,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.7059259,
+        "Confidence": 0.6620797325,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.1475412,
-            "FDI": 0.1465329,
-            "Memory_Corruption": 0.7059259
+            "System_Fault": 0.22056518374999998,
+            "FDI": 0.11735508375,
+            "Memory_Corruption": 0.6620797325
         }
     },
     {
         "Scenario": 8,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.5277850000000001,
+        "Confidence": 0.79500876,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.31372375,
-            "FDI": 0.15849125,
-            "Memory_Corruption": 0.5277850000000001
+            "System_Fault": 0.10119327,
+            "FDI": 0.10379797,
+            "Memory_Corruption": 0.79500876
         }
     },
     {
         "Scenario": 9,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.5374933,
+        "Confidence": 0.79500876,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.304432525,
-            "FDI": 0.158074175,
-            "Memory_Corruption": 0.5374933
+            "System_Fault": 0.10119327,
+            "FDI": 0.10379796999999999,
+            "Memory_Corruption": 0.79500876
         }
     },
     {
         "Scenario": 10,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.6627587500000001,
+        "Confidence": 0.76124273,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.17247000000000004,
-            "FDI": 0.16477125,
-            "Memory_Corruption": 0.6627587500000001
+            "System_Fault": 0.13220583500000002,
+            "FDI": 0.10655143500000001,
+            "Memory_Corruption": 0.76124273
         }
     },
     {
         "Scenario": 11,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.6965059,
+        "Confidence": 0.80760652,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.15298120000000004,
-            "FDI": 0.15051290000000003,
-            "Memory_Corruption": 0.6965059
+            "System_Fault": 0.09402079,
+            "FDI": 0.09837269,
+            "Memory_Corruption": 0.80760652
         }
     },
     {
         "Scenario": 12,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.6978718,
+        "Confidence": 0.80681916,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.15219240000000003,
-            "FDI": 0.1499358,
-            "Memory_Corruption": 0.6978718
+            "System_Fault": 0.09446907,
+            "FDI": 0.09871177,
+            "Memory_Corruption": 0.80681916
         }
     },
     {
         "Scenario": 13,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.5779687,
+        "Confidence": 0.80305108,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.265695975,
-            "FDI": 0.156335325,
-            "Memory_Corruption": 0.5779687
+            "System_Fault": 0.09661441000000001,
+            "FDI": 0.10033451,
+            "Memory_Corruption": 0.80305108
+        }
+    },
+    {
+        "Scenario": 14,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.7314952499999999,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.15871237500000002,
+            "FDI": 0.10979237500000003,
+            "Memory_Corruption": 0.7314952499999999
+        }
+    },
+    {
+        "Scenario": 15,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.73422021,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.15628429500000002,
+            "FDI": 0.10949549500000001,
+            "Memory_Corruption": 0.73422021
+        }
+    },
+    {
+        "Scenario": 16,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.7810050000000001,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.10916625,
+            "FDI": 0.10982875,
+            "Memory_Corruption": 0.7810050000000001
+        }
+    },
+    {
+        "Scenario": 17,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.7971458800000001,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.09997651000000002,
+            "FDI": 0.10287761000000001,
+            "Memory_Corruption": 0.7971458800000001
+        }
+    },
+    {
+        "Scenario": 18,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.79782076,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.09959227,
+            "FDI": 0.10258697,
+            "Memory_Corruption": 0.79782076
+        }
+    },
+    {
+        "Scenario": 19,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.756161815,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.13673319250000002,
+            "FDI": 0.10710499250000001,
+            "Memory_Corruption": 0.756161815
         }
     },
     {
         "Scenario": 20,
-        "Prediction": "System_Fault",
-        "Confidence": 0.49270695,
-        "Ground Truth": "System_Fault",
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.6097079900000001,
+        "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.49270695,
-            "FDI": 0.16652564999999997,
-            "Memory_Corruption": 0.34076739999999994
+            "System_Fault": 0.10963041750000001,
+            "FDI": 0.2806615925,
+            "Memory_Corruption": 0.6097079900000001
         }
     },
     {
         "Scenario": 21,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.65814295,
+        "Confidence": 0.6097079900000001,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.17513560000000003,
-            "FDI": 0.16672145,
-            "Memory_Corruption": 0.65814295
+            "System_Fault": 0.10963041750000001,
+            "FDI": 0.2806615925,
+            "Memory_Corruption": 0.6097079900000001
         }
     },
     {
         "Scenario": 22,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.65814295,
+        "Confidence": 0.59101208,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.17513560000000003,
-            "FDI": 0.16672145,
-            "Memory_Corruption": 0.65814295
+            "System_Fault": 0.10814197250000002,
+            "FDI": 0.3008459475,
+            "Memory_Corruption": 0.59101208
         }
     },
     {
         "Scenario": 23,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.66379495,
+        "Confidence": 0.6170768525,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.1718716,
-            "FDI": 0.16433345,
-            "Memory_Corruption": 0.66379495
+            "System_Fault": 0.17198892375000002,
+            "FDI": 0.21093422374999998,
+            "Memory_Corruption": 0.6170768525
         }
     },
     {
         "Scenario": 24,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.65451625,
+        "Confidence": 0.6170768525,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.17723000000000003,
-            "FDI": 0.16825375,
-            "Memory_Corruption": 0.65451625
+            "System_Fault": 0.17198892375000002,
+            "FDI": 0.21093422374999998,
+            "Memory_Corruption": 0.6170768525
         }
     },
     {
         "Scenario": 25,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.6868975,
+        "Confidence": 0.6114514925,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.15853,
-            "FDI": 0.1545725,
-            "Memory_Corruption": 0.6868975
-        }
-    },
-    {
-        "Scenario": 26,
-        "Prediction": "Memory_Corruption",
-        "Confidence": 0.5374933,
-        "Ground Truth": "Memory_Corruption",
-        "Posterior": {
-            "System_Fault": 0.304432525,
-            "FDI": 0.158074175,
-            "Memory_Corruption": 0.5374933
+            "System_Fault": 0.16591689124999998,
+            "FDI": 0.22263161625,
+            "Memory_Corruption": 0.6114514925
         }
     },
     {
         "Scenario": 27,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.5551710999999999,
+        "Confidence": 0.78007704,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.28751417500000004,
-            "FDI": 0.157314725,
-            "Memory_Corruption": 0.5551710999999999
+            "System_Fault": 0.10969458000000001,
+            "FDI": 0.11022838,
+            "Memory_Corruption": 0.78007704
+        }
+    },
+    {
+        "Scenario": 28,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.78007704,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.10969458000000001,
+            "FDI": 0.11022838,
+            "Memory_Corruption": 0.78007704
+        }
+    },
+    {
+        "Scenario": 29,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.78239694,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.108373755,
+            "FDI": 0.109229305,
+            "Memory_Corruption": 0.78239694
+        }
+    },
+    {
+        "Scenario": 30,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.778193,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.11076725000000001,
+            "FDI": 0.11103975,
+            "Memory_Corruption": 0.778193
         }
     },
     {
         "Scenario": 31,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.358145,
+        "Confidence": 0.793659,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.31270375,
-            "FDI": 0.32915125000000006,
-            "Memory_Corruption": 0.358145
+            "System_Fault": 0.10196175000000002,
+            "FDI": 0.10437925,
+            "Memory_Corruption": 0.793659
         }
     },
     {
         "Scenario": 32,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.3434113,
+        "Confidence": 0.73422021,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.32081902500000004,
-            "FDI": 0.33576967500000005,
-            "Memory_Corruption": 0.3434113
+            "System_Fault": 0.15628429500000002,
+            "FDI": 0.10949549500000001,
+            "Memory_Corruption": 0.73422021
         }
     },
     {
         "Scenario": 33,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.3538786,
+        "Confidence": 0.74375757,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.305117925,
-            "FDI": 0.341003475,
-            "Memory_Corruption": 0.3538786
+            "System_Fault": 0.147786015,
+            "FDI": 0.10845641500000001,
+            "Memory_Corruption": 0.74375757
         }
     },
     {
         "Scenario": 34,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.6823523499999999,
+        "Confidence": 0.64584812,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.16115480000000001,
-            "FDI": 0.15649285000000002,
-            "Memory_Corruption": 0.6823523499999999
+            "System_Fault": 0.10534799,
+            "FDI": 0.24880389,
+            "Memory_Corruption": 0.64584812
         }
     },
     {
         "Scenario": 35,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.68621455,
+        "Confidence": 0.64584812,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.15892440000000002,
-            "FDI": 0.15486105,
-            "Memory_Corruption": 0.68621455
+            "System_Fault": 0.10534799,
+            "FDI": 0.24880389,
+            "Memory_Corruption": 0.64584812
         }
     },
     {
         "Scenario": 36,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.6868975,
+        "Confidence": 0.610172,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.15853,
-            "FDI": 0.1545725,
-            "Memory_Corruption": 0.6868975
+            "System_Fault": 0.10693775000000001,
+            "FDI": 0.28289025,
+            "Memory_Corruption": 0.610172
         }
     },
     {
         "Scenario": 37,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.42331209999999997,
+        "Confidence": 0.6457992499999999,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.413708425,
-            "FDI": 0.16297947499999998,
-            "Memory_Corruption": 0.42331209999999997
+            "System_Fault": 0.15347037500000002,
+            "FDI": 0.200730375,
+            "Memory_Corruption": 0.6457992499999999
         }
     },
     {
         "Scenario": 38,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.5370585999999999,
+        "Confidence": 0.6399032600000001,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.30484855000000005,
-            "FDI": 0.15809285,
-            "Memory_Corruption": 0.5370585999999999
+            "System_Fault": 0.15727177000000003,
+            "FDI": 0.20282497,
+            "Memory_Corruption": 0.6399032600000001
         }
     },
     {
         "Scenario": 39,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.5263843,
+        "Confidence": 0.641108545,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.315064275,
-            "FDI": 0.158551425,
-            "Memory_Corruption": 0.5263843
+            "System_Fault": 0.14947740250000002,
+            "FDI": 0.2094140525,
+            "Memory_Corruption": 0.641108545
         }
     },
     {
         "Scenario": 40,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.3727532,
+        "Confidence": 0.7908048200000001,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.30465760000000003,
-            "FDI": 0.3225892000000001,
-            "Memory_Corruption": 0.3727532
+            "System_Fault": 0.10358676500000001,
+            "FDI": 0.10560841500000001,
+            "Memory_Corruption": 0.7908048200000001
         }
     },
     {
         "Scenario": 41,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.3727532,
+        "Confidence": 0.79318096,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.30465760000000003,
-            "FDI": 0.3225892000000001,
-            "Memory_Corruption": 0.3727532
+            "System_Fault": 0.10223392,
+            "FDI": 0.10458512,
+            "Memory_Corruption": 0.79318096
         }
     },
     {
         "Scenario": 42,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.34986039999999996,
+        "Confidence": 0.793659,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.3068872,
-            "FDI": 0.3432524,
-            "Memory_Corruption": 0.34986039999999996
+            "System_Fault": 0.10196175000000002,
+            "FDI": 0.10437925,
+            "Memory_Corruption": 0.793659
+        }
+    },
+    {
+        "Scenario": 43,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.68329752,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.20165904,
+            "FDI": 0.11504344000000002,
+            "Memory_Corruption": 0.68329752
+        }
+    },
+    {
+        "Scenario": 44,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.73524207,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.15537376500000002,
+            "FDI": 0.10938416500000002,
+            "Memory_Corruption": 0.73524207
+        }
+    },
+    {
+        "Scenario": 45,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.7305301599999999,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.15957232,
+            "FDI": 0.10989752000000001,
+            "Memory_Corruption": 0.7305301599999999
+        }
+    },
+    {
+        "Scenario": 46,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.65040329,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.15050195500000002,
+            "FDI": 0.19909475499999998,
+            "Memory_Corruption": 0.65040329
+        }
+    },
+    {
+        "Scenario": 47,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.65040329,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.15050195500000002,
+            "FDI": 0.19909475499999998,
+            "Memory_Corruption": 0.65040329
+        }
+    },
+    {
+        "Scenario": 48,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.63887593,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.150714985,
+            "FDI": 0.210409085,
+            "Memory_Corruption": 0.63887593
         }
     },
     {
         "Scenario": 49,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.63595885,
+        "Confidence": 0.63074648,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.18794680000000005,
-            "FDI": 0.17609435,
-            "Memory_Corruption": 0.63595885
+            "System_Fault": 0.10713746,
+            "FDI": 0.26211606,
+            "Memory_Corruption": 0.63074648
         }
     },
     {
         "Scenario": 50,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.65451625,
+        "Confidence": 0.628841,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.17723000000000003,
-            "FDI": 0.16825375,
-            "Memory_Corruption": 0.65451625
+            "System_Fault": 0.10736325,
+            "FDI": 0.26379575,
+            "Memory_Corruption": 0.628841
         }
     },
     {
         "Scenario": 51,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.67217875,
+        "Confidence": 0.61208016,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.16703000000000004,
-            "FDI": 0.16079125000000002,
-            "Memory_Corruption": 0.67217875
+            "System_Fault": 0.10681782000000001,
+            "FDI": 0.28110201999999995,
+            "Memory_Corruption": 0.61208016
         }
     },
     {
         "Scenario": 52,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.66379495,
+        "Confidence": 0.63445358,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.1718716,
-            "FDI": 0.16433345,
-            "Memory_Corruption": 0.66379495
+            "System_Fault": 0.16078541000000002,
+            "FDI": 0.20476100999999997,
+            "Memory_Corruption": 0.63445358
         }
     },
     {
         "Scenario": 53,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.42331209999999997,
+        "Confidence": 0.63445358,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.413708425,
-            "FDI": 0.16297947499999998,
-            "Memory_Corruption": 0.42331209999999997
+            "System_Fault": 0.16078541000000002,
+            "FDI": 0.20476100999999997,
+            "Memory_Corruption": 0.63445358
         }
     },
     {
         "Scenario": 54,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.42331209999999997,
+        "Confidence": 0.62575086,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.413708425,
-            "FDI": 0.16297947499999998,
-            "Memory_Corruption": 0.42331209999999997
+            "System_Fault": 0.15799047,
+            "FDI": 0.21625867000000001,
+            "Memory_Corruption": 0.62575086
         }
     },
     {
         "Scenario": 55,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.4328272,
+        "Confidence": 0.76978512,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.4046021000000001,
-            "FDI": 0.16257069999999998,
-            "Memory_Corruption": 0.4328272
+            "System_Fault": 0.11555423999999999,
+            "FDI": 0.11466064,
+            "Memory_Corruption": 0.76978512
         }
     },
     {
         "Scenario": 56,
-        "Prediction": "FDI",
-        "Confidence": 0.5339133,
-        "Ground Truth": "FDI",
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.778193,
+        "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.18831240000000005,
-            "FDI": 0.5339133,
-            "Memory_Corruption": 0.27777430000000003
+            "System_Fault": 0.11076725000000001,
+            "FDI": 0.11103975,
+            "Memory_Corruption": 0.778193
         }
     },
     {
         "Scenario": 57,
-        "Prediction": "FDI",
-        "Confidence": 0.5339133,
-        "Ground Truth": "FDI",
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.786629,
+        "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.18831240000000005,
-            "FDI": 0.5339133,
-            "Memory_Corruption": 0.27777430000000003
+            "System_Fault": 0.10596425000000001,
+            "FDI": 0.10740675,
+            "Memory_Corruption": 0.786629
         }
     },
     {
         "Scenario": 58,
-        "Prediction": "FDI",
-        "Confidence": 0.5765151,
-        "Ground Truth": "FDI",
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.78239694,
+        "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.1854528,
-            "FDI": 0.5765151,
-            "Memory_Corruption": 0.23803210000000002
+            "System_Fault": 0.108373755,
+            "FDI": 0.109229305,
+            "Memory_Corruption": 0.78239694
+        }
+    },
+    {
+        "Scenario": 59,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.68329752,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.20165904,
+            "FDI": 0.11504344000000002,
+            "Memory_Corruption": 0.68329752
+        }
+    },
+    {
+        "Scenario": 60,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.68329752,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.20165904,
+            "FDI": 0.11504344000000002,
+            "Memory_Corruption": 0.68329752
+        }
+    },
+    {
+        "Scenario": 61,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.6875410775,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.19787781125,
+            "FDI": 0.11458111125000002,
+            "Memory_Corruption": 0.6875410775
+        }
+    },
+    {
+        "Scenario": 65,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.6085734725,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.17747141375,
+            "FDI": 0.21395511374999998,
+            "Memory_Corruption": 0.6085734725
+        }
+    },
+    {
+        "Scenario": 66,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.6044540325000001,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.16979572125,
+            "FDI": 0.22575024625,
+            "Memory_Corruption": 0.6044540325000001
+        }
+    },
+    {
+        "Scenario": 67,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.62818175,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.16482912500000002,
+            "FDI": 0.206989125,
+            "Memory_Corruption": 0.62818175
+        }
+    },
+    {
+        "Scenario": 68,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.63522875,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.16028562500000001,
+            "FDI": 0.20448562499999998,
+            "Memory_Corruption": 0.63522875
+        }
+    },
+    {
+        "Scenario": 69,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.63122125,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.154958125,
+            "FDI": 0.213820625,
+            "Memory_Corruption": 0.63122125
+        }
+    },
+    {
+        "Scenario": 70,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.628841,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.10736325,
+            "FDI": 0.26379575,
+            "Memory_Corruption": 0.628841
+        }
+    },
+    {
+        "Scenario": 71,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.63074648,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.10713746,
+            "FDI": 0.26211606,
+            "Memory_Corruption": 0.63074648
         }
     },
     {
         "Scenario": 72,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.35330069999999997,
+        "Confidence": 0.61208016,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.31537197499999997,
-            "FDI": 0.331327325,
-            "Memory_Corruption": 0.35330069999999997
+            "System_Fault": 0.10681782000000001,
+            "FDI": 0.28110201999999995,
+            "Memory_Corruption": 0.61208016
         }
     },
     {
         "Scenario": 73,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.4994328999999999,
+        "Confidence": 0.6258562400000001,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.340857825,
-            "FDI": 0.15970927499999998,
-            "Memory_Corruption": 0.4994328999999999
+            "System_Fault": 0.16632848000000003,
+            "FDI": 0.20781528,
+            "Memory_Corruption": 0.6258562400000001
         }
     },
     {
         "Scenario": 74,
         "Prediction": "Memory_Corruption",
-        "Confidence": 0.4804027,
+        "Confidence": 0.63445358,
         "Ground Truth": "Memory_Corruption",
         "Posterior": {
-            "System_Fault": 0.359070475,
-            "FDI": 0.16052682499999998,
-            "Memory_Corruption": 0.4804027
+            "System_Fault": 0.16078541000000002,
+            "FDI": 0.20476100999999997,
+            "Memory_Corruption": 0.63445358
+        }
+    },
+    {
+        "Scenario": 75,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.62445575,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.15870837499999998,
+            "FDI": 0.216835875,
+            "Memory_Corruption": 0.62445575
+        }
+    },
+    {
+        "Scenario": 76,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.6360924099999999,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.152257945,
+            "FDI": 0.211649645,
+            "Memory_Corruption": 0.6360924099999999
+        }
+    },
+    {
+        "Scenario": 77,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.64159634,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.10585180499999998,
+            "FDI": 0.252551855,
+            "Memory_Corruption": 0.64159634
+        }
+    },
+    {
+        "Scenario": 78,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.6434150150000001,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.15500759250000004,
+            "FDI": 0.2015773925,
+            "Memory_Corruption": 0.6434150150000001
+        }
+    },
+    {
+        "Scenario": 79,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.71724598,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.17140921,
+            "FDI": 0.11134481,
+            "Memory_Corruption": 0.71724598
+        }
+    },
+    {
+        "Scenario": 80,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.708758865,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.1789716675,
+            "FDI": 0.11226946750000001,
+            "Memory_Corruption": 0.708758865
+        }
+    },
+    {
+        "Scenario": 81,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.61946696,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.17044792000000003,
+            "FDI": 0.21008512,
+            "Memory_Corruption": 0.61946696
+        }
+    },
+    {
+        "Scenario": 82,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.61946696,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.17044792000000003,
+            "FDI": 0.21008512,
+            "Memory_Corruption": 0.61946696
+        }
+    },
+    {
+        "Scenario": 83,
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.6205897499999999,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.160851375,
+            "FDI": 0.218558875,
+            "Memory_Corruption": 0.6205897499999999
         }
     }
 ]

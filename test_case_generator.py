@@ -457,3 +457,26 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# import pandas as pd
+
+# # Read CSV files
+# df1 = pd.read_csv("Scenarios.csv")
+# df2 = pd.read_csv("final_validated_dataset.csv")
+
+# # Merge rows
+# merged_df = pd.concat([df1, df2], ignore_index=True)
+
+# # Remove duplicate rows
+# merged_df = merged_df.drop_duplicates()
+
+# # Renumber Scenario #
+# merged_df = merged_df.reset_index(drop=True)
+
+# if "Scenario #" in merged_df.columns:
+#     merged_df["Scenario #"] = range(1, len(merged_df) + 1)
+
+# # Save merged dataset
+# merged_df.to_csv("final_validated_dataset.csv", index=False)
+
+# print(f"Total merged rows: {len(merged_df)}")

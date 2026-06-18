@@ -2,12 +2,13 @@ import os
 import json
 import re
 import copy
+import pandas as pd
 
-from bn_generator import generate_bn, store_bn_proposal
+# from bn_generator import generate_bn, store_bn_proposal
+from automatic_bn_reasoning_old import run_evaluation as initial_run_evaluation
 from bn_generator_evaluator import find_proposed_bn, run_evaluation, store_analysis
 from bn_generator_reflexion import generate_refined_bn, store_new_bn
 from bn_validator import get_best_bn_number, compare_all_cpts
-from automatic_bn_reasoning import run_evaluation as initial_run_evaluation
 
 bn_analysis_filename = "bn_analysis.json"
 proposed_bn_filename = "last_proposed_bn.jsonl"
@@ -99,42 +100,116 @@ while restart_count <= MAX_RESTARTS:
     print(f"PIPELINE RESTART #{restart_count}")
     print(f"==============================")
 
+    bn_number = 0
+
+    full_context = read_file("context_agent.txt")
+
+    success_report = read_file("merged_flawed_success_train.json")
+
+    failure_report = read_file("merged_flawed_failure_train.json")
+
+    original_success_report = success_report
+    original_failure_report = failure_report
+
+    flawed_bn_text = read_file("flawed_BN_0.json")
+
+    flawed_bn_json = safe_json_loads(flawed_bn_text)
+
+    train_csv = "combined_train_scenarios.csv"
+
     MAX_ITER = 3
     max_records = 3
-    previous_accuracy = 0
+    _, _, baseline_accuracy, _ = (
+        initial_run_evaluation(
+            flawed_bn_json,
+            train_csv
+        )
+    )
+
+    previous_accuracy = baseline_accuracy
+
     FAILURE_RATIO_THRESHOLD = 0.03  # stop if failed cases <= X%
 
     # -----------------------------
     # CLEAR OLD FILES
     # -----------------------------
-    for filename in [bn_analysis_filename, proposed_bn_filename]:
+    for filename in [bn_analysis_filename, proposed_bn_filename, "failure_cpt_parameter_risks.jsonl"]:
         if os.path.exists(filename):
             open(filename, "w").close()
             print(f"Cleared: {filename}")
 
+    
     # -----------------------------
-    # STEP 1: INITIAL BN
+    # STEP 1: BASELINE ANALYSIS OF FLAWED BN
     # -----------------------------
-    bn_number = 0
-    full_context = read_file("context_agent.txt")
-    success_report = read_file("flawed_success_results.json")
-    failure_report = read_file("flawed_failure_results.json")
-    original_success_report = read_file("flawed_success_results.json")
-    original_failure_report = read_file("flawed_failure_results.json")
-    gen_prompt_template_text = read_file("gen_prompt.txt")
-    flawed_bn=read_file("flawed_BN_0.json")
 
-    bn_text = generate_bn(full_context, flawed_bn, success_report, failure_report, gen_prompt_template_text)
+    print("\nEvaluating flawed BN...")
 
-    bn_json = safe_json_loads(bn_text)
+    evaluation_output = run_evaluation(
+        flawed_bn_json,
+        bn_number=0
+    )
 
-    if bn_json is None:
-        print("\nInitial BN generation failed. Trying again...")
-        continue
+    failure_ratio, failed, succeeded, total = (
+        compute_failure_ratio_from_results(
+            evaluation_output
+        )
+    )
 
-    store_bn_proposal(bn_json, bn_number, proposed_bn_filename)
+    store_analysis(
+        0,
+        evaluation_output
+    )
 
-    print("\nInitial BN generated")
+    print(
+        f"\nBaseline flawed BN evaluation completed."
+    )
+
+    print(
+        f"Failure ratio: {failure_ratio:.4f} "
+        f"({failed}/{total} failed)"
+    )
+
+    # -----------------------------
+    # STEP 2: FIRST REFINEMENT
+    # -----------------------------
+    print("\nGenerating first refined BN...")
+
+    new_bn = generate_refined_bn(
+        full_context,
+        flawed_bn_json,
+        original_success_report,
+        original_failure_report,
+        0,
+        proposed_bn_filename,
+        bn_analysis_filename,
+        max_records
+    )
+
+    new_bn_json = safe_json_loads(
+        new_bn
+    )
+
+    if new_bn_json is None:
+
+        print(
+            "\nInvalid JSON from first refinement."
+        )
+
+        raise RuntimeError(
+            "Failed to generate BN#1"
+        )
+
+    bn_number = 1
+
+    store_new_bn(
+        bn_number,
+        new_bn_json
+    )
+
+    print("\nBN#1 generated.")
+
+    ###-----------------------------
 
     solved = False
     i = 0
@@ -166,7 +241,7 @@ while restart_count <= MAX_RESTARTS:
             # Initial evaluation to check for refinement
             ### ------------------------------
             failures, successes, accuracy, results = initial_run_evaluation(
-                prev_bn_json
+                prev_bn_json, train_csv
             )
 
             # Track best BN seen during retry cycle
@@ -204,7 +279,7 @@ while restart_count <= MAX_RESTARTS:
 
                 new_bn = generate_refined_bn(
                     full_context,
-                    flawed_bn,
+                    flawed_bn_json,
                     original_success_report,
                     original_failure_report,
                     bn_number,
@@ -252,7 +327,7 @@ while restart_count <= MAX_RESTARTS:
         # Initial evaluation to get failures for reflexion and analysis
         ### ------------------------------
         failures, successes, accuracy, results = initial_run_evaluation(
-            prev_bn_json
+            prev_bn_json, train_csv
         )
 
         # Track best BN seen during retry cycle
@@ -271,7 +346,7 @@ while restart_count <= MAX_RESTARTS:
 
             new_bn = generate_refined_bn(
                 full_context,
-                flawed_bn,
+                flawed_bn_json,
                 original_success_report,
                 original_failure_report,
                 bn_number,
@@ -300,6 +375,7 @@ while restart_count <= MAX_RESTARTS:
 
             continue   
         
+
         else:
 
             if accuracy <= previous_accuracy:
@@ -327,7 +403,7 @@ while restart_count <= MAX_RESTARTS:
             best_retry_bn = None
             best_retry_accuracy = float("-inf")
 
-            for filename in ["failure_cpt_parameter_risks.jsonl", "dangerous_cpt_report.json"]:
+            for filename in ["dangerous_cpt_report.json"]:
                 if os.path.exists(filename):
                     open(filename, "w").close()
                     print(f"Cleared: {filename}")
@@ -376,7 +452,7 @@ while restart_count <= MAX_RESTARTS:
             # -----------------------------
             new_bn = generate_refined_bn(
                 full_context,
-                flawed_bn,
+                flawed_bn_json,
                 original_success_report,
                 original_failure_report,
                 bn_number,
@@ -415,7 +491,7 @@ while restart_count <= MAX_RESTARTS:
 # -----------------------------
 # VALIDATION
 # -----------------------------
-best_bn_number, best_bn_accuracy = get_best_bn_number(proposed_bn_filename)
+best_bn_number, best_bn_accuracy = get_best_bn_number(proposed_bn_filename, train_csv=train_csv)
 print("\n\nBest BN Number:", best_bn_number)
 print("Best BN Accuracy:", best_bn_accuracy)
 

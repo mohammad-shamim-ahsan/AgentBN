@@ -25,8 +25,8 @@ def read_file(filename):
     
 full_context = read_file("context_agent.txt")
 flawed_bn = read_file("flawed_BN_0.json")
-original_success_report = read_file("flawed_success_results.json")
-original_failure_report = read_file("flawed_failure_results.json")
+original_success_report = read_file("merged_flawed_success_train.json")
+original_failure_report = read_file("merged_flawed_failure_train.json")
 prompt_template_text = read_file("ref_prompt.txt")
 
 ### -----------------------------

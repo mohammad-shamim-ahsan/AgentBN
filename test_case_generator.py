@@ -18,7 +18,7 @@ client = OpenAI(api_key="sk-proj-JBgMHNsbMYtcZ0m4l30lC5lkfn5cIjgUtq9uVDnJl0ftsk4
 MODEL = "gpt-5.4"
 
 INITIAL_SCENARIOS_FILE = "Scenarios.csv"
-CONTEXT_FILE = "context_eval_agent.txt"
+CONTEXT_FILE = "context_agent.txt"
 PROMPT_FILE = "scenario_gen_prompt.txt"
 # proposed_bn_filename = "last_proposed_bn.jsonl"
 BN_FILE = "BN_gt.json"
@@ -177,7 +177,7 @@ def call_bn_inference(model, df):
 
         pred_idx = result.values.argmax()
         pred_state = result.state_names["Root_Causes"][pred_idx]
-        confidence = result.values.max()
+        confidence = float(result.values.max())
 
         posterior_probs = {
             state: float(prob)
@@ -189,12 +189,20 @@ def call_bn_inference(model, df):
 
         ground_truth = str(row["Ground Truth"]).strip()
 
+        # Success only if:
+        # 1. Predicted class matches Ground Truth
+        # 2. Confidence >= 60%
+        is_success = bool(
+            pred_state == ground_truth
+            and confidence >= 0.60
+        )
+
         results.append({
             "Scenario": row["Scenario #"],
             "Prediction": pred_state,
             "Confidence": float(confidence),
             "Ground Truth": ground_truth,
-            "Matched": pred_state == ground_truth,
+            "Matched": is_success,
             "Posterior": posterior_probs
         })
 
@@ -274,7 +282,7 @@ def store_inference_results(results, filename=INFERENCE_OUTPUT_FILE):
         json.dump(results, f, indent=2)
 
 
-NUM_ITERATIONS = 3
+NUM_ITERATIONS = 5
 
 def main():
     bn = read_bn(BN_FILE)
@@ -460,23 +468,40 @@ if __name__ == "__main__":
 
 # import pandas as pd
 
-# # Read CSV files
-# df1 = pd.read_csv("Scenarios.csv")
-# df2 = pd.read_csv("final_validated_dataset.csv")
+# # Read files
+# scenarios_df = pd.read_csv("Scenarios.csv")
+# final_df = pd.read_csv("final_validated_dataset.csv")
 
-# # Merge rows
-# merged_df = pd.concat([df1, df2], ignore_index=True)
+# before_count = len(final_df)
 
-# # Remove duplicate rows
-# merged_df = merged_df.drop_duplicates()
+# # Ignore Scenario # when comparing
+# compare_cols = [c for c in final_df.columns if c != "Scenario #"]
+
+# # Remove rows that exist in Scenarios.csv
+# remaining_df = (
+#     final_df.merge(
+#         scenarios_df[compare_cols].drop_duplicates(),
+#         on=compare_cols,
+#         how="left",
+#         indicator=True
+#     )
+# )
+
+# remaining_df = (
+#     remaining_df[remaining_df["_merge"] == "left_only"]
+#     .drop(columns=["_merge"])
+# )
 
 # # Renumber Scenario #
-# merged_df = merged_df.reset_index(drop=True)
+# remaining_df = remaining_df.reset_index(drop=True)
+# if "Scenario #" in remaining_df.columns:
+#     remaining_df["Scenario #"] = range(1, len(remaining_df) + 1)
 
-# if "Scenario #" in merged_df.columns:
-#     merged_df["Scenario #"] = range(1, len(merged_df) + 1)
+# after_count = len(remaining_df)
 
-# # Save merged dataset
-# merged_df.to_csv("final_validated_dataset.csv", index=False)
+# # Save
+# remaining_df.to_csv("final_validated_dataset.csv", index=False)
 
-# print(f"Total merged rows: {len(merged_df)}")
+# print(f"Rows before removal: {before_count}")
+# print(f"Rows after removal:  {after_count}")
+# print(f"Rows removed:        {before_count - after_count}")

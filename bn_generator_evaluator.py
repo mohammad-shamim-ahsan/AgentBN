@@ -10,6 +10,7 @@ from datetime import datetime
 
 client = OpenAI(api_key="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")
 
+
 def llm(prompt, temperature=0.3, max_tokens=4000):
     response = client.responses.create(
         model="gpt-5.4",
@@ -18,6 +19,7 @@ def llm(prompt, temperature=0.3, max_tokens=4000):
         max_output_tokens=max_tokens,
     )
     return response.output[0].content[0].text.strip()
+
 
 ###--------Step 1: Building BN Tool---------------------
 def build_model(bn):
@@ -83,6 +85,7 @@ def build_model(bn):
 
     return model
 
+
 def run_inference(model, query, evidence=None):
     infer = VariableElimination(model)
 
@@ -92,6 +95,7 @@ def run_inference(model, query, evidence=None):
     )
 
     return result
+
 
 # -----------------------------
 # Step 2: Calling BN Tool for the Scenarios
@@ -148,20 +152,30 @@ def call_bn_inference(model, df):
 
     return results
 
+
 ###--------Step 3: Getting Analysis Results for LLM---------------------
 def format_results_for_llm(results_df, original_df):
 
     lines = []
 
-    for i, row in results_df.iterrows():
+    for _, row in results_df.iterrows():
 
-        original_row = original_df.iloc[i].to_dict()
+        scenario_id = row["Scenario"]
+
+        original_row = original_df[
+            original_df["Scenario #"] == scenario_id
+        ].iloc[0].to_dict()
 
         # remove metadata fields
         original_row.pop("Scenario #", None)
         original_row.pop("Ground Truth", None)
 
-        status = "CORRECT" if row["Prediction"] == row["Ground Truth"] else "WRONG"
+        is_success = (
+            row["Prediction"] == row["Ground Truth"]
+            and row["Confidence"] >= 0.60
+        )
+
+        status = "SUCCESS" if is_success else "FAILURE"
 
         lines.append(
             f"Scenario {row['Scenario']}:\n"
@@ -181,6 +195,7 @@ def read_file(filename):
 import json
 proposed_bn_filename="last_proposed_bn.jsonl"
 
+
 def find_proposed_bn(bn_number_to_find, filename=proposed_bn_filename):
     with open(filename, "r", encoding="utf-8") as f:
         for line in f:
@@ -189,10 +204,11 @@ def find_proposed_bn(bn_number_to_find, filename=proposed_bn_filename):
                 return record["bn"]
     return None
 
-df = pd.read_csv("final_validated_dataset.csv")
+df = pd.read_csv("combined_train_scenarios.csv")
 df.columns = df.columns.str.strip()
 
 context = read_file("context_agent.txt")
+
 
 def clean_text(text):
     return (
@@ -206,6 +222,7 @@ def clean_text(text):
 PARAMETER_RISK_FILE = "failure_cpt_parameter_risks.jsonl"
 CPT_DANGER_REPORT_FILE = "dangerous_cpt_report.json"
 
+
 def safe_json_loads(text):
     if not text:
         return None
@@ -218,6 +235,7 @@ def safe_json_loads(text):
     except json.JSONDecodeError:
         return None
     
+
 def analyze_failure_parameters_with_llm(bn_json, failure_scenario_text):
     prompt = f"""
 You are analyzing a Bayesian Network failure case.
@@ -284,6 +302,7 @@ Failure scenario:
 
     return parsed
 
+
 def check_parameter_against_successes_with_llm(
     bn_json,
     parameter_record,
@@ -333,9 +352,11 @@ Successful scenarios:
 
     return parsed
 
+
 def append_risky_failure_record(record, filename=PARAMETER_RISK_FILE):
     with open(filename, "a", encoding="utf-8") as f:
         f.write(json.dumps(record) + "\n")
+
 
 def generate_cpt_danger_report(
     bn_json,
@@ -347,8 +368,19 @@ def generate_cpt_danger_report(
     try:
         with open(risk_file, "r", encoding="utf-8") as f:
             for line in f:
-                if line.strip():
-                    risky_records.append(json.loads(line))
+                if not line.strip():
+                    continue
+
+                record = json.loads(line)
+
+                if (
+                    bn_number is not None
+                    and record.get("bn_number") != bn_number
+                ):
+                    continue
+
+                risky_records.append(record)
+
     except FileNotFoundError:
         risky_records = []
 
@@ -485,7 +517,9 @@ Candidate risky CPT parameter records:
 
     return parsed
 
+
 def run_evaluation(bn_json, bn_number=None):
+    
     # Step 1: Build BN model
     model = build_model(bn_json)
 
@@ -495,8 +529,17 @@ def run_evaluation(bn_json, bn_number=None):
     results_df = pd.DataFrame(results)
 
     # Step 3: Split failures and successes
-    failures = results_df[results_df["Prediction"] != results_df["Ground Truth"]]
-    successes = results_df[results_df["Prediction"] == results_df["Ground Truth"]]
+    failures = results_df[
+        (results_df["Prediction"] != results_df["Ground Truth"])
+        |
+        (results_df["Confidence"] < 0.60)
+    ]
+
+    successes = results_df[
+        (results_df["Prediction"] == results_df["Ground Truth"])
+        &
+        (results_df["Confidence"] >= 0.60)
+    ]
 
     accuracy = len(successes) / len(results_df) if len(results_df) > 0 else 0
     print("\n===================================================")
@@ -539,6 +582,7 @@ def run_evaluation(bn_json, bn_number=None):
         # Step 5.3: Store only if risky parameters exist
         if risky_parameters:
             failure_record = {
+                "bn_number": bn_number,
                 "timestamp": str(datetime.now()),
                 "failure_scenario_index": int(failure_index),
                 "failure_scenario_text": failure_scenario_text,
@@ -572,6 +616,7 @@ def run_evaluation(bn_json, bn_number=None):
         "cpt_danger_report": cpt_danger_report
     }
 
+
 def store_analysis(bn_number, evaluation_output):
     record = {
         "timestamp": str(datetime.now()),
@@ -590,8 +635,11 @@ def store_analysis(bn_number, evaluation_output):
 
     print(f"\nNew workflow analysis for BN #{bn_number} stored in bn_analysis.json")
 
+
+
 ### ------------------------------MAIN--------------------------------------
 if __name__ == "__main__":
+    
     bn_number = 1
 
     bn_json = find_proposed_bn(

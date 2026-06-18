@@ -1,7 +1,7 @@
 import json
 from collections import Counter
 
-from automatic_bn_reasoning import run_evaluation
+from automatic_bn_reasoning_old import run_evaluation
 
 GT_FILE = "BN_gt.json"
 PROPOSED_FILE = "last_proposed_bn.jsonl"
@@ -49,7 +49,7 @@ def normalize_bn(bn_obj):
     return bn_obj
 
 
-def get_best_bn_number(filename="last_proposed_bn.jsonl"):
+def get_best_bn_number(filename="last_proposed_bn.jsonl", train_csv="combined_train_scenarios.csv"):
     best_bn_number = None
     best_bn_accuracy = None
     best_failure_count = float("inf")
@@ -71,7 +71,7 @@ def get_best_bn_number(filename="last_proposed_bn.jsonl"):
                 continue
 
             failures, successes, accuracy, results = run_evaluation(
-                bn_json
+                bn_json, train_csv
             )
 
             failure_count = len(failures)
@@ -240,9 +240,13 @@ def compare_all_cpts(bn_number=None):
 
 ### ------------------------------
 if __name__ == "__main__":
+
+    train_csv="combined_train_scenarios.csv"
+
     best_bn_number, best_bn_accuracy = get_best_bn_number(
-        "last_proposed_bn.jsonl"
+        "last_proposed_bn.jsonl", train_csv=train_csv
     )
+
     print("Best BN Number:", best_bn_number)
     print("Best BN Accuracy:", best_bn_accuracy)
 

@@ -22,22 +22,38 @@ The following is the full context including flawed Bayesian Networks, along with
 {failure_report}
 
 ---------------------------------------------------
+SUCCESS AND FAILURE DEFINITION
+---------------------------------------------------
+A scenario is considered successful only if:
+1. The predicted root cause, defined as the argmax posterior of "Root_Causes", matches the "Ground Truth"; and
+2. The posterior probability of the predicted root cause is at least 0.60.
+
+Therefore, a scenario is considered a failure if either:
+1. The predicted root cause does not match the "Ground Truth"; or
+2. The predicted root cause matches the "Ground Truth", but its posterior probability is less than 0.60.
+
+---------------------------------------------------
 TASK
 ---------------------------------------------------
 Make minimal necessary changes to the Conditional Probability Tables (CPTs) in the Flawed BN.
-Only modify the CPT paramter values in as few CPTs as possible to fix the failure scenarios in the Failure Report.
-The failure scenarios MUST be fixed.
-The success scenarios in the Success Report MUST be preserved.
+
+Identify a small subset of CPTs in the Flawed BN that are most likely responsible for the failures in the Failure Report, and restrict modifications to those CPTs whenever possible.
+
+Before modifying CPT values, analyze the failure and success scenarios together.
+
+Make the minimum necessary CPT changes required to:
+1. fix the failure scenarios under the confidence-aware definition,
+2. preserve the success scenarios, and
+3. avoid unnecessary changes to unrelated CPTs.
 
 The structure of the Flawed BN is FIXED.
 Do NOT add/remove/rename any nodes.
 Do NOT add/remove/modify any edges.
 Do NOT change node states, parent lists, or parent_state_order.
 
-Only the paramter values in the CPTs may be changed.
+Only the parameter values in the CPTs may be changed.
 
 You MUST output a COMPLETE Bayesian Network, not a patch.
-
 ---------------------------------------------------
 CPT VALIDITY RULES
 ---------------------------------------------------

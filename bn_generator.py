@@ -20,8 +20,8 @@ def read_file(filename):
 
 proposed_bn_filename="last_proposed_bn.jsonl"
 full_context = read_file("context_agent.txt")
-success_report = read_file("flawed_success_results.json")
-failure_report = read_file("flawed_failure_results.json")
+success_report = read_file("merged_flawed_success_train.json")
+failure_report = read_file("merged_flawed_failure_train.json")
 prompt_template_text = read_file("gen_prompt.txt")
 flawed_bn=read_file("flawed_BN_0.json")
 

@@ -20,10 +20,18 @@ Rules:
 3. Use exactly this header:
 {columns}
 4. Do not add spaces after commas.
+
 5. Evidence values must be only Found or Not_Found.
 6. Ground Truth must be one of the Root_Causes states in the BN.
-7. Ground Truth should match the most likely posterior Root_Causes label implied by the evidence.
-8. Preserve realistic probabilistic dependencies implied by the BN.
-9. Keep the same structure and style as the examples.
-10. Do not repeat existing scenarios exactly.
-11. Generate diverse combinations of evidence values.
+
+7. Every generated scenario must satisfy the same success criterion used during evaluation:
+   - Ground Truth = argmax posterior Root_Causes label
+   - max posterior probability >= 0.60
+
+8. Ground Truth must match the argmax posterior Root_Causes label implied by the evidence.
+9. The posterior probability of the Ground Truth label must be at least 0.60.
+
+10. Preserve realistic probabilistic dependencies implied by the BN.
+11. Keep the same structure and style as the examples.
+12. Do not repeat existing scenarios exactly.
+13. Generate diverse combinations of evidence values.

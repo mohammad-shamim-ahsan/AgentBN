@@ -35,8 +35,18 @@ Make minimal necessary changes to the CPTs in the baseline BN.
 
 Only modify CPT parameter values in as few CPTs as possible.
 
-The failure scenarios in the Analysis Memory MUST be fixed.
+A scenario is considered successful only if:
+1. The predicted root cause, defined as the argmax posterior of "Root_Causes", matches the "Ground Truth"; and
+2. The posterior probability of the predicted root cause is at least 0.60.
+
+Therefore, a scenario is considered a failure if either:
+1. The predicted root cause does not match the "Ground Truth"; or
+2. The predicted root cause matches the "Ground Truth", but its posterior probability is less than 0.60.
+
+The failure scenarios in the Analysis Memory MUST be fixed under this definition.
 The success scenarios in the Analysis Memory MUST be preserved.
+
+For low-confidence failures, increase posterior support for the correct root cause when justified by the evidence while avoiding unnecessary changes that could harm existing successes.
 
 The graph structure, nodes, edges, states, parent lists, and parent_state_order are FIXED.
 

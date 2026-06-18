@@ -1,0 +1,299 @@
+[
+    {
+        "Scenario": 4,
+        "Evidence": {
+            "GPTN_1": "Not_Found",
+            "GPTN_2": "Not_Found",
+            "GPTN_3": "Not_Found",
+            "GPTN_5": "Found",
+            "LPTN_1_i": "Found",
+            "LPTN_1_ii": "Found",
+            "LPTN_1_iii": "Found",
+            "LPTN_1_iv": "Found",
+            "LPTN_1_v": "Found",
+            "LPTN_1_vi": "Found",
+            "LPTN_1_viii": "Found",
+            "LPTN_1_ix": "Found",
+            "LPTN_1_x": "Found"
+        },
+        "Prediction": "System_Fault",
+        "Confidence": 0.49270695,
+        "Ground Truth": "System_Fault",
+        "Posterior": {
+            "System_Fault": 0.49270695,
+            "FDI": 0.16652564999999997,
+            "Memory_Corruption": 0.34076739999999994
+        },
+        "Success": false
+    },
+    {
+        "Scenario": 22,
+        "Evidence": {
+            "GPTN_1": "Not_Found",
+            "GPTN_2": "Found",
+            "GPTN_3": "Found",
+            "GPTN_5": "Not_Found",
+            "LPTN_1_i": "Found",
+            "LPTN_1_ii": "Found",
+            "LPTN_1_iii": "Found",
+            "LPTN_1_iv": "Found",
+            "LPTN_1_v": "Found",
+            "LPTN_1_vi": "Not_Found",
+            "LPTN_1_viii": "Not_Found",
+            "LPTN_1_ix": "Not_Found",
+            "LPTN_1_x": "Not_Found"
+        },
+        "Prediction": "FDI",
+        "Confidence": 0.43147735000000004,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.1915708,
+            "FDI": 0.43147735000000004,
+            "Memory_Corruption": 0.37695185
+        },
+        "Success": false
+    },
+    {
+        "Scenario": 64,
+        "Evidence": {
+            "GPTN_1": "Not_Found",
+            "GPTN_2": "Not_Found",
+            "GPTN_3": "Found",
+            "GPTN_5": "Found",
+            "LPTN_1_i": "Found",
+            "LPTN_1_ii": "Found",
+            "LPTN_1_iii": "Not_Found",
+            "LPTN_1_iv": "Found",
+            "LPTN_1_v": "Found",
+            "LPTN_1_vi": "Not_Found",
+            "LPTN_1_viii": "Found",
+            "LPTN_1_ix": "Not_Found",
+            "LPTN_1_x": "Found"
+        },
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.5067262,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.33387785000000003,
+            "FDI": 0.15939595,
+            "Memory_Corruption": 0.5067262
+        },
+        "Success": false
+    },
+    {
+        "Scenario": 18,
+        "Evidence": {
+            "GPTN_1": "Found",
+            "GPTN_2": "Not_Found",
+            "GPTN_3": "Found",
+            "GPTN_5": "Not_Found",
+            "LPTN_1_i": "Found",
+            "LPTN_1_ii": "Found",
+            "LPTN_1_iii": "Found",
+            "LPTN_1_iv": "Found",
+            "LPTN_1_v": "Not_Found",
+            "LPTN_1_vi": "Found",
+            "LPTN_1_viii": "Found",
+            "LPTN_1_ix": "Found",
+            "LPTN_1_x": "Found"
+        },
+        "Prediction": "FDI",
+        "Confidence": 0.49093195000000006,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.18967960000000003,
+            "FDI": 0.49093195000000006,
+            "Memory_Corruption": 0.31938845000000005
+        },
+        "Success": false
+    },
+    {
+        "Scenario": 43,
+        "Evidence": {
+            "GPTN_1": "Not_Found",
+            "GPTN_2": "Not_Found",
+            "GPTN_3": "Found",
+            "GPTN_5": "Found",
+            "LPTN_1_i": "Not_Found",
+            "LPTN_1_ii": "Not_Found",
+            "LPTN_1_iii": "Found",
+            "LPTN_1_iv": "Found",
+            "LPTN_1_v": "Found",
+            "LPTN_1_vi": "Found",
+            "LPTN_1_viii": "Found",
+            "LPTN_1_ix": "Found",
+            "LPTN_1_x": "Found"
+        },
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.4613725,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.37728312500000005,
+            "FDI": 0.16134437499999998,
+            "Memory_Corruption": 0.4613725
+        },
+        "Success": false
+    },
+    {
+        "Scenario": 28,
+        "Evidence": {
+            "GPTN_1": "Found",
+            "GPTN_2": "Not_Found",
+            "GPTN_3": "Not_Found",
+            "GPTN_5": "Not_Found",
+            "LPTN_1_i": "Found",
+            "LPTN_1_ii": "Found",
+            "LPTN_1_iii": "Found",
+            "LPTN_1_iv": "Found",
+            "LPTN_1_v": "Found",
+            "LPTN_1_vi": "Found",
+            "LPTN_1_viii": "Found",
+            "LPTN_1_ix": "Found",
+            "LPTN_1_x": "Found"
+        },
+        "Prediction": "FDI",
+        "Confidence": 0.5339133,
+        "Ground Truth": "FDI",
+        "Posterior": {
+            "System_Fault": 0.18831240000000005,
+            "FDI": 0.5339133,
+            "Memory_Corruption": 0.27777430000000003
+        },
+        "Success": false
+    },
+    {
+        "Scenario": 32,
+        "Evidence": {
+            "GPTN_1": "Not_Found",
+            "GPTN_2": "Not_Found",
+            "GPTN_3": "Found",
+            "GPTN_5": "Found",
+            "LPTN_1_i": "Not_Found",
+            "LPTN_1_ii": "Not_Found",
+            "LPTN_1_iii": "Not_Found",
+            "LPTN_1_iv": "Not_Found",
+            "LPTN_1_v": "Not_Found",
+            "LPTN_1_vi": "Not_Found",
+            "LPTN_1_viii": "Not_Found",
+            "LPTN_1_ix": "Not_Found",
+            "LPTN_1_x": "Not_Found"
+        },
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.5875804,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.25649720000000004,
+            "FDI": 0.1559224,
+            "Memory_Corruption": 0.5875804
+        },
+        "Success": false
+    },
+    {
+        "Scenario": 15,
+        "Evidence": {
+            "GPTN_1": "Found",
+            "GPTN_2": "Found",
+            "GPTN_3": "Found",
+            "GPTN_5": "Not_Found",
+            "LPTN_1_i": "Not_Found",
+            "LPTN_1_ii": "Not_Found",
+            "LPTN_1_iii": "Not_Found",
+            "LPTN_1_iv": "Not_Found",
+            "LPTN_1_v": "Not_Found",
+            "LPTN_1_vi": "Not_Found",
+            "LPTN_1_viii": "Not_Found",
+            "LPTN_1_ix": "Not_Found",
+            "LPTN_1_x": "Not_Found"
+        },
+        "Prediction": "FDI",
+        "Confidence": 0.4382896,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.19873880000000002,
+            "FDI": 0.4382896,
+            "Memory_Corruption": 0.36297160000000006
+        },
+        "Success": false
+    },
+    {
+        "Scenario": 26,
+        "Evidence": {
+            "GPTN_1": "Found",
+            "GPTN_2": "Found",
+            "GPTN_3": "Found",
+            "GPTN_5": "Not_Found",
+            "LPTN_1_i": "Not_Found",
+            "LPTN_1_ii": "Found",
+            "LPTN_1_iii": "Found",
+            "LPTN_1_iv": "Found",
+            "LPTN_1_v": "Not_Found",
+            "LPTN_1_vi": "Found",
+            "LPTN_1_viii": "Found",
+            "LPTN_1_ix": "Not_Found",
+            "LPTN_1_x": "Not_Found"
+        },
+        "Prediction": "FDI",
+        "Confidence": 0.47177749999999996,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.19552000000000003,
+            "FDI": 0.47177749999999996,
+            "Memory_Corruption": 0.3327025
+        },
+        "Success": false
+    },
+    {
+        "Scenario": 85,
+        "Evidence": {
+            "GPTN_1": "Not_Found",
+            "GPTN_2": "Not_Found",
+            "GPTN_3": "Found",
+            "GPTN_5": "Found",
+            "LPTN_1_i": "Found",
+            "LPTN_1_ii": "Not_Found",
+            "LPTN_1_iii": "Found",
+            "LPTN_1_iv": "Found",
+            "LPTN_1_v": "Found",
+            "LPTN_1_vi": "Not_Found",
+            "LPTN_1_viii": "Not_Found",
+            "LPTN_1_ix": "Found",
+            "LPTN_1_x": "Not_Found"
+        },
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.5370585999999999,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.30484855000000005,
+            "FDI": 0.15809285,
+            "Memory_Corruption": 0.5370585999999999
+        },
+        "Success": false
+    },
+    {
+        "Scenario": 72,
+        "Evidence": {
+            "GPTN_1": "Not_Found",
+            "GPTN_2": "Not_Found",
+            "GPTN_3": "Found",
+            "GPTN_5": "Found",
+            "LPTN_1_i": "Found",
+            "LPTN_1_ii": "Found",
+            "LPTN_1_iii": "Not_Found",
+            "LPTN_1_iv": "Not_Found",
+            "LPTN_1_v": "Found",
+            "LPTN_1_vi": "Found",
+            "LPTN_1_viii": "Found",
+            "LPTN_1_ix": "Not_Found",
+            "LPTN_1_x": "Found"
+        },
+        "Prediction": "Memory_Corruption",
+        "Confidence": 0.49759749999999997,
+        "Ground Truth": "Memory_Corruption",
+        "Posterior": {
+            "System_Fault": 0.34261437499999997,
+            "FDI": 0.15978812499999998,
+            "Memory_Corruption": 0.49759749999999997
+        },
+        "Success": false
+    }
+]

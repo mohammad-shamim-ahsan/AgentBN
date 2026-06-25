@@ -238,6 +238,161 @@ def compare_all_cpts(bn_number=None):
     return final_output
 
 
+###------------------------------
+import numpy as np
+
+EPS = 1e-12
+
+
+def kl_divergence(p, q):
+    """
+    Compute KL(P || Q) for two discrete probability distributions.
+    """
+    p = np.asarray(p, dtype=float)
+    q = np.asarray(q, dtype=float)
+
+    p = np.clip(p, EPS, 1.0)
+    q = np.clip(q, EPS, 1.0)
+
+    return np.sum(p * np.log(p / q))
+
+
+def load_bn(filename):
+    with open(filename, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def build_node_dict(bn_json):
+    return {node["name"]: node for node in bn_json["nodes"]}
+
+
+def compute_average_cpt_kl(gt_bn, prop_bn, target_nodes=None):
+
+    total_kl = 0.0
+    total_columns = 0
+
+    print("=" * 70)
+
+    for name in sorted(gt_bn.keys()):
+
+        if target_nodes and name not in target_nodes:
+            continue
+
+        if name not in prop_bn:
+            raise ValueError(f"Missing node '{name}'.")
+
+        gt_values = np.asarray(gt_bn[name]["cpt"]["values"], dtype=float)
+        prop_values = np.asarray(prop_bn[name]["cpt"]["values"], dtype=float)
+
+        if gt_values.shape != prop_values.shape:
+            raise ValueError(
+                f"CPT shape mismatch for {name}: "
+                f"{gt_values.shape} vs {prop_values.shape}"
+            )
+
+        node_kl = 0.0
+
+        for col in range(gt_values.shape[1]):
+            kl = kl_divergence(
+                gt_values[:, col],
+                prop_values[:, col]
+            )
+
+            node_kl += kl
+            total_kl += kl
+            total_columns += 1
+
+        print(f"{name:<30} {node_kl / gt_values.shape[1]:.8f}")
+
+    print("=" * 70)
+
+    avg_kl = total_kl / total_columns
+
+    print(f"Overall Average CPT KL = {avg_kl:.8f}")
+
+    return avg_kl
+
+def compute_average_cpt_rmse(gt_bn, prop_bn, target_nodes=None):
+
+    total_squared_error = 0.0
+    total_parameters = 0
+
+    print("=" * 70)
+
+    for name in sorted(gt_bn.keys()):
+
+        if target_nodes and name not in target_nodes:
+            continue
+
+        gt_values = np.asarray(gt_bn[name]["cpt"]["values"], dtype=float)
+        prop_values = np.asarray(prop_bn[name]["cpt"]["values"], dtype=float)
+
+        if gt_values.shape != prop_values.shape:
+            raise ValueError(f"CPT shape mismatch for {name}")
+
+        node_rmse = np.sqrt(np.mean((gt_values - prop_values) ** 2))
+
+        total_squared_error += np.sum((gt_values - prop_values) ** 2)
+        total_parameters += gt_values.size
+
+        print(f"{name:<30} RMSE = {node_rmse:.8f}")
+
+    print("=" * 70)
+
+    overall_rmse = np.sqrt(total_squared_error / total_parameters)
+
+    print(f"Overall CPT RMSE = {overall_rmse:.8f}")
+
+    return overall_rmse
+
+def hellinger_distance(p, q):
+
+    p = np.asarray(p, dtype=float)
+    q = np.asarray(q, dtype=float)
+
+    return np.sqrt(np.sum((np.sqrt(p) - np.sqrt(q)) ** 2)) / np.sqrt(2)
+
+
+def compute_average_cpt_hellinger(gt_bn, prop_bn, target_nodes=None):
+
+    total = 0.0
+    total_columns = 0
+
+    print("=" * 70)
+
+    for name in sorted(gt_bn.keys()):
+
+        if target_nodes and name not in target_nodes:
+            continue
+
+        gt_values = np.asarray(gt_bn[name]["cpt"]["values"], dtype=float)
+        prop_values = np.asarray(prop_bn[name]["cpt"]["values"], dtype=float)
+
+        node_total = 0.0
+
+        for col in range(gt_values.shape[1]):
+
+            h = hellinger_distance(
+                gt_values[:, col],
+                prop_values[:, col]
+            )
+
+            node_total += h
+            total += h
+            total_columns += 1
+
+        print(f"{name:<30} Hellinger = {node_total / gt_values.shape[1]:.8f}")
+
+    print("=" * 70)
+
+    overall = total / total_columns
+
+    print(f"Overall Average Hellinger = {overall:.8f}")
+
+    return overall
+###------------------------------
+
+
 ### ------------------------------
 if __name__ == "__main__":
 
@@ -250,5 +405,36 @@ if __name__ == "__main__":
     print("Best BN Number:", best_bn_number)
     print("Best BN Accuracy:", best_bn_accuracy)
 
-    final_output = compare_all_cpts(bn_number=best_bn_number)
-    print(final_output)
+    # final_output = compare_all_cpts(bn_number=best_bn_number)
+    # print(final_output)
+
+    gt_bn = normalize_bn(read_json(GT_FILE))
+    prop_bn = normalize_bn(get_bn(PROPOSED_FILE, bn_number=best_bn_number))
+
+    TARGET_NODES = {
+        "Network_Manipulation",
+        "Physical_Anomaly",
+        "Program_Anomaly",
+        "Execution_Integrity",
+        "Deviation_in_Response",
+        "Deviation_in_Dispatch",
+        "Root_Causes",
+    }
+
+    compute_average_cpt_kl(
+        gt_bn,
+        prop_bn,
+        target_nodes=TARGET_NODES
+    )
+
+    compute_average_cpt_rmse(
+        gt_bn,
+        prop_bn,
+        target_nodes=TARGET_NODES
+    )
+
+    compute_average_cpt_hellinger(
+        gt_bn,
+        prop_bn,
+        target_nodes=TARGET_NODES
+    )

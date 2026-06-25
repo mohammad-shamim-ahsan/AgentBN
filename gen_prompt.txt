@@ -37,14 +37,9 @@ TASK
 ---------------------------------------------------
 Make minimal necessary changes to the Conditional Probability Tables (CPTs) in the Flawed BN.
 
-Identify a small subset of CPTs in the Flawed BN that are most likely responsible for the failures in the Failure Report, and restrict modifications to those CPTs whenever possible.
-
-Before modifying CPT values, analyze the failure and success scenarios together.
-
-Make the minimum necessary CPT changes required to:
-1. fix the failure scenarios under the confidence-aware definition,
-2. preserve the success scenarios, and
-3. avoid unnecessary changes to unrelated CPTs.
+Only modify the CPT paramter values in as few CPTs as possible to fix the failure scenarios in the Failure Report.
+The failure scenarios MUST be fixed under the evaluation definition.
+The success scenarios in the Success Report MUST be preserved under the same evaluation definition.
 
 The structure of the Flawed BN is FIXED.
 Do NOT add/remove/rename any nodes.
@@ -54,6 +49,7 @@ Do NOT change node states, parent lists, or parent_state_order.
 Only the parameter values in the CPTs may be changed.
 
 You MUST output a COMPLETE Bayesian Network, not a patch.
+
 ---------------------------------------------------
 CPT VALIDITY RULES
 ---------------------------------------------------

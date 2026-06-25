@@ -1,0 +1,131 @@
+{
+  "reported_risk_level": "high",
+  "dangerous_cpts": [
+    {
+      "cpt": "Root_Causes",
+      "risk_level": "high",
+      "number_of_failure_scenarios": 12,
+      "main_problem": "This CPT recurs across many failures and contains several competing root-cause rows where FDI or System_Fault remain too weak relative to Memory_Corruption under influential parent combinations.",
+      "suspicious_parameters": [
+        {
+          "rank": 1,
+          "parameter": "P(FDI | Network_Manipulation=Yes, Execution_Integrity=Normal, Physical_Anomaly=No) = 0.38",
+          "failure_count": 5,
+          "success_count": 0,
+          "failure_to_success_ratio": 5.0,
+          "error_severity": "high",
+          "recommended_adjustment": "increase",
+          "justification": "This parameter appears repeatedly in FDI-labeled failures and is not supported by successful cases. Under a strong cyber/no-physical pattern, FDI is likely underweighted."
+        },
+        {
+          "rank": 2,
+          "parameter": "P(FDI | Network_Manipulation=Yes, Execution_Integrity=Compromised, Physical_Anomaly=No) = 0.38",
+          "failure_count": 6,
+          "success_count": 0,
+          "failure_to_success_ratio": 6.0,
+          "error_severity": "high",
+          "recommended_adjustment": "increase",
+          "justification": "This row is repeatedly implicated when the model predicts Memory_Corruption instead of FDI. The parameter is failure-dominant and not clearly protected by successes."
+        },
+        {
+          "rank": 3,
+          "parameter": "P(System_Fault | Network_Manipulation=No, Execution_Integrity=Normal, Physical_Anomaly=Yes) = 0.18",
+          "failure_count": 2,
+          "success_count": 0,
+          "failure_to_success_ratio": 2.0,
+          "error_severity": "high",
+          "recommended_adjustment": "increase",
+          "justification": "This parameter is implicated in System_Fault failures under a physical-anomaly/no-network pattern. Its current value appears too low relative to the competing Memory_Corruption mass."
+        },
+        {
+          "rank": 4,
+          "parameter": "P(System_Fault | Network_Manipulation=No, Execution_Integrity=Compromised, Physical_Anomaly=Yes) = 0.18",
+          "failure_count": 5,
+          "success_count": 0,
+          "failure_to_success_ratio": 5.0,
+          "error_severity": "high",
+          "recommended_adjustment": "increase",
+          "justification": "This row recurs in physical-side failure cases and still leaves System_Fault too weak. The pattern is failure-dominant and plausibly shifts predictions toward Memory_Corruption."
+        },
+        {
+          "rank": 5,
+          "parameter": "P(Memory_Corruption | Network_Manipulation=Yes, Execution_Integrity=Normal, Physical_Anomaly=No) = 0.59",
+          "failure_count": 4,
+          "success_count": 0,
+          "failure_to_success_ratio": 4.0,
+          "error_severity": "high",
+          "recommended_adjustment": "decrease",
+          "justification": "This Memory_Corruption mass repeatedly competes against true FDI in cyber-dominant failures. It likely overpulls the final diagnosis toward Memory_Corruption."
+        },
+        {
+          "rank": 6,
+          "parameter": "P(Memory_Corruption | Network_Manipulation=Yes, Execution_Integrity=Compromised, Physical_Anomaly=No) = 0.59",
+          "failure_count": 6,
+          "success_count": 0,
+          "failure_to_success_ratio": 6.0,
+          "error_severity": "high",
+          "recommended_adjustment": "decrease",
+          "justification": "This is one of the most repeated failure-linked parameters and directly favors the wrong class in several FDI failures. The evidence suggests Memory_Corruption is overestimated for this parent configuration."
+        }
+      ]
+    },
+    {
+      "cpt": "Execution_Integrity",
+      "risk_level": "high",
+      "number_of_failure_scenarios": 10,
+      "main_problem": "This CPT repeatedly appears in failures at the bridge between cyber/physical anomaly evidence and final root-cause inference, suggesting unstable compromise-vs-normal assumptions.",
+      "suspicious_parameters": [
+        {
+          "rank": 1,
+          "parameter": "P(Execution_Integrity=Normal | Program_Anomaly=No, Deviation_in_Response=No, Deviation_in_Dispatch=No) = 0.60",
+          "failure_count": 5,
+          "success_count": 0,
+          "failure_to_success_ratio": 5.0,
+          "error_severity": "high",
+          "recommended_adjustment": "decrease",
+          "justification": "This clean-evidence normal row is repeatedly implicated in failures and can suppress compromise propagation. It is not strongly supported by successful scenarios."
+        },
+        {
+          "rank": 2,
+          "parameter": "P(Execution_Integrity=Compromised | Program_Anomaly=Yes, Deviation_in_Response=No, Deviation_in_Dispatch=No) = 0.82",
+          "failure_count": 4,
+          "success_count": 0,
+          "failure_to_success_ratio": 4.0,
+          "error_severity": "medium",
+          "recommended_adjustment": "slightly_decrease",
+          "justification": "This parameter recurs in failures where compromise may be inferred too aggressively from program evidence alone. The repeated appearance suggests over-amplification of compromise."
+        },
+        {
+          "rank": 3,
+          "parameter": "P(Execution_Integrity=Compromised | Program_Anomaly=Yes, Deviation_in_Response=Yes, Deviation_in_Dispatch=Yes) = 0.90",
+          "failure_count": 3,
+          "success_count": 0,
+          "failure_to_success_ratio": 3.0,
+          "error_severity": "medium",
+          "recommended_adjustment": "slightly_decrease",
+          "justification": "This high-compromise row appears in multiple failures and may be too strong when all anomaly channels are active. It can reinforce downstream Memory_Corruption dominance."
+        }
+      ]
+    },
+    {
+      "cpt": "Deviation_in_Dispatch",
+      "risk_level": "high",
+      "number_of_failure_scenarios": 9,
+      "main_problem": "This CPT repeatedly contributes weak or ambiguous dispatch-deviation support under recurring dispatch patterns, affecting the compromise pathway into Execution_Integrity.",
+      "suspicious_parameters": [
+        {
+          "rank": 1,
+          "parameter": "P(Deviation_in_Dispatch=Yes | LPTN_1_vi=Found, LPTN_1_viii=Found, LPTN_1_ix=Found, LPTN_1_x=Found) = 0.05",
+          "failure_count": 7,
+          "success_count": 0,
+          "failure_to_success_ratio": 7.0,
+          "error_severity": "high",
+          "recommended_adjustment": "increase",
+          "justification": "This parameter is repeatedly flagged under the same all-Found dispatch pattern yet gives almost no support to deviation. It likely underreacts to strong dispatch-side anomaly evidence."
+        }
+      ]
+    }
+  ],
+  "overall_summary": "High-risk CPTs are concentrated in Root_Causes, Execution_Integrity, and Deviation_in_Dispatch. The strongest pattern is repeated over-attribution to Memory_Corruption and underweighting of FDI/System_Fault under cyber-dominant or physical-anomaly parent configurations, with bridge-node assumptions likely amplifying the error.",
+  "bn_number": 2
+}

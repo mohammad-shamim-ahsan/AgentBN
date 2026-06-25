@@ -21,20 +21,9 @@ You are refining an existing Bayesian Network (BN). The following is the full co
 6. Analysis memory:
 {analysis_memory}
 
----
-## REFINEMENT OBJECTIVE
-
-Identify the Bayesian Network with the lowest failure count in the Analysis Memory and use it as the baseline for refinement.
-
-Other BNs and the original flawed BN are provided only as historical context.
-
-Do NOT use the flawed BN as the baseline.
-Do NOT revert CPT values toward the flawed BN.
-
-Make minimal necessary changes to the CPTs in the baseline BN.
-
-Only modify CPT parameter values in as few CPTs as possible.
-
+---------------------------------------------------
+SUCCESS AND FAILURE DEFINITION
+---------------------------------------------------
 A scenario is considered successful only if:
 1. The predicted root cause, defined as the argmax posterior of "Root_Causes", matches the "Ground Truth"; and
 2. The posterior probability of the predicted root cause is at least 0.60.
@@ -43,21 +32,28 @@ Therefore, a scenario is considered a failure if either:
 1. The predicted root cause does not match the "Ground Truth"; or
 2. The predicted root cause matches the "Ground Truth", but its posterior probability is less than 0.60.
 
-The failure scenarios in the Analysis Memory MUST be fixed under this definition.
-The success scenarios in the Analysis Memory MUST be preserved.
+---
+## REFINEMENT OBJECTIVE
 
-For low-confidence failures, increase posterior support for the correct root cause when justified by the evidence while avoiding unnecessary changes that could harm existing successes.
+Identify the Bayesian Network with the lowest failure count in the Analysis Memory and use it as the baseline for refinement.
+
+Other BNs and the original flawed BN are provided only as historical context.
+
+Only the parameter values in the the Conditional Probability Tables (CPTs) may be changed.
 
 The graph structure, nodes, edges, states, parent lists, and parent_state_order are FIXED.
+
+Make minimal necessary changes to the CPTs of the selected baseline BN. Modify as few CPTs as possible.
+
+The failure scenarios in the Analysis Memory MUST be fixed under the evaluation definition.
+
+The success scenarios in the Analysis Memory MUST be preserved under the same evaluation definition.
 
 Use the Analysis Memory to identify:
 - failure scenarios that must be corrected,
 - success scenarios that must be preserved,
 - dangerous CPTs that may be contributing to failures,
 - suspicious parameters that should be prioritized for modification.
-
-Dangerous CPTs and suspicious parameters are guidance only.
-Failure and success scenarios are the primary optimization targets.
 
 ---
 ## CPT VALIDITY REQUIREMENTS
@@ -71,4 +67,4 @@ Whenever a CPT parameter is modified:
 ## OUTPUT REQUIREMENT
 
 Return a complete Bayesian Network JSON.
-Modify only the CPT probabilities necessary to fix the failure scenarios while preserving the success scenarios.
+Modify only the parameter values in the CPTs necessary to fix the failure scenarios while preserving the success scenarios.

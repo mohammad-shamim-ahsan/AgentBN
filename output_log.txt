@@ -1,0 +1,436 @@
+(hugging_face_venv) shamim_ist@i4-gw-pxl20-3:~/BN_Agent$ python3 orchestration_pipeline.py
+/home/shamim_ist/hugging_face_venv/lib/python3.12/site-packages/pgmpy/estimators/__init__.py:4: FutureWarning: `pgmpy.estimators.StructureScore` is deprecated and will be removed in a future release. Use `pgmpy.structure_score` instead.
+  from .StructureScore import (
+Cleared: bn_analysis.json
+Cleared: last_proposed_bn.jsonl
+
+==============================
+PIPELINE RESTART #0
+==============================
+Cleared: bn_analysis.json
+Cleared: last_proposed_bn.jsonl
+Cleared: failure_cpt_parameter_risks.jsonl
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 41.67 %
+Total: 72
+Successes: 30
+Failures: 42
+Flawed BN Accuracy: 0.42%
+Initial Acceptance Threshold: 30.29%
+
+Initial Generation Attempt 1
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 81.94 %
+Total: 72
+Successes: 59
+Failures: 13
+Accuracy = 0.82%
+
+Initial Generation Attempt 2
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 81.94 %
+Total: 72
+Successes: 59
+Failures: 13
+Accuracy = 0.82%
+
+Initial Generation Attempt 3
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+Accuracy = 0.79%
+Threshold (30.29%) not reached after 3 attempts. Using best generated BN (0.82%).
+
+Initial BN generated
+
+===== ITERATION 1 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 81.94 %
+Total: 72
+Successes: 59
+Failures: 13
+Cleared: dangerous_cpt_report.json
+
+===================================================
+
+Accuracy: 81.94 %
+Processed failure scenario 1/13
+Processed failure scenario 2/13
+Processed failure scenario 3/13
+Processed failure scenario 4/13
+Processed failure scenario 5/13
+Processed failure scenario 6/13
+Processed failure scenario 7/13
+Processed failure scenario 8/13
+Processed failure scenario 9/13
+Processed failure scenario 10/13
+Processed failure scenario 11/13
+Processed failure scenario 12/13
+Processed failure scenario 13/13
+
+Final CPT-level danger report generated.
+
+Failure ratio: 0.1806 (13/72 failed)
+
+New workflow analysis for BN #0 stored in bn_analysis.json
+
+Evaluation completed. Analysis stored.
+
+Reflexion completed. BN#1 stored.
+
+===== ITERATION 2 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 75.0 %
+Total: 72
+Successes: 54
+Failures: 18
+Removed 1 record(s) with bn_number=1
+
+No improvement, skip analysis and reflexion for this iteration BN#1 stored. New BN generated without analysis.
+
+===== ITERATION 2 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 73.61 %
+Total: 72
+Successes: 53
+Failures: 19
+Removed 1 record(s) with bn_number=1
+
+No improvement, skip analysis and reflexion for this iteration BN#1 stored. New BN generated without analysis.
+
+===== ITERATION 2 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 81.94 %
+Total: 72
+Successes: 59
+Failures: 13
+Removed 1 record(s) with bn_number=1
+
+No improvement, skip analysis and reflexion for this iteration BN#1 stored. New BN generated without analysis.
+
+===== ITERATION 2 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 91.67 %
+Total: 72
+Successes: 66
+Failures: 6
+Cleared: dangerous_cpt_report.json
+
+===================================================
+
+Accuracy: 91.67 %
+Processed failure scenario 1/6
+Processed failure scenario 2/6
+Processed failure scenario 3/6
+Processed failure scenario 4/6
+Processed failure scenario 5/6
+Processed failure scenario 6/6
+
+Final CPT-level danger report generated.
+
+Failure ratio: 0.0833 (6/72 failed)
+
+New workflow analysis for BN #1 stored in bn_analysis.json
+
+Evaluation completed. Analysis stored.
+
+Reflexion completed. BN#2 stored.
+
+===== ITERATION 3 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 72.22 %
+Total: 72
+Successes: 52
+Failures: 20
+Removed 1 record(s) with bn_number=2
+
+No improvement, skip analysis and reflexion for this iteration BN#2 stored. New BN generated without analysis.
+
+===== ITERATION 3 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 73.61 %
+Total: 72
+Successes: 53
+Failures: 19
+Removed 1 record(s) with bn_number=2
+
+No improvement, skip analysis and reflexion for this iteration BN#2 stored. New BN generated without analysis.
+
+===== ITERATION 3 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 73.61 %
+Total: 72
+Successes: 53
+Failures: 19
+Removed 1 record(s) with bn_number=2
+
+No improvement, skip analysis and reflexion for this iteration BN#2 stored. New BN generated without analysis.
+
+===== ITERATION 3 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 81.94 %
+Total: 72
+Successes: 59
+Failures: 13
+
+No improvement after 3 retries. Selecting best retry candidate (accuracy=0.82%).
+Removed 1 record(s) with bn_number=2
+Cleared: dangerous_cpt_report.json
+
+===================================================
+
+Accuracy: 81.94 %
+Processed failure scenario 1/13
+Processed failure scenario 2/13
+Processed failure scenario 3/13
+Processed failure scenario 4/13
+Processed failure scenario 5/13
+Processed failure scenario 6/13
+Processed failure scenario 7/13
+Processed failure scenario 8/13
+Processed failure scenario 9/13
+Processed failure scenario 10/13
+Processed failure scenario 11/13
+Processed failure scenario 12/13
+Processed failure scenario 13/13
+
+Final CPT-level danger report generated.
+
+Failure ratio: 0.1806 (13/72 failed)
+
+New workflow analysis for BN #2 stored in bn_analysis.json
+
+Evaluation completed. Analysis stored.
+
+Reflexion completed. BN#3 stored.
+
+===== ITERATION 4 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+Removed 1 record(s) with bn_number=3
+
+No improvement at final iteration. Retry 1/3. Regenerated BN#3.
+
+===== ITERATION 4 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 75.0 %
+Total: 72
+Successes: 54
+Failures: 18
+Removed 1 record(s) with bn_number=3
+
+No improvement at final iteration. Retry 2/3. Regenerated BN#3.
+
+===== ITERATION 4 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 73.61 %
+Total: 72
+Successes: 53
+Failures: 19
+Removed 1 record(s) with bn_number=3
+
+No improvement at final iteration. Retry 3/3. Regenerated BN#3.
+
+===== ITERATION 4 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+No improvement after 3 retries. Using best retry candidate (accuracy=0.79%).
+Removed 1 record(s) with bn_number=3
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 81.94 %
+Total: 72
+Successes: 59
+Failures: 13
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 91.67 %
+Total: 72
+Successes: 66
+Failures: 6
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 81.94 %
+Total: 72
+Successes: 59
+Failures: 13
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+
+Best BN Number: 1
+Best BN Accuracy: 0.9166666666666666
+Saved CPT identity comparison to cpt_comparison_analysis.json
+BN number: 1
+Agent change verdict: very_good
+Expected changed CPTs: ['Execution_Integrity', 'Root_Causes']
+Actual changed CPTs: ['Execution_Integrity', 'Network_Manipulation', 'Physical_Anomaly', 'Root_Causes']
+Unexpected changed CPTs: ['Network_Manipulation', 'Physical_Anomaly']
+{'bn_number': 1, 'non_identical_cpt_count': 4, 'non_identical_cpts': ['Execution_Integrity', 'Network_Manipulation', 'Physical_Anomaly', 'Root_Causes'], 'missing_in_proposed': [], 'agent_change_report': {'verdict': 'very_good', 'total_cpts': 20, 'expected_changed_count': 2, 'expected_changed_cpts': ['Execution_Integrity', 'Root_Causes'], 'actual_changed_count': 4, 'actual_changed_cpts': ['Execution_Integrity', 'Network_Manipulation', 'Physical_Anomaly', 'Root_Causes'], 'matched_expected_count': 2, 'matched_expected_cpts': ['Execution_Integrity', 'Root_Causes'], 'missed_expected_count': 0, 'missed_expected_cpts': [], 'unexpected_changed_count': 2, 'unexpected_changed_cpts': ['Network_Manipulation', 'Physical_Anomaly'], 'unflawed_cpt_count': 18, 'untouched_unflawed_count': 16, 'untouched_unflawed_cpts': ['Deviation_in_Dispatch', 'Deviation_in_Response', 'GPTN_1', 'GPTN_2', 'GPTN_3', 'GPTN_5', 'LPTN_1_i', 'LPTN_1_ii', 'LPTN_1_iii', 'LPTN_1_iv', 'LPTN_1_ix', 'LPTN_1_v', 'LPTN_1_vi', 'LPTN_1_viii', 'LPTN_1_x', 'Program_Anomaly'], 'expected_change_recall': 1.0, 'unexpected_change_rate': 0.1111, 'unflawed_preservation_rate': 0.8889}}
+======================================================================
+Deviation_in_Dispatch          0.00000000
+Deviation_in_Response          0.00000000
+Execution_Integrity            0.07343440
+Network_Manipulation           0.06655463
+Physical_Anomaly               0.01488241
+Program_Anomaly                0.00000000
+Root_Causes                    0.26617147
+======================================================================
+Overall Average CPT KL = 0.04184486
+======================================================================
+Deviation_in_Dispatch          RMSE = 0.00000000
+Deviation_in_Response          RMSE = 0.00000000
+Execution_Integrity            RMSE = 0.13968715
+Network_Manipulation           RMSE = 0.14577380
+Physical_Anomaly               RMSE = 0.07071068
+Program_Anomaly                RMSE = 0.00000000
+Root_Causes                    RMSE = 0.24814310
+======================================================================
+Overall CPT RMSE = 0.11413289
+======================================================================
+Deviation_in_Dispatch          Hellinger = 0.00000000
+Deviation_in_Response          Hellinger = 0.00000000
+Execution_Integrity            Hellinger = 0.14091294
+Network_Manipulation           Hellinger = 0.11673661
+Physical_Anomaly               Hellinger = 0.04448275
+Program_Anomaly                Hellinger = 0.00000000
+Root_Causes                    Hellinger = 0.22584356
+======================================================================
+Overall Average Hellinger = 0.04847172
+
+Pipeline finished.

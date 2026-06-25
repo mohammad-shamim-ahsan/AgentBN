@@ -201,6 +201,59 @@ def run_evaluation(bn_json, dataset_file):
 
     return failures, successes, accuracy, results
 
+def run_evaluation_2(bn_json, dataset_file):
+
+    model = build_model(bn_json)
+
+    df = pd.read_csv(dataset_file)
+    df.columns = df.columns.str.strip()
+
+    results = call_bn_inference(model, df)
+    results_df = pd.DataFrame(results)
+
+    successes = results_df[results_df["Success"] == True]
+    failures = results_df[results_df["Success"] == False]
+
+    accuracy = len(successes) / len(results_df)
+
+    print("Accuracy:", round(accuracy * 100, 2), "%")
+
+    return failures, successes, accuracy, results
+
+def get_best_bn_number(filename="last_proposed_bn.jsonl", train_csv="combined_train_scenarios.csv"):
+    best_bn_number = None
+    best_bn_accuracy = None
+    best_failure_count = float("inf")
+
+    with open(filename, "r", encoding="utf-8") as f:
+        for line in f:
+            if not line.strip():
+                continue
+
+            try:
+                record = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+
+            bn_number = record.get("bn_number")
+            bn_json = record.get("bn")
+
+            if not bn_json:
+                continue
+
+            failures, successes, accuracy, results = run_evaluation_2(
+                bn_json, train_csv
+            )
+
+            failure_count = len(failures)
+
+            if failure_count <= best_failure_count:
+                best_failure_count = failure_count
+                best_bn_number = bn_number
+                best_bn_accuracy = accuracy
+
+    return best_bn_number, best_bn_accuracy
+
 
 # ============================================================
 # MAIN
@@ -208,21 +261,28 @@ def run_evaluation(bn_json, dataset_file):
 
 if __name__ == "__main__":
 
-    # bn_json = load_bn("BN_gt.json")
+    bn_json = load_bn("BN_gt.json")
     # bn_json = load_bn("flawed_BN_0.json")
-    bn_json = find_proposed_bn(bn_number_to_find=1, filename=proposed_bn_filename)
+
+    # best_bn_number, best_bn_accuracy = get_best_bn_number(proposed_bn_filename)
+    # print("\n\nBest BN Number:", best_bn_number)
+    # print("Best BN Accuracy:", best_bn_accuracy)
+    # bn_json = find_proposed_bn(bn_number_to_find=best_bn_number, filename=proposed_bn_filename)
 
     dataset_files = [
         "original_scenarios_train.csv",
         "original_scenarios_test.csv",
         "synthetic_scenarios_train.csv",
         "synthetic_scenarios_test.csv",
-        # "Scenarios.csv"
+        "combined_train_scenarios.csv",
+        "combined_test_scenarios.csv",
+        "Scenarios.csv"
     ]
 
     all_results = {}
 
     for dataset_file in dataset_files:
+        
         failures, successes, accuracy, results = run_evaluation(
             bn_json,
             dataset_file

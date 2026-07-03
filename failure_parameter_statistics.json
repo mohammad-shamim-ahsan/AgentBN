@@ -1,0 +1,186 @@
+{
+    "bn_number": 2,
+    "parameter_statistics": {
+        "Network_Manipulation": [
+            {
+                "column": 0,
+                "state": "Yes",
+                "argmax_probability": 0.72,
+                "failure_weight": 7,
+                "success_weight": 0
+            },
+            {
+                "column": 1,
+                "state": "Yes",
+                "argmax_probability": 0.55,
+                "failure_weight": 3,
+                "success_weight": 1
+            }
+        ],
+        "Program_Anomaly": [
+            {
+                "column": 1,
+                "state": "No",
+                "argmax_probability": 0.9,
+                "failure_weight": 5,
+                "success_weight": 2
+            }
+        ],
+        "Deviation_in_Dispatch": [
+            {
+                "column": 0,
+                "state": "No",
+                "argmax_probability": 0.95,
+                "failure_weight": 10,
+                "success_weight": 9
+            }
+        ],
+        "Execution_Integrity": [
+            {
+                "column": 7,
+                "state": "Normal",
+                "argmax_probability": 0.75,
+                "failure_weight": 5,
+                "success_weight": 0
+            }
+        ],
+        "Root_Causes": [
+            {
+                "column": 6,
+                "state": "System_Fault",
+                "argmax_probability": 0.78,
+                "failure_weight": 2,
+                "success_weight": 0
+            },
+            {
+                "column": 1,
+                "state": "FDI",
+                "argmax_probability": 0.52,
+                "failure_weight": 7,
+                "success_weight": 3
+            },
+            {
+                "column": 3,
+                "state": "FDI",
+                "argmax_probability": 0.78,
+                "failure_weight": 3,
+                "success_weight": 0
+            },
+            {
+                "column": 0,
+                "state": "FDI",
+                "argmax_probability": 0.42,
+                "failure_weight": 2,
+                "success_weight": 0
+            }
+        ]
+    },
+    "common_activation_patterns": [
+        {
+            "pattern": {
+                "Deviation_in_Dispatch": 0,
+                "Execution_Integrity": 7,
+                "Program_Anomaly": 1
+            },
+            "failure_scenarios": [
+                4,
+                27,
+                28,
+                29,
+                39
+            ]
+        },
+        {
+            "pattern": {
+                "Deviation_in_Dispatch": 0,
+                "Execution_Integrity": 7,
+                "Program_Anomaly": 1,
+                "Root_Causes": 6
+            },
+            "failure_scenarios": [
+                4,
+                39
+            ]
+        },
+        {
+            "pattern": {
+                "Deviation_in_Dispatch": 0,
+                "Network_Manipulation": 0
+            },
+            "failure_scenarios": [
+                11,
+                12,
+                27
+            ]
+        },
+        {
+            "pattern": {
+                "Deviation_in_Dispatch": 0,
+                "Root_Causes": 1
+            },
+            "failure_scenarios": [
+                11,
+                13,
+                14,
+                18
+            ]
+        },
+        {
+            "pattern": {
+                "Network_Manipulation": 0,
+                "Root_Causes": 1
+            },
+            "failure_scenarios": [
+                11,
+                15,
+                23,
+                26
+            ]
+        },
+        {
+            "pattern": {
+                "Network_Manipulation": 0,
+                "Root_Causes": 0
+            },
+            "failure_scenarios": [
+                12,
+                25
+            ]
+        },
+        {
+            "pattern": {
+                "Deviation_in_Dispatch": 0,
+                "Network_Manipulation": 1,
+                "Root_Causes": 1
+            },
+            "failure_scenarios": [
+                13,
+                18
+            ]
+        },
+        {
+            "pattern": {
+                "Deviation_in_Dispatch": 0,
+                "Network_Manipulation": 1
+            },
+            "failure_scenarios": [
+                13,
+                18,
+                28
+            ]
+        },
+        {
+            "pattern": {
+                "Deviation_in_Dispatch": 0,
+                "Execution_Integrity": 7,
+                "Program_Anomaly": 1,
+                "Root_Causes": 3
+            },
+            "failure_scenarios": [
+                27,
+                28,
+                29
+            ]
+        }
+    ]
+}

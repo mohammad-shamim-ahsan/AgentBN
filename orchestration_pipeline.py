@@ -33,7 +33,7 @@ def safe_json_loads(text):
 # -----------------------------
 # CLEAR OLD FILES
 # -----------------------------
-for filename in [bn_analysis_filename, proposed_bn_filename]:
+for filename in [bn_analysis_filename, proposed_bn_filename, "dangerous_cpt_report.json", "failure_parameter_statistics.json"]:
     if os.path.exists(filename):
         open(filename, "w").close()
         print(f"Cleared: {filename}")
@@ -108,7 +108,7 @@ while restart_count <= MAX_RESTARTS:
     # -----------------------------
     # CLEAR OLD FILES
     # -----------------------------
-    for filename in [bn_analysis_filename, proposed_bn_filename, "failure_cpt_parameter_risks.jsonl"]:
+    for filename in [bn_analysis_filename, proposed_bn_filename, "dangerous_cpt_report.json", "failure_parameter_statistics.json"]:
         if os.path.exists(filename):
             open(filename, "w").close()
             print(f"Cleared: {filename}")
@@ -406,7 +406,7 @@ while restart_count <= MAX_RESTARTS:
             best_retry_bn = None
             best_retry_accuracy = float("-inf")
 
-            for filename in ["dangerous_cpt_report.json"]:
+            for filename in ["dangerous_cpt_report.json", "failure_parameter_statistics.json"]:
                 if os.path.exists(filename):
                     open(filename, "w").close()
                     print(f"Cleared: {filename}")

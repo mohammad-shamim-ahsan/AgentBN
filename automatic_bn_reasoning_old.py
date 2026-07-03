@@ -122,9 +122,13 @@ def call_bn_inference(model, df):
         )
 
         pred_idx = np.argmax(result.values)
-
         pred_state = result.state_names["Root_Causes"][pred_idx]
         confidence = result.values[pred_idx]
+
+        probs = sorted(result.values, reverse=True)
+        max_prob = probs[0]
+        second_prob = probs[1]
+        margin = max_prob - second_prob
 
         posterior_probs = {
             state: float(prob)
@@ -136,10 +140,12 @@ def call_bn_inference(model, df):
 
         # Success only if:
         # 1. Predicted class matches Ground Truth
-        # 2. Confidence >= 60%
+        # 2. Confidence >= 50%
+        # 3. Margin >= 20%
         is_success = (
             pred_state == row["Ground Truth"]
-            and confidence >= 0.60
+            and confidence >= 0.50
+            and margin >= 0.20
         )
 
         results.append({
@@ -261,8 +267,8 @@ def get_best_bn_number(filename="last_proposed_bn.jsonl", train_csv="combined_tr
 
 if __name__ == "__main__":
 
-    bn_json = load_bn("BN_gt.json")
-    # bn_json = load_bn("flawed_BN_0.json")
+    # bn_json = load_bn("BN_gt.json")
+    bn_json = load_bn("flawed_BN_0.json")
 
     # best_bn_number, best_bn_accuracy = get_best_bn_number(proposed_bn_filename)
     # print("\n\nBest BN Number:", best_bn_number)

@@ -60,3 +60,41 @@ C2: # === Pattern definitions ===
     - UED (Unexpected Deviation): deviation not predicted by upstream node or normal behavior; may indicate anomaly or attack
 - **⊤ (top)** → unknown or not applicable
 - **F / S / Others** → node type: Float, String, or Other (e.g., function call, object)
+
+# === Bayesian Network Semantics ===
+
+The Bayesian Network (BN) integrates domain knowledge to capture causal relationships among different variables involved in distinguishing undetected faults and cyberattacks.
+
+Subgraphs:
+- Global subgraph:
+  - Consists of global pattern matching results and their dependent nodes.
+  - Global patterns (GPTN_X) capture field-level and network-level manipulations.
+
+- Local subgraph:
+  - Consists of local pattern matching results and their dependent nodes.
+  - Local patterns (LPTN_X) capture application-level characteristics and deviations.
+
+Node groups:
+- Group 1 (Pattern Matching Nodes):
+  - GPTN and LPTN evidence nodes obtained from deterministic pattern matching.
+  - These nodes serve as observed evidence and are not modified.
+
+- Group 2 (Deviation Nodes):
+  - Intermediate nodes representing deviations in different regions of the DER system.
+  - These nodes aggregate evidence from multiple pattern-matching nodes.
+
+- Group 3 (Root Cause Nodes):
+  - Final diagnosis nodes representing the inferred root cause.
+  - These nodes integrate global and local deviations to determine the most probable incident type.
+
+Edges:
+- Group 1 → Group 2:
+  Represent conditional probabilities of deviations based on observed pattern-matching evidence.
+
+- Group 2 → Group 3:
+  Represent conditional probabilities of root causes given the observed global and local deviations.
+
+Implication for reasoning:
+- Information propagates from evidence nodes, through intermediate deviation nodes, to the final root-cause nodes.
+- Intermediate deviation nodes aggregate evidence from multiple pattern-matching nodes.
+- Root-cause nodes integrate upstream deviations to infer the most probable incident type.

@@ -122,9 +122,13 @@ def call_bn_inference(model, df):
         )
 
         pred_idx = np.argmax(result.values)
-
         pred_state = result.state_names["Root_Causes"][pred_idx]
         confidence = result.values[pred_idx]
+
+        probs = sorted(result.values, reverse=True)
+        max_prob = probs[0]
+        second_prob = probs[1]
+        margin = max_prob - second_prob
 
         posterior_probs = {
             state: float(prob)
@@ -136,10 +140,12 @@ def call_bn_inference(model, df):
 
         # Success only if:
         # 1. Predicted class matches Ground Truth
-        # 2. Confidence >= 60%
+        # 2. Confidence >= 50%
+        # 3. Margin >= 20%
         is_success = (
             pred_state == row["Ground Truth"]
-            and confidence >= 0.60
+            and confidence >= 0.50
+            and margin >= 0.20
         )
 
         results.append({
@@ -198,12 +204,43 @@ def run_evaluation(bn_json, dataset_file, prefix, train_test_split_ratio=0.33):
 
     print("\nAccuracy:", round(accuracy * 100, 2), "%")
 
-    train_df, test_df = train_test_split(
-        results_df,
-        test_size=train_test_split_ratio,
-        stratify=results_df["Success"],
-        random_state=42
+    # ----------------------------------------------------
+    # Use stratified split only when every class has
+    # at least two samples.
+    # ----------------------------------------------------
+    class_counts = results_df["Success"].value_counts()
+
+    use_stratify = (
+        len(class_counts) > 1
+        and class_counts.min() >= 2
     )
+
+    if use_stratify:
+
+        train_df, test_df = train_test_split(
+            results_df,
+            test_size=train_test_split_ratio,
+            stratify=results_df["Success"],
+            random_state=42
+        )
+
+        print("\nUsing stratified train/test split.")
+
+    else:
+
+        train_df, test_df = train_test_split(
+            results_df,
+            test_size=train_test_split_ratio,
+            random_state=42
+        )
+
+        print(
+            "\nWarning: Stratified split skipped because "
+            "one class has fewer than two samples."
+        )
+
+        print("Class counts:")
+        print(class_counts)
 
     # Preserve raw scenarios corresponding to the split
     train_scenarios = df.iloc[train_df.index].copy()
@@ -316,6 +353,7 @@ if __name__ == "__main__":
     bn_json = load_bn("flawed_BN_0.json")
 
     train_test_split_ratio_original=0.33
+    
     train_test_split_ratio_synthetic=0.20
 
     run_evaluation(

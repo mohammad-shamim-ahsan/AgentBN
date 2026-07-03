@@ -7,6 +7,7 @@ from pgmpy.inference import VariableElimination
 import json
 import pandas as pd
 from datetime import datetime
+from collections import deque
 
 client = OpenAI(api_key="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")
 
@@ -133,6 +134,11 @@ def call_bn_inference(model, df):
         pred_state = result.state_names["Root_Causes"][pred_idx]
         confidence = result.values.max()
 
+        probs = sorted(result.values, reverse=True)
+        max_prob = probs[0]
+        second_prob = probs[1]
+        margin = max_prob - second_prob
+
         # Store posterior probabilities
         posterior_probs = {
             state: float(prob)
@@ -146,6 +152,7 @@ def call_bn_inference(model, df):
             "Scenario": row["Scenario #"],
             "Prediction": pred_state,
             "Confidence": float(confidence),
+            "Margin": float(margin),
             "Ground Truth": row["Ground Truth"],
             "Posterior": posterior_probs
         })
@@ -172,9 +179,9 @@ def format_results_for_llm(results_df, original_df):
 
         is_success = (
             row["Prediction"] == row["Ground Truth"]
-            and row["Confidence"] >= 0.60
+            and row["Confidence"] >= 0.50
+            and row["Margin"] >= 0.20
         )
-
         status = "SUCCESS" if is_success else "FAILURE"
 
         lines.append(
@@ -218,8 +225,398 @@ def clean_text(text):
             .strip()
     )
 
+
 ###-----------------------------
-PARAMETER_RISK_FILE = "failure_cpt_parameter_risks.jsonl"
+def generate_activation_trace_csv(
+    bn_json,
+    scenarios_df,
+    inference_results,
+    output_csv="activation_trace.csv"
+):
+    """
+    Deterministically propagates node states (argmax) for every scenario
+    and stores the activated state of every node.
+
+    Parameters
+    ----------
+    bn_json : dict
+        Bayesian Network JSON.
+
+    scenarios_df : pd.DataFrame
+        Original scenario CSV.
+
+    inference_results : list
+        Output of call_bn_inference().
+
+    output_csv : str
+        Output activation trace CSV.
+    """
+
+    # ----------------------------------------------------
+    # Build node lookup
+    # ----------------------------------------------------
+    node_lookup = {
+        node["name"]: node
+        for node in bn_json["nodes"]
+    }
+
+    # ----------------------------------------------------
+    # Topological order
+    # ----------------------------------------------------
+    indegree = {n["name"]: 0 for n in bn_json["nodes"]}
+    children = {n["name"]: [] for n in bn_json["nodes"]}
+
+    for parent, child in bn_json["edges"]:
+        children[parent].append(child)
+        indegree[child] += 1
+
+    q = deque([n for n in indegree if indegree[n] == 0])
+
+    topo_order = []
+
+    while q:
+        node = q.popleft()
+        topo_order.append(node)
+
+        for child in children[node]:
+            indegree[child] -= 1
+            if indegree[child] == 0:
+                q.append(child)
+
+    # ----------------------------------------------------
+    # Trace every scenario
+    # ----------------------------------------------------
+    rows = []
+
+    for (_, scenario), inference in zip(
+        scenarios_df.iterrows(),
+        inference_results
+    ):
+
+        activated = {}
+
+        activated["Scenario"] = scenario["Scenario #"]
+        activated["Prediction"] = inference["Prediction"]
+        activated["Confidence"] = inference["Confidence"]
+        activated["Ground Truth"] = inference["Ground Truth"]
+        activated["Confidence"] = float(inference["Confidence"])
+        activated["Margin"] = float(inference["Margin"])
+
+        activated["Status"] = (
+            "SUCCESS"
+            if (
+                inference["Prediction"] == inference["Ground Truth"]
+                and inference["Confidence"] >= 0.50
+                and inference["Margin"] >= 0.20
+            )
+            else "FAILURE"
+        )
+
+        # --------------------------------------------
+        # Initialize evidence
+        # --------------------------------------------
+        for col in scenarios_df.columns:
+
+            if col in ["Scenario #", "Ground Truth"]:
+                continue
+
+            value = scenario[col]
+
+            if pd.isna(value):
+                continue
+
+            activated[col] = value.strip()
+
+        # --------------------------------------------
+        # Deterministic forward propagation
+        # --------------------------------------------
+        for node_name in topo_order:
+
+            if node_name in activated:
+                continue
+
+            node = node_lookup[node_name]
+
+            parents = node.get("parents", [])
+
+            parent_state_order = node["cpt"].get(
+                "parent_state_order",
+                {}
+            )
+
+            # Determine CPT column
+            column = 0
+            multiplier = 1
+
+            for parent in reversed(parents):
+
+                state = activated[parent]
+
+                idx = parent_state_order[parent].index(state)
+
+                column += idx * multiplier
+
+                multiplier *= len(parent_state_order[parent])
+
+            probs = [
+                row[column]
+                for row in node["cpt"]["values"]
+            ]
+
+            best_idx = probs.index(max(probs))
+
+            selected_state = node["states"][best_idx]
+            selected_prob = probs[best_idx]
+
+            # Store everything
+            activated[node_name] = selected_state
+            activated[f"{node_name}_col"] = column
+            activated[f"{node_name}_argmax_prob"] = selected_prob
+
+        rows.append(activated)
+
+        activation_df = pd.DataFrame(rows)
+
+        activation_df.to_csv(
+            output_csv,
+            index=False
+        )
+
+    print(
+        f"\nActivation trace saved to {output_csv}"
+    )
+
+    return activation_df
+
+
+
+def generate_failure_parameter_statistics(
+    activation_df, bn_number=None
+):
+
+    df = activation_df
+
+    failure_df = df[df["Status"] == "FAILURE"]
+    success_df = df[df["Status"] == "SUCCESS"]
+
+    results = {}
+
+    # --------------------------------------------------
+    # Cross-CPT activation signatures for failure scenarios
+    # --------------------------------------------------
+    common_failure_columns = {}
+
+    # Every inferred node has a *_col column
+    col_fields = [
+        c for c in df.columns
+        if c.endswith("_col")
+    ]
+
+    for col_field in col_fields:
+
+        cpt = col_field[:-4]
+
+        results[cpt] = []
+
+        # --------------------------------------------------
+        # Get unique (column, state) pairs for this CPT
+        # --------------------------------------------------
+        unique_parameters = (
+            failure_df[[col_field, cpt]]
+            .drop_duplicates()
+            .reset_index(drop=True)
+        )
+
+        for _, parameter in unique_parameters.iterrows():
+
+            column = int(parameter[col_field])
+            state = parameter[cpt]
+
+            # ----------------------------------------------
+            # Failure occurrences
+            # ----------------------------------------------
+            failure_mask = (
+                (failure_df[col_field] == column)
+                &
+                (failure_df[cpt] == state)
+            )
+
+            failure_rows = failure_df[failure_mask]
+
+            failure_weight = len(failure_rows)
+
+            # ----------------------------------------------
+            # Success occurrences
+            # ----------------------------------------------
+            success_mask = (
+                (success_df[col_field] == column)
+                &
+                (success_df[cpt] == state)
+            )
+
+            success_rows = success_df[success_mask]
+
+            success_weight = len(success_rows)
+
+            # Keep only failure-dominant parameters
+            if failure_weight <= success_weight:
+                continue
+
+            # ----------------------------------------------
+            # Record cross-CPT activation signatures
+            # ----------------------------------------------
+            for scenario in (
+                failure_rows["Scenario"]
+                .astype(int)
+                .tolist()
+            ):
+
+                if scenario not in common_failure_columns:
+                    common_failure_columns[scenario] = {}
+
+                common_failure_columns[scenario][cpt] = {
+                    "column": column,
+                    "state": state
+                }
+
+            failure_scenarios = (
+                failure_rows["Scenario"]
+                .astype(int)
+                .tolist()
+            )
+
+            success_scenarios = (
+                success_rows["Scenario"]
+                .astype(int)
+                .tolist()
+            )
+
+            # ----------------------------------------------
+            # Argmax probability
+            # (same for every occurrence of this parameter)
+            # ----------------------------------------------
+            argmax_prob = float(
+                failure_rows.iloc[0][
+                    f"{cpt}_argmax_prob"
+                ]
+            )
+
+            results[cpt].append({
+
+                "column": column,
+
+                "state": state,
+
+                "argmax_probability": argmax_prob,
+
+                "failure_weight": failure_weight,
+
+                "success_weight": success_weight,
+
+                # "failure_scenarios": failure_scenarios,
+
+                # "success_scenarios": success_scenarios
+
+            })
+
+    results = {
+        cpt: params
+        for cpt, params in results.items()
+        if params
+    }
+
+    # ----------------------------------------------
+    # Store JSON
+    # ----------------------------------------------
+    output = {
+        "parameter_statistics": results,
+        "common_failure_columns": common_failure_columns
+    }
+
+    # --------------------------------------------------
+    # Discover common activation patterns
+    # --------------------------------------------------
+    from collections import defaultdict
+
+    pattern_map = defaultdict(list)
+
+    scenarios = sorted(common_failure_columns.keys())
+
+    for i in range(len(scenarios)):
+        s1 = scenarios[i]
+
+        for j in range(i + 1, len(scenarios)):
+            s2 = scenarios[j]
+
+            common = {}
+
+            for cpt in common_failure_columns[s1]:
+
+                if cpt not in common_failure_columns[s2]:
+                    continue
+
+                if (
+                    common_failure_columns[s1][cpt]["column"]
+                    ==
+                    common_failure_columns[s2][cpt]["column"]
+                ):
+
+                    common[cpt] = (
+                        common_failure_columns[s1][cpt]["column"]
+                    )
+
+            if len(common) >= 2:
+                key = tuple(sorted(common.items()))
+                pattern_map[key].extend([s1, s2])
+
+    # --------------------------------------------------
+    # Convert to JSON-friendly format
+    # --------------------------------------------------
+    common_activation_patterns = []
+
+    for pattern, scenarios in pattern_map.items():
+
+        common_activation_patterns.append({
+
+            "pattern": {
+                cpt: column
+                for cpt, column in pattern
+            },
+
+            "failure_scenarios": sorted(
+                list(set(scenarios))
+            )
+
+        })
+
+    output = {
+
+        "bn_number": bn_number,
+
+        "parameter_statistics": results,
+
+        # "common_failure_columns": common_failure_columns,
+
+        "common_activation_patterns":
+            common_activation_patterns
+    }
+
+    with open(
+        "failure_parameter_statistics.json",
+        "w",
+        encoding="utf-8"
+    ) as f:
+        json.dump(output, f, indent=4)
+
+    print(
+        "Failure parameter statistics saved to "
+        "'failure_parameter_statistics.json'"
+    )
+
+    return output
+
+
+###-----------------------------
 CPT_DANGER_REPORT_FILE = "dangerous_cpt_report.json"
 
 
@@ -234,423 +631,302 @@ def safe_json_loads(text):
         return json.loads(text)
     except json.JSONDecodeError:
         return None
-    
-
-def analyze_failure_parameters_with_llm(bn_json, failure_scenario_text):
-    prompt = f"""
-You are analyzing a Bayesian Network failure case.
-
-Domain context:
-The Bayesian Network is used to distinguish undetected faults and cyberattacks
-in DER systems.
-
-GPTN nodes represent global cyber-physical consistency/deviation patterns.
-LPTN nodes represent local program-variable deviation patterns.
-
-GPTN/LPTN nodes are evidence/prior nodes in the BN.
-CPTs are expert-driven and model uncertainty from imperfect logs, packets,
-measurements, and insufficient data sources.
-
-Your task:
-Identify the conditional CPT paths activated by this failure scenario.
-A conditional CPT path means the sequence of CPT rows/parameters used or influenced
-by the scenario evidence, from observed evidence nodes through intermediate nodes
-to the predicted/root-cause node.
-
-Important:
-- Do not assume there is only one path.
-- Include paths supporting the wrong prediction.
-- Include paths that should have supported the ground truth but appear weak.
-
-A CPT parameter means:
-- CPT name / node name
-- parent condition values
-- target state probability that may be wrong
-
-Return ONLY valid JSON.
-
-Required JSON format:
-{{
-  "failure_scenario": "",
-  "identified_cpt_parameters": [
-    {{
-      "cpt": "",
-      "target_state": "",
-      "parent_conditions": {{}},
-      "suspected_issue": "",
-      "reason": ""
-    }}
-  ]
-}}
-
-Bayesian Network JSON:
-{json.dumps(bn_json, indent=2)}
-
-Failure scenario:
-{failure_scenario_text}
-"""
-
-    response = llm(prompt)
-    parsed = safe_json_loads(response)
-
-    if parsed is None:
-        return {
-            "failure_scenario": "unknown",
-            "identified_cpt_parameters": [],
-            "raw_response": str(response)
-        }
-
-    return parsed
-
-
-def check_parameter_against_successes_with_llm(
-    bn_json,
-    parameter_record,
-    success_text
-):
-    prompt = f"""
-You are checking whether a suspicious CPT parameter from a failed scenario is also strongly involved in successful scenarios.
-
-Decision rule:
-- If this CPT parameter appears necessary for many/all success scenarios, mark it as PROTECTED.
-- If it is not clearly involved in successes, mark it as NOT PROTECTED.
-- If uncertain, mark it as NOT PROTECTED.
-
-Return ONLY valid JSON.
-
-Required JSON format:
-{{
-  "cpt": "",
-  "target_state": "",
-  "parent_conditions": {{}},
-  "protected_by_successes": true,
-  "success_involvement_summary": "",
-  "should_store_as_risky": false
-}}
-
-Suspicious CPT parameter:
-{json.dumps(parameter_record, indent=2)}
-
-Bayesian Network JSON:
-{json.dumps(bn_json, indent=2)}
-
-Successful scenarios:
-{success_text}
-"""
-
-    response = llm(prompt)
-    parsed = safe_json_loads(response)
-
-    if parsed is None:
-        return {
-            **parameter_record,
-            "protected_by_successes": False,
-            "success_involvement_summary": "Could not parse LLM response; storing as risky by default.",
-            "should_store_as_risky": True,
-            "raw_response": str(response)
-        }
-
-    return parsed
-
-
-def append_risky_failure_record(record, filename=PARAMETER_RISK_FILE):
-    with open(filename, "a", encoding="utf-8") as f:
-        f.write(json.dumps(record) + "\n")
 
 
 def generate_cpt_danger_report(
     bn_json,
+    statistics_json,
     bn_number=None,
-    risk_file=PARAMETER_RISK_FILE
 ):
-    risky_records = []
-
-    try:
-        with open(risk_file, "r", encoding="utf-8") as f:
-            for line in f:
-                if not line.strip():
-                    continue
-
-                record = json.loads(line)
-
-                if (
-                    bn_number is not None
-                    and record.get("bn_number") != bn_number
-                ):
-                    continue
-
-                risky_records.append(record)
-
-    except FileNotFoundError:
-        risky_records = []
+    
+    if (
+        bn_number is not None
+        and statistics_json.get("bn_number") != bn_number
+    ):
+        statistics_json = {
+            "bn_number": bn_number,
+            "parameter_statistics": {},
+            "common_failure_columns": {},
+            "common_activation_patterns": []
+        }
 
     prompt = f"""
-You are analyzing candidate risky CPT parameters found across failed Bayesian Network scenarios.
+You are analyzing deterministic Bayesian Network (BN) parameter statistics.
 
-Domain context:
-The BN is designed to distinguish undetected faults and cyberattacks in DER systems.
-GPTN/LPTN pattern nodes bridge cyber-side observations and physical-side observations.
-Repeated risky CPTs may indicate unstable expert-driven probability assumptions.
+The deterministic analysis has already identified candidate failure-associated CPT parameters.
 
-Important:
-The parameter records below have already passed an initial deterministic statistical screening.
-However, do NOT assume every candidate parameter is truly suspicious.
-Your job is to identify the strongest evidence-supported risky CPTs and parameters.
+Your task is to determine which, if any, candidate CPTs are genuinely plausible contributors to the observed failure patterns. Base your judgment on the domain context, the Bayesian Network structure, and the provided deterministic statistics.
+
+The objective is to identify the smallest sufficient set of CPTs whose modification is likely to improve the BN's diagnostic performance. In most cases, this should be a single CPT. Recommend multiple CPTs only when there is strong, independent evidence that each contributes to repeated incorrect predictions and their effects cannot be explained by the same upstream reasoning path.
+
+You are given:
+
+1. Domain context.
+
+{context}
+
+2. The complete Bayesian Network.
+
+{json.dumps(bn_json, indent=2)}
+
+3. Failure parameter statistics.
+
+{json.dumps(statistics_json, indent=2)}
+
+Definitions:
+
+- column:
+  Activated CPT column (i.e., the parent-state configuration).
+
+- state:
+  Selected child state obtained by deterministic forward propagation using the argmax rule.
+
+- argmax_probability:
+  The probability assigned by the activated CPT column to the selected child state.
+
+- failure_weight:
+  Number of unique FAILURE scenarios in which the same CPT parameter
+  (same CPT, same column, same child state) was activated.
+
+- success_weight:
+  Number of unique SUCCESS scenarios in which the same CPT parameter
+  (same CPT, same column, same child state) was activated.
+
+Reasoning principles:
+
+1. The reported statistics identify deterministic candidate parameters only. Their presence does not necessarily imply that the corresponding CPT requires modification.
+
+2. Evaluate each candidate CPT holistically. Consider the deterministic statistics, common activation patterns, argmax_probability, Bayesian Network semantics, domain knowledge, and the CPT's role within the causal reasoning path. No single factor should be treated as sufficient evidence for recommending modification.
+
+3. Consider the complete set of candidate parameters within each CPT. Multiple consistently failure-associated parameters generally provide stronger evidence than a single isolated parameter.
+
+4. Evaluate both failure_weight and success_weight together. Parameters that appear relatively frequently in successful scenarios provide weaker evidence than those predominantly associated with failures.
+
+5. Consider the common activation patterns across failure scenarios. Repeated co-occurrence of CPT columns may indicate a common reasoning path within the Bayesian Network; however, recurring activation alone does not imply that every CPT in the pattern requires modification.
+
+6. Use argmax_probability as supporting evidence rather than a standalone criterion. Whether a strongly activated CPT parameter is problematic should be judged together with the domain semantics and the overall causal reasoning path.
+
+7. Recommend modifying a CPT only when the collective evidence consistently indicates that its probability assignments are plausible contributors to repeated incorrect predictions and that modifying the CPT is likely to improve the overall diagnostic behavior of the Bayesian Network while preserving successful reasoning.
+
+8. Prefer the smallest sufficient set of CPTs. If multiple candidate CPTs belong to the same causal reasoning path, determine whether the apparent risk of downstream CPTs is better explained by upstream CPTs before recommending multiple modifications. Recommend additional CPTs only when there is strong evidence of independent contributions that cannot be explained by upstream probability assignments.
+
+9. If the available evidence is weak, ambiguous, inconsistent, or better explained by other CPTs in the same reasoning path, do not recommend modifying the CPT.
 
 Your task:
 
-Step 1:
-Identify risky CPTs.
+Step 1.
+Evaluate every candidate CPT by jointly considering:
+- the deterministic parameter statistics,
+- the common activation patterns across failure scenarios,
+- the argmax probabilities,
+- and the provided domain context.
 
-Step 2:
-For each reported risky CPT, identify only the suspicious parameters inside that CPT.
+Step 2.
+Determine whether any candidate CPT is sufficiently supported to warrant modification.
 
-Priority rule:
-1. If at least one HIGH-RISK CPT exists, report ONLY HIGH-RISK CPTs.
-2. If no HIGH-RISK CPT exists, report ONLY MEDIUM-RISK CPTs.
-3. If neither exists, return an empty report.
+Step 3.
+If modification is justified, classify the CPT as HIGH or MEDIUM risk.
 
-A CPT should be classified as HIGH RISK only if:
-- it appears repeatedly across failure scenarios
-- it contains multiple suspicious parameters
-- it likely has strong influence on incorrect predictions
-- it is not strongly protected by successful scenarios
+Step 4.
+If HIGH-risk CPTs exist, report ONLY HIGH-risk CPTs.
+Otherwise, if no HIGH-risk CPTs exist but MEDIUM-risk CPTs do, report ONLY MEDIUM-risk CPTs.
+If neither HIGH-risk nor MEDIUM-risk CPTs are sufficiently supported, return "none".
 
-A CPT should be classified as MEDIUM RISK if:
-- it appears in some failure scenarios
-- it contains at least one suspicious parameter
-- it may contribute to wrong predictions, but evidence is weaker than high-risk CPTs
+Do NOT blindly report all candidate CPTs.
 
-Parameter-reporting rule:
-Do NOT blindly report all parameters inside a risky CPT.
-
-Report ONLY parameters that:
-- repeatedly appear in failed scenarios
-- are failure-dominant compared with successful scenarios
-- have medium or high error severity
-- plausibly contribute to incorrect predictions
-- The "justification" field must be short: 1–2 sentences maximum.
+Do NOT report a CPT simply because it appears in the deterministic statistics.
 
 Return ONLY valid JSON.
 
-If HIGH-RISK CPTs exist:
+Output format:
+
 {{
-  "reported_risk_level": "high",
+  "reported_risk_level": "high | medium | none",
+
   "dangerous_cpts": [
     {{
       "cpt": "",
-      "risk_level": "high",
+
+      "risk_level": "high | medium",
+
       "number_of_failure_scenarios": 0,
-      "main_problem": "",
+
+      "main_problem": "Briefly explain why this CPT is considered a plausible contributor to repeated incorrect predictions based on the deterministic statistics, the BN structure, and the domain semantics.",
+
       "suspicious_parameters": [
         {{
           "rank": 1,
-          "parameter": "",
-          "failure_count": 0,
-          "success_count": 0,
+
+          "parameter": "Column X → ChildState",
+
+          "failure_weight": 0,
+
+          "success_weight": 0,
+
           "failure_to_success_ratio": 0.0,
-          "error_severity": "medium/high",
-          "recommended_adjustment": "increase/decrease/slightly_increase/slightly_decrease",
+
+          "argmax_probability": 0.0,
+
+          "recommended_adjustment":
+              "increase | decrease | slightly_increase | slightly_decrease",
+
           "justification": ""
         }}
-      ],
+      ]
     }}
   ],
+
   "overall_summary": ""
 }}
 
-If no HIGH-RISK CPT exists, report MEDIUM-RISK CPTs only:
+If no HIGH-risk CPT exists, report MEDIUM-risk CPTs only.
+
+If neither HIGH-risk nor MEDIUM-risk CPTs are sufficiently supported, return:
+
 {{
-  "reported_risk_level": "medium",
-  "dangerous_cpts": [
-    {{
-      "cpt": "",
-      "risk_level": "medium",
-      "number_of_failure_scenarios": 0,
-      "main_problem": "",
-      "suspicious_parameters": [
-        {{
-          "rank": 1,
-          "parameter": "",
-          "failure_count": 0,
-          "success_count": 0,
-          "failure_to_success_ratio": 0.0,
-          "error_severity": "medium/high",
-          "recommended_adjustment": "increase/decrease/slightly_increase/slightly_decrease",
-          "justification": ""
-        }}
-      ],
-    }}
-  ],
-  "overall_summary": ""
+    "reported_risk_level": "none",
+    "dangerous_cpts": [],
+    "overall_summary": "No high-risk or medium-risk CPTs identified."
 }}
-
-If neither HIGH-RISK nor MEDIUM-RISK CPTs exist:
-{{
-  "reported_risk_level": "none",
-  "dangerous_cpts": [],
-  "overall_summary": "No high-risk or medium-risk CPTs identified."
-}}
-
-Bayesian Network JSON:
-{json.dumps(bn_json, indent=2)}
-
-Candidate risky CPT parameter records:
-{json.dumps(risky_records, indent=2)}
 """
 
     response = llm(prompt)
-    parsed = safe_json_loads(response)
 
-    if parsed is None:
-        parsed = {
-            "bn_number": bn_number,
+    report = safe_json_loads(response)
+
+    if report is None:
+        report = {
+            "reported_risk_level": "none",
             "dangerous_cpts": [],
-            "overall_summary": "Could not parse final LLM report.",
+            "overall_summary": "Unable to parse LLM response.",
             "raw_response": str(response)
         }
-    else:
-        parsed["bn_number"] = bn_number
 
-    with open(CPT_DANGER_REPORT_FILE, "w", encoding="utf-8") as f:
-        json.dump(parsed, f, indent=2)
+    with open(
+        "dangerous_cpt_report.json",
+        "w",
+        encoding="utf-8"
+    ) as f:
+        json.dump(report, f, indent=4)
 
-    return parsed
+    return report
 
 
+### -----------------------------
 def run_evaluation(bn_json, bn_number=None):
-    
+
+    # --------------------------------------------------
     # Step 1: Build BN model
+    # --------------------------------------------------
     model = build_model(bn_json)
 
+    # --------------------------------------------------
     # Step 2: Run BN inference
+    # --------------------------------------------------
     results = call_bn_inference(model, df)
 
     results_df = pd.DataFrame(results)
 
-    # Step 3: Split failures and successes
+    # --------------------------------------------------
+    # Step 3: Deterministic activation tracing
+    # --------------------------------------------------
+    activation_df = generate_activation_trace_csv(
+        bn_json=bn_json,
+        scenarios_df=df,
+        inference_results=results,
+        output_csv="activation_trace.csv"
+    )
+
+    # --------------------------------------------------
+    # Step 4: Deterministic parameter statistics
+    # --------------------------------------------------
+    parameter_statistics = generate_failure_parameter_statistics(
+        activation_df=activation_df, bn_number=bn_number
+    )
+
+    # --------------------------------------------------
+    # Step 5: LLM danger report
+    # --------------------------------------------------
+    cpt_danger_report = generate_cpt_danger_report(
+        bn_json=bn_json,
+        statistics_json=parameter_statistics,
+        bn_number=bn_number
+    )
+
+    # --------------------------------------------------
+    # Evaluation
+    # --------------------------------------------------
     failures = results_df[
         (results_df["Prediction"] != results_df["Ground Truth"])
         |
-        (results_df["Confidence"] < 0.60)
-    ]
-
-    successes = results_df[
-        (results_df["Prediction"] == results_df["Ground Truth"])
-        &
-        (results_df["Confidence"] >= 0.60)
-    ]
-
-    accuracy = len(successes) / len(results_df) if len(results_df) > 0 else 0
-    print("\n===================================================")
-    print("\nAccuracy:", round(accuracy * 100, 2), "%")
-
-    # Step 4: Format successes once
-    success_text = format_results_for_llm(successes, df)
-
-    all_failure_records = []
-
-    total_failures = len(failures)
-    processed_failures = 0
-
-    # Step 5: Process one failure scenario at a time
-    for failure_index, failure_row in failures.iterrows():
-        single_failure_df = pd.DataFrame([failure_row])
-        failure_scenario_text = format_results_for_llm(single_failure_df, df)
-
-        # Step 5.1: Identify CPT parameters involved in this failure
-        failure_parameter_analysis = analyze_failure_parameters_with_llm(
-            bn_json=bn_json,
-            failure_scenario_text=failure_scenario_text
+        (
+            (results_df["Confidence"] < 0.50)
+            |
+            (results_df["Margin"] < 0.20)
         )
+    ]
 
-        risky_parameters = []
+    successes = results_df.drop(failures.index)
 
-        # Step 5.2: Check each parameter against success scenarios
-        for parameter_record in failure_parameter_analysis.get(
-            "identified_cpt_parameters", []
-        ):
-            checked_parameter = check_parameter_against_successes_with_llm(
-                bn_json=bn_json,
-                parameter_record=parameter_record,
-                success_text=success_text
-            )
+    accuracy = (
+        len(successes) / len(results_df)
+        if len(results_df) > 0 else 0
+    )
 
-            if checked_parameter.get("should_store_as_risky", False):
-                risky_parameters.append(checked_parameter)
-
-        # Step 5.3: Store only if risky parameters exist
-        if risky_parameters:
-            failure_record = {
-                "bn_number": bn_number,
-                "timestamp": str(datetime.now()),
-                "failure_scenario_index": int(failure_index),
-                "failure_scenario_text": failure_scenario_text,
-                "identified_cpt_parameters": risky_parameters
-            }
-
-            append_risky_failure_record(failure_record)
-            all_failure_records.append(failure_record)
-
-            processed_failures += 1
-            
-            print(
-                f"Processed failure scenario "
-                f"{processed_failures}/{total_failures}"
-            )
-
-    # Step 6: Final CPT-level danger report
-    cpt_danger_report = generate_cpt_danger_report(bn_json, bn_number=bn_number)
-
-    print("\nFinal CPT-level danger report generated.")
-
-    failures_text = format_results_for_llm(failures, df)
+    print("\n===================================================")
+    print(f"\nAccuracy: {accuracy * 100:.2f}%")
 
     return {
-        # "results": results,
         "failure_count": len(failures),
         "success_count": len(successes),
-        "failure_scenarios_text": failures_text,
-        "success_scenarios_text": success_text,
-        # "risky_failure_records": all_failure_records,
-        "cpt_danger_report": cpt_danger_report
+        "accuracy": accuracy,
+        "cpt_danger_report": cpt_danger_report,
     }
 
 
 def store_analysis(bn_number, evaluation_output):
+
     record = {
         "timestamp": str(datetime.now()),
         "bn_number": bn_number,
         "failure_count": evaluation_output["failure_count"],
         "success_count": evaluation_output["success_count"],
-        "failure_scenarios_text": evaluation_output["failure_scenarios_text"],
-        "success_scenarios_text": evaluation_output["success_scenarios_text"],
-        # "risky_failure_records": evaluation_output["risky_failure_records"],
-        "cpt_danger_report": evaluation_output["cpt_danger_report"],
-        # "scenario_results": evaluation_output["results"]
+        "accuracy": evaluation_output["accuracy"],
+        "cpt_danger_report":
+            evaluation_output["cpt_danger_report"]
+
     }
 
-    with open("bn_analysis.json", "a", encoding="utf-8") as f:
+    with open(
+        "bn_analysis.json",
+        "a",
+        encoding="utf-8"
+    ) as f:
+
         f.write(json.dumps(record) + "\n")
 
-    print(f"\nNew workflow analysis for BN #{bn_number} stored in bn_analysis.json")
+    print(
+        f"\nWorkflow analysis for BN #{bn_number} "
+        "stored in bn_analysis.json"
+    )
 
 
-
+def load_bn(filename):
+    with open(filename, "r") as f:
+        return json.load(f)
+    
 ### ------------------------------MAIN--------------------------------------
 if __name__ == "__main__":
     
     bn_number = 1
+    
+    # bn_json = find_proposed_bn(
+    #     bn_number,
+    #     proposed_bn_filename
+    # )
 
-    bn_json = find_proposed_bn(
-        bn_number,
-        proposed_bn_filename
-    )
+    bn_json = load_bn("flawed_BN_0.json")
 
     evaluation_output = run_evaluation(bn_json, bn_number=bn_number)
-    # print(json.dumps(evaluation_output["cpt_danger_report"], indent=2))
 
-    store_analysis(
-        bn_number,
-        evaluation_output
-    )
+    store_analysis(bn_number, evaluation_output)

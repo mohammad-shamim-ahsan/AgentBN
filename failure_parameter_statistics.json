@@ -3,27 +3,25 @@
     "parameter_statistics": {
         "Network_Manipulation": [
             {
+                "column": 2,
+                "state": "Yes",
+                "argmax_probability": 0.8,
+                "failure_weight": 3,
+                "success_weight": 1
+            },
+            {
                 "column": 0,
                 "state": "Yes",
-                "argmax_probability": 0.72,
-                "failure_weight": 7,
-                "success_weight": 0
+                "argmax_probability": 0.75,
+                "failure_weight": 6,
+                "success_weight": 1
             },
             {
                 "column": 1,
                 "state": "Yes",
-                "argmax_probability": 0.55,
-                "failure_weight": 3,
-                "success_weight": 1
-            }
-        ],
-        "Program_Anomaly": [
-            {
-                "column": 1,
-                "state": "No",
-                "argmax_probability": 0.9,
-                "failure_weight": 5,
-                "success_weight": 2
+                "argmax_probability": 0.6,
+                "failure_weight": 4,
+                "success_weight": 0
             }
         ],
         "Deviation_in_Dispatch": [
@@ -31,7 +29,16 @@
                 "column": 0,
                 "state": "No",
                 "argmax_probability": 0.95,
-                "failure_weight": 10,
+                "failure_weight": 12,
+                "success_weight": 7
+            }
+        ],
+        "Deviation_in_Response": [
+            {
+                "column": 0,
+                "state": "No",
+                "argmax_probability": 0.95,
+                "failure_weight": 11,
                 "success_weight": 9
             }
         ],
@@ -39,38 +46,52 @@
             {
                 "column": 7,
                 "state": "Normal",
-                "argmax_probability": 0.75,
-                "failure_weight": 5,
-                "success_weight": 0
+                "argmax_probability": 0.8,
+                "failure_weight": 3,
+                "success_weight": 2
+            },
+            {
+                "column": 3,
+                "state": "Normal",
+                "argmax_probability": 0.7,
+                "failure_weight": 7,
+                "success_weight": 4
             }
         ],
         "Root_Causes": [
             {
                 "column": 6,
                 "state": "System_Fault",
-                "argmax_probability": 0.78,
-                "failure_weight": 2,
+                "argmax_probability": 0.75,
+                "failure_weight": 4,
                 "success_weight": 0
             },
             {
                 "column": 1,
                 "state": "FDI",
-                "argmax_probability": 0.52,
-                "failure_weight": 7,
-                "success_weight": 3
+                "argmax_probability": 0.55,
+                "failure_weight": 6,
+                "success_weight": 0
             },
             {
                 "column": 3,
                 "state": "FDI",
-                "argmax_probability": 0.78,
-                "failure_weight": 3,
-                "success_weight": 0
+                "argmax_probability": 0.75,
+                "failure_weight": 5,
+                "success_weight": 2
             },
             {
                 "column": 0,
                 "state": "FDI",
-                "argmax_probability": 0.42,
-                "failure_weight": 2,
+                "argmax_probability": 0.45,
+                "failure_weight": 1,
+                "success_weight": 0
+            },
+            {
+                "column": 2,
+                "state": "FDI",
+                "argmax_probability": 0.5,
+                "failure_weight": 1,
                 "success_weight": 0
             }
         ]
@@ -79,22 +100,48 @@
         {
             "pattern": {
                 "Deviation_in_Dispatch": 0,
-                "Execution_Integrity": 7,
-                "Program_Anomaly": 1
+                "Deviation_in_Response": 0,
+                "Root_Causes": 6
             },
             "failure_scenarios": [
                 4,
-                27,
-                28,
-                29,
+                5,
                 39
             ]
         },
         {
             "pattern": {
                 "Deviation_in_Dispatch": 0,
+                "Deviation_in_Response": 0
+            },
+            "failure_scenarios": [
+                4,
+                5,
+                11,
+                12,
+                13,
+                14,
+                28,
+                39
+            ]
+        },
+        {
+            "pattern": {
+                "Deviation_in_Dispatch": 0,
+                "Deviation_in_Response": 0,
+                "Execution_Integrity": 7
+            },
+            "failure_scenarios": [
+                4,
+                28,
+                39
+            ]
+        },
+        {
+            "pattern": {
+                "Deviation_in_Dispatch": 0,
+                "Deviation_in_Response": 0,
                 "Execution_Integrity": 7,
-                "Program_Anomaly": 1,
                 "Root_Causes": 6
             },
             "failure_scenarios": [
@@ -104,54 +151,119 @@
         },
         {
             "pattern": {
-                "Deviation_in_Dispatch": 0,
-                "Network_Manipulation": 0
+                "Deviation_in_Response": 0,
+                "Root_Causes": 6
             },
             "failure_scenarios": [
-                11,
-                12,
-                27
+                4,
+                39,
+                40
             ]
         },
         {
             "pattern": {
                 "Deviation_in_Dispatch": 0,
-                "Root_Causes": 1
+                "Deviation_in_Response": 0,
+                "Execution_Integrity": 3
+            },
+            "failure_scenarios": [
+                5,
+                11,
+                12,
+                13,
+                14
+            ]
+        },
+        {
+            "pattern": {
+                "Deviation_in_Dispatch": 0,
+                "Execution_Integrity": 3
+            },
+            "failure_scenarios": [
+                5,
+                12,
+                18
+            ]
+        },
+        {
+            "pattern": {
+                "Deviation_in_Response": 0,
+                "Execution_Integrity": 3,
+                "Root_Causes": 6
+            },
+            "failure_scenarios": [
+                5,
+                40
+            ]
+        },
+        {
+            "pattern": {
+                "Deviation_in_Dispatch": 0,
+                "Deviation_in_Response": 0,
+                "Execution_Integrity": 3,
+                "Network_Manipulation": 0
+            },
+            "failure_scenarios": [
+                11,
+                12
+            ]
+        },
+        {
+            "pattern": {
+                "Deviation_in_Dispatch": 0,
+                "Deviation_in_Response": 0,
+                "Execution_Integrity": 3,
+                "Root_Causes": 3
             },
             "failure_scenarios": [
                 11,
                 13,
+                14
+            ]
+        },
+        {
+            "pattern": {
+                "Deviation_in_Dispatch": 0,
+                "Execution_Integrity": 3,
+                "Root_Causes": 3
+            },
+            "failure_scenarios": [
+                11,
                 14,
                 18
             ]
         },
         {
             "pattern": {
-                "Network_Manipulation": 0,
-                "Root_Causes": 1
+                "Deviation_in_Dispatch": 0,
+                "Deviation_in_Response": 0,
+                "Root_Causes": 3
             },
             "failure_scenarios": [
                 11,
-                15,
-                23,
-                26
+                14,
+                28
             ]
         },
         {
             "pattern": {
-                "Network_Manipulation": 0,
-                "Root_Causes": 0
+                "Deviation_in_Response": 0,
+                "Execution_Integrity": 3
             },
             "failure_scenarios": [
+                11,
                 12,
-                25
+                13,
+                14,
+                40
             ]
         },
         {
             "pattern": {
                 "Deviation_in_Dispatch": 0,
+                "Execution_Integrity": 3,
                 "Network_Manipulation": 1,
-                "Root_Causes": 1
+                "Root_Causes": 3
             },
             "failure_scenarios": [
                 13,
@@ -166,20 +278,82 @@
             "failure_scenarios": [
                 13,
                 18,
+                21,
                 28
             ]
         },
         {
             "pattern": {
                 "Deviation_in_Dispatch": 0,
-                "Execution_Integrity": 7,
-                "Program_Anomaly": 1,
+                "Deviation_in_Response": 0,
+                "Network_Manipulation": 1,
                 "Root_Causes": 3
             },
             "failure_scenarios": [
-                27,
-                28,
-                29
+                13,
+                28
+            ]
+        },
+        {
+            "pattern": {
+                "Deviation_in_Dispatch": 0,
+                "Network_Manipulation": 2
+            },
+            "failure_scenarios": [
+                14,
+                19
+            ]
+        },
+        {
+            "pattern": {
+                "Deviation_in_Response": 0,
+                "Network_Manipulation": 2
+            },
+            "failure_scenarios": [
+                14,
+                22
+            ]
+        },
+        {
+            "pattern": {
+                "Network_Manipulation": 0,
+                "Root_Causes": 1
+            },
+            "failure_scenarios": [
+                15,
+                23,
+                26
+            ]
+        },
+        {
+            "pattern": {
+                "Deviation_in_Dispatch": 0,
+                "Network_Manipulation": 1,
+                "Root_Causes": 3
+            },
+            "failure_scenarios": [
+                18,
+                28
+            ]
+        },
+        {
+            "pattern": {
+                "Deviation_in_Dispatch": 0,
+                "Root_Causes": 1
+            },
+            "failure_scenarios": [
+                19,
+                21
+            ]
+        },
+        {
+            "pattern": {
+                "Network_Manipulation": 2,
+                "Root_Causes": 1
+            },
+            "failure_scenarios": [
+                19,
+                22
             ]
         }
     ]

@@ -7,7 +7,7 @@ import pandas as pd
 from bn_generator import generate_bn, store_bn_proposal
 from automatic_bn_reasoning_old import run_evaluation as initial_run_evaluation
 from bn_generator_evaluator import find_proposed_bn, run_evaluation, store_analysis
-from bn_generator_reflexion import generate_refined_bn, store_new_bn
+from bn_generator_reflexion import generate_and_select_best_candidate, store_new_bn
 from bn_validator import GT_FILE, compute_average_cpt_hellinger, compute_average_cpt_kl, compute_average_cpt_rmse, get_best_bn_number, compare_all_cpts, get_bn, normalize_bn, read_json
 
 bn_analysis_filename = "bn_analysis.json"
@@ -127,91 +127,89 @@ while restart_count <= MAX_RESTARTS:
 
     train_csv="combined_train_scenarios.csv"
 
-    # bn_text = generate_bn(full_context, flawed_bn, success_report, failure_report, gen_prompt_template_text)
-
-    # bn_json = safe_json_loads(bn_text)
-
-    # if bn_json is None:
-    #     print("\nInitial BN generation failed. Trying again...")
-    #     continue
-
-    # store_bn_proposal(bn_json, bn_number, proposed_bn_filename)
-
     ###------------------------------------------------------
 
-    failures, successes, flawed_accuracy, results = initial_run_evaluation(safe_json_loads(flawed_bn), train_csv)
+    # failures, successes, flawed_accuracy, results = initial_run_evaluation(safe_json_loads(flawed_bn), train_csv)
 
-    best_bn = None
-    best_accuracy = float("-inf")
+    # best_bn = None
+    # best_accuracy = float("-inf")
 
-    initial_retry = 0
-    MAX_INITIAL_RETRIES = 3
-    INITIAL_IMPROVEMENT_RATIO = 0.30  # recover at least 30% of the gap
+    # initial_retry = 0
+    # MAX_INITIAL_RETRIES = 3
+    # INITIAL_IMPROVEMENT_RATIO = 0.30  # recover at least 30% of the gap
 
-    INITIAL_ACCURACY_THRESHOLD = (
-        flawed_accuracy +
-        INITIAL_IMPROVEMENT_RATIO * (1.0 - flawed_accuracy)
+    # INITIAL_ACCURACY_THRESHOLD = (
+    #     flawed_accuracy +
+    #     INITIAL_IMPROVEMENT_RATIO * (1.0 - flawed_accuracy)
+    # )
+
+    # print(f"Flawed BN Accuracy: {100*flawed_accuracy:.2f}%")
+    # print(f"Initial Acceptance Threshold: {100*INITIAL_ACCURACY_THRESHOLD:.2f}%")
+
+    # for initial_retry in range(MAX_INITIAL_RETRIES):
+
+    #     print(f"\nInitial Generation Attempt {initial_retry+1}")
+
+    #     bn_text = generate_bn(
+    #         full_context,
+    #         flawed_bn,
+    #         success_report,
+    #         failure_report,
+    #         gen_prompt_template_text
+    #     )
+
+    #     bn_json = safe_json_loads(bn_text)
+
+    #     if bn_json is None:
+    #         print("Invalid JSON.")
+    #         continue
+
+    #     failures, successes, accuracy, results = initial_run_evaluation(
+    #         bn_json,
+    #         train_csv
+    #     )
+
+    #     print(f"Accuracy = {100*accuracy:.2f}%")
+
+    #     if accuracy > best_accuracy:
+    #         best_accuracy = accuracy
+    #         best_bn = copy.deepcopy(bn_json)
+
+    #     if accuracy >= INITIAL_ACCURACY_THRESHOLD:
+    #         print("Initial BN accepted.")
+    #         break
+
+    # if best_bn is None:
+    #     print("Unable to generate a valid BN.")
+    #     continue
+
+    # bn_json = best_bn
+
+    # store_bn_proposal(
+    #     bn_json,
+    #     bn_number,
+    #     proposed_bn_filename
+    # )
+
+    # if best_accuracy >= INITIAL_ACCURACY_THRESHOLD:
+    #     print(f"Accepted initial BN ({100*best_accuracy:.2f}%).")
+    # else:
+    #     print(
+    #         f"Threshold ({100*INITIAL_ACCURACY_THRESHOLD:.2f}%) "
+    #         f"not reached after {MAX_INITIAL_RETRIES} attempts. "
+    #         f"Using best generated BN ({100*best_accuracy:.2f}%)."
+    #     )
+
+    # print("\nInitial BN generated")
+
+    ###------------------------------------------------------
+    # Start a fresh proposed BN file
+    open(proposed_bn_filename, "w").close()
+
+    store_new_bn(
+        0,
+        safe_json_loads(flawed_bn)
     )
-
-    print(f"Flawed BN Accuracy: {100*flawed_accuracy:.2f}%")
-    print(f"Initial Acceptance Threshold: {100*INITIAL_ACCURACY_THRESHOLD:.2f}%")
-
-    for initial_retry in range(MAX_INITIAL_RETRIES):
-
-        print(f"\nInitial Generation Attempt {initial_retry+1}")
-
-        bn_text = generate_bn(
-            full_context,
-            flawed_bn,
-            success_report,
-            failure_report,
-            gen_prompt_template_text
-        )
-
-        bn_json = safe_json_loads(bn_text)
-
-        if bn_json is None:
-            print("Invalid JSON.")
-            continue
-
-        failures, successes, accuracy, results = initial_run_evaluation(
-            bn_json,
-            train_csv
-        )
-
-        print(f"Accuracy = {100*accuracy:.2f}%")
-
-        if accuracy > best_accuracy:
-            best_accuracy = accuracy
-            best_bn = copy.deepcopy(bn_json)
-
-        if accuracy >= INITIAL_ACCURACY_THRESHOLD:
-            print("Initial BN accepted.")
-            break
-
-    if best_bn is None:
-        print("Unable to generate a valid BN.")
-        continue
-
-    bn_json = best_bn
-
-    store_bn_proposal(
-        bn_json,
-        bn_number,
-        proposed_bn_filename
-    )
-
-    if best_accuracy >= INITIAL_ACCURACY_THRESHOLD:
-        print(f"Accepted initial BN ({100*best_accuracy:.2f}%).")
-    else:
-        print(
-            f"Threshold ({100*INITIAL_ACCURACY_THRESHOLD:.2f}%) "
-            f"not reached after {MAX_INITIAL_RETRIES} attempts. "
-            f"Using best generated BN ({100*best_accuracy:.2f}%)."
-        )
-
-    print("\nInitial BN generated")
-
     ###------------------------------------------------------
 
     solved = False
@@ -280,27 +278,23 @@ while restart_count <= MAX_RESTARTS:
                 # The new BN will be generated using only earlier accepted BNs and analysis memory.
                 remove_bn(bn_number, proposed_bn_filename)
 
-                new_bn = generate_refined_bn(
+                new_bn = generate_and_select_best_candidate(
                     full_context,
-                    flawed_bn,
-                    original_success_report,
-                    original_failure_report,
-                    bn_number,
                     proposed_bn_filename,
                     bn_analysis_filename,
-                    max_records
+                    train_csv
                 )
 
-                new_bn_json = safe_json_loads(new_bn)
+                # new_bn_json = safe_json_loads(new_bn)
 
-                if new_bn_json is None:
-                    print("\nInvalid JSON from LLM during Reflexion.")
-                    print("Stopping safely.")
-                    break
+                # if new_bn_json is None:
+                #     print("\nInvalid JSON from LLM during Reflexion.")
+                #     print("Stopping safely.")
+                #     break
 
                 store_new_bn(
                     bn_number,
-                    new_bn_json
+                    new_bn
                 )
 
                 no_improvement_retry += 1
@@ -347,29 +341,25 @@ while restart_count <= MAX_RESTARTS:
             # The new BN will be generated using only earlier accepted BNs and analysis memory.
             remove_bn(bn_number, proposed_bn_filename)
 
-            new_bn = generate_refined_bn(
+            new_bn = generate_and_select_best_candidate(
                 full_context,
-                flawed_bn,
-                original_success_report,
-                original_failure_report,
-                bn_number,
                 proposed_bn_filename,
                 bn_analysis_filename,
-                max_records
+                train_csv
             )
 
-            new_bn_json = safe_json_loads(new_bn)
+            # new_bn_json = safe_json_loads(new_bn)
 
-            if new_bn_json is None:
+            # if new_bn_json is None:
 
-                print("\nInvalid JSON from LLM during Reflexion.")
-                print("Stopping safely.")
+            #     print("\nInvalid JSON from LLM during Reflexion.")
+            #     print("Stopping safely.")
 
-                break
+            #     break
 
             store_new_bn(
                 bn_number,
-                new_bn_json
+                new_bn
             )
 
             no_improvement_retry += 1
@@ -453,32 +443,30 @@ while restart_count <= MAX_RESTARTS:
             # -----------------------------
             # REFLEXION
             # -----------------------------
-            new_bn = generate_refined_bn(
+            new_bn = generate_and_select_best_candidate(
                 full_context,
-                flawed_bn,
-                original_success_report,
-                original_failure_report,
-                bn_number,
                 proposed_bn_filename,
                 bn_analysis_filename,
-                max_records
+                train_csv
             )
 
-            new_bn_json = safe_json_loads(new_bn)
+            # new_bn_json = safe_json_loads(new_bn)
 
-            if new_bn_json is None:
+            # if new_bn_json is None:
 
-                print("\nInvalid JSON from LLM during Reflexion.")
-                print("Stopping safely.")
+            #     print("\nInvalid JSON from LLM during Reflexion.")
+            #     print("Stopping safely.")
 
-                break
+            #     break
 
             bn_number += 1
 
             store_new_bn(
                 bn_number,
-                new_bn_json
+                new_bn
             )
+
+            print(new_bn.keys())
 
             print(f"\nReflexion completed. BN#{bn_number} stored.")
 

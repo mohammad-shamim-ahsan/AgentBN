@@ -1,29 +1,23 @@
 ---
 ## REFINEMENT CONTEXT
 
-You are refining an existing Bayesian Network (BN). The following is the full context including previously proposed Bayesian Networks and the originally flawed BN, along with success and failure reports stored in the analysis memory:
+You are refining an existing Bayesian Network (BN).
+
+The following information is provided:
 
 1. Domain context:
 {full_context}
 
-2. Original flawed BN:
-{flawed_bn}
+2. Selected baseline BN for refinement:
+{baseline_bn}
 
-3. Original flawed BN success report:
-{original_success_report}
-
-4. Original flawed BN failure report:
-{original_failure_report}
-
-5. Previous Bayesian Networks:
-{previous_bns}
-
-6. Analysis memory:
-{analysis_memory}
+3. Analysis record of the selected baseline BN:
+{analysis_record}
 
 ---------------------------------------------------
 SUCCESS AND FAILURE DEFINITION
 ---------------------------------------------------
+
 A scenario is considered successful only if all of the following conditions are satisfied:
 
 1. The predicted root cause, defined as the argmax posterior of "Root_Causes", matches the "Ground Truth";
@@ -37,42 +31,94 @@ Therefore, a scenario is considered a failure if any one of the following condit
 3. The difference between the posterior probabilities of the most probable and the second most probable root causes is less than 0.20.
 
 ---
-## REFINEMENT OBJECTIVE
+## REFINEMENT TASK
 
-Identify the Bayesian Network with the lowest "failure_count" in the Analysis Memory and use it as the baseline for refinement.
+The selected baseline BN has already been determined by the workflow.
 
-Other BNs and the original flawed BN are provided only as historical context.
+The "cpt_danger_report" field is the fault-localization result and defines the allowable refinement search space.
 
-Only the parameter values in the Conditional Probability Tables (CPTs) may be modified.
+The reported CPTs are plausible refinement candidates identified during fault localization. Only these CPTs may be modified. Every other CPT must remain identical to the selected baseline BN.
+
+Determine whether all or a subset of the reported CPTs requires modification to correct the observed failures. Do not assume that every reported CPT must be modified.
 
 The graph structure, nodes, edges, states, parent lists, and parent_state_order are FIXED and must remain unchanged.
 
-The failure scenarios recorded in the Analysis Memory MUST be corrected under the evaluation definition.
+Generate 3 independent refinement candidates.
 
-The success scenarios recorded in the Analysis Memory MUST be preserved under the same evaluation definition.
+Each candidate represents one complete Bayesian Network refinement hypothesis. A candidate may modify one or more reported CPTs, depending on the proposed refinement strategy.
 
-The "cpt_danger_report" field serves as the fault-localization result, identifying the CPTs that are the most plausible sources of the observed failures.
+Different candidates should represent distinct refinement strategies rather than merely trivial numerical variations of the same parameter modifications.
 
-Use the Analysis Memory to identify:
-- failure scenarios that must be corrected,
-- success scenarios that must be preserved,
-- the dangerous CPTs reported in the "cpt_danger_report" field.
+For each candidate, determine the corresponding parameter modifications for the selected reported CPTs based on a distinct causal explanation of the observed failures, using the domain context, the Bayesian Network semantics, and the recorded failure and success scenarios.
 
-Restrict refinement exclusively to the CPTs reported in the "cpt_danger_report" field.
+Prefer the smallest sufficient set of parameter modifications that corrects the recorded failure scenarios while preserving the recorded success scenarios.
 
-Do not modify any CPT that is not included in the "cpt_danger_report" field.
+The recorded failure scenarios should be corrected under the evaluation definition.
 
-Within the reported CPTs, use the domain context, the Bayesian Network semantics, and the failure and success scenarios to determine the minimal necessary parameter changes.
+The recorded success scenarios should be preserved under the same evaluation definition.
+
+Each candidate will be evaluated independently by a deterministic evaluation pipeline, and only the best-performing candidate will be selected for the next iteration.
 
 ---
 ## CPT VALIDITY REQUIREMENTS
 
-Whenever a CPT parameter is modified:
-* Rebalance the remaining probabilities in the same CPT column.
-* Ensure every CPT column sums to exactly 1.
-* Ensure all probabilities remain within [0,1].
+Any modified CPT must remain a valid conditional probability table.
+
+Specifically:
+
+- Every column represents a probability distribution over the child states.
+- Every probability must lie within [0, 1].
+- Every column must sum to exactly 1.
 
 ---
 ## OUTPUT REQUIREMENT
 
-Return a complete Bayesian Network JSON.
+Return 3 refinement candidates.
+
+Return ONLY valid JSON.
+
+Do NOT return the complete Bayesian Network.
+
+The output must follow this structure exactly:
+{{
+  "candidates": [
+    {{
+      "candidate_id": 1,
+      "modified_cpts": [
+        {{
+          "name": "X",
+          "cpt": {{
+            "parent_state_order": {{}},
+            "values": [
+              [...],
+              [...]
+            ]
+          }}
+        }},
+        {{
+          "name": "Y",
+          "cpt": {{
+            "parent_state_order": {{}},
+            "values": [
+              [...],
+              [...],
+              [...]
+            ]
+          }}
+        }}
+      ]
+    }},
+    {{
+      "candidate_id": 2,
+      "modified_cpts": [
+        ...
+      ]
+    }},
+    {{
+      "candidate_id": 3,
+      "modified_cpts": [
+        ...
+      ]
+    }}
+  ]
+}}

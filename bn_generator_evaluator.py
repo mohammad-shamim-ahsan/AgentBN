@@ -9,7 +9,7 @@ import pandas as pd
 from datetime import datetime
 from collections import deque
 
-client = OpenAI(api_key="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")
+client = OpenAI(api_key="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")
 
 
 def llm(prompt, temperature=0.3, max_tokens=4000):
@@ -657,7 +657,9 @@ The deterministic analysis has already identified candidate failure-associated C
 
 Your task is to determine which, if any, candidate CPTs are genuinely plausible contributors to the observed failure patterns. Base your judgment on the domain context, the Bayesian Network structure, and the provided deterministic statistics.
 
-The objective is to identify the smallest sufficient set of CPTs whose modification is likely to improve the BN's diagnostic performance. In most cases, this should be a single CPT. Recommend multiple CPTs only when there is strong, independent evidence that each contributes to repeated incorrect predictions and their effects cannot be explained by the same upstream reasoning path.
+The objective is to identify every CPT for which there is strong, independent evidence that its probability assignments may contribute to repeated incorrect predictions.
+
+Report only CPTs that are plausible candidates for refinement. Do not attempt to determine the exact subset of CPTs that should ultimately be modified. That decision will be made during the refinement stage.
 
 You are given:
 
@@ -708,7 +710,7 @@ Reasoning principles:
 
 7. Recommend modifying a CPT only when the collective evidence consistently indicates that its probability assignments are plausible contributors to repeated incorrect predictions and that modifying the CPT is likely to improve the overall diagnostic behavior of the Bayesian Network while preserving successful reasoning.
 
-8. Prefer the smallest sufficient set of CPTs. If multiple candidate CPTs belong to the same causal reasoning path, determine whether the apparent risk of downstream CPTs is better explained by upstream CPTs before recommending multiple modifications. Recommend additional CPTs only when there is strong evidence of independent contributions that cannot be explained by upstream probability assignments.
+8. Report every CPT for which there is strong independent evidence of potential modeling error. If multiple CPTs belong to the same causal reasoning path, distinguish between CPTs whose apparent behavior is fully explained by upstream probability assignments and CPTs whose probability assignments themselves appear independently flawed.
 
 9. If the available evidence is weak, ambiguous, inconsistent, or better explained by other CPTs in the same reasoning path, do not recommend modifying the CPT.
 
@@ -722,15 +724,25 @@ Evaluate every candidate CPT by jointly considering:
 - and the provided domain context.
 
 Step 2.
-Determine whether any candidate CPT is sufficiently supported to warrant modification.
+Determine which candidate CPTs are sufficiently supported as plausible refinement candidates.
 
 Step 3.
-If modification is justified, classify the CPT as HIGH or MEDIUM risk.
+If modification is justified, classify each CPT as one of:
+- HIGH
+- HIGH_MEDIUM
+- MEDIUM
+- LOW
+
+The assigned risk level should reflect the overall strength of evidence that the CPT independently contributes to repeated incorrect predictions.
 
 Step 4.
-If HIGH-risk CPTs exist, report ONLY HIGH-risk CPTs.
-Otherwise, if no HIGH-risk CPTs exist but MEDIUM-risk CPTs do, report ONLY MEDIUM-risk CPTs.
-If neither HIGH-risk nor MEDIUM-risk CPTs are sufficiently supported, return "none".
+Construct the refinement search space using the following priority:
+1. Prioritize HIGH-risk CPTs.
+2. If one or more HIGH-risk CPTs exist, report all HIGH-risk CPTs together with any HIGH_MEDIUM-risk CPTs.
+3. Otherwise, if one or more HIGH_MEDIUM-risk CPTs exist, report all HIGH_MEDIUM-risk CPTs.
+4. Otherwise, return "none".
+
+If no CPT is sufficiently supported for refinement, return "none".
 
 Do NOT blindly report all candidate CPTs.
 
@@ -741,13 +753,13 @@ Return ONLY valid JSON.
 Output format:
 
 {{
-  "reported_risk_level": "high | medium | none",
+  "reported_risk_level":  "high | high_medium | medium | none",
 
   "dangerous_cpts": [
     {{
       "cpt": "",
 
-      "risk_level": "high | medium",
+      "risk_level": "high | high_medium | medium | low",
 
       "number_of_failure_scenarios": 0,
 
@@ -779,14 +791,12 @@ Output format:
   "overall_summary": ""
 }}
 
-If no HIGH-risk CPT exists, report MEDIUM-risk CPTs only.
-
-If neither HIGH-risk nor MEDIUM-risk CPTs are sufficiently supported, return:
+If no CPT is selected for the refinement search space, return:
 
 {{
     "reported_risk_level": "none",
     "dangerous_cpts": [],
-    "overall_summary": "No high-risk or medium-risk CPTs identified."
+    "overall_summary": "No CPTs were sufficiently supported for refinement."
 }}
 """
 
@@ -920,12 +930,12 @@ if __name__ == "__main__":
     
     bn_number = 1
     
-    # bn_json = find_proposed_bn(
-    #     bn_number,
-    #     proposed_bn_filename
-    # )
+    bn_json = find_proposed_bn(
+        bn_number,
+        proposed_bn_filename
+    )
 
-    bn_json = load_bn("flawed_BN_0.json")
+    # bn_json = load_bn("flawed_BN_0.json")
 
     evaluation_output = run_evaluation(bn_json, bn_number=bn_number)
 

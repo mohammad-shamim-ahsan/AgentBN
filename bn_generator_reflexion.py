@@ -8,7 +8,7 @@ from automatic_bn_reasoning_old import run_evaluation as initial_run_evaluation
 
 client = OpenAI(api_key="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")
 
-def llm(prompt, temperature=0.2, max_tokens=4000):
+def llm(prompt, temperature=0.3, max_tokens=4000):
     response = client.responses.create(
         model="gpt-5.4",
         input=prompt,
@@ -141,7 +141,8 @@ CPT DANGER REPORT:
 def generate_refined_cpt_patch(
     full_context,
     proposed_bn_filename=proposed_bn_filename,
-    bn_analysis_filename=bn_analysis_filename
+    bn_analysis_filename=bn_analysis_filename,
+    temperature=0.3
 ):
     # Deterministically select the baseline BN
     best_bn_number = get_best_bn_number(
@@ -180,7 +181,7 @@ def generate_refined_cpt_patch(
         analysis_record=formatted_analysis_record
     )
 
-    response = llm(prompt)
+    response = llm(prompt, temperature=temperature)
 
     response_json = json.loads(response)
 
@@ -228,12 +229,14 @@ def generate_and_select_best_candidate(
     full_context,
     proposed_bn_filename=proposed_bn_filename,
     bn_analysis_filename=bn_analysis_filename,
-    train_csv=train_csv
+    train_csv=train_csv,
+    temperature=0.3
 ):
     refinement_output = generate_refined_cpt_patch(
         full_context=full_context,
         proposed_bn_filename=proposed_bn_filename,
-        bn_analysis_filename=bn_analysis_filename
+        bn_analysis_filename=bn_analysis_filename,
+        temperature=temperature
     )
 
     best_bn_number = refinement_output["best_bn_number"]
@@ -310,7 +313,8 @@ if __name__ == "__main__":
         full_context=full_context,
         proposed_bn_filename=proposed_bn_filename,
         bn_analysis_filename=bn_analysis_filename,
-        train_csv=train_csv
+        train_csv=train_csv,
+        temperature=0.3
     )
 
     store_new_bn(

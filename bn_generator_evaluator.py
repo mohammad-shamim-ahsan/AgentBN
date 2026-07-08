@@ -637,6 +637,7 @@ def generate_cpt_danger_report(
     bn_json,
     statistics_json,
     bn_number=None,
+    temperature=0.3
 ):
     
     if (
@@ -696,31 +697,25 @@ Definitions:
 
 Reasoning principles:
 
-1. The reported statistics identify deterministic candidate parameters only. Their presence does not necessarily imply that the corresponding CPT requires modification.
+1. The reported statistics identify deterministic candidate parameters only. Their presence alone does not necessarily imply that the corresponding CPT requires modification.
 
-2. Evaluate each candidate CPT holistically. Consider the deterministic statistics, common activation patterns, argmax_probability, Bayesian Network semantics, domain knowledge, and the CPT's role within the causal reasoning path. No single factor should be treated as sufficient evidence for recommending modification.
+2. Evaluate each candidate CPT holistically. Consider the deterministic statistics, common activation patterns, Bayesian Network semantics, domain knowledge, and the CPT's role within the causal reasoning path. No single factor should be treated as sufficient evidence for recommending modification.
 
-3. Consider the complete set of candidate parameters within each CPT. Multiple consistently failure-associated parameters generally provide stronger evidence than a single isolated parameter.
+3. Evaluate both failure_weight and success_weight together. A parameter's importance is not determined solely by how frequently it is activated, but by whether its activation is disproportionately associated with failure scenarios after considering its occurrence in successful scenarios.
 
-4. Evaluate both failure_weight and success_weight together. Parameters that appear relatively frequently in successful scenarios provide weaker evidence than those predominantly associated with failures.
+4. Consider the common activation patterns across failure scenarios. Repeated co-occurrence of CPT columns may indicate a common reasoning path within the Bayesian Network; however, recurring activation alone does not imply that every CPT in the pattern requires modification.
 
-5. Consider the common activation patterns across failure scenarios. Repeated co-occurrence of CPT columns may indicate a common reasoning path within the Bayesian Network; however, recurring activation alone does not imply that every CPT in the pattern requires modification.
+5. Use argmax_probability as supporting evidence rather than a standalone criterion. Whether a strongly activated CPT parameter is problematic should be judged together with the domain semantics and the overall causal reasoning path.
 
-6. Use argmax_probability as supporting evidence rather than a standalone criterion. Whether a strongly activated CPT parameter is problematic should be judged together with the domain semantics and the overall causal reasoning path.
+6. Recommend modifying a CPT only when the collective evidence consistently indicates that its probability assignments are plausible contributors to repeated incorrect predictions and that modifying the CPT is likely to improve the overall diagnostic behavior of the Bayesian Network while preserving successful reasoning.
 
-7. Recommend modifying a CPT only when the collective evidence consistently indicates that its probability assignments are plausible contributors to repeated incorrect predictions and that modifying the CPT is likely to improve the overall diagnostic behavior of the Bayesian Network while preserving successful reasoning.
-
-8. Report every CPT for which there is strong independent evidence of potential modeling error. If multiple CPTs belong to the same causal reasoning path, distinguish between CPTs whose apparent behavior is fully explained by upstream probability assignments and CPTs whose probability assignments themselves appear independently flawed.
-
-9. If the available evidence is weak, ambiguous, inconsistent, or better explained by other CPTs in the same reasoning path, do not recommend modifying the CPT.
+7. Report every CPT for which there is strong independent evidence of potential modeling error. If multiple CPTs belong to the same causal reasoning path, distinguish between CPTs whose apparent behavior is fully explained by upstream probability assignments and CPTs whose probability assignments themselves appear independently flawed.
 
 Your task:
 
 Step 1.
 Evaluate every candidate CPT by jointly considering:
 - the deterministic parameter statistics,
-- the common activation patterns across failure scenarios,
-- the argmax probabilities,
 - and the provided domain context.
 
 Step 2.
@@ -745,8 +740,6 @@ Construct the refinement search space using the following priority:
 If no CPT is sufficiently supported for refinement, return "none".
 
 Do NOT blindly report all candidate CPTs.
-
-Do NOT report a CPT simply because it appears in the deterministic statistics.
 
 Return ONLY valid JSON.
 
@@ -800,7 +793,7 @@ If no CPT is selected for the refinement search space, return:
 }}
 """
 
-    response = llm(prompt)
+    response = llm(prompt, temperature=temperature)
 
     report = safe_json_loads(response)
 
@@ -823,7 +816,7 @@ If no CPT is selected for the refinement search space, return:
 
 
 ### -----------------------------
-def run_evaluation(bn_json, bn_number=None):
+def run_evaluation(bn_json, bn_number=None, temperature=0.3):
 
     # --------------------------------------------------
     # Step 1: Build BN model
@@ -860,7 +853,8 @@ def run_evaluation(bn_json, bn_number=None):
     cpt_danger_report = generate_cpt_danger_report(
         bn_json=bn_json,
         statistics_json=parameter_statistics,
-        bn_number=bn_number
+        bn_number=bn_number,
+        temperature=temperature
     )
 
     # --------------------------------------------------
@@ -937,6 +931,6 @@ if __name__ == "__main__":
 
     # bn_json = load_bn("flawed_BN_0.json")
 
-    evaluation_output = run_evaluation(bn_json, bn_number=bn_number)
+    evaluation_output = run_evaluation(bn_json, bn_number=bn_number, temperature=0.3)
 
     store_analysis(bn_number, evaluation_output)

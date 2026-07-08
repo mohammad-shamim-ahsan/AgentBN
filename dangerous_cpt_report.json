@@ -2,81 +2,41 @@
     "reported_risk_level": "high_medium",
     "dangerous_cpts": [
         {
-            "cpt": "Network_Manipulation",
+            "cpt": "Execution_Integrity",
             "risk_level": "high_medium",
-            "number_of_failure_scenarios": 13,
-            "main_problem": "This CPT has multiple distinct failure-associated parameters, all selecting Network_Manipulation=Yes, with strong failure dominance and very little success overlap. Because it is an intermediate diagnostic node directly feeding Root_Causes, and because the repeated failure patterns include several downstream misclassifications involving FDI/System_Fault decisions under different Network_Manipulation columns, there is independent evidence that this CPT may be over-asserting manipulation in some parent configurations.",
+            "number_of_failure_scenarios": 5,
+            "main_problem": "This CPT has the strongest failure-specific signal: the same parameter (column 7 -> Compromised) appears in 5 failure scenarios and 0 success scenarios, and it is part of a repeated failure activation pattern together with Program_Anomaly. Structurally, this node is the key integrator from program/log anomalies and response/dispatch deviations into the final diagnosis. In the domain, execution integrity should be strongly tied to true application compromise, but column 7 maps a specific upstream configuration to Compromised with high confidence (0.8). Because this parameter sits between intermediate evidence and Root_Causes, repeated wrong predictions are plausibly amplified here rather than being fully explained by downstream classification alone.",
             "suspicious_parameters": [
                 {
                     "rank": 1,
-                    "parameter": "Column 0 \u2192 Yes",
-                    "failure_weight": 6,
-                    "success_weight": 1,
-                    "failure_to_success_ratio": 6.0,
-                    "argmax_probability": 0.75,
-                    "recommended_adjustment": "decrease",
-                    "justification": "This is the strongest single parameter in the CPT by failure count, with high confidence and minimal success overlap. In domain terms, when both packet inconsistency patterns are found, the model may be too ready to conclude manipulation, which can propagate to attack-oriented root-cause predictions."
-                },
-                {
-                    "rank": 2,
-                    "parameter": "Column 1 \u2192 Yes",
-                    "failure_weight": 4,
+                    "parameter": "Column 7 \u2192 Compromised",
+                    "failure_weight": 5,
                     "success_weight": 0,
-                    "failure_to_success_ratio": 4.0,
-                    "argmax_probability": 0.6,
-                    "recommended_adjustment": "slightly_decrease",
-                    "justification": "This parameter appears only in failures and never in successes. Although the probability is moderate rather than extreme, its clean failure association suggests this parent configuration may still be biased toward manipulation more often than warranted."
-                },
-                {
-                    "rank": 3,
-                    "parameter": "Column 2 \u2192 Yes",
-                    "failure_weight": 3,
-                    "success_weight": 1,
-                    "failure_to_success_ratio": 3.0,
+                    "failure_to_success_ratio": 5.0,
                     "argmax_probability": 0.8,
                     "recommended_adjustment": "decrease",
-                    "justification": "This parameter is also failure-dominant and relatively strong probabilistically. Its recurrence across failure patterns indicates that one-sided evidence from GPTN_1/GPTN_2 may be converted into manipulation too aggressively."
+                    "justification": "This parameter is activated only in failures among the observed scenarios and repeatedly co-occurs with Program_Anomaly column 1 in the common failure pattern. The CPT currently makes Compromised the argmax with strong confidence for the parent configuration (Program_Anomaly=No, Deviation_in_Response=No, Deviation_in_Dispatch=Yes). Domain-wise, dispatch-side expected deviations alone should not necessarily imply compromised execution when program anomaly evidence is absent, so the current probability may be too aggressive."
                 }
             ]
         },
         {
-            "cpt": "Root_Causes",
+            "cpt": "Program_Anomaly",
             "risk_level": "high_medium",
-            "number_of_failure_scenarios": 15,
-            "main_problem": "This CPT is the final decision layer and shows several failure-associated output parameters, especially repeated selection of FDI and one repeated selection of System_Fault under specific upstream combinations. The failure patterns repeatedly terminate at these root-cause columns, and the errors cannot be fully explained by one upstream CPT alone because different upstream activation combinations converge to problematic final labels. That gives this CPT independent plausibility as a contributor to repeated incorrect predictions.",
+            "number_of_failure_scenarios": 5,
+            "main_problem": "This CPT shows a repeated failure-associated parameter with limited success overlap: column 1 -> No is activated in 5 failure scenarios versus 2 success scenarios. It also participates directly in the most common failure activation pattern with Execution_Integrity. Semantically, GPTN_3 captures inconsistent execution logs, which are important evidence for application anomalies. If this CPT too readily outputs Program_Anomaly=No when GPTN_3 is Not_Found, it can suppress compromise evidence and distort downstream execution-integrity reasoning across multiple failures.",
             "suspicious_parameters": [
                 {
                     "rank": 1,
-                    "parameter": "Column 1 \u2192 FDI",
-                    "failure_weight": 6,
-                    "success_weight": 0,
-                    "failure_to_success_ratio": 6.0,
-                    "argmax_probability": 0.55,
-                    "recommended_adjustment": "decrease",
-                    "justification": "This parameter appears only in failures. Even though 0.55 is not extreme, as an argmax at the final diagnosis node it can systematically tip cases toward FDI. Domain-wise, moderate evidence combinations should not repeatedly collapse to attack if they also occur in benign or fault-like situations."
-                },
-                {
-                    "rank": 2,
-                    "parameter": "Column 3 \u2192 FDI",
+                    "parameter": "Column 1 \u2192 No",
                     "failure_weight": 5,
                     "success_weight": 2,
                     "failure_to_success_ratio": 2.5,
-                    "argmax_probability": 0.75,
+                    "argmax_probability": 0.9,
                     "recommended_adjustment": "decrease",
-                    "justification": "This is a stronger final-layer preference for FDI and recurs in several common failure patterns. Because it sits at the last inference step, a high FDI probability here can directly create repeated misclassification even when upstream evidence is only partially suggestive."
-                },
-                {
-                    "rank": 3,
-                    "parameter": "Column 6 \u2192 System_Fault",
-                    "failure_weight": 4,
-                    "success_weight": 0,
-                    "failure_to_success_ratio": 4.0,
-                    "argmax_probability": 0.75,
-                    "recommended_adjustment": "decrease",
-                    "justification": "This parameter is also failure-exclusive and relatively strong. Its recurrence alongside patterns with both deviation nodes selecting No suggests the model may be overcommitting to System_Fault in a specific low-deviation upstream configuration."
+                    "justification": "For GPTN_3=Not_Found, the CPT strongly favors No (0.9). In this domain, absence of inconsistent log evidence does not reliably prove absence of program anomaly because logs may be imperfect or incomplete. The repeated failure pattern suggests this strong negative mapping may be causing under-detection of program anomalies, which then feeds into incorrect Execution_Integrity and final root-cause predictions."
                 }
             ]
         }
     ],
-    "overall_summary": "The strongest refinement candidates are Network_Manipulation and Root_Causes. Network_Manipulation has multiple failure-dominant parameters with little success overlap, indicating a plausible upstream bias toward inferring manipulation from packet-pattern evidence. Root_Causes has repeated failure-associated final-label selections across multiple columns, especially toward FDI and one System_Fault column, suggesting independent decision-boundary problems at the diagnosis layer. Other candidate CPTs are not included because their suspicious behavior is weaker, has substantial success overlap, or is better explained as downstream propagation from these more plausible contributors."
+    "overall_summary": "Execution_Integrity and Program_Anomaly are the only CPTs with strong enough independent evidence for refinement search. Both lie on the same repeated failure path, but each has its own plausible modeling issue: Program_Anomaly may overinterpret missing log inconsistency as evidence of normality, and Execution_Integrity may overinterpret dispatch-only deviation evidence as compromise even when program anomaly and response deviation are absent. Network_Manipulation and Root_Causes were not included because their evidence is weaker and more plausibly explained by upstream reasoning errors rather than independent CPT flaws."
 }

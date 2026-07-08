@@ -29,7 +29,7 @@ flawed_bn=read_file("flawed_BN_0.json")
 # 1️⃣ Draft Stage (generation only)
 # -------------------------------
 
-def draft_model(full_context, flawed_bn, success_report, failure_report, prompt_template_text):
+def draft_model(full_context, flawed_bn, success_report, failure_report, prompt_template_text, temperature):
     prompt_gen_template = PromptTemplate(
         input_variables=[
             "full_context",
@@ -47,10 +47,10 @@ def draft_model(full_context, flawed_bn, success_report, failure_report, prompt_
         failure_report=failure_report
     )
 
-    return llm(prompt)
+    return llm(prompt, temperature=temperature)
 
-def generate_bn(full_context, flawed_bn, success_report, failure_report, prompt_template_text):
-    draft = draft_model(full_context, flawed_bn, success_report, failure_report, prompt_template_text)
+def generate_bn(full_context, flawed_bn, success_report, failure_report, prompt_template_text, temperature=0.3):
+    draft = draft_model(full_context, flawed_bn, success_report, failure_report, prompt_template_text, temperature)
     return draft
 
 def store_bn_proposal(bn_new, bn_number, filename=proposed_bn_filename):
@@ -64,7 +64,7 @@ def store_bn_proposal(bn_new, bn_number, filename=proposed_bn_filename):
 
 ### -------------------------------
 if __name__ == "__main__":
-    bn_proposal = generate_bn(full_context, flawed_bn, success_report, failure_report, prompt_template_text)
+    bn_proposal = generate_bn(full_context, flawed_bn, success_report, failure_report, prompt_template_text, temperature=0.3)
     print(bn_proposal)
     bn_json = json.loads(bn_proposal)
     store_bn_proposal(bn_json, bn_number=1)

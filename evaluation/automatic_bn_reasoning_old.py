@@ -1,5 +1,3 @@
-import os
-
 from pgmpy.models import DiscreteBayesianNetwork
 from pgmpy.factors.discrete import TabularCPD
 from pgmpy.inference import VariableElimination
@@ -12,81 +10,11 @@ pd.set_option('display.max_rows', None)
 pd.set_option('display.max_colwidth', None)
 pd.set_option('display.width', 1000)
 
-# ============================================================
-# Step 1: Read BN (JSON-like format: GeNIe XML equivalent)
-# ============================================================
-import json
+from utils.pgmpy_tool import *
+from utils.bn_io import *
+from utils.file_utils import *
+from config.settings import *
 
-def load_bn(filename):
-    with open(filename, "r") as f:
-        return json.load(f)
-
-# ============================================================
-# Step 2: Building BN Tool
-# ============================================================
-
-def build_model(bn):
-    edges = bn["edges"]
-    model = DiscreteBayesianNetwork(edges)
-
-    cpds = []
-
-    for node in bn["nodes"]:
-
-        name = node["name"]
-        states = node["states"]
-        parents = node.get("parents", [])
-        cpt = node["cpt"]
-
-        state_names = {name: states}
-
-        if parents:
-
-            parent_order = cpt["parent_state_order"]
-
-            for p in parents:
-                state_names[p] = parent_order[p]
-
-            evidence_card = [
-                len(parent_order[p])
-                for p in parents
-            ]
-
-        else:
-            evidence_card = None
-
-        cpd = TabularCPD(
-            variable=name,
-            variable_card=len(states),
-            values=cpt["values"],
-            evidence=parents if parents else None,
-            evidence_card=evidence_card,
-            state_names=state_names
-        )
-
-        cpds.append(cpd)
-
-    model.add_cpds(*cpds)
-
-    print("\nChecking model...")
-    print(model.check_model())
-
-    return model
-
-# ============================================================
-# Step 3: Inference
-# ============================================================
-
-def run_inference(model, query, evidence=None):
-
-    infer = VariableElimination(model)
-
-    result = infer.query(
-        variables=[query],
-        evidence=evidence or {}
-    )
-
-    return result
 
 # ============================================================
 # Step 4: Batch Evaluation
@@ -159,18 +87,6 @@ def call_bn_inference(model, df):
 
     return results
 
-###
-import json
-
-proposed_bn_filename="last_proposed_bn.jsonl"
-
-def find_proposed_bn(bn_number_to_find, filename=proposed_bn_filename):
-    with open(filename, "r", encoding="utf-8") as f:
-        for line in f:
-            record = json.loads(line)
-            if record["bn_number"] == bn_number_to_find:
-                return record["bn"]
-    return None
 
 # ============================================================
 # Step 5: Run Evaluation
@@ -207,6 +123,7 @@ def run_evaluation(bn_json, dataset_file):
 
     return failures, successes, accuracy, results
 
+
 def run_evaluation_2(bn_json, dataset_file):
 
     model = build_model(bn_json)
@@ -226,7 +143,8 @@ def run_evaluation_2(bn_json, dataset_file):
 
     return failures, successes, accuracy, results
 
-def get_best_bn_number(filename="last_proposed_bn.jsonl", train_csv="combined_train_scenarios.csv"):
+
+def get_best_bn_number(filename=PROPOSED_BN_FILE, train_csv=TRAIN_CSV):
     best_bn_number = None
     best_bn_accuracy = None
     best_failure_count = float("inf")
@@ -267,13 +185,9 @@ def get_best_bn_number(filename="last_proposed_bn.jsonl", train_csv="combined_tr
 
 if __name__ == "__main__":
 
-    # bn_json = load_bn("BN_gt.json")
-    bn_json = load_bn("flawed_BN_0.json")
+    # bn_json = load_bn(GROUND_TRUTH_BN_FILE)
 
-    # best_bn_number, best_bn_accuracy = get_best_bn_number(proposed_bn_filename)
-    # print("\n\nBest BN Number:", best_bn_number)
-    # print("Best BN Accuracy:", best_bn_accuracy)
-    # bn_json = find_proposed_bn(bn_number_to_find=best_bn_number, filename=proposed_bn_filename)
+    bn_json = load_bn(FLAWED_BN_FILE)
 
     dataset_files = [
         "original_scenarios_train.csv",

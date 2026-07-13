@@ -4,98 +4,18 @@ from openai import OpenAI
 from pgmpy.models import DiscreteBayesianNetwork
 from pgmpy.factors.discrete import TabularCPD
 from pgmpy.inference import VariableElimination
+
 import json
 import pandas as pd
 from datetime import datetime
 from collections import deque
 
-client = OpenAI(api_key="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")
-
-
-def llm(prompt, temperature=0.3, max_tokens=4000):
-    response = client.responses.create(
-        model="gpt-5.4",
-        input=prompt,
-        temperature=temperature,
-        max_output_tokens=max_tokens,
-    )
-    return response.output[0].content[0].text.strip()
-
-
-###--------Step 1: Building BN Tool---------------------
-def build_model(bn):
-    edges = bn["edges"]
-    model = DiscreteBayesianNetwork(edges)
-
-    cpds = []
-
-    for node in bn["nodes"]:
-        name = node["name"]
-        states = node["states"]
-        parents = node.get("parents", [])
-
-        cpt = node["cpt"]
-
-        # -----------------------------
-        # Build state_names safely
-        # -----------------------------
-        state_names = {name: states}
-
-        if parents:
-            parent_order = cpt["parent_state_order"]
-            for p in parents:
-                state_names[p] = parent_order[p]
-
-            evidence_card = [len(parent_order[p]) for p in parents]
-
-        else:
-            evidence_card = None
-
-        # -----------------------------
-        # Root node
-        # -----------------------------
-        if not parents:
-            values = cpt["values"]
-
-            cpd = TabularCPD(
-                variable=name,
-                variable_card=len(states),
-                values=values,
-                state_names=state_names
-            )
-
-        # -----------------------------
-        # Child node
-        # -----------------------------
-        else:
-            values = cpt["values"]
-
-            cpd = TabularCPD(
-                variable=name,
-                variable_card=len(states),
-                values=values,
-                evidence=parents,
-                evidence_card=evidence_card,
-                state_names=state_names
-            )
-
-        cpds.append(cpd)
-
-    model.add_cpds(*cpds)
-    model.check_model()
-
-    return model
-
-
-def run_inference(model, query, evidence=None):
-    infer = VariableElimination(model)
-
-    result = infer.query(
-        variables=[query],
-        evidence=evidence or {}
-    )
-
-    return result
+from utils.llm import *
+from utils.pgmpy_tool import *
+from utils.bn_io import *
+from utils.file_utils import *
+from utils.json_utils import *
+from config.settings import *
 
 
 # -----------------------------
@@ -194,28 +114,6 @@ def format_results_for_llm(results_df, original_df):
 
     return "\n".join(lines)
 
-###------------------RUN---------------------------------
-def read_file(filename):
-    with open(filename, "r", encoding="utf-8") as f:
-        return f.read()
-
-import json
-proposed_bn_filename="last_proposed_bn.jsonl"
-
-
-def find_proposed_bn(bn_number_to_find, filename=proposed_bn_filename):
-    with open(filename, "r", encoding="utf-8") as f:
-        for line in f:
-            record = json.loads(line)
-            if record["bn_number"] == bn_number_to_find:
-                return record["bn"]
-    return None
-
-df = pd.read_csv("combined_train_scenarios.csv")
-df.columns = df.columns.str.strip()
-
-context = read_file("context_agent.txt")
-
 
 def clean_text(text):
     return (
@@ -231,7 +129,7 @@ def generate_activation_trace_csv(
     bn_json,
     scenarios_df,
     inference_results,
-    output_csv="activation_trace.csv"
+    output_csv=ACTIVATION_TRACE_FILE
 ):
     """
     Deterministically propagates node states (argmax) for every scenario
@@ -602,7 +500,7 @@ def generate_failure_parameter_statistics(
     }
 
     with open(
-        "failure_parameter_statistics.json",
+        FAILURE_PARAMETER_FILE,
         "w",
         encoding="utf-8"
     ) as f:
@@ -610,27 +508,10 @@ def generate_failure_parameter_statistics(
 
     print(
         "Failure parameter statistics saved to "
-        "'failure_parameter_statistics.json'"
+        f"'{FAILURE_PARAMETER_FILE}'"
     )
 
     return output
-
-
-###-----------------------------
-CPT_DANGER_REPORT_FILE = "dangerous_cpt_report.json"
-
-
-def safe_json_loads(text):
-    if not text:
-        return None
-
-    text = str(text).strip()
-    text = text.replace("```json", "").replace("```", "").strip()
-
-    try:
-        return json.loads(text)
-    except json.JSONDecodeError:
-        return None
 
 
 def generate_cpt_danger_report(
@@ -666,7 +547,7 @@ You are given:
 
 1. Domain context.
 
-{context}
+{CONTEXT_AGENT_FILE}
 
 2. The complete Bayesian Network.
 
@@ -806,7 +687,7 @@ If no CPT is selected for the refinement search space, return:
         }
 
     with open(
-        "dangerous_cpt_report.json",
+        DANGER_REPORT_FILE,
         "w",
         encoding="utf-8"
     ) as f:
@@ -816,8 +697,13 @@ If no CPT is selected for the refinement search space, return:
 
 
 ### -----------------------------
-def run_evaluation(bn_json, bn_number=None, temperature=0.3):
+def run_evaluation(bn_json, bn_number=None, temperature=0.3, dataset_file=None):
 
+    if dataset_file is None:
+        dataset_file = "combined_train_scenarios.csv"
+    
+    df = pd.read_csv(dataset_file)
+    
     # --------------------------------------------------
     # Step 1: Build BN model
     # --------------------------------------------------
@@ -837,7 +723,7 @@ def run_evaluation(bn_json, bn_number=None, temperature=0.3):
         bn_json=bn_json,
         scenarios_df=df,
         inference_results=results,
-        output_csv="activation_trace.csv"
+        output_csv=ACTIVATION_TRACE_FILE
     )
 
     # --------------------------------------------------
@@ -902,7 +788,7 @@ def store_analysis(bn_number, evaluation_output):
     }
 
     with open(
-        "bn_analysis.json",
+        BN_ANALYSIS_FILE,
         "a",
         encoding="utf-8"
     ) as f:
@@ -911,25 +797,21 @@ def store_analysis(bn_number, evaluation_output):
 
     print(
         f"\nWorkflow analysis for BN #{bn_number} "
-        "stored in bn_analysis.json"
+        f"stored in {BN_ANALYSIS_FILE}"
     )
 
 
-def load_bn(filename):
-    with open(filename, "r") as f:
-        return json.load(f)
-    
 ### ------------------------------MAIN--------------------------------------
 if __name__ == "__main__":
     
     bn_number = 1
-    
+
     bn_json = find_proposed_bn(
         bn_number,
-        proposed_bn_filename
+        PROPOSED_BN_FILE
     )
 
-    # bn_json = load_bn("flawed_BN_0.json")
+    # bn_json = load_bn(FLAWED_BN_FILE)
 
     evaluation_output = run_evaluation(bn_json, bn_number=bn_number, temperature=0.3)
 

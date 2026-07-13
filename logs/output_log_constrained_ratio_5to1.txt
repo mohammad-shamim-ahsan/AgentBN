@@ -1,0 +1,3344 @@
+Cleared: bn_analysis.json
+Cleared: last_proposed_bn.jsonl
+Cleared: dangerous_cpt_report.json
+Cleared: failure_parameter_statistics.json
+Cleared: restart_final_bns.jsonl
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 68.06 %
+Total: 72
+Successes: 49
+Failures: 23
+Created constrained_train_5to1.csv: 50 successes, 10 failures (ratio 5:1)
+(72, 15) (60, 15)
+(60, 15) (60, 15)
+
+==============================
+PIPELINE RESTART #0
+==============================
+Cleared: bn_analysis.json
+Cleared: last_proposed_bn.jsonl
+Cleared: dangerous_cpt_report.json
+Cleared: failure_parameter_statistics.json
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 81.67 %
+Total: 60
+Successes: 49
+Failures: 11
+Flawed BN Accuracy: 81.67%
+Initial Acceptance Threshold: 87.17%
+
+Initial Generation Attempt 0
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 81.67%
+
+Workflow analysis for BN #0 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.2, 0.55, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.15, 0.2, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.65, 0.25, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.7, 0.45, 0.7, 0.7, 0.7, 0.2], [0.2, 0.3, 0.3, 0.55, 0.3, 0.3, 0.3, 0.8]]}}, {'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.15, 0.65, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.15, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.7, 0.2, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.7, 0.55, 0.7, 0.7, 0.7, 0.2], [0.2, 0.3, 0.3, 0.45, 0.3, 0.3, 0.3, 0.8]]}}, {'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.35, 0.15, 0.15, 0.25, 0.6, 0.2], [0.35, 0.4, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.65, 0.25, 0.6]]}}]}]}
+Selected baseline BN: 0
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 85.0 %
+Total: 60
+Successes: 51
+Failures: 9
+
+Candidate 1: Accuracy = 0.8500, Failures = 9, Successes = 51
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 85.0 %
+Total: 60
+Successes: 51
+Failures: 9
+
+Candidate 2: Accuracy = 0.8500, Failures = 9, Successes = 51
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+
+Candidate 3: Accuracy = 0.8667, Failures = 8, Successes = 52
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 3
+Accuracy: 0.8667
+Failures: 8
+Successes: 52
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+Accuracy = 86.67%
+
+Initial Generation Attempt 1
+Removed workflow analysis for BN #0 from bn_analysis.json
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 81.67%
+
+Workflow analysis for BN #0 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.05, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.05, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.9, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.82, 0.3, 0.7, 0.7, 0.7, 0.2], [0.2, 0.3, 0.18, 0.7, 0.3, 0.3, 0.3, 0.8]]}}, {'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.15, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.15, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.7, 0.15, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.75, 0.3, 0.7, 0.7, 0.7, 0.2], [0.2, 0.3, 0.25, 0.7, 0.3, 0.3, 0.3, 0.8]]}}, {'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.1, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.8, 0.15, 0.6]]}}]}]}
+Selected baseline BN: 0
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 81.67 %
+Total: 60
+Successes: 49
+Failures: 11
+
+Candidate 1: Accuracy = 0.8167, Failures = 11, Successes = 49
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 85.0 %
+Total: 60
+Successes: 51
+Failures: 9
+
+Candidate 2: Accuracy = 0.8500, Failures = 9, Successes = 51
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 81.67 %
+Total: 60
+Successes: 49
+Failures: 11
+
+Candidate 3: Accuracy = 0.8167, Failures = 11, Successes = 49
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 2
+Accuracy: 0.8500
+Failures: 9
+Successes: 51
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 85.0 %
+Total: 60
+Successes: 51
+Failures: 9
+Accuracy = 85.00%
+
+Initial Generation Attempt 2
+Removed workflow analysis for BN #0 from bn_analysis.json
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 81.67%
+
+Workflow analysis for BN #0 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.25, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.65, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.8, 0.3, 0.7, 0.7, 0.7, 0.2], [0.2, 0.3, 0.2, 0.7, 0.3, 0.3, 0.3, 0.8]]}}, {'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.3, 0.15, 0.15, 0.2, 0.7, 0.2], [0.3, 0.4, 0.35, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.35, 0.15, 0.7, 0.7, 0.15, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.9, 0.3, 0.7, 0.7, 0.7, 0.2], [0.2, 0.3, 0.1, 0.7, 0.3, 0.3, 0.3, 0.8]]}}, {'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.25, 0.15, 0.15, 0.15, 0.7, 0.2], [0.25, 0.35, 0.3, 0.7, 0.1, 0.1, 0.15, 0.2], [0.5, 0.45, 0.45, 0.15, 0.75, 0.75, 0.15, 0.6]]}}]}]}
+Selected baseline BN: 0
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 68.33 %
+Total: 60
+Successes: 41
+Failures: 19
+
+Candidate 1: Accuracy = 0.6833, Failures = 19, Successes = 41
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 81.67 %
+Total: 60
+Successes: 49
+Failures: 11
+
+Candidate 2: Accuracy = 0.8167, Failures = 11, Successes = 49
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 85.0 %
+Total: 60
+Successes: 51
+Failures: 9
+
+Candidate 3: Accuracy = 0.8500, Failures = 9, Successes = 51
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 3
+Accuracy: 0.8500
+Failures: 9
+Successes: 51
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 85.0 %
+Total: 60
+Successes: 51
+Failures: 9
+Accuracy = 85.00%
+Threshold (87.17%) not reached after 3 attempts. Using best generated BN (86.67%).
+Removed workflow analysis for BN #0 from bn_analysis.json
+
+Initial BN generated
+
+===== ITERATION 2 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 86.67%
+
+Workflow analysis for BN #1 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.35, 0.15, 0.15, 0.15, 0.6, 0.2], [0.25, 0.4, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.5, 0.4, 0.2, 0.15, 0.7, 0.75, 0.25, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.35, 0.15, 0.15, 0.1, 0.6, 0.2], [0.2, 0.4, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.55, 0.4, 0.2, 0.15, 0.7, 0.8, 0.25, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.35, 0.15, 0.15, 0.05, 0.6, 0.2], [0.15, 0.4, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.6, 0.4, 0.2, 0.15, 0.7, 0.85, 0.25, 0.6]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+
+Candidate 1: Accuracy = 0.8667, Failures = 8, Successes = 52
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+
+Candidate 2: Accuracy = 0.8667, Failures = 8, Successes = 52
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+
+Candidate 3: Accuracy = 0.8667, Failures = 8, Successes = 52
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.8667
+Failures: 8
+Successes: 52
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+
+Accuracy did not improve. Need improvement from 86.67% 
+Removed 1 record(s) with bn_number=2
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.35, 0.15, 0.15, 0.15, 0.45, 0.2], [0.3, 0.35, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.45, 0.45, 0.2, 0.15, 0.7, 0.75, 0.4, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.2, 0.15, 0.3, 0.1, 0.1, 0.1, 0.55, 0.15], [0.25, 0.25, 0.5, 0.8, 0.1, 0.05, 0.1, 0.15], [0.55, 0.6, 0.2, 0.1, 0.8, 0.85, 0.35, 0.7]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.25, 0.4, 0.2, 0.2, 0.2, 0.5, 0.25], [0.2, 0.2, 0.35, 0.65, 0.1, 0.05, 0.1, 0.15], [0.5, 0.55, 0.25, 0.15, 0.7, 0.75, 0.4, 0.6]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 1: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 2: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 85.0 %
+Total: 60
+Successes: 51
+Failures: 9
+
+Candidate 3: Accuracy = 0.8500, Failures = 9, Successes = 51
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9000
+Failures: 6
+Successes: 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Accuracy improved from 86.67% to 90.00%.
+
+===== ITERATION 3 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 90.00%
+
+Workflow analysis for BN #2 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.35, 0.15, 0.15, 0.1, 0.45, 0.2], [0.3, 0.35, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.45, 0.45, 0.2, 0.15, 0.7, 0.8, 0.4, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.25, 0.35, 0.15, 0.15, 0.15, 0.45, 0.2], [0.35, 0.4, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.35, 0.35, 0.2, 0.15, 0.7, 0.75, 0.4, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.2, 0.15, 0.35, 0.15, 0.15, 0.05, 0.45, 0.2], [0.25, 0.3, 0.45, 0.7, 0.1, 0.1, 0.15, 0.15], [0.55, 0.55, 0.2, 0.15, 0.75, 0.85, 0.4, 0.65]]}}]}]}
+Selected baseline BN: 2
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 1: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 2: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+
+Candidate 3: Accuracy = 0.8667, Failures = 8, Successes = 52
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9000
+Failures: 6
+Successes: 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Accuracy did not improve. Need improvement from 90.00% 
+Removed 1 record(s) with bn_number=3
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.35, 0.15, 0.15, 0.1, 0.45, 0.2], [0.3, 0.35, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.45, 0.45, 0.2, 0.15, 0.7, 0.8, 0.4, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.2, 0.2, 0.35, 0.15, 0.15, 0.15, 0.45, 0.2], [0.35, 0.35, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.45, 0.45, 0.2, 0.15, 0.7, 0.75, 0.4, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.35, 0.15, 0.15, 0.05, 0.45, 0.2], [0.35, 0.4, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.85, 0.4, 0.6]]}}]}]}
+Selected baseline BN: 2
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 1: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 2: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 3: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9000
+Failures: 6
+Successes: 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+Removed 1 record(s) with bn_number=3
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.35, 0.15, 0.15, 0.1, 0.45, 0.2], [0.3, 0.35, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.45, 0.45, 0.2, 0.15, 0.7, 0.8, 0.4, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.2, 0.2, 0.35, 0.15, 0.15, 0.15, 0.45, 0.2], [0.35, 0.35, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.45, 0.45, 0.2, 0.15, 0.7, 0.75, 0.4, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.2, 0.2, 0.35, 0.15, 0.15, 0.1, 0.45, 0.2], [0.35, 0.35, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.45, 0.45, 0.2, 0.15, 0.7, 0.8, 0.4, 0.6]]}}]}]}
+Selected baseline BN: 2
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 1: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 2: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 3: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9000
+Failures: 6
+Successes: 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+Removed 1 record(s) with bn_number=3
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.35, 0.15, 0.15, 0.1, 0.45, 0.2], [0.3, 0.35, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.45, 0.45, 0.2, 0.15, 0.7, 0.8, 0.4, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.35, 0.2, 0.35, 0.15, 0.15, 0.1, 0.45, 0.2], [0.3, 0.35, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.35, 0.45, 0.2, 0.15, 0.7, 0.8, 0.4, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.35, 0.15, 0.15, 0.05, 0.45, 0.2], [0.4, 0.35, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.35, 0.45, 0.2, 0.15, 0.7, 0.85, 0.4, 0.6]]}}]}]}
+Selected baseline BN: 2
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 1: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 2: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 3: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9000
+Failures: 6
+Successes: 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+No improvement after 3 retries. Selecting best retry candidate (accuracy=90.00%).
+Removed 1 record(s) with bn_number=3
+Continuing with retry candidate (accuracy=90.00%).
+
+===== ITERATION 4 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 90.00%
+
+Workflow analysis for BN #3 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.35, 0.15, 0.15, 0.1, 0.45, 0.2], [0.3, 0.35, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.45, 0.45, 0.2, 0.15, 0.7, 0.8, 0.4, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.2, 0.2, 0.35, 0.15, 0.15, 0.15, 0.45, 0.2], [0.35, 0.35, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.45, 0.45, 0.2, 0.15, 0.7, 0.75, 0.4, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.2, 0.2, 0.35, 0.15, 0.15, 0.1, 0.45, 0.2], [0.35, 0.35, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.45, 0.45, 0.2, 0.15, 0.7, 0.8, 0.4, 0.6]]}}]}]}
+Selected baseline BN: 2
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 1: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 2: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 3: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9000
+Failures: 6
+Successes: 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Accuracy did not improve. Need improvement from 90.00% 
+Removed 1 record(s) with bn_number=4
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.35, 0.15, 0.15, 0.1, 0.45, 0.2], [0.3, 0.35, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.45, 0.45, 0.2, 0.15, 0.7, 0.8, 0.4, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.2, 0.2, 0.35, 0.15, 0.15, 0.1, 0.45, 0.2], [0.4, 0.4, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.8, 0.4, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.2, 0.15, 0.35, 0.15, 0.15, 0.05, 0.45, 0.2], [0.45, 0.5, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.35, 0.35, 0.2, 0.15, 0.7, 0.85, 0.4, 0.6]]}}]}]}
+Selected baseline BN: 2
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 1: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 2: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 3: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9000
+Failures: 6
+Successes: 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+Removed 1 record(s) with bn_number=4
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.35, 0.15, 0.15, 0.1, 0.45, 0.2], [0.3, 0.35, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.45, 0.45, 0.2, 0.15, 0.7, 0.8, 0.4, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.2, 0.2, 0.35, 0.15, 0.15, 0.1, 0.45, 0.2], [0.3, 0.35, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.5, 0.45, 0.2, 0.15, 0.7, 0.8, 0.4, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.35, 0.15, 0.15, 0.05, 0.45, 0.2], [0.35, 0.35, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.45, 0.2, 0.15, 0.7, 0.85, 0.4, 0.6]]}}]}]}
+Selected baseline BN: 2
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 1: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 2: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 3: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9000
+Failures: 6
+Successes: 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+Removed 1 record(s) with bn_number=4
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.35, 0.15, 0.15, 0.1, 0.45, 0.2], [0.3, 0.35, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.45, 0.45, 0.2, 0.15, 0.7, 0.8, 0.4, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.2, 0.2, 0.35, 0.15, 0.15, 0.1, 0.45, 0.2], [0.35, 0.35, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.45, 0.45, 0.2, 0.15, 0.7, 0.8, 0.4, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.2, 0.2, 0.35, 0.15, 0.15, 0.05, 0.45, 0.2], [0.35, 0.4, 0.45, 0.7, 0.15, 0.1, 0.15, 0.2], [0.45, 0.4, 0.2, 0.15, 0.7, 0.85, 0.4, 0.6]]}}]}]}
+Selected baseline BN: 2
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 1: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 2: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 3: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9000
+Failures: 6
+Successes: 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+No improvement after 3 retries. Selecting best retry candidate (accuracy=90.00%).
+Removed 1 record(s) with bn_number=4
+Continuing with retry candidate (accuracy=90.00%).
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 81.67 %
+Total: 60
+Successes: 49
+Failures: 11
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+
+Best BN Number: 4
+Best BN Accuracy: 0.9
+Saved CPT identity comparison to cpt_comparison_analysis.json
+BN number: 4
+Agent change verdict: excellent
+Expected changed CPTs: ['Execution_Integrity', 'Root_Causes']
+Actual changed CPTs: ['Execution_Integrity', 'Root_Causes']
+Unexpected changed CPTs: []
+{'bn_number': 4, 'non_identical_cpt_count': 2, 'non_identical_cpts': ['Execution_Integrity', 'Root_Causes'], 'missing_in_proposed': [], 'agent_change_report': {'verdict': 'excellent', 'total_cpts': 20, 'expected_changed_count': 2, 'expected_changed_cpts': ['Execution_Integrity', 'Root_Causes'], 'actual_changed_count': 2, 'actual_changed_cpts': ['Execution_Integrity', 'Root_Causes'], 'matched_expected_count': 2, 'matched_expected_cpts': ['Execution_Integrity', 'Root_Causes'], 'missed_expected_count': 0, 'missed_expected_cpts': [], 'unexpected_changed_count': 0, 'unexpected_changed_cpts': [], 'unflawed_cpt_count': 18, 'untouched_unflawed_count': 18, 'untouched_unflawed_cpts': ['Deviation_in_Dispatch', 'Deviation_in_Response', 'GPTN_1', 'GPTN_2', 'GPTN_3', 'GPTN_5', 'LPTN_1_i', 'LPTN_1_ii', 'LPTN_1_iii', 'LPTN_1_iv', 'LPTN_1_ix', 'LPTN_1_v', 'LPTN_1_vi', 'LPTN_1_viii', 'LPTN_1_x', 'Network_Manipulation', 'Physical_Anomaly', 'Program_Anomaly'], 'expected_change_recall': 1.0, 'unexpected_change_rate': 0.0, 'unflawed_preservation_rate': 1.0}}
+======================================================================
+Deviation_in_Dispatch          0.00000000
+Deviation_in_Response          0.00000000
+Execution_Integrity            0.14468932
+Network_Manipulation           0.00000000
+Physical_Anomaly               0.00000000
+Program_Anomaly                0.00000000
+Root_Causes                    0.19499745
+======================================================================
+Overall Average CPT KL = 0.03774297
+======================================================================
+Deviation_in_Dispatch          RMSE = 0.00000000
+Deviation_in_Response          RMSE = 0.00000000
+Execution_Integrity            RMSE = 0.21089097
+Network_Manipulation           RMSE = 0.00000000
+Physical_Anomaly               RMSE = 0.00000000
+Program_Anomaly                RMSE = 0.00000000
+Root_Causes                    RMSE = 0.20974190
+======================================================================
+Overall CPT RMSE = 0.10783150
+======================================================================
+Deviation_in_Dispatch          Hellinger = 0.00000000
+Deviation_in_Response          Hellinger = 0.00000000
+Execution_Integrity            Hellinger = 0.20570772
+Network_Manipulation           Hellinger = 0.00000000
+Physical_Anomaly               Hellinger = 0.00000000
+Program_Anomaly                Hellinger = 0.00000000
+Root_Causes                    Hellinger = 0.21006122
+======================================================================
+Overall Average Hellinger = 0.04619655
+###------------------------------###
+
+Restart 0 finished.
+###------------------------------###
+
+==============================
+PIPELINE RESTART #1
+==============================
+Cleared: bn_analysis.json
+Cleared: last_proposed_bn.jsonl
+Cleared: dangerous_cpt_report.json
+Cleared: failure_parameter_statistics.json
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 81.67 %
+Total: 60
+Successes: 49
+Failures: 11
+Flawed BN Accuracy: 81.67%
+Initial Acceptance Threshold: 87.17%
+
+Initial Generation Attempt 0
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 81.67%
+
+Workflow analysis for BN #0 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.05, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.15, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.8, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.85, 0.3, 0.7, 0.7, 0.7, 0.2], [0.2, 0.3, 0.15, 0.7, 0.3, 0.3, 0.3, 0.8]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.8, 0.3, 0.7, 0.7, 0.7, 0.2], [0.2, 0.3, 0.2, 0.7, 0.3, 0.3, 0.3, 0.8]]}}, {'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.1, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.2, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.7, 0.15, 0.6]]}}]}]}
+Selected baseline BN: 0
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 81.67 %
+Total: 60
+Successes: 49
+Failures: 11
+
+Candidate 1: Accuracy = 0.8167, Failures = 11, Successes = 49
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 85.0 %
+Total: 60
+Successes: 51
+Failures: 9
+
+Candidate 2: Accuracy = 0.8500, Failures = 9, Successes = 51
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 81.67 %
+Total: 60
+Successes: 49
+Failures: 11
+
+Candidate 3: Accuracy = 0.8167, Failures = 11, Successes = 49
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 2
+Accuracy: 0.8500
+Failures: 9
+Successes: 51
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 85.0 %
+Total: 60
+Successes: 51
+Failures: 9
+Accuracy = 85.00%
+
+Initial Generation Attempt 1
+Removed workflow analysis for BN #0 from bn_analysis.json
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 81.67%
+
+Workflow analysis for BN #0 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.05, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.85, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.85, 0.3, 0.7, 0.7, 0.7, 0.2], [0.2, 0.3, 0.15, 0.7, 0.3, 0.3, 0.3, 0.8]]}}, {'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.1, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.8, 0.15, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.9, 0.3, 0.7, 0.7, 0.7, 0.2], [0.2, 0.3, 0.1, 0.7, 0.3, 0.3, 0.3, 0.8]]}}]}]}
+Selected baseline BN: 0
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 81.67 %
+Total: 60
+Successes: 49
+Failures: 11
+
+Candidate 1: Accuracy = 0.8167, Failures = 11, Successes = 49
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 85.0 %
+Total: 60
+Successes: 51
+Failures: 9
+
+Candidate 2: Accuracy = 0.8500, Failures = 9, Successes = 51
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 85.0 %
+Total: 60
+Successes: 51
+Failures: 9
+
+Candidate 3: Accuracy = 0.8500, Failures = 9, Successes = 51
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 2
+Accuracy: 0.8500
+Failures: 9
+Successes: 51
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 85.0 %
+Total: 60
+Successes: 51
+Failures: 9
+Accuracy = 85.00%
+
+Initial Generation Attempt 2
+Removed workflow analysis for BN #0 from bn_analysis.json
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 81.67%
+
+Workflow analysis for BN #0 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.25, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.2, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.55, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.7, 0.45, 0.7, 0.7, 0.7, 0.2], [0.2, 0.3, 0.3, 0.55, 0.3, 0.3, 0.3, 0.8]]}}, {'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.3, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.2, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.5, 0.15, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.7, 0.55, 0.7, 0.7, 0.7, 0.2], [0.2, 0.3, 0.3, 0.45, 0.3, 0.3, 0.3, 0.8]]}}]}]}
+Selected baseline BN: 0
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 63.33 %
+Total: 60
+Successes: 38
+Failures: 22
+
+Candidate 1: Accuracy = 0.6333, Failures = 22, Successes = 38
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 66.67 %
+Total: 60
+Successes: 40
+Failures: 20
+
+Candidate 2: Accuracy = 0.6667, Failures = 20, Successes = 40
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 85.0 %
+Total: 60
+Successes: 51
+Failures: 9
+
+Candidate 3: Accuracy = 0.8500, Failures = 9, Successes = 51
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 3
+Accuracy: 0.8500
+Failures: 9
+Successes: 51
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 85.0 %
+Total: 60
+Successes: 51
+Failures: 9
+Accuracy = 85.00%
+Threshold (87.17%) not reached after 3 attempts. Using best generated BN (85.00%).
+Removed workflow analysis for BN #0 from bn_analysis.json
+
+Initial BN generated
+
+===== ITERATION 2 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 85.0 %
+Total: 60
+Successes: 51
+Failures: 9
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 85.00%
+
+Workflow analysis for BN #1 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.35, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.55, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.25, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.05, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.7, 0.15, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.4, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.15, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.45, 0.15, 0.6]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 73.33 %
+Total: 60
+Successes: 44
+Failures: 16
+
+Candidate 1: Accuracy = 0.7333, Failures = 16, Successes = 44
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 83.33 %
+Total: 60
+Successes: 50
+Failures: 10
+
+Candidate 2: Accuracy = 0.8333, Failures = 10, Successes = 50
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 20.0 %
+Total: 60
+Successes: 12
+Failures: 48
+
+Candidate 3: Accuracy = 0.2000, Failures = 48, Successes = 12
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 2
+Accuracy: 0.8333
+Failures: 10
+Successes: 50
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 83.33 %
+Total: 60
+Successes: 50
+Failures: 10
+
+Accuracy did not improve. Need improvement from 85.00% 
+Removed 1 record(s) with bn_number=2
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.35, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.55, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.25, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.25, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.5, 0.15, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.2, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.35, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.45, 0.15, 0.6]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 73.33 %
+Total: 60
+Successes: 44
+Failures: 16
+
+Candidate 1: Accuracy = 0.7333, Failures = 16, Successes = 44
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 73.33 %
+Total: 60
+Successes: 44
+Failures: 16
+
+Candidate 2: Accuracy = 0.7333, Failures = 16, Successes = 44
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 30.0 %
+Total: 60
+Successes: 18
+Failures: 42
+
+Candidate 3: Accuracy = 0.3000, Failures = 42, Successes = 18
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.7333
+Failures: 16
+Successes: 44
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 73.33 %
+Total: 60
+Successes: 44
+Failures: 16
+Removed 1 record(s) with bn_number=2
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.35, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.55, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.2, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.7, 0.15, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.25, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.25, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.5, 0.15, 0.6]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 73.33 %
+Total: 60
+Successes: 44
+Failures: 16
+
+Candidate 1: Accuracy = 0.7333, Failures = 16, Successes = 44
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 83.33 %
+Total: 60
+Successes: 50
+Failures: 10
+
+Candidate 2: Accuracy = 0.8333, Failures = 10, Successes = 50
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 73.33 %
+Total: 60
+Successes: 44
+Failures: 16
+
+Candidate 3: Accuracy = 0.7333, Failures = 16, Successes = 44
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 2
+Accuracy: 0.8333
+Failures: 10
+Successes: 50
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 83.33 %
+Total: 60
+Successes: 50
+Failures: 10
+Removed 1 record(s) with bn_number=2
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.35, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.55, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.2, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.7, 0.15, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.25, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.25, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.5, 0.15, 0.6]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 73.33 %
+Total: 60
+Successes: 44
+Failures: 16
+
+Candidate 1: Accuracy = 0.7333, Failures = 16, Successes = 44
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 83.33 %
+Total: 60
+Successes: 50
+Failures: 10
+
+Candidate 2: Accuracy = 0.8333, Failures = 10, Successes = 50
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 73.33 %
+Total: 60
+Successes: 44
+Failures: 16
+
+Candidate 3: Accuracy = 0.7333, Failures = 16, Successes = 44
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 2
+Accuracy: 0.8333
+Failures: 10
+Successes: 50
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 83.33 %
+Total: 60
+Successes: 50
+Failures: 10
+
+No improvement after 3 retries. Selecting best retry candidate (accuracy=83.33%).
+Removed 1 record(s) with bn_number=2
+Continuing with retry candidate (accuracy=83.33%).
+
+===== ITERATION 3 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 83.33 %
+Total: 60
+Successes: 50
+Failures: 10
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 83.33%
+
+Workflow analysis for BN #2 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.3, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.6, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.2, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.7, 0.15, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.25, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.15, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.6, 0.15, 0.6]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 73.33 %
+Total: 60
+Successes: 44
+Failures: 16
+
+Candidate 1: Accuracy = 0.7333, Failures = 16, Successes = 44
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 83.33 %
+Total: 60
+Successes: 50
+Failures: 10
+
+Candidate 2: Accuracy = 0.8333, Failures = 10, Successes = 50
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 75.0 %
+Total: 60
+Successes: 45
+Failures: 15
+
+Candidate 3: Accuracy = 0.7500, Failures = 15, Successes = 45
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 2
+Accuracy: 0.8333
+Failures: 10
+Successes: 50
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 83.33 %
+Total: 60
+Successes: 50
+Failures: 10
+
+Accuracy did not improve. Need improvement from 83.33% 
+Removed 1 record(s) with bn_number=3
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.35, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.55, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.25, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.65, 0.15, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.4, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.15, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.45, 0.15, 0.6]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 73.33 %
+Total: 60
+Successes: 44
+Failures: 16
+
+Candidate 1: Accuracy = 0.7333, Failures = 16, Successes = 44
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 75.0 %
+Total: 60
+Successes: 45
+Failures: 15
+
+Candidate 2: Accuracy = 0.7500, Failures = 15, Successes = 45
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 20.0 %
+Total: 60
+Successes: 12
+Failures: 48
+
+Candidate 3: Accuracy = 0.2000, Failures = 48, Successes = 12
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 2
+Accuracy: 0.7500
+Failures: 15
+Successes: 45
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 75.0 %
+Total: 60
+Successes: 45
+Failures: 15
+Removed 1 record(s) with bn_number=3
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.35, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.55, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.25, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.05, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.7, 0.15, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.2, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.3, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.5, 0.15, 0.6]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 73.33 %
+Total: 60
+Successes: 44
+Failures: 16
+
+Candidate 1: Accuracy = 0.7333, Failures = 16, Successes = 44
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 83.33 %
+Total: 60
+Successes: 50
+Failures: 10
+
+Candidate 2: Accuracy = 0.8333, Failures = 10, Successes = 50
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 73.33 %
+Total: 60
+Successes: 44
+Failures: 16
+
+Candidate 3: Accuracy = 0.7333, Failures = 16, Successes = 44
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 2
+Accuracy: 0.8333
+Failures: 10
+Successes: 50
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 83.33 %
+Total: 60
+Successes: 50
+Failures: 10
+Removed 1 record(s) with bn_number=3
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.35, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.55, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.25, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.15, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.6, 0.15, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.2, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.25, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.55, 0.15, 0.6]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 73.33 %
+Total: 60
+Successes: 44
+Failures: 16
+
+Candidate 1: Accuracy = 0.7333, Failures = 16, Successes = 44
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 75.0 %
+Total: 60
+Successes: 45
+Failures: 15
+
+Candidate 2: Accuracy = 0.7500, Failures = 15, Successes = 45
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 75.0 %
+Total: 60
+Successes: 45
+Failures: 15
+
+Candidate 3: Accuracy = 0.7500, Failures = 15, Successes = 45
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 2
+Accuracy: 0.7500
+Failures: 15
+Successes: 45
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 75.0 %
+Total: 60
+Successes: 45
+Failures: 15
+
+No improvement after 3 retries. Selecting best retry candidate (accuracy=83.33%).
+Removed 1 record(s) with bn_number=3
+Continuing with retry candidate (accuracy=83.33%).
+
+===== ITERATION 4 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 83.33 %
+Total: 60
+Successes: 50
+Failures: 10
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 83.33%
+
+Workflow analysis for BN #3 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.35, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.55, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.2, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.7, 0.15, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.25, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.25, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.5, 0.15, 0.6]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 73.33 %
+Total: 60
+Successes: 44
+Failures: 16
+
+Candidate 1: Accuracy = 0.7333, Failures = 16, Successes = 44
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 83.33 %
+Total: 60
+Successes: 50
+Failures: 10
+
+Candidate 2: Accuracy = 0.8333, Failures = 10, Successes = 50
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 73.33 %
+Total: 60
+Successes: 44
+Failures: 16
+
+Candidate 3: Accuracy = 0.7333, Failures = 16, Successes = 44
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 2
+Accuracy: 0.8333
+Failures: 10
+Successes: 50
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 83.33 %
+Total: 60
+Successes: 50
+Failures: 10
+
+Accuracy did not improve. Need improvement from 83.33% 
+Removed 1 record(s) with bn_number=4
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.35, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.55, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.2, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.7, 0.15, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.25, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.25, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.5, 0.15, 0.6]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 73.33 %
+Total: 60
+Successes: 44
+Failures: 16
+
+Candidate 1: Accuracy = 0.7333, Failures = 16, Successes = 44
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 83.33 %
+Total: 60
+Successes: 50
+Failures: 10
+
+Candidate 2: Accuracy = 0.8333, Failures = 10, Successes = 50
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 73.33 %
+Total: 60
+Successes: 44
+Failures: 16
+
+Candidate 3: Accuracy = 0.7333, Failures = 16, Successes = 44
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 2
+Accuracy: 0.8333
+Failures: 10
+Successes: 50
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 83.33 %
+Total: 60
+Successes: 50
+Failures: 10
+Removed 1 record(s) with bn_number=4
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.35, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.55, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.2, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.7, 0.15, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.45, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.45, 0.15, 0.6]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 73.33 %
+Total: 60
+Successes: 44
+Failures: 16
+
+Candidate 1: Accuracy = 0.7333, Failures = 16, Successes = 44
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 83.33 %
+Total: 60
+Successes: 50
+Failures: 10
+
+Candidate 2: Accuracy = 0.8333, Failures = 10, Successes = 50
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 20.0 %
+Total: 60
+Successes: 12
+Failures: 48
+
+Candidate 3: Accuracy = 0.2000, Failures = 48, Successes = 12
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 2
+Accuracy: 0.8333
+Failures: 10
+Successes: 50
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 83.33 %
+Total: 60
+Successes: 50
+Failures: 10
+Removed 1 record(s) with bn_number=4
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.35, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.55, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.2, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.7, 0.15, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.25, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.2, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.55, 0.15, 0.6]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 73.33 %
+Total: 60
+Successes: 44
+Failures: 16
+
+Candidate 1: Accuracy = 0.7333, Failures = 16, Successes = 44
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 83.33 %
+Total: 60
+Successes: 50
+Failures: 10
+
+Candidate 2: Accuracy = 0.8333, Failures = 10, Successes = 50
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 73.33 %
+Total: 60
+Successes: 44
+Failures: 16
+
+Candidate 3: Accuracy = 0.7333, Failures = 16, Successes = 44
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 2
+Accuracy: 0.8333
+Failures: 10
+Successes: 50
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 83.33 %
+Total: 60
+Successes: 50
+Failures: 10
+
+No improvement after 3 retries. Selecting best retry candidate (accuracy=83.33%).
+Removed 1 record(s) with bn_number=4
+Continuing with retry candidate (accuracy=83.33%).
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 81.67 %
+Total: 60
+Successes: 49
+Failures: 11
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 85.0 %
+Total: 60
+Successes: 51
+Failures: 9
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 83.33 %
+Total: 60
+Successes: 50
+Failures: 10
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 83.33 %
+Total: 60
+Successes: 50
+Failures: 10
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 83.33 %
+Total: 60
+Successes: 50
+Failures: 10
+
+
+Best BN Number: 1
+Best BN Accuracy: 0.85
+Saved CPT identity comparison to cpt_comparison_analysis.json
+BN number: 1
+Agent change verdict: excellent
+Expected changed CPTs: ['Execution_Integrity', 'Root_Causes']
+Actual changed CPTs: ['Execution_Integrity', 'Root_Causes']
+Unexpected changed CPTs: []
+{'bn_number': 1, 'non_identical_cpt_count': 2, 'non_identical_cpts': ['Execution_Integrity', 'Root_Causes'], 'missing_in_proposed': [], 'agent_change_report': {'verdict': 'excellent', 'total_cpts': 20, 'expected_changed_count': 2, 'expected_changed_cpts': ['Execution_Integrity', 'Root_Causes'], 'actual_changed_count': 2, 'actual_changed_cpts': ['Execution_Integrity', 'Root_Causes'], 'matched_expected_count': 2, 'matched_expected_cpts': ['Execution_Integrity', 'Root_Causes'], 'missed_expected_count': 0, 'missed_expected_cpts': [], 'unexpected_changed_count': 0, 'unexpected_changed_cpts': [], 'unflawed_cpt_count': 18, 'untouched_unflawed_count': 18, 'untouched_unflawed_cpts': ['Deviation_in_Dispatch', 'Deviation_in_Response', 'GPTN_1', 'GPTN_2', 'GPTN_3', 'GPTN_5', 'LPTN_1_i', 'LPTN_1_ii', 'LPTN_1_iii', 'LPTN_1_iv', 'LPTN_1_ix', 'LPTN_1_v', 'LPTN_1_vi', 'LPTN_1_viii', 'LPTN_1_x', 'Network_Manipulation', 'Physical_Anomaly', 'Program_Anomaly'], 'expected_change_recall': 1.0, 'unexpected_change_rate': 0.0, 'unflawed_preservation_rate': 1.0}}
+======================================================================
+Deviation_in_Dispatch          0.00000000
+Deviation_in_Response          0.00000000
+Execution_Integrity            0.16898342
+Network_Manipulation           0.00000000
+Physical_Anomaly               0.00000000
+Program_Anomaly                0.00000000
+Root_Causes                    0.17299207
+======================================================================
+Overall Average CPT KL = 0.03799728
+======================================================================
+Deviation_in_Dispatch          RMSE = 0.00000000
+Deviation_in_Response          RMSE = 0.00000000
+Execution_Integrity            RMSE = 0.24129857
+Network_Manipulation           RMSE = 0.00000000
+Physical_Anomaly               RMSE = 0.00000000
+Program_Anomaly                RMSE = 0.00000000
+Root_Causes                    RMSE = 0.19480760
+======================================================================
+Overall CPT RMSE = 0.11009565
+======================================================================
+Deviation_in_Dispatch          Hellinger = 0.00000000
+Deviation_in_Response          Hellinger = 0.00000000
+Execution_Integrity            Hellinger = 0.21204381
+Network_Manipulation           Hellinger = 0.00000000
+Physical_Anomaly               Hellinger = 0.00000000
+Program_Anomaly                Hellinger = 0.00000000
+Root_Causes                    Hellinger = 0.19500215
+======================================================================
+Overall Average Hellinger = 0.04522733
+###------------------------------###
+
+Restart 1 finished.
+###------------------------------###
+
+==============================
+PIPELINE RESTART #2
+==============================
+Cleared: bn_analysis.json
+Cleared: last_proposed_bn.jsonl
+Cleared: dangerous_cpt_report.json
+Cleared: failure_parameter_statistics.json
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 81.67 %
+Total: 60
+Successes: 49
+Failures: 11
+Flawed BN Accuracy: 81.67%
+Initial Acceptance Threshold: 87.17%
+
+Initial Generation Attempt 0
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 81.67%
+
+Workflow analysis for BN #0 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.05, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.05, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.9, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.7, 0.45, 0.7, 0.7, 0.7, 0.2], [0.2, 0.3, 0.3, 0.55, 0.3, 0.3, 0.3, 0.8]]}}, {'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.15, 0.7, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.15, 0.15, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.7, 0.15, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.7, 0.55, 0.7, 0.7, 0.7, 0.2], [0.2, 0.3, 0.3, 0.45, 0.3, 0.3, 0.3, 0.8]]}}, {'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.4, 0.15, 0.15, 0.1, 0.7, 0.2], [0.25, 0.4, 0.4, 0.7, 0.15, 0.1, 0.15, 0.2], [0.5, 0.4, 0.2, 0.15, 0.7, 0.8, 0.15, 0.6]]}}]}]}
+Selected baseline BN: 0
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 81.67 %
+Total: 60
+Successes: 49
+Failures: 11
+
+Candidate 1: Accuracy = 0.8167, Failures = 11, Successes = 49
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 81.67 %
+Total: 60
+Successes: 49
+Failures: 11
+
+Candidate 2: Accuracy = 0.8167, Failures = 11, Successes = 49
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 85.0 %
+Total: 60
+Successes: 51
+Failures: 9
+
+Candidate 3: Accuracy = 0.8500, Failures = 9, Successes = 51
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 3
+Accuracy: 0.8500
+Failures: 9
+Successes: 51
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 85.0 %
+Total: 60
+Successes: 51
+Failures: 9
+Accuracy = 85.00%
+
+Initial Generation Attempt 1
+Removed workflow analysis for BN #0 from bn_analysis.json
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 81.67%
+
+Workflow analysis for BN #0 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.1, 0.45, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.35, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.8, 0.2, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.7, 0.45, 0.7, 0.7, 0.7, 0.2], [0.2, 0.3, 0.3, 0.55, 0.3, 0.3, 0.3, 0.8]]}}, {'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.1, 0.55, 0.2], [0.3, 0.4, 0.4, 0.7, 0.15, 0.1, 0.2, 0.2], [0.4, 0.4, 0.2, 0.15, 0.7, 0.8, 0.25, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.7, 0.55, 0.7, 0.7, 0.7, 0.2], [0.2, 0.3, 0.3, 0.45, 0.3, 0.3, 0.3, 0.8]]}}, {'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.15, 0.35, 0.1, 0.15, 0.1, 0.4, 0.15], [0.35, 0.45, 0.45, 0.75, 0.1, 0.1, 0.3, 0.15], [0.4, 0.4, 0.2, 0.15, 0.75, 0.8, 0.3, 0.7]]}}]}]}
+Selected baseline BN: 0
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 85.0 %
+Total: 60
+Successes: 51
+Failures: 9
+
+Candidate 1: Accuracy = 0.8500, Failures = 9, Successes = 51
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+
+Candidate 2: Accuracy = 0.8667, Failures = 8, Successes = 52
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 3: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 3
+Accuracy: 0.9000
+Failures: 6
+Successes: 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+Accuracy = 90.00%
+Initial BN accepted.
+Accepted initial BN (90.00%).
+Removed workflow analysis for BN #0 from bn_analysis.json
+
+Initial BN generated
+
+===== ITERATION 2 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 90.00%
+
+Workflow analysis for BN #1 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.15, 0.35, 0.1, 0.15, 0.18, 0.4, 0.15], [0.35, 0.37, 0.45, 0.75, 0.1, 0.1, 0.3, 0.15], [0.4, 0.48, 0.2, 0.15, 0.75, 0.72, 0.3, 0.7]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.12, 0.35, 0.1, 0.15, 0.2, 0.4, 0.15], [0.35, 0.28, 0.45, 0.75, 0.1, 0.08, 0.3, 0.15], [0.4, 0.6, 0.2, 0.15, 0.75, 0.72, 0.3, 0.7]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.18, 0.35, 0.1, 0.15, 0.12, 0.4, 0.15], [0.35, 0.32, 0.45, 0.75, 0.1, 0.08, 0.3, 0.15], [0.4, 0.5, 0.2, 0.15, 0.75, 0.8, 0.3, 0.7]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 1: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+
+Candidate 2: Accuracy = 0.8667, Failures = 8, Successes = 52
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 3: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9000
+Failures: 6
+Successes: 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Accuracy did not improve. Need improvement from 90.00% 
+Removed 1 record(s) with bn_number=2
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.35, 0.1, 0.15, 0.1, 0.5, 0.15], [0.35, 0.35, 0.45, 0.75, 0.1, 0.1, 0.2, 0.15], [0.4, 0.45, 0.2, 0.15, 0.75, 0.8, 0.3, 0.7]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.1, 0.35, 0.1, 0.15, 0.1, 0.55, 0.15], [0.3, 0.25, 0.45, 0.75, 0.1, 0.1, 0.15, 0.15], [0.45, 0.65, 0.2, 0.15, 0.75, 0.8, 0.3, 0.7]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.15, 0.35, 0.1, 0.15, 0.1, 0.6, 0.15], [0.25, 0.2, 0.45, 0.75, 0.1, 0.1, 0.1, 0.15], [0.5, 0.65, 0.2, 0.15, 0.75, 0.8, 0.3, 0.7]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 1: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+
+Candidate 2: Accuracy = 0.8667, Failures = 8, Successes = 52
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+
+Candidate 3: Accuracy = 0.8667, Failures = 8, Successes = 52
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9000
+Failures: 6
+Successes: 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+Removed 1 record(s) with bn_number=2
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.15, 0.35, 0.1, 0.15, 0.2, 0.4, 0.15], [0.35, 0.3, 0.45, 0.75, 0.1, 0.1, 0.3, 0.15], [0.4, 0.55, 0.2, 0.15, 0.75, 0.7, 0.3, 0.7]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.1, 0.35, 0.1, 0.15, 0.15, 0.4, 0.15], [0.35, 0.25, 0.45, 0.75, 0.1, 0.1, 0.3, 0.15], [0.4, 0.65, 0.2, 0.15, 0.75, 0.75, 0.3, 0.7]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.15, 0.35, 0.1, 0.15, 0.05, 0.4, 0.15], [0.35, 0.2, 0.45, 0.75, 0.1, 0.05, 0.3, 0.15], [0.4, 0.65, 0.2, 0.15, 0.75, 0.9, 0.3, 0.7]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 1: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+
+Candidate 2: Accuracy = 0.8667, Failures = 8, Successes = 52
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+
+Candidate 3: Accuracy = 0.8667, Failures = 8, Successes = 52
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9000
+Failures: 6
+Successes: 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+Removed 1 record(s) with bn_number=2
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.35, 0.1, 0.15, 0.15, 0.5, 0.15], [0.35, 0.35, 0.45, 0.75, 0.1, 0.1, 0.2, 0.15], [0.4, 0.45, 0.2, 0.15, 0.75, 0.75, 0.3, 0.7]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.2, 0.15, 0.3, 0.08, 0.12, 0.08, 0.45, 0.12], [0.3, 0.3, 0.35, 0.72, 0.08, 0.08, 0.2, 0.1], [0.5, 0.55, 0.35, 0.2, 0.8, 0.84, 0.35, 0.78]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.18, 0.45, 0.12, 0.18, 0.12, 0.55, 0.18], [0.25, 0.27, 0.35, 0.73, 0.07, 0.08, 0.15, 0.1], [0.45, 0.55, 0.2, 0.15, 0.75, 0.8, 0.3, 0.72]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 1: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+
+Candidate 2: Accuracy = 0.8667, Failures = 8, Successes = 52
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+
+Candidate 3: Accuracy = 0.8667, Failures = 8, Successes = 52
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9000
+Failures: 6
+Successes: 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+No improvement after 3 retries. Selecting best retry candidate (accuracy=90.00%).
+Removed 1 record(s) with bn_number=2
+Continuing with retry candidate (accuracy=90.00%).
+
+===== ITERATION 3 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 90.00%
+
+Workflow analysis for BN #2 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.1, 0.35, 0.1, 0.15, 0.05, 0.4, 0.15], [0.35, 0.35, 0.45, 0.75, 0.1, 0.1, 0.3, 0.15], [0.4, 0.55, 0.2, 0.15, 0.75, 0.85, 0.3, 0.7]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.2, 0.1, 0.35, 0.1, 0.1, 0.05, 0.4, 0.15], [0.3, 0.25, 0.45, 0.75, 0.1, 0.1, 0.25, 0.1], [0.5, 0.65, 0.2, 0.15, 0.8, 0.85, 0.35, 0.75]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.2, 0.15, 0.35, 0.1, 0.15, 0.05, 0.45, 0.15], [0.3, 0.3, 0.45, 0.75, 0.1, 0.1, 0.25, 0.1], [0.5, 0.55, 0.2, 0.15, 0.75, 0.85, 0.3, 0.75]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 1: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+
+Candidate 2: Accuracy = 0.8667, Failures = 8, Successes = 52
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+
+Candidate 3: Accuracy = 0.8667, Failures = 8, Successes = 52
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9000
+Failures: 6
+Successes: 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Accuracy did not improve. Need improvement from 90.00% 
+Removed 1 record(s) with bn_number=3
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.35, 0.15, 0.15, 0.1, 0.5, 0.15], [0.35, 0.35, 0.45, 0.65, 0.1, 0.1, 0.2, 0.15], [0.4, 0.45, 0.2, 0.2, 0.75, 0.8, 0.3, 0.7]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.2, 0.15, 0.3, 0.1, 0.15, 0.1, 0.55, 0.1], [0.25, 0.25, 0.35, 0.7, 0.05, 0.05, 0.1, 0.1], [0.55, 0.6, 0.35, 0.2, 0.8, 0.85, 0.35, 0.8]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.45, 0.15, 0.2, 0.1, 0.45, 0.2], [0.3, 0.3, 0.35, 0.6, 0.1, 0.1, 0.15, 0.1], [0.4, 0.5, 0.2, 0.25, 0.7, 0.8, 0.4, 0.7]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+
+Candidate 1: Accuracy = 0.8667, Failures = 8, Successes = 52
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 85.0 %
+Total: 60
+Successes: 51
+Failures: 9
+
+Candidate 2: Accuracy = 0.8500, Failures = 9, Successes = 51
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 85.0 %
+Total: 60
+Successes: 51
+Failures: 9
+
+Candidate 3: Accuracy = 0.8500, Failures = 9, Successes = 51
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.8667
+Failures: 8
+Successes: 52
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+Removed 1 record(s) with bn_number=3
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.15, 0.35, 0.1, 0.15, 0.18, 0.4, 0.15], [0.35, 0.35, 0.45, 0.75, 0.1, 0.1, 0.3, 0.15], [0.4, 0.5, 0.2, 0.15, 0.75, 0.72, 0.3, 0.7]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.12, 0.35, 0.1, 0.15, 0.5, 0.4, 0.15], [0.35, 0.28, 0.45, 0.75, 0.1, 0.08, 0.3, 0.15], [0.4, 0.6, 0.2, 0.15, 0.75, 0.42, 0.3, 0.7]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.08, 0.35, 0.1, 0.15, 0.15, 0.4, 0.15], [0.35, 0.22, 0.45, 0.75, 0.1, 0.1, 0.3, 0.15], [0.4, 0.7, 0.2, 0.15, 0.75, 0.75, 0.3, 0.7]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 1: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 43.33 %
+Total: 60
+Successes: 26
+Failures: 34
+
+Candidate 2: Accuracy = 0.4333, Failures = 34, Successes = 26
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+
+Candidate 3: Accuracy = 0.8667, Failures = 8, Successes = 52
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9000
+Failures: 6
+Successes: 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+Removed 1 record(s) with bn_number=3
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.15, 0.35, 0.1, 0.15, 0.1, 0.5, 0.15], [0.3, 0.35, 0.45, 0.75, 0.1, 0.1, 0.2, 0.15], [0.45, 0.5, 0.2, 0.15, 0.75, 0.8, 0.3, 0.7]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.15, 0.35, 0.1, 0.15, 0.1, 0.55, 0.15], [0.25, 0.25, 0.45, 0.75, 0.1, 0.1, 0.15, 0.15], [0.5, 0.6, 0.2, 0.15, 0.75, 0.8, 0.3, 0.7]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.15, 0.35, 0.1, 0.15, 0.05, 0.45, 0.15], [0.35, 0.45, 0.45, 0.75, 0.1, 0.1, 0.25, 0.15], [0.4, 0.4, 0.2, 0.15, 0.75, 0.85, 0.3, 0.7]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 1: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+
+Candidate 2: Accuracy = 0.8667, Failures = 8, Successes = 52
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 3: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9000
+Failures: 6
+Successes: 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+No improvement after 3 retries. Selecting best retry candidate (accuracy=90.00%).
+Removed 1 record(s) with bn_number=3
+Continuing with retry candidate (accuracy=90.00%).
+
+===== ITERATION 4 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 90.00%
+
+Workflow analysis for BN #3 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.15, 0.35, 0.1, 0.15, 0.18, 0.4, 0.15], [0.35, 0.35, 0.45, 0.75, 0.1, 0.07, 0.3, 0.15], [0.4, 0.5, 0.2, 0.15, 0.75, 0.75, 0.3, 0.7]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.22, 0.12, 0.35, 0.08, 0.12, 0.05, 0.4, 0.15], [0.28, 0.28, 0.45, 0.82, 0.08, 0.05, 0.3, 0.15], [0.5, 0.6, 0.2, 0.1, 0.8, 0.9, 0.3, 0.7]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.35, 0.1, 0.15, 0.25, 0.4, 0.15], [0.35, 0.25, 0.45, 0.75, 0.1, 0.05, 0.3, 0.15], [0.4, 0.55, 0.2, 0.15, 0.75, 0.7, 0.3, 0.7]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 1: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 2: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+
+Candidate 3: Accuracy = 0.8667, Failures = 8, Successes = 52
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9000
+Failures: 6
+Successes: 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Accuracy did not improve. Need improvement from 90.00% 
+Removed 1 record(s) with bn_number=4
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.25, 0.35, 0.1, 0.15, 0.1, 0.25, 0.15], [0.35, 0.3, 0.45, 0.75, 0.1, 0.1, 0.45, 0.15], [0.4, 0.45, 0.2, 0.15, 0.75, 0.8, 0.3, 0.7]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.2, 0.15, 0.45, 0.08, 0.12, 0.08, 0.55, 0.12], [0.28, 0.22, 0.3, 0.82, 0.08, 0.08, 0.2, 0.08], [0.52, 0.63, 0.25, 0.1, 0.8, 0.84, 0.25, 0.8]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.22, 0.2, 0.38, 0.1, 0.12, 0.08, 0.48, 0.12], [0.33, 0.25, 0.42, 0.78, 0.08, 0.07, 0.22, 0.08], [0.45, 0.55, 0.2, 0.12, 0.8, 0.85, 0.3, 0.8]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 1: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 2: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 3: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9000
+Failures: 6
+Successes: 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+Removed 1 record(s) with bn_number=4
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.15, 0.35, 0.1, 0.15, 0.1, 0.5, 0.15], [0.3, 0.35, 0.45, 0.75, 0.1, 0.1, 0.2, 0.15], [0.45, 0.5, 0.2, 0.15, 0.75, 0.8, 0.3, 0.7]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.15, 0.35, 0.1, 0.15, 0.05, 0.4, 0.15], [0.25, 0.25, 0.45, 0.75, 0.1, 0.1, 0.3, 0.15], [0.5, 0.6, 0.2, 0.15, 0.75, 0.85, 0.3, 0.7]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.2, 0.1, 0.35, 0.1, 0.15, 0.05, 0.45, 0.15], [0.35, 0.3, 0.45, 0.75, 0.1, 0.05, 0.25, 0.15], [0.45, 0.6, 0.2, 0.15, 0.75, 0.9, 0.3, 0.7]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 1: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+
+Candidate 2: Accuracy = 0.8667, Failures = 8, Successes = 52
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 86.67 %
+Total: 60
+Successes: 52
+Failures: 8
+
+Candidate 3: Accuracy = 0.8667, Failures = 8, Successes = 52
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9000
+Failures: 6
+Successes: 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+Removed 1 record(s) with bn_number=4
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.15, 0.35, 0.1, 0.15, 0.18, 0.4, 0.15], [0.35, 0.35, 0.45, 0.75, 0.1, 0.1, 0.3, 0.15], [0.4, 0.5, 0.2, 0.15, 0.75, 0.72, 0.3, 0.7]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.12, 0.35, 0.1, 0.15, 0.5, 0.4, 0.15], [0.35, 0.28, 0.45, 0.75, 0.1, 0.08, 0.3, 0.15], [0.4, 0.6, 0.2, 0.15, 0.75, 0.42, 0.3, 0.7]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.35, 0.1, 0.15, 0.45, 0.4, 0.15], [0.35, 0.2, 0.45, 0.75, 0.1, 0.08, 0.3, 0.15], [0.4, 0.6, 0.2, 0.15, 0.75, 0.47, 0.3, 0.7]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Candidate 1: Accuracy = 0.9000, Failures = 6, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 43.33 %
+Total: 60
+Successes: 26
+Failures: 34
+
+Candidate 2: Accuracy = 0.4333, Failures = 34, Successes = 26
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 76.67 %
+Total: 60
+Successes: 46
+Failures: 14
+
+Candidate 3: Accuracy = 0.7667, Failures = 14, Successes = 46
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9000
+Failures: 6
+Successes: 54
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+No improvement after 3 retries. Selecting best retry candidate (accuracy=90.00%).
+Removed 1 record(s) with bn_number=4
+Continuing with retry candidate (accuracy=90.00%).
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 81.67 %
+Total: 60
+Successes: 49
+Failures: 11
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+
+Best BN Number: 4
+Best BN Accuracy: 0.9
+Saved CPT identity comparison to cpt_comparison_analysis.json
+BN number: 4
+Agent change verdict: excellent
+Expected changed CPTs: ['Execution_Integrity', 'Root_Causes']
+Actual changed CPTs: ['Execution_Integrity', 'Root_Causes']
+Unexpected changed CPTs: []
+{'bn_number': 4, 'non_identical_cpt_count': 2, 'non_identical_cpts': ['Execution_Integrity', 'Root_Causes'], 'missing_in_proposed': [], 'agent_change_report': {'verdict': 'excellent', 'total_cpts': 20, 'expected_changed_count': 2, 'expected_changed_cpts': ['Execution_Integrity', 'Root_Causes'], 'actual_changed_count': 2, 'actual_changed_cpts': ['Execution_Integrity', 'Root_Causes'], 'matched_expected_count': 2, 'matched_expected_cpts': ['Execution_Integrity', 'Root_Causes'], 'missed_expected_count': 0, 'missed_expected_cpts': [], 'unexpected_changed_count': 0, 'unexpected_changed_cpts': [], 'unflawed_cpt_count': 18, 'untouched_unflawed_count': 18, 'untouched_unflawed_cpts': ['Deviation_in_Dispatch', 'Deviation_in_Response', 'GPTN_1', 'GPTN_2', 'GPTN_3', 'GPTN_5', 'LPTN_1_i', 'LPTN_1_ii', 'LPTN_1_iii', 'LPTN_1_iv', 'LPTN_1_ix', 'LPTN_1_v', 'LPTN_1_vi', 'LPTN_1_viii', 'LPTN_1_x', 'Network_Manipulation', 'Physical_Anomaly', 'Program_Anomaly'], 'expected_change_recall': 1.0, 'unexpected_change_rate': 0.0, 'unflawed_preservation_rate': 1.0}}
+======================================================================
+Deviation_in_Dispatch          0.00000000
+Deviation_in_Response          0.00000000
+Execution_Integrity            0.14468932
+Network_Manipulation           0.00000000
+Physical_Anomaly               0.00000000
+Program_Anomaly                0.00000000
+Root_Causes                    0.22423954
+======================================================================
+Overall Average CPT KL = 0.04099210
+======================================================================
+Deviation_in_Dispatch          RMSE = 0.00000000
+Deviation_in_Response          RMSE = 0.00000000
+Execution_Integrity            RMSE = 0.21089097
+Network_Manipulation           RMSE = 0.00000000
+Physical_Anomaly               RMSE = 0.00000000
+Program_Anomaly                RMSE = 0.00000000
+Root_Causes                    RMSE = 0.22235482
+======================================================================
+Overall CPT RMSE = 0.11175043
+======================================================================
+Deviation_in_Dispatch          Hellinger = 0.00000000
+Deviation_in_Response          Hellinger = 0.00000000
+Execution_Integrity            Hellinger = 0.20570772
+Network_Manipulation           Hellinger = 0.00000000
+Physical_Anomaly               Hellinger = 0.00000000
+Program_Anomaly                Hellinger = 0.00000000
+Root_Causes                    Hellinger = 0.22587438
+======================================================================
+Overall Average Hellinger = 0.04795357
+###------------------------------###
+
+Restart 2 finished.
+###------------------------------###
+Restart: 0
+BN keys: dict_keys(['edges', 'nodes'])
+Evaluating restart 0
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+Restart: 1
+BN keys: dict_keys(['edges', 'nodes'])
+Evaluating restart 1
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 85.0 %
+Total: 60
+Successes: 51
+Failures: 9
+Restart: 2
+BN keys: dict_keys(['edges', 'nodes'])
+Evaluating restart 2
+
+Checking model...
+True
+
+===================================================
+Dataset: constrained_train_5to1.csv
+===================================================
+Accuracy: 90.0 %
+Total: 60
+Successes: 54
+Failures: 6
+
+===================================
+BEST RESTART
+===================================
+Restart: 0
+Accuracy: 0.9
+Failures: 6
+###------------------------------###
+
+Pipeline finished.
+###------------------------------###

@@ -1,0 +1,42 @@
+{
+    "reported_risk_level": "high_medium",
+    "dangerous_cpts": [
+        {
+            "cpt": "Execution_Integrity",
+            "risk_level": "high_medium",
+            "number_of_failure_scenarios": 5,
+            "main_problem": "This CPT shows the strongest failure-specific signal with no corresponding success activations. The repeated failure pattern activates column 7, where Program_Anomaly=No, Deviation_in_Response=No, and Deviation_in_Dispatch=No, yet the CPT deterministically selects Execution_Integrity=Normal with probability 0.6. In this domain, execution integrity should be a key discriminator for memory corruption or execution-related compromise; repeatedly defaulting to Normal under a fully clean evidence pattern can plausibly suppress downstream assignment of execution-related root causes and contribute independently to repeated misclassification.",
+            "suspicious_parameters": [
+                {
+                    "rank": 1,
+                    "parameter": "Column 7 \u2192 Normal",
+                    "failure_weight": 5,
+                    "success_weight": 0,
+                    "failure_to_success_ratio": 5.0,
+                    "argmax_probability": 0.6,
+                    "recommended_adjustment": "slightly_decrease",
+                    "justification": "This parameter is activated in all five recurring failure scenarios and in no success scenarios, giving strong independent evidence that the CPT's preference for Normal in the absence of detected anomalies may be too strong. Because the margin is only moderate (0.6), a modest reduction is more plausible than a drastic change."
+                }
+            ]
+        },
+        {
+            "cpt": "Program_Anomaly",
+            "risk_level": "high_medium",
+            "number_of_failure_scenarios": 5,
+            "main_problem": "This CPT is repeatedly part of the same failure pathway and directly feeds Execution_Integrity. The activated parameter selects Program_Anomaly=No when GPTN_3=Not_Found, with a strong 0.9 probability. Given the domain semantics, absence of an inconsistent execution log is only indirect evidence against execution compromise; if execution logs can miss corruption, this CPT may be overconfidently ruling out program anomalies and thereby pushing Execution_Integrity toward Normal in the repeated failure cases.",
+            "suspicious_parameters": [
+                {
+                    "rank": 1,
+                    "parameter": "Column 1 \u2192 No",
+                    "failure_weight": 5,
+                    "success_weight": 2,
+                    "failure_to_success_ratio": 2.5,
+                    "argmax_probability": 0.9,
+                    "recommended_adjustment": "decrease",
+                    "justification": "The parameter appears in five failures and only two successes, and it sits immediately upstream of the repeatedly suspicious Execution_Integrity decision. Its high confidence means it can strongly block the execution-compromise pathway. Although not failure-exclusive, there is enough independent structural and statistical evidence to treat it as a plausible refinement candidate."
+                }
+            ]
+        }
+    ],
+    "overall_summary": "Execution_Integrity and Program_Anomaly form a repeated failure-associated reasoning path that ends with execution being treated as normal despite failure outcomes. Execution_Integrity has the clearest independent evidence because its suspicious parameter appears only in failures. Program_Anomaly is also plausible because it directly drives that downstream decision and may be overconfident when execution-log inconsistency is not found. Root_Causes was not included because its candidate parameters have weaker independent support and are more plausibly downstream consequences of upstream misclassification than primary modeling errors."
+}

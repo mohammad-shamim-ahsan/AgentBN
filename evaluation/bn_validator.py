@@ -1,58 +1,22 @@
 import json
-from collections import Counter
+import numpy as np
 
-from automatic_bn_reasoning_old import run_evaluation
-
-GT_FILE = "BN_gt.json"
-PROPOSED_FILE = "last_proposed_bn.jsonl"
-OUT_FILE = "cpt_comparison_analysis.json"
-
-# -----------------------------
-# FILE READERS
-# -----------------------------
-def read_json(path):
-    with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
+from config.settings import *
+from utils.json_utils import *
+from utils.bn_io import *
+from evaluation.automatic_bn_reasoning_old import run_evaluation
 
 
-def get_bn(path, bn_number=None):
-    last_record = None
-
-    with open(path, "r", encoding="utf-8") as f:
-        for line in f:
-            if not line.strip():
-                continue
-
-            record = json.loads(line)
-
-            if bn_number is not None and record.get("bn_number") == bn_number:
-                return record["bn"]
-
-            last_record = record
-
-    if bn_number is not None:
-        raise ValueError(f"BN #{bn_number} not found.")
-
-    if last_record is None:
-        raise ValueError("No BN records found.")
-
-    return last_record["bn"]
+EPS = 1e-12
 
 
-def normalize_bn(bn_obj):
-    if "bn" in bn_obj and "nodes" in bn_obj["bn"]:
-        return {n["name"]: n for n in bn_obj["bn"]["nodes"]}
-
-    if "nodes" in bn_obj:
-        return {n["name"]: n for n in bn_obj["nodes"]}
-
-    return bn_obj
-
-
-def get_best_bn_number(filename="last_proposed_bn.jsonl", train_csv="combined_train_scenarios.csv"):
+def get_best_bn_number(filename=PROPOSED_BN_FILE, train_csv=None):
     best_bn_number = None
     best_bn_accuracy = None
     best_failure_count = float("inf")
+
+    if train_csv is None:
+        train_csv = TRAIN_CSV
 
     with open(filename, "r", encoding="utf-8") as f:
         for line in f:
@@ -188,14 +152,14 @@ def evaluate_agent_cpt_change_policy(
     }
 
 
-def compare_all_cpts(bn_number=None):
-    gt_bn = normalize_bn(read_json(GT_FILE))
-    proposed_bn = normalize_bn(get_bn(PROPOSED_FILE, bn_number=bn_number))
+def compare_all_cpts(bn_number=None, expected_changed_cpts=None, passed_bn=None, ):
 
-    EXPECTED_CHANGED_CPTS = {
-        "Execution_Integrity",
-        "Root_Causes"
-    }
+    gt_bn = normalize_bn(read_json(GROUND_TRUTH_BN_FILE))
+
+    if bn_number!=None:
+        proposed_bn = normalize_bn(get_bn(PROPOSED_BN_FILE, bn_number=bn_number))
+    else:
+        proposed_bn = normalize_bn(passed_bn)
 
     non_identical_cpts = []
     missing_in_proposed = []
@@ -210,7 +174,7 @@ def compare_all_cpts(bn_number=None):
 
     agent_change_report = evaluate_agent_cpt_change_policy(
         all_cpts=set(gt_bn.keys()),
-        expected_changed_cpts=EXPECTED_CHANGED_CPTS,
+        expected_changed_cpts=expected_changed_cpts,
         actual_changed_cpts=set(non_identical_cpts)
     )
 
@@ -225,10 +189,10 @@ def compare_all_cpts(bn_number=None):
         "agent_change_report": agent_change_report
     }
 
-    with open(OUT_FILE, "w", encoding="utf-8") as f:
+    with open(CPT_COMPARISON_FILE, "w", encoding="utf-8") as f:
         json.dump(final_output, f, indent=2)
 
-    print(f"Saved CPT identity comparison to {OUT_FILE}")
+    print(f"Saved CPT identity comparison to {CPT_COMPARISON_FILE}")
     print("BN number:", bn_number)
     print("Agent change verdict:", agent_change_report["verdict"])
     print("Expected changed CPTs:", agent_change_report["expected_changed_cpts"])
@@ -239,10 +203,8 @@ def compare_all_cpts(bn_number=None):
 
 
 ###------------------------------
-import numpy as np
-
-EPS = 1e-12
-
+# Statistical Metrics
+###------------------------------
 
 def kl_divergence(p, q):
     """
@@ -255,11 +217,6 @@ def kl_divergence(p, q):
     q = np.clip(q, EPS, 1.0)
 
     return np.sum(p * np.log(p / q))
-
-
-def load_bn(filename):
-    with open(filename, "r", encoding="utf-8") as f:
-        return json.load(f)
 
 
 def build_node_dict(bn_json):
@@ -312,6 +269,7 @@ def compute_average_cpt_kl(gt_bn, prop_bn, target_nodes=None):
 
     return avg_kl
 
+
 def compute_average_cpt_rmse(gt_bn, prop_bn, target_nodes=None):
 
     total_squared_error = 0.0
@@ -344,6 +302,7 @@ def compute_average_cpt_rmse(gt_bn, prop_bn, target_nodes=None):
     print(f"Overall CPT RMSE = {overall_rmse:.8f}")
 
     return overall_rmse
+
 
 def hellinger_distance(p, q):
 
@@ -390,16 +349,15 @@ def compute_average_cpt_hellinger(gt_bn, prop_bn, target_nodes=None):
     print(f"Overall Average Hellinger = {overall:.8f}")
 
     return overall
-###------------------------------
 
 
 ### ------------------------------
 if __name__ == "__main__":
 
-    train_csv="combined_train_scenarios.csv"
+    train_csv=TRAIN_CSV
 
     best_bn_number, best_bn_accuracy = get_best_bn_number(
-        "last_proposed_bn.jsonl", train_csv=train_csv
+        PROPOSED_BN_FILE, train_csv=train_csv
     )
 
     print("Best BN Number:", best_bn_number)
@@ -408,8 +366,8 @@ if __name__ == "__main__":
     # final_output = compare_all_cpts(bn_number=best_bn_number)
     # print(final_output)
 
-    gt_bn = normalize_bn(read_json(GT_FILE))
-    prop_bn = normalize_bn(get_bn(PROPOSED_FILE, bn_number=best_bn_number))
+    gt_bn = normalize_bn(read_json(GROUND_TRUTH_BN_FILE))
+    prop_bn = normalize_bn(get_bn(PROPOSED_BN_FILE, bn_number=best_bn_number))
 
     TARGET_NODES = {
         "Network_Manipulation",

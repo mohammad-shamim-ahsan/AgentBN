@@ -1,15 +1,6 @@
 {
     "bn_number": 3,
     "parameter_statistics": {
-        "Network_Manipulation": [
-            {
-                "column": 1,
-                "state": "Yes",
-                "argmax_probability": 0.85,
-                "failure_weight": 3,
-                "success_weight": 1
-            }
-        ],
         "Program_Anomaly": [
             {
                 "column": 1,
@@ -22,8 +13,8 @@
         "Execution_Integrity": [
             {
                 "column": 7,
-                "state": "Compromised",
-                "argmax_probability": 0.8,
+                "state": "Normal",
+                "argmax_probability": 0.6,
                 "failure_weight": 5,
                 "success_weight": 0
             }
@@ -32,8 +23,15 @@
             {
                 "column": 3,
                 "state": "FDI",
-                "argmax_probability": 0.8,
+                "argmax_probability": 0.5,
                 "failure_weight": 4,
+                "success_weight": 3
+            },
+            {
+                "column": 2,
+                "state": "Memory_Corruption",
+                "argmax_probability": 0.45,
+                "failure_weight": 1,
                 "success_weight": 0
             }
         ]
@@ -54,12 +52,14 @@
         },
         {
             "pattern": {
-                "Network_Manipulation": 1,
+                "Execution_Integrity": 7,
+                "Program_Anomaly": 1,
                 "Root_Causes": 3
             },
             "failure_scenarios": [
-                13,
-                18
+                27,
+                28,
+                29
             ]
         }
     ]

@@ -1,83 +1,24 @@
 import os
 import json
-import re
 import copy
+import pandas as pd
+import argparse
 
-# from bn_generator import generate_bn, store_bn_proposal
-from automatic_bn_reasoning_old import run_evaluation as initial_run_evaluation
-from bn_generator_evaluator import find_proposed_bn, run_evaluation, store_analysis
-from bn_generator_reflexion import generate_and_select_best_candidate, store_new_bn
-from bn_validator import GT_FILE, compute_average_cpt_hellinger, compute_average_cpt_kl, compute_average_cpt_rmse, get_best_bn_number, compare_all_cpts, get_bn, normalize_bn, read_json
+from config.settings import *
+from utils.json_utils import *
+from utils.bn_io import *
+from utils.file_utils import *
 
-bn_analysis_filename = "bn_analysis.json"
-proposed_bn_filename = "last_proposed_bn.jsonl"
-train_csv="combined_train_scenarios.csv"
-
-# -----------------------------
-# SAFE JSON LOADER
-# -----------------------------
-def safe_json_loads(text):
-    if not text or not text.strip():
-        return None
-
-    text = text.strip()
-
-    # remove markdown code fences if present
-    text = re.sub(r"```json|```", "", text).strip()
-
-    try:
-        return json.loads(text)
-    except json.JSONDecodeError:
-        return None
-
-# -----------------------------
-# CLEAR OLD FILES
-# -----------------------------
-for filename in [bn_analysis_filename, proposed_bn_filename, "dangerous_cpt_report.json", "failure_parameter_statistics.json", "restart_final_bns.jsonl"]:
-    if os.path.exists(filename):
-        open(filename, "w").close()
-        print(f"Cleared: {filename}")
-
-def read_file(filename):
-    with open(filename, "r", encoding="utf-8") as f:
-        return f.read()
+# from legacy.bn_generator import generate_bn, store_bn_proposal
+from evaluation.automatic_bn_reasoning_old import run_evaluation as initial_run_evaluation
+from agents.bn_evaluator import run_evaluation, store_analysis
+from agents.bn_generator_reflexion import generate_and_select_best_candidate
+from evaluation.bn_validator import compute_average_cpt_hellinger, compute_average_cpt_kl, compute_average_cpt_rmse, get_best_bn_number, compare_all_cpts
 
 
-def remove_bn(bn_number, filename="last_proposed_bn.jsonl"):
-    if not os.path.exists(filename):
-        print(f"{filename} does not exist.")
-        return
-
-    records = []
-    removed_count = 0
-
-    with open(filename, "r", encoding="utf-8") as f:
-        for line in f:
-            if not line.strip():
-                continue
-
-            try:
-                record = json.loads(line)
-
-                if record.get("bn_number") == bn_number:
-                    removed_count += 1
-                else:
-                    records.append(record)
-
-            except json.JSONDecodeError:
-                continue
-
-    with open(filename, "w", encoding="utf-8") as f:
-        for record in records:
-            f.write(json.dumps(record) + "\n")
-
-    print(
-        f"Removed {removed_count} record(s) "
-        f"with bn_number={bn_number}"
-    )
+train_csv = TRAIN_CSV
 
 
-# -----------------------------
 def compute_failure_ratio_from_results(evaluation_output):
     failed = evaluation_output.get("failure_count", 0)
     succeeded = evaluation_output.get("success_count", 0)
@@ -108,7 +49,7 @@ def store_restart_final_bn(
         f.write(json.dumps(record) + "\n")
 
 
-def get_best_restart_bn(filename="restart_final_bns.jsonl"):
+def get_best_restart_bn(filename=RESTART_FINAL_BN_FILE):
 
     best_restart = None
     best_accuracy = -1
@@ -132,7 +73,7 @@ def get_best_restart_bn(filename="restart_final_bns.jsonl"):
 
             failures, successes, accuracy, _ = initial_run_evaluation(
                 bn,
-                train_csv
+                TEST_CSV
             )
 
             failure_count = len(failures)
@@ -159,7 +100,7 @@ def get_best_restart_bn(filename="restart_final_bns.jsonl"):
 
 def remove_analysis(
     bn_number,
-    filename="bn_analysis.json"
+    filename=BN_ANALYSIS_FILE
 ):
 
     if not os.path.exists(filename):
@@ -188,125 +129,175 @@ def remove_analysis(
     )
 
 
-# -----------------------------
-MAX_RESTARTS = 3
-restart_count = 0
-restart_final_bn_filename = "restart_final_bns.jsonl"
+def create_constrained_train(
+    train_csv,
+    failures,
+    successes,
+    ratio=5
+):
+    """
+    Create a temporary training dataset with the specified
+    SUCCESS:FAILURE ratio.
 
-BASE_TEMPERATURE = 0.2
+    Parameters
+    ----------
+    train_csv : str
+        Path to the original training CSV.
+    failures : list
+        Failure results returned by initial_run_evaluation().
+    successes : list
+        Success results returned by initial_run_evaluation().
+    ratio : int
+        Desired success-to-failure ratio.
+    output_csv : str
+        Output CSV filename.
+
+    Returns
+    -------
+    str
+        Path to the constrained training CSV.
+    """
+
+    output_csv = f"constrained_train_{ratio}to1.csv"
+
+    df = pd.read_csv(train_csv)
+    df.columns = df.columns.str.strip()
+
+    # Scenario IDs from the evaluation results
+    failure_ids = set(failures["Scenario"])
+    success_ids = set(successes["Scenario"])
+
+    # Select corresponding rows from the original training CSV
+    failure_rows = df[df["Scenario #"].isin(failure_ids)]
+    success_rows = df[df["Scenario #"].isin(success_ids)]
+
+    # Determine the maximum dataset satisfying the desired ratio
+    n_failure = min(len(failure_rows), len(success_rows) // ratio)
+    n_success = n_failure * ratio
+
+    failure_rows = failure_rows.sample(
+        n=n_failure,
+        random_state=42
+    )
+
+    success_rows = success_rows.sample(
+        n=n_success,
+        random_state=42
+    )
+
+    constrained_df = (
+        pd.concat([success_rows, failure_rows], ignore_index=True)
+        .sample(frac=1, random_state=42)
+        .reset_index(drop=True)
+    )
+
+    constrained_df.to_csv(output_csv, index=False)
+
+    print(
+        f"Created {output_csv}: "
+        f"{len(success_rows)} successes, "
+        f"{len(failure_rows)} failures "
+        f"(ratio {ratio}:1)"
+    )
+
+    return output_csv
+
+
+# --------------------------------------------------
+# Experiment configuration
+# --------------------------------------------------
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "--SFR",
+    type=int,
+    default=None,
+    help="Success:Failure ratio (e.g., 8). Omit for normal experiment."
+)
+
+args = parser.parse_args()
+
+use_ratio_constraint = args.SFR is not None
+SFR = args.SFR
+
+# ----------------------------------------
+# Create constrained training set
+# ----------------------------------------
+flawed_bn = safe_json_loads(FLAWED_BN_FILE)
+
+if use_ratio_constraint:
+    failures, successes, flawed_accuracy, _ = initial_run_evaluation(flawed_bn, TRAIN_CSV)
+    working_train_csv = create_constrained_train(
+            train_csv=TRAIN_CSV,
+            failures=failures,
+            successes=successes,
+            ratio=SFR
+    )
+
+    print(pd.read_csv(TRAIN_CSV).shape, pd.read_csv(working_train_csv).shape)
+    train_csv = working_train_csv ### -------------------------- CRUCIAL step for ration constrained experiments
+    print(pd.read_csv(train_csv).shape, pd.read_csv(working_train_csv).shape)
+
+
+# ----------------------------------------
+# Main orchestration loop
+# ----------------------------------------
+
+TARGET_NODES_FOR_VALIDATION = {
+        "Network_Manipulation",
+        "Physical_Anomaly",
+        "Program_Anomaly",
+        "Execution_Integrity",
+        "Deviation_in_Response",
+        "Deviation_in_Dispatch",
+        "Root_Causes",
+    }
+
+
+EXPECTED_CHANGED_CPTS = {
+        "Execution_Integrity",
+        "Root_Causes"
+    }
+
+
+# -----------------------------
+# CLEAR OLD FILES
+# -----------------------------
+clear_files([
+    BN_ANALYSIS_FILE,
+    PROPOSED_BN_FILE,
+    DANGER_REPORT_FILE,
+    FAILURE_PARAMETER_FILE,
+    RESTART_FINAL_BN_FILE,
+])
+
+
+restart_count = 0
+flawed_bn = safe_json_loads(read_file(FLAWED_BN_FILE))
+
 
 while restart_count < MAX_RESTARTS:
 
     print(f"\n==============================")
     print(f"PIPELINE RESTART #{restart_count}")
     print(f"==============================")
-
+    
     CURRENT_TEMPERATURE = BASE_TEMPERATURE + 0.1 * restart_count
-    MAX_ITER = 3
-    max_records = 3
 
     # -----------------------------
     # CLEAR OLD FILES
     # -----------------------------
-    for filename in [bn_analysis_filename, proposed_bn_filename, "dangerous_cpt_report.json", "failure_parameter_statistics.json"]:
-        if os.path.exists(filename):
-            open(filename, "w").close()
-            print(f"Cleared: {filename}")
+    clear_files([
+        BN_ANALYSIS_FILE,
+        PROPOSED_BN_FILE,
+        DANGER_REPORT_FILE,
+        FAILURE_PARAMETER_FILE
+    ])
 
     # -----------------------------
     # STEP 1: INITIAL BN
     # -----------------------------
     bn_number = 0
-    full_context = read_file("context_agent.txt")
-    success_report = read_file("merged_flawed_success_train.json")
-    failure_report = read_file("merged_flawed_failure_train.json")
-    original_success_report = read_file("merged_flawed_success_train.json")
-    original_failure_report = read_file("merged_flawed_failure_train.json")
-    gen_prompt_template_text = read_file("gen_prompt.txt")
-    flawed_bn=read_file("flawed_BN_0.json")
-
-    ###------------------------------------------------------
-    # failures, successes, flawed_accuracy, results = initial_run_evaluation(safe_json_loads(flawed_bn), train_csv)
-
-    # best_bn = None
-    # best_accuracy = float("-inf")
-
-    # initial_retry = 0
-    # MAX_INITIAL_RETRIES = 3
-    # INITIAL_IMPROVEMENT_RATIO = 0.30  # recover at least 30% of the gap
-
-    # INITIAL_ACCURACY_THRESHOLD = (
-    #     flawed_accuracy +
-    #     INITIAL_IMPROVEMENT_RATIO * (1.0 - flawed_accuracy)
-    # )
-
-    # print(f"Flawed BN Accuracy: {100*flawed_accuracy:.2f}%")
-    # print(f"Initial Acceptance Threshold: {100*INITIAL_ACCURACY_THRESHOLD:.2f}%")
-
-    # for initial_retry in range(MAX_INITIAL_RETRIES):
-
-    #     print(f"\nInitial Generation Attempt {initial_retry+1}")
-
-    #     bn_text = generate_bn(
-    #         full_context,
-    #         flawed_bn,
-    #         success_report,
-    #         failure_report,
-    #         gen_prompt_template_text,
-    #         temperature=CURRENT_TEMPERATURE
-    #     )
-
-    #     bn_json = safe_json_loads(bn_text)
-
-    #     if bn_json is None:
-    #         print("Invalid JSON.")
-    #         continue
-
-    #     failures, successes, accuracy, results = initial_run_evaluation(
-    #         bn_json,
-    #         train_csv
-    #     )
-
-    #     print(f"Accuracy = {100*accuracy:.2f}%")
-
-    #     if accuracy > best_accuracy:
-    #         best_accuracy = accuracy
-    #         best_bn = copy.deepcopy(bn_json)
-
-    #     if accuracy >= INITIAL_ACCURACY_THRESHOLD:
-    #         print("Initial BN accepted.")
-    #         break
-
-    # if best_bn is None:
-    #     print("Unable to generate a valid BN.")
-    #     continue
-
-    # bn_json = best_bn
-
-    # store_bn_proposal(
-    #     bn_json,
-    #     bn_number,
-    #     proposed_bn_filename
-    # )
-
-    # if best_accuracy >= INITIAL_ACCURACY_THRESHOLD:
-    #     print(f"Accepted initial BN ({100*best_accuracy:.2f}%).")
-    # else:
-    #     print(
-    #         f"Threshold ({100*INITIAL_ACCURACY_THRESHOLD:.2f}%) "
-    #         f"not reached after {MAX_INITIAL_RETRIES} attempts. "
-    #         f"Using best generated BN ({100*best_accuracy:.2f}%)."
-    #     )
-
-    # print("\nInitial BN generated")
-
-    ###------------------------------------------------------
-    # Start a fresh proposed BN file
-    ###------------------------------------------------------
-
-    open(proposed_bn_filename, "w").close()
-
-    flawed_bn = safe_json_loads(flawed_bn)
 
     # ----------------------------------------
     # Store flawed BN
@@ -315,16 +306,14 @@ while restart_count < MAX_RESTARTS:
         0,
         flawed_bn
     )
-
+    
     # ----------------------------------------
     # Evaluate flawed BN
     # ----------------------------------------
     failures, successes, flawed_accuracy, _ = initial_run_evaluation(flawed_bn, train_csv)
-
+    
     best_bn = None
     best_accuracy = float("-inf")
-    MAX_INITIAL_RETRIES = 3
-    INITIAL_IMPROVEMENT_RATIO = 0.30  # recover at least 30% of the gap
 
     INITIAL_ACCURACY_THRESHOLD = (
         flawed_accuracy +
@@ -339,12 +328,12 @@ while restart_count < MAX_RESTARTS:
         print(f"\nInitial Generation Attempt {retry}")
 
         if retry > 0:
-            remove_analysis(bn_number, bn_analysis_filename)
+            remove_analysis(bn_number, BN_ANALYSIS_FILE)
 
-        evaluation_output = run_evaluation(flawed_bn, bn_number=bn_number, temperature=CURRENT_TEMPERATURE)
+        evaluation_output = run_evaluation(flawed_bn, bn_number=bn_number, temperature=CURRENT_TEMPERATURE, dataset_file=train_csv)
         store_analysis(bn_number, evaluation_output)
 
-        new_bn = generate_and_select_best_candidate(full_context, proposed_bn_filename, bn_analysis_filename, train_csv, temperature=CURRENT_TEMPERATURE) 
+        new_bn = generate_and_select_best_candidate(CONTEXT_AGENT_FILE, PROPOSED_BN_FILE, BN_ANALYSIS_FILE, train_csv, temperature=CURRENT_TEMPERATURE) 
         
         failures, successes, accuracy, _ = initial_run_evaluation(new_bn, train_csv)
 
@@ -369,16 +358,17 @@ while restart_count < MAX_RESTARTS:
         )
     
     
-    remove_analysis(bn_number, bn_analysis_filename)
+    remove_analysis(bn_number, BN_ANALYSIS_FILE)
     bn_number += 1 
     store_new_bn(bn_number, best_bn)
 
     print("\nInitial BN generated")
 
-    ###------------------------------------------------------
+    ### -----------------------------
+    # STEP 2 & 3: ITERATIONS
+    ### -----------------------------
     solved = False
     i = 1
-    MAX_NO_IMPROVEMENT_RETRIES = 3
 
     # -----------------------------
     # STEP 2 & 3: ITERATIONS
@@ -395,7 +385,7 @@ while restart_count < MAX_RESTARTS:
         ### ------------------------------
         prev_bn_json = find_proposed_bn(
             bn_number,
-            proposed_bn_filename
+            PROPOSED_BN_FILE
         )
 
         ### ------------------------------
@@ -405,14 +395,14 @@ while restart_count < MAX_RESTARTS:
             prev_bn_json, train_csv
         )
 
-        evaluation_output = run_evaluation(prev_bn_json, bn_number=bn_number, temperature=CURRENT_TEMPERATURE)
+        evaluation_output = run_evaluation(prev_bn_json, bn_number=bn_number, temperature=CURRENT_TEMPERATURE, dataset_file=train_csv)
         
         store_analysis(bn_number, evaluation_output)
 
         new_bn = generate_and_select_best_candidate(
-                full_context,
-                proposed_bn_filename,
-                bn_analysis_filename,
+                CONTEXT_AGENT_FILE,
+                PROPOSED_BN_FILE,
+                BN_ANALYSIS_FILE,
                 train_csv,
                 temperature=CURRENT_TEMPERATURE
         )
@@ -445,6 +435,7 @@ while restart_count < MAX_RESTARTS:
         ### ------------------------------
         # Check if accuracy has improved
         ### ------------------------------
+        
         improved = new_accuracy > accuracy
         no_improvement_retry = 0
 
@@ -452,12 +443,12 @@ while restart_count < MAX_RESTARTS:
             
             # Remove the unimproved BN before refinement so it is not included in previous_bns memory. 
             # The new BN will be generated using only earlier accepted BNs and analysis memory.
-            remove_bn(bn_number, proposed_bn_filename)
+            remove_bn(bn_number, PROPOSED_BN_FILE)
 
             new_bn = generate_and_select_best_candidate(
-                full_context,
-                proposed_bn_filename,
-                bn_analysis_filename,
+                CONTEXT_AGENT_FILE,
+                PROPOSED_BN_FILE,
+                BN_ANALYSIS_FILE,
                 train_csv,
                 temperature=CURRENT_TEMPERATURE
             )
@@ -493,7 +484,7 @@ while restart_count < MAX_RESTARTS:
                 )
 
                 # Restore best BN found during retry cycle
-                remove_bn(bn_number, proposed_bn_filename)
+                remove_bn(bn_number, PROPOSED_BN_FILE)
 
                 store_new_bn(
                     bn_number,
@@ -511,40 +502,32 @@ while restart_count < MAX_RESTARTS:
         
         i+=1
 
+    
     # -----------------------------
     # VALIDATION
     # -----------------------------
-    best_bn_number, best_bn_accuracy = get_best_bn_number(proposed_bn_filename)
+    
+    best_bn_number, best_bn_accuracy = get_best_bn_number(PROPOSED_BN_FILE, train_csv=train_csv)
     print("\n\nBest BN Number:", best_bn_number)
     print("Best BN Accuracy:", best_bn_accuracy)
 
-    final_output = compare_all_cpts(bn_number=best_bn_number)
+    final_output = compare_all_cpts(bn_number=best_bn_number, expected_changed_cpts=EXPECTED_CHANGED_CPTS)
     print(final_output)
 
-    gt_bn = normalize_bn(read_json(GT_FILE))
-    best_bn = get_bn(proposed_bn_filename, bn_number=best_bn_number)
+    gt_bn = normalize_bn(read_json(GROUND_TRUTH_BN_FILE))
+    best_bn = get_bn(PROPOSED_BN_FILE, bn_number=best_bn_number)
     nor_best_bn =normalize_bn(best_bn)
 
-    TARGET_NODES = {
-        "Network_Manipulation",
-        "Physical_Anomaly",
-        "Program_Anomaly",
-        "Execution_Integrity",
-        "Deviation_in_Response",
-        "Deviation_in_Dispatch",
-        "Root_Causes",
-    }
-
-    compute_average_cpt_kl(gt_bn, nor_best_bn, target_nodes=TARGET_NODES)
-    compute_average_cpt_rmse(gt_bn, nor_best_bn, target_nodes=TARGET_NODES)
-    compute_average_cpt_hellinger(gt_bn, nor_best_bn, target_nodes=TARGET_NODES)
+    compute_average_cpt_kl(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION)
+    compute_average_cpt_rmse(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION)
+    compute_average_cpt_hellinger(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION)
 
     store_restart_final_bn(
         restart_count=restart_count,
         best_bn_number=best_bn_number,
         best_bn_accuracy=best_bn_accuracy,
         best_bn=best_bn,
-        filename=restart_final_bn_filename
+        filename=RESTART_FINAL_BN_FILE
     )
 
     print("###------------------------------###")
@@ -554,8 +537,11 @@ while restart_count < MAX_RESTARTS:
     restart_count += 1
 
 
-###------------------------------------------
-best_restart, best_bn, accuracy, failures = (
+### -----------------------------
+# FINAL EVALUATION
+### -----------------------------
+
+best_restart, best_restart_bn, accuracy, failures = (
     get_best_restart_bn()
 )
 
@@ -566,6 +552,16 @@ print("===================================")
 print("Restart:", best_restart)
 print("Accuracy:", accuracy)
 print("Failures:", failures)
+
+final_output = compare_all_cpts(bn_number=None, expected_changed_cpts=EXPECTED_CHANGED_CPTS, passed_bn=best_restart_bn)
+print(final_output)
+
+gt_bn = normalize_bn(read_json(GROUND_TRUTH_BN_FILE))
+nor_best_bn = normalize_bn(best_restart_bn)
+
+compute_average_cpt_kl(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION)
+compute_average_cpt_rmse(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION)
+compute_average_cpt_hellinger(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION)
 
 print("###------------------------------###")
 print("\nPipeline finished.")

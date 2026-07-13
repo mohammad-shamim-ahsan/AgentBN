@@ -1,57 +1,17 @@
 from langchain_core.prompts import PromptTemplate
-from openai import OpenAI
+
 import json
 import copy
-import re
 
-from automatic_bn_reasoning_old import run_evaluation as initial_run_evaluation
-
-client = OpenAI(api_key="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")
-
-def llm(prompt, temperature=0.3, max_tokens=4000):
-    response = client.responses.create(
-        model="gpt-5.4",
-        input=prompt,
-        temperature=temperature,
-        max_output_tokens=max_tokens,
-    )
-    
-    return response.output[0].content[0].text.strip()
+from utils.bn_io import *
+from utils.json_utils import *
+from utils.file_utils import *
+from config.settings import *
+from utils.llm import *
+from evaluation.automatic_bn_reasoning_old import run_evaluation as initial_run_evaluation
 
 
-# -----------------------------
-# SAFE JSON LOADER
-# -----------------------------
-def safe_json_loads(text):
-    if not text or not text.strip():
-        return None
-
-    text = text.strip()
-
-    # remove markdown code fences if present
-    text = re.sub(r"```json|```", "", text).strip()
-
-    try:
-        return json.loads(text)
-    except json.JSONDecodeError:
-        return None
-    
-
-###-----------------------------
-bn_analysis_filename="bn_analysis.json"
-max_records=3
-proposed_bn_filename="last_proposed_bn.jsonl"
-train_csv="combined_train_scenarios.csv"
-
-def read_file(filename):
-    with open(filename, "r", encoding="utf-8") as f:
-        return f.read()
-    
-full_context = read_file("context_agent.txt")
-prompt_template_text = read_file("ref_prompt.txt")
-
-### -----------------------------
-def read_all_analysis_records(filename=bn_analysis_filename):
+def read_all_analysis_records(filename=PROPOSED_BN_FILE):
     records = []
 
     with open(filename, "r", encoding="utf-8") as f:
@@ -67,7 +27,7 @@ def read_all_analysis_records(filename=bn_analysis_filename):
     return records
 
 
-def get_best_bn_number(filename=bn_analysis_filename):
+def get_best_bn_number(filename=PROPOSED_BN_FILE):
     records = read_all_analysis_records(filename)
 
     if not records:
@@ -81,7 +41,7 @@ def get_best_bn_number(filename=bn_analysis_filename):
     return best_record["bn_number"]
 
 
-def get_analysis_record(bn_number, filename=bn_analysis_filename):
+def get_analysis_record(bn_number, filename=BN_ANALYSIS_FILE):
     records = read_all_analysis_records(filename)
 
     for record in records:
@@ -89,20 +49,6 @@ def get_analysis_record(bn_number, filename=bn_analysis_filename):
             return record
 
     raise ValueError(f"No analysis record found for BN #{bn_number}")
-
-
-def find_proposed_bn(bn_number, filename=proposed_bn_filename):
-    with open(filename, "r", encoding="utf-8") as f:
-        for line in f:
-            if not line.strip():
-                continue
-
-            record = json.loads(line)
-
-            if record.get("bn_number") == bn_number:
-                return record["bn"]
-
-    raise ValueError(f"No proposed BN found for BN #{bn_number}")
 
 
 def format_analysis_record(record):
@@ -140,8 +86,8 @@ CPT DANGER REPORT:
 
 def generate_refined_cpt_patch(
     full_context,
-    proposed_bn_filename=proposed_bn_filename,
-    bn_analysis_filename=bn_analysis_filename,
+    proposed_bn_filename=PROPOSED_BN_FILE,
+    bn_analysis_filename=BN_ANALYSIS_FILE,
     temperature=0.3
 ):
     # Deterministically select the baseline BN
@@ -169,7 +115,7 @@ def generate_refined_cpt_patch(
             "baseline_bn",
             "analysis_record"
         ],
-        template=prompt_template_text
+        template=read_file(REF_PROMPT_FILE)
     )
 
     prompt = prompt_gen_template.format(
@@ -215,21 +161,11 @@ def integrate_modified_cpts(baseline_bn, patch):
     return refined_bn
 
 
-def store_new_bn(bn_number, bn_new):
-    record = {
-        "bn_number": bn_number,
-        "bn": bn_new
-    }
-
-    with open(proposed_bn_filename, "a", encoding="utf-8") as f:
-        f.write(json.dumps(record) + "\n")
-
-
 def generate_and_select_best_candidate(
     full_context,
-    proposed_bn_filename=proposed_bn_filename,
-    bn_analysis_filename=bn_analysis_filename,
-    train_csv=train_csv,
+    proposed_bn_filename=PROPOSED_BN_FILE,
+    bn_analysis_filename=BN_ANALYSIS_FILE,
+    train_csv=TRAIN_CSV,
     temperature=0.3
 ):
     refinement_output = generate_refined_cpt_patch(
@@ -310,14 +246,11 @@ def generate_and_select_best_candidate(
 if __name__ == "__main__":
 
     new_bn = generate_and_select_best_candidate(
-        full_context=full_context,
-        proposed_bn_filename=proposed_bn_filename,
-        bn_analysis_filename=bn_analysis_filename,
-        train_csv=train_csv,
+        full_context=CONTEXT_AGENT_FILE,
+        proposed_bn_filename=PROPOSED_BN_FILE,
+        bn_analysis_filename=BN_ANALYSIS_FILE,
+        train_csv=TRAIN_CSV,
         temperature=0.3
     )
 
-    store_new_bn(
-        2,
-        new_bn
-    )
+    store_new_bn(2, new_bn)

@@ -1,0 +1,2022 @@
+Cleared: bn_analysis.json
+Cleared: last_proposed_bn.jsonl
+Cleared: dangerous_cpt_report.json
+Cleared: failure_parameter_statistics.json
+Cleared: restart_final_bns.jsonl
+
+==============================
+PIPELINE RESTART #0
+==============================
+Cleared: bn_analysis.json
+Cleared: last_proposed_bn.jsonl
+Cleared: dangerous_cpt_report.json
+Cleared: failure_parameter_statistics.json
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 68.06 %
+Total: 72
+Successes: 49
+Failures: 23
+Flawed BN Accuracy: 68.06%
+Initial Acceptance Threshold: 77.64%
+
+Initial Generation Attempt 0
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 68.06%
+
+Workflow analysis for BN #0 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.45, 0.25, 0.15, 0.2, 0.55, 0.2], [0.2, 0.25, 0.25, 0.45, 0.1, 0.15, 0.15, 0.2], [0.5, 0.55, 0.3, 0.3, 0.75, 0.65, 0.3, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.45, 0.3, 0.35, 0.2, 0.2, 0.2, 0.6, 0.25], [0.2, 0.2, 0.35, 0.55, 0.1, 0.1, 0.15, 0.15], [0.35, 0.5, 0.3, 0.25, 0.7, 0.7, 0.25, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.35, 0.25, 0.4, 0.2, 0.2, 0.25, 0.6, 0.25], [0.15, 0.2, 0.2, 0.5, 0.1, 0.1, 0.15, 0.15], [0.5, 0.55, 0.4, 0.3, 0.7, 0.65, 0.25, 0.6]]}}]}]}
+Selected baseline BN: 0
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 73.61 %
+Total: 72
+Successes: 53
+Failures: 19
+
+Candidate 1: Accuracy = 0.7361, Failures = 19, Successes = 53
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 63.89 %
+Total: 72
+Successes: 46
+Failures: 26
+
+Candidate 2: Accuracy = 0.6389, Failures = 26, Successes = 46
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 63.89 %
+Total: 72
+Successes: 46
+Failures: 26
+
+Candidate 3: Accuracy = 0.6389, Failures = 26, Successes = 46
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.7361
+Failures: 19
+Successes: 53
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 73.61 %
+Total: 72
+Successes: 53
+Failures: 19
+Accuracy = 73.61%
+
+Initial Generation Attempt 1
+Removed workflow analysis for BN #0 from bn_analysis.json
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 68.06%
+
+Workflow analysis for BN #0 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.15, 0.35, 0.1, 0.1, 0.45, 0.7, 0.2], [0.2, 0.25, 0.2, 0.55, 0.1, 0.15, 0.15, 0.2], [0.55, 0.6, 0.45, 0.35, 0.8, 0.4, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.35, 0.2, 0.45, 0.15, 0.15, 0.55, 0.75, 0.25], [0.15, 0.2, 0.15, 0.65, 0.1, 0.1, 0.1, 0.15], [0.5, 0.6, 0.4, 0.2, 0.75, 0.35, 0.15, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.5, 0.7, 0.2], [0.15, 0.2, 0.2, 0.6, 0.1, 0.1, 0.15, 0.2], [0.55, 0.6, 0.4, 0.25, 0.75, 0.4, 0.15, 0.6]]}}]}]}
+Selected baseline BN: 0
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 33.33 %
+Total: 72
+Successes: 24
+Failures: 48
+
+Candidate 1: Accuracy = 0.3333, Failures = 48, Successes = 24
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 6.94 %
+Total: 72
+Successes: 5
+Failures: 67
+
+Candidate 2: Accuracy = 0.0694, Failures = 67, Successes = 5
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 9.72 %
+Total: 72
+Successes: 7
+Failures: 65
+
+Candidate 3: Accuracy = 0.0972, Failures = 65, Successes = 7
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.3333
+Failures: 48
+Successes: 24
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 33.33 %
+Total: 72
+Successes: 24
+Failures: 48
+Accuracy = 33.33%
+
+Initial Generation Attempt 2
+Removed workflow analysis for BN #0 from bn_analysis.json
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 68.06%
+
+Workflow analysis for BN #0 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.2, 0.15, 0.35, 0.1, 0.2, 0.55, 0.75, 0.25], [0.15, 0.2, 0.5, 0.75, 0.1, 0.15, 0.1, 0.15], [0.65, 0.65, 0.15, 0.15, 0.7, 0.3, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Network_Manipulation', 'cpt': {'parent_state_order': {'GPTN_1': ['Found', 'Not_Found'], 'GPTN_2': ['Found', 'Not_Found']}, 'values': [[0.8, 0.65, 0.6, 0.05], [0.2, 0.35, 0.4, 0.95]]}}, {'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.2, 0.15, 0.35, 0.1, 0.2, 0.6, 0.75, 0.25], [0.2, 0.25, 0.55, 0.8, 0.1, 0.15, 0.1, 0.15], [0.6, 0.6, 0.1, 0.1, 0.7, 0.25, 0.15, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Network_Manipulation', 'cpt': {'parent_state_order': {'GPTN_1': ['Found', 'Not_Found'], 'GPTN_2': ['Found', 'Not_Found']}, 'values': [[0.7, 0.55, 0.5, 0.05], [0.3, 0.45, 0.5, 0.95]]}}]}]}
+Selected baseline BN: 0
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 8.33 %
+Total: 72
+Successes: 6
+Failures: 66
+
+Candidate 1: Accuracy = 0.0833, Failures = 66, Successes = 6
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 4.17 %
+Total: 72
+Successes: 3
+Failures: 69
+
+Candidate 2: Accuracy = 0.0417, Failures = 69, Successes = 3
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 65.28 %
+Total: 72
+Successes: 47
+Failures: 25
+
+Candidate 3: Accuracy = 0.6528, Failures = 25, Successes = 47
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 3
+Accuracy: 0.6528
+Failures: 25
+Successes: 47
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 65.28 %
+Total: 72
+Successes: 47
+Failures: 25
+Accuracy = 65.28%
+Threshold (77.64%) not reached after 3 attempts. Using best generated BN (73.61%).
+Removed workflow analysis for BN #0 from bn_analysis.json
+
+Initial BN generated
+
+===== ITERATION 2 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 73.61 %
+Total: 72
+Successes: 53
+Failures: 19
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 73.61%
+
+Workflow analysis for BN #1 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Network_Manipulation', 'cpt': {'parent_state_order': {'GPTN_1': ['Found', 'Not_Found'], 'GPTN_2': ['Found', 'Not_Found']}, 'values': [[0.75, 0.65, 0.65, 0.05], [0.25, 0.35, 0.35, 0.95]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.7, 0.45, 0.7, 0.7, 0.65, 0.4], [0.2, 0.3, 0.3, 0.55, 0.3, 0.3, 0.35, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Network_Manipulation', 'cpt': {'parent_state_order': {'GPTN_1': ['Found', 'Not_Found'], 'GPTN_2': ['Found', 'Not_Found']}, 'values': [[0.8, 0.7, 0.7, 0.05], [0.2, 0.3, 0.3, 0.95]]}}, {'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.7, 0.4, 0.7, 0.7, 0.65, 0.45], [0.2, 0.3, 0.3, 0.6, 0.3, 0.3, 0.35, 0.55]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 80.56 %
+Total: 72
+Successes: 58
+Failures: 14
+
+Candidate 1: Accuracy = 0.8056, Failures = 14, Successes = 58
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 75.0 %
+Total: 72
+Successes: 54
+Failures: 18
+
+Candidate 2: Accuracy = 0.7500, Failures = 18, Successes = 54
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 80.56 %
+Total: 72
+Successes: 58
+Failures: 14
+
+Candidate 3: Accuracy = 0.8056, Failures = 14, Successes = 58
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.8056
+Failures: 14
+Successes: 58
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 80.56 %
+Total: 72
+Successes: 58
+Failures: 14
+
+Accuracy improved from 73.61% to 80.56%.
+
+===== ITERATION 3 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 80.56 %
+Total: 72
+Successes: 58
+Failures: 14
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 80.56%
+
+Workflow analysis for BN #2 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.85, 0.45, 0.7, 0.7, 0.7, 0.35], [0.2, 0.3, 0.15, 0.55, 0.3, 0.3, 0.3, 0.65]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.3, 0.25, 0.15, 0.35, 0.55, 0.2], [0.2, 0.25, 0.15, 0.45, 0.1, 0.1, 0.15, 0.2], [0.5, 0.55, 0.55, 0.3, 0.75, 0.55, 0.3, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.85, 0.75, 0.9, 0.5, 0.75, 0.75, 0.75, 0.4], [0.15, 0.25, 0.1, 0.5, 0.25, 0.25, 0.25, 0.6]]}}, {'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.15, 0.25, 0.2, 0.2, 0.35, 0.6, 0.25], [0.15, 0.2, 0.15, 0.35, 0.1, 0.1, 0.1, 0.15], [0.6, 0.65, 0.6, 0.45, 0.7, 0.55, 0.3, 0.6]]}}]}]}
+Selected baseline BN: 2
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Candidate 1: Accuracy = 0.8333, Failures = 12, Successes = 60
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 80.56 %
+Total: 72
+Successes: 58
+Failures: 14
+
+Candidate 2: Accuracy = 0.8056, Failures = 14, Successes = 58
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 91.67 %
+Total: 72
+Successes: 66
+Failures: 6
+
+Candidate 3: Accuracy = 0.9167, Failures = 6, Successes = 66
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 3
+Accuracy: 0.9167
+Failures: 6
+Successes: 66
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 91.67 %
+Total: 72
+Successes: 66
+Failures: 6
+
+Accuracy improved from 80.56% to 91.67%.
+
+===== ITERATION 4 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 91.67 %
+Total: 72
+Successes: 66
+Failures: 6
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 91.67%
+
+Workflow analysis for BN #3 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.85, 0.75, 0.9, 0.5, 0.75, 0.75, 0.75, 0.3], [0.15, 0.25, 0.1, 0.5, 0.25, 0.25, 0.25, 0.7]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.85, 0.75, 0.9, 0.5, 0.75, 0.75, 0.75, 0.45], [0.15, 0.25, 0.1, 0.5, 0.25, 0.25, 0.25, 0.55]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.85, 0.75, 0.9, 0.5, 0.75, 0.75, 0.75, 0.2], [0.15, 0.25, 0.1, 0.5, 0.25, 0.25, 0.25, 0.8]]}}]}]}
+Selected baseline BN: 3
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 91.67 %
+Total: 72
+Successes: 66
+Failures: 6
+
+Candidate 1: Accuracy = 0.9167, Failures = 6, Successes = 66
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 91.67 %
+Total: 72
+Successes: 66
+Failures: 6
+
+Candidate 2: Accuracy = 0.9167, Failures = 6, Successes = 66
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 91.67 %
+Total: 72
+Successes: 66
+Failures: 6
+
+Candidate 3: Accuracy = 0.9167, Failures = 6, Successes = 66
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9167
+Failures: 6
+Successes: 66
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 91.67 %
+Total: 72
+Successes: 66
+Failures: 6
+
+Accuracy did not improve. Need improvement from 91.67% 
+Removed 1 record(s) with bn_number=4
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.85, 0.75, 0.9, 0.5, 0.75, 0.75, 0.75, 0.55], [0.15, 0.25, 0.1, 0.5, 0.25, 0.25, 0.25, 0.45]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.85, 0.75, 0.9, 0.5, 0.75, 0.75, 0.65, 0.4], [0.15, 0.25, 0.1, 0.5, 0.25, 0.25, 0.35, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.85, 0.75, 0.9, 0.45, 0.75, 0.75, 0.7, 0.3], [0.15, 0.25, 0.1, 0.55, 0.25, 0.25, 0.3, 0.7]]}}]}]}
+Selected baseline BN: 3
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 91.67 %
+Total: 72
+Successes: 66
+Failures: 6
+
+Candidate 1: Accuracy = 0.9167, Failures = 6, Successes = 66
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 91.67 %
+Total: 72
+Successes: 66
+Failures: 6
+
+Candidate 2: Accuracy = 0.9167, Failures = 6, Successes = 66
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 91.67 %
+Total: 72
+Successes: 66
+Failures: 6
+
+Candidate 3: Accuracy = 0.9167, Failures = 6, Successes = 66
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9167
+Failures: 6
+Successes: 66
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 91.67 %
+Total: 72
+Successes: 66
+Failures: 6
+Removed 1 record(s) with bn_number=4
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.85, 0.75, 0.9, 0.5, 0.75, 0.75, 0.75, 0.25], [0.15, 0.25, 0.1, 0.5, 0.25, 0.25, 0.25, 0.75]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.85, 0.75, 0.9, 0.5, 0.75, 0.75, 0.75, 0.4], [0.15, 0.25, 0.1, 0.5, 0.25, 0.25, 0.25, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.85, 0.75, 0.9, 0.5, 0.75, 0.75, 0.75, 0.5], [0.15, 0.25, 0.1, 0.5, 0.25, 0.25, 0.25, 0.5]]}}]}]}
+Selected baseline BN: 3
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 91.67 %
+Total: 72
+Successes: 66
+Failures: 6
+
+Candidate 1: Accuracy = 0.9167, Failures = 6, Successes = 66
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 91.67 %
+Total: 72
+Successes: 66
+Failures: 6
+
+Candidate 2: Accuracy = 0.9167, Failures = 6, Successes = 66
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 91.67 %
+Total: 72
+Successes: 66
+Failures: 6
+
+Candidate 3: Accuracy = 0.9167, Failures = 6, Successes = 66
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9167
+Failures: 6
+Successes: 66
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 91.67 %
+Total: 72
+Successes: 66
+Failures: 6
+Removed 1 record(s) with bn_number=4
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.85, 0.75, 0.9, 0.5, 0.75, 0.75, 0.75, 0.55], [0.15, 0.25, 0.1, 0.5, 0.25, 0.25, 0.25, 0.45]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.85, 0.75, 0.9, 0.5, 0.75, 0.75, 0.75, 0.7], [0.15, 0.25, 0.1, 0.5, 0.25, 0.25, 0.25, 0.3]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.85, 0.75, 0.9, 0.5, 0.75, 0.75, 0.75, 0.65], [0.15, 0.25, 0.1, 0.5, 0.25, 0.25, 0.25, 0.35]]}}]}]}
+Selected baseline BN: 3
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 91.67 %
+Total: 72
+Successes: 66
+Failures: 6
+
+Candidate 1: Accuracy = 0.9167, Failures = 6, Successes = 66
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 91.67 %
+Total: 72
+Successes: 66
+Failures: 6
+
+Candidate 2: Accuracy = 0.9167, Failures = 6, Successes = 66
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 91.67 %
+Total: 72
+Successes: 66
+Failures: 6
+
+Candidate 3: Accuracy = 0.9167, Failures = 6, Successes = 66
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9167
+Failures: 6
+Successes: 66
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 91.67 %
+Total: 72
+Successes: 66
+Failures: 6
+
+No improvement after 3 retries. Selecting best retry candidate (accuracy=91.67%).
+Removed 1 record(s) with bn_number=4
+Continuing with retry candidate (accuracy=91.67%).
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 68.06 %
+Total: 72
+Successes: 49
+Failures: 23
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 73.61 %
+Total: 72
+Successes: 53
+Failures: 19
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 80.56 %
+Total: 72
+Successes: 58
+Failures: 14
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 91.67 %
+Total: 72
+Successes: 66
+Failures: 6
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 91.67 %
+Total: 72
+Successes: 66
+Failures: 6
+
+
+Best BN Number: 4
+Best BN Accuracy: 0.9166666666666666
+Saved CPT identity comparison to cpt_comparison_analysis.json
+BN number: 4
+Agent change verdict: very_good
+Expected changed CPTs: ['Execution_Integrity', 'Root_Causes']
+Actual changed CPTs: ['Execution_Integrity', 'Network_Manipulation', 'Root_Causes']
+Unexpected changed CPTs: ['Network_Manipulation']
+{'bn_number': 4, 'non_identical_cpt_count': 3, 'non_identical_cpts': ['Execution_Integrity', 'Network_Manipulation', 'Root_Causes'], 'missing_in_proposed': [], 'agent_change_report': {'verdict': 'very_good', 'total_cpts': 20, 'expected_changed_count': 2, 'expected_changed_cpts': ['Execution_Integrity', 'Root_Causes'], 'actual_changed_count': 3, 'actual_changed_cpts': ['Execution_Integrity', 'Network_Manipulation', 'Root_Causes'], 'matched_expected_count': 2, 'matched_expected_cpts': ['Execution_Integrity', 'Root_Causes'], 'missed_expected_count': 0, 'missed_expected_cpts': [], 'unexpected_changed_count': 1, 'unexpected_changed_cpts': ['Network_Manipulation'], 'unflawed_cpt_count': 18, 'untouched_unflawed_count': 17, 'untouched_unflawed_cpts': ['Deviation_in_Dispatch', 'Deviation_in_Response', 'GPTN_1', 'GPTN_2', 'GPTN_3', 'GPTN_5', 'LPTN_1_i', 'LPTN_1_ii', 'LPTN_1_iii', 'LPTN_1_iv', 'LPTN_1_ix', 'LPTN_1_v', 'LPTN_1_vi', 'LPTN_1_viii', 'LPTN_1_x', 'Physical_Anomaly', 'Program_Anomaly'], 'expected_change_recall': 1.0, 'unexpected_change_rate': 0.0556, 'unflawed_preservation_rate': 0.9444}}
+======================================================================
+Deviation_in_Dispatch          0.00000000
+Deviation_in_Response          0.00000000
+Execution_Integrity            0.10952639
+Network_Manipulation           0.08648922
+Physical_Anomaly               0.00000000
+Program_Anomaly                0.00000000
+Root_Causes                    0.23452081
+======================================================================
+Overall Average CPT KL = 0.04303242
+======================================================================
+Deviation_in_Dispatch          RMSE = 0.00000000
+Deviation_in_Response          RMSE = 0.00000000
+Execution_Integrity            RMSE = 0.18193405
+Network_Manipulation           RMSE = 0.17320508
+Physical_Anomaly               RMSE = 0.00000000
+Program_Anomaly                RMSE = 0.00000000
+Root_Causes                    RMSE = 0.22755952
+======================================================================
+Overall CPT RMSE = 0.11506291
+======================================================================
+Deviation_in_Dispatch          Hellinger = 0.00000000
+Deviation_in_Response          Hellinger = 0.00000000
+Execution_Integrity            Hellinger = 0.17222847
+Network_Manipulation           Hellinger = 0.13551741
+Physical_Anomaly               Hellinger = 0.00000000
+Program_Anomaly                Hellinger = 0.00000000
+Root_Causes                    Hellinger = 0.24390281
+======================================================================
+Overall Average Hellinger = 0.05376555
+###------------------------------###
+
+Restart 0 finished.
+###------------------------------###
+
+==============================
+PIPELINE RESTART #1
+==============================
+Cleared: bn_analysis.json
+Cleared: last_proposed_bn.jsonl
+Cleared: dangerous_cpt_report.json
+Cleared: failure_parameter_statistics.json
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 68.06 %
+Total: 72
+Successes: 49
+Failures: 23
+Flawed BN Accuracy: 68.06%
+Initial Acceptance Threshold: 77.64%
+
+Initial Generation Attempt 0
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 68.06%
+
+Workflow analysis for BN #0 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.2, 0.15, 0.35, 0.1, 0.2, 0.15, 0.75, 0.25], [0.25, 0.3, 0.45, 0.75, 0.1, 0.05, 0.1, 0.15], [0.55, 0.55, 0.2, 0.15, 0.7, 0.8, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Network_Manipulation', 'cpt': {'parent_state_order': {'GPTN_1': ['Found', 'Not_Found'], 'GPTN_2': ['Found', 'Not_Found']}, 'values': [[0.8, 0.65, 0.65, 0.05], [0.2, 0.35, 0.35, 0.95]]}}, {'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.2, 0.15, 0.35, 0.1, 0.2, 0.15, 0.75, 0.25], [0.25, 0.3, 0.45, 0.75, 0.1, 0.05, 0.1, 0.15], [0.55, 0.55, 0.2, 0.15, 0.7, 0.8, 0.15, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Network_Manipulation', 'cpt': {'parent_state_order': {'GPTN_1': ['Found', 'Not_Found'], 'GPTN_2': ['Found', 'Not_Found']}, 'values': [[0.9, 0.7, 0.7, 0.05], [0.1, 0.3, 0.3, 0.95]]}}, {'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.15, 0.3, 0.1, 0.15, 0.1, 0.75, 0.2], [0.45, 0.55, 0.5, 0.8, 0.1, 0.05, 0.1, 0.15], [0.3, 0.3, 0.2, 0.1, 0.75, 0.85, 0.15, 0.65]]}}]}]}
+Selected baseline BN: 0
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 51.39 %
+Total: 72
+Successes: 37
+Failures: 35
+
+Candidate 1: Accuracy = 0.5139, Failures = 35, Successes = 37
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 50.0 %
+Total: 72
+Successes: 36
+Failures: 36
+
+Candidate 2: Accuracy = 0.5000, Failures = 36, Successes = 36
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 68.06 %
+Total: 72
+Successes: 49
+Failures: 23
+
+Candidate 3: Accuracy = 0.6806, Failures = 23, Successes = 49
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 3
+Accuracy: 0.6806
+Failures: 23
+Successes: 49
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 68.06 %
+Total: 72
+Successes: 49
+Failures: 23
+Accuracy = 68.06%
+
+Initial Generation Attempt 1
+Removed workflow analysis for BN #0 from bn_analysis.json
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 68.06%
+
+Workflow analysis for BN #0 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.35, 0.15, 0.15, 0.2, 0.7, 0.2], [0.2, 0.35, 0.45, 0.7, 0.1, 0.1, 0.15, 0.2], [0.55, 0.45, 0.2, 0.15, 0.75, 0.7, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.2, 0.15, 0.3, 0.1, 0.1, 0.25, 0.75, 0.25], [0.15, 0.25, 0.5, 0.75, 0.1, 0.1, 0.1, 0.15], [0.65, 0.6, 0.2, 0.15, 0.8, 0.65, 0.15, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.15, 0.25, 0.1, 0.15, 0.3, 0.65, 0.2], [0.15, 0.25, 0.55, 0.75, 0.1, 0.1, 0.15, 0.2], [0.55, 0.6, 0.2, 0.15, 0.75, 0.6, 0.2, 0.6]]}}]}]}
+Selected baseline BN: 0
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 68.06 %
+Total: 72
+Successes: 49
+Failures: 23
+
+Candidate 1: Accuracy = 0.6806, Failures = 23, Successes = 49
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 73.61 %
+Total: 72
+Successes: 53
+Failures: 19
+
+Candidate 2: Accuracy = 0.7361, Failures = 19, Successes = 53
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 72.22 %
+Total: 72
+Successes: 52
+Failures: 20
+
+Candidate 3: Accuracy = 0.7222, Failures = 20, Successes = 52
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 2
+Accuracy: 0.7361
+Failures: 19
+Successes: 53
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 73.61 %
+Total: 72
+Successes: 53
+Failures: 19
+Accuracy = 73.61%
+
+Initial Generation Attempt 2
+Removed workflow analysis for BN #0 from bn_analysis.json
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 68.06%
+
+Workflow analysis for BN #0 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.2, 0.15, 0.45, 0.1, 0.1, 0.05, 0.75, 0.2], [0.2, 0.25, 0.35, 0.55, 0.1, 0.05, 0.1, 0.15], [0.6, 0.6, 0.2, 0.35, 0.8, 0.9, 0.15, 0.65]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.15, 0.55, 0.1, 0.1, 0.05, 0.8, 0.25], [0.15, 0.2, 0.25, 0.45, 0.1, 0.05, 0.05, 0.1], [0.6, 0.65, 0.2, 0.45, 0.8, 0.9, 0.15, 0.65]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.15, 0.5, 0.1, 0.2, 0.1, 0.7, 0.25], [0.15, 0.15, 0.3, 0.55, 0.1, 0.05, 0.1, 0.15], [0.6, 0.7, 0.2, 0.35, 0.7, 0.85, 0.2, 0.6]]}}]}]}
+Selected baseline BN: 0
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 76.39 %
+Total: 72
+Successes: 55
+Failures: 17
+
+Candidate 1: Accuracy = 0.7639, Failures = 17, Successes = 55
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Candidate 2: Accuracy = 0.8333, Failures = 12, Successes = 60
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 72.22 %
+Total: 72
+Successes: 52
+Failures: 20
+
+Candidate 3: Accuracy = 0.7222, Failures = 20, Successes = 52
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 2
+Accuracy: 0.8333
+Failures: 12
+Successes: 60
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+Accuracy = 83.33%
+Initial BN accepted.
+Accepted initial BN (83.33%).
+Removed workflow analysis for BN #0 from bn_analysis.json
+
+Initial BN generated
+
+===== ITERATION 2 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 83.33%
+
+Workflow analysis for BN #1 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.7, 0.3, 0.7, 0.7, 0.7, 0.45], [0.2, 0.3, 0.3, 0.7, 0.3, 0.3, 0.3, 0.55]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Program_Anomaly', 'cpt': {'parent_state_order': {'GPTN_3': ['Found', 'Not_Found']}, 'values': [[0.9, 0.3], [0.1, 0.7]]}}, {'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.7, 0.35, 0.7, 0.7, 0.7, 0.4], [0.2, 0.3, 0.3, 0.65, 0.3, 0.3, 0.3, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Program_Anomaly', 'cpt': {'parent_state_order': {'GPTN_3': ['Found', 'Not_Found']}, 'values': [[0.9, 0.45], [0.1, 0.55]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Candidate 1: Accuracy = 0.8333, Failures = 12, Successes = 60
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Candidate 2: Accuracy = 0.8333, Failures = 12, Successes = 60
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Candidate 3: Accuracy = 0.8333, Failures = 12, Successes = 60
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.8333
+Failures: 12
+Successes: 60
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Accuracy did not improve. Need improvement from 83.33% 
+Removed 1 record(s) with bn_number=2
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.7, 0.3, 0.7, 0.7, 0.7, 0.45], [0.2, 0.3, 0.3, 0.7, 0.3, 0.3, 0.3, 0.55]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Program_Anomaly', 'cpt': {'parent_state_order': {'GPTN_3': ['Found', 'Not_Found']}, 'values': [[0.9, 0.3], [0.1, 0.7]]}}, {'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.7, 0.3, 0.7, 0.7, 0.7, 0.35], [0.2, 0.3, 0.3, 0.7, 0.3, 0.3, 0.3, 0.65]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Program_Anomaly', 'cpt': {'parent_state_order': {'GPTN_3': ['Found', 'Not_Found']}, 'values': [[0.9, 0.45], [0.1, 0.55]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Candidate 1: Accuracy = 0.8333, Failures = 12, Successes = 60
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Candidate 2: Accuracy = 0.8333, Failures = 12, Successes = 60
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Candidate 3: Accuracy = 0.8333, Failures = 12, Successes = 60
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.8333
+Failures: 12
+Successes: 60
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+Removed 1 record(s) with bn_number=2
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.7, 0.3, 0.7, 0.7, 0.55, 0.2], [0.2, 0.3, 0.3, 0.7, 0.3, 0.3, 0.45, 0.8]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Program_Anomaly', 'cpt': {'parent_state_order': {'GPTN_3': ['Found', 'Not_Found']}, 'values': [[0.9, 0.3], [0.1, 0.7]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Program_Anomaly', 'cpt': {'parent_state_order': {'GPTN_3': ['Found', 'Not_Found']}, 'values': [[0.9, 0.4], [0.1, 0.6]]}}, {'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.7, 0.3, 0.7, 0.7, 0.45, 0.2], [0.2, 0.3, 0.3, 0.7, 0.3, 0.3, 0.55, 0.8]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Candidate 1: Accuracy = 0.8333, Failures = 12, Successes = 60
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Candidate 2: Accuracy = 0.8333, Failures = 12, Successes = 60
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Candidate 3: Accuracy = 0.8333, Failures = 12, Successes = 60
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.8333
+Failures: 12
+Successes: 60
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+Removed 1 record(s) with bn_number=2
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.7, 0.3, 0.7, 0.7, 0.45, 0.2], [0.2, 0.3, 0.3, 0.7, 0.3, 0.3, 0.55, 0.8]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Program_Anomaly', 'cpt': {'parent_state_order': {'GPTN_3': ['Found', 'Not_Found']}, 'values': [[0.9, 0.35], [0.1, 0.65]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Program_Anomaly', 'cpt': {'parent_state_order': {'GPTN_3': ['Found', 'Not_Found']}, 'values': [[0.9, 0.45], [0.1, 0.55]]}}, {'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.7, 0.3, 0.7, 0.7, 0.4, 0.2], [0.2, 0.3, 0.3, 0.7, 0.3, 0.3, 0.6, 0.8]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Candidate 1: Accuracy = 0.8333, Failures = 12, Successes = 60
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Candidate 2: Accuracy = 0.8333, Failures = 12, Successes = 60
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Candidate 3: Accuracy = 0.8333, Failures = 12, Successes = 60
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.8333
+Failures: 12
+Successes: 60
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+No improvement after 3 retries. Selecting best retry candidate (accuracy=83.33%).
+Removed 1 record(s) with bn_number=2
+Continuing with retry candidate (accuracy=83.33%).
+
+===== ITERATION 3 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 83.33%
+
+Workflow analysis for BN #2 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.7, 0.3, 0.7, 0.7, 0.7, 0.45], [0.2, 0.3, 0.3, 0.7, 0.3, 0.3, 0.3, 0.55]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Program_Anomaly', 'cpt': {'parent_state_order': {'GPTN_3': ['Found', 'Not_Found']}, 'values': [[0.9, 0.3], [0.1, 0.7]]}}, {'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.7, 0.3, 0.7, 0.7, 0.7, 0.35], [0.2, 0.3, 0.3, 0.7, 0.3, 0.3, 0.3, 0.65]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Program_Anomaly', 'cpt': {'parent_state_order': {'GPTN_3': ['Found', 'Not_Found']}, 'values': [[0.95, 0.45], [0.05, 0.55]]}}, {'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.85, 0.75, 0.75, 0.4, 0.75, 0.75, 0.75, 0.5], [0.15, 0.25, 0.25, 0.6, 0.25, 0.25, 0.25, 0.5]]}}]}]}
+Selected baseline BN: 1
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Candidate 1: Accuracy = 0.8333, Failures = 12, Successes = 60
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Candidate 2: Accuracy = 0.8333, Failures = 12, Successes = 60
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 88.89 %
+Total: 72
+Successes: 64
+Failures: 8
+
+Candidate 3: Accuracy = 0.8889, Failures = 8, Successes = 64
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 3
+Accuracy: 0.8889
+Failures: 8
+Successes: 64
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 88.89 %
+Total: 72
+Successes: 64
+Failures: 8
+
+Accuracy improved from 83.33% to 88.89%.
+
+===== ITERATION 4 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 88.89 %
+Total: 72
+Successes: 64
+Failures: 8
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 88.89%
+
+Workflow analysis for BN #3 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.85, 0.75, 0.75, 0.4, 0.75, 0.75, 0.75, 0.15], [0.15, 0.25, 0.25, 0.6, 0.25, 0.25, 0.25, 0.85]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.9, 0.8, 0.8, 0.35, 0.8, 0.8, 0.8, 0.05], [0.1, 0.2, 0.2, 0.65, 0.2, 0.2, 0.2, 0.95]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.85, 0.75, 0.75, 0.25, 0.75, 0.75, 0.75, 0.1], [0.15, 0.25, 0.25, 0.75, 0.25, 0.25, 0.25, 0.9]]}}]}]}
+Selected baseline BN: 3
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 88.89 %
+Total: 72
+Successes: 64
+Failures: 8
+
+Candidate 1: Accuracy = 0.8889, Failures = 8, Successes = 64
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 87.5 %
+Total: 72
+Successes: 63
+Failures: 9
+
+Candidate 2: Accuracy = 0.8750, Failures = 9, Successes = 63
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 84.72 %
+Total: 72
+Successes: 61
+Failures: 11
+
+Candidate 3: Accuracy = 0.8472, Failures = 11, Successes = 61
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.8889
+Failures: 8
+Successes: 64
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 88.89 %
+Total: 72
+Successes: 64
+Failures: 8
+
+Accuracy did not improve. Need improvement from 88.89% 
+Removed 1 record(s) with bn_number=4
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.85, 0.75, 0.75, 0.4, 0.75, 0.75, 0.75, 0.1], [0.15, 0.25, 0.25, 0.6, 0.25, 0.25, 0.25, 0.9]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.9, 0.8, 0.8, 0.45, 0.8, 0.8, 0.8, 0.05], [0.1, 0.2, 0.2, 0.55, 0.2, 0.2, 0.2, 0.95]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.85, 0.75, 0.75, 0.3, 0.75, 0.75, 0.75, 0.02], [0.15, 0.25, 0.25, 0.7, 0.25, 0.25, 0.25, 0.98]]}}]}]}
+Selected baseline BN: 3
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 88.89 %
+Total: 72
+Successes: 64
+Failures: 8
+
+Candidate 1: Accuracy = 0.8889, Failures = 8, Successes = 64
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 88.89 %
+Total: 72
+Successes: 64
+Failures: 8
+
+Candidate 2: Accuracy = 0.8889, Failures = 8, Successes = 64
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 88.89 %
+Total: 72
+Successes: 64
+Failures: 8
+
+Candidate 3: Accuracy = 0.8889, Failures = 8, Successes = 64
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.8889
+Failures: 8
+Successes: 64
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 88.89 %
+Total: 72
+Successes: 64
+Failures: 8
+Removed 1 record(s) with bn_number=4
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.85, 0.75, 0.75, 0.4, 0.75, 0.75, 0.75, 0.15], [0.15, 0.25, 0.25, 0.6, 0.25, 0.25, 0.25, 0.85]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.9, 0.8, 0.8, 0.35, 0.8, 0.8, 0.8, 0.05], [0.1, 0.2, 0.2, 0.65, 0.2, 0.2, 0.2, 0.95]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.85, 0.7, 0.7, 0.25, 0.7, 0.7, 0.7, 0.1], [0.15, 0.3, 0.3, 0.75, 0.3, 0.3, 0.3, 0.9]]}}]}]}
+Selected baseline BN: 3
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 88.89 %
+Total: 72
+Successes: 64
+Failures: 8
+
+Candidate 1: Accuracy = 0.8889, Failures = 8, Successes = 64
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 87.5 %
+Total: 72
+Successes: 63
+Failures: 9
+
+Candidate 2: Accuracy = 0.8750, Failures = 9, Successes = 63
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Candidate 3: Accuracy = 0.8333, Failures = 12, Successes = 60
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.8889
+Failures: 8
+Successes: 64
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 88.89 %
+Total: 72
+Successes: 64
+Failures: 8
+Removed 1 record(s) with bn_number=4
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.85, 0.75, 0.75, 0.4, 0.75, 0.75, 0.75, 0.1], [0.15, 0.25, 0.25, 0.6, 0.25, 0.25, 0.25, 0.9]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.9, 0.8, 0.8, 0.35, 0.8, 0.8, 0.8, 0.05], [0.1, 0.2, 0.2, 0.65, 0.2, 0.2, 0.2, 0.95]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.85, 0.75, 0.75, 0.25, 0.75, 0.75, 0.75, 0.02], [0.15, 0.25, 0.25, 0.75, 0.25, 0.25, 0.25, 0.98]]}}]}]}
+Selected baseline BN: 3
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 88.89 %
+Total: 72
+Successes: 64
+Failures: 8
+
+Candidate 1: Accuracy = 0.8889, Failures = 8, Successes = 64
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 87.5 %
+Total: 72
+Successes: 63
+Failures: 9
+
+Candidate 2: Accuracy = 0.8750, Failures = 9, Successes = 63
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 84.72 %
+Total: 72
+Successes: 61
+Failures: 11
+
+Candidate 3: Accuracy = 0.8472, Failures = 11, Successes = 61
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.8889
+Failures: 8
+Successes: 64
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 88.89 %
+Total: 72
+Successes: 64
+Failures: 8
+
+No improvement after 3 retries. Selecting best retry candidate (accuracy=88.89%).
+Removed 1 record(s) with bn_number=4
+Continuing with retry candidate (accuracy=88.89%).
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 68.06 %
+Total: 72
+Successes: 49
+Failures: 23
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 88.89 %
+Total: 72
+Successes: 64
+Failures: 8
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 88.89 %
+Total: 72
+Successes: 64
+Failures: 8
+
+
+Best BN Number: 4
+Best BN Accuracy: 0.8888888888888888
+Saved CPT identity comparison to cpt_comparison_analysis.json
+BN number: 4
+Agent change verdict: very_good
+Expected changed CPTs: ['Execution_Integrity', 'Root_Causes']
+Actual changed CPTs: ['Execution_Integrity', 'Program_Anomaly', 'Root_Causes']
+Unexpected changed CPTs: ['Program_Anomaly']
+{'bn_number': 4, 'non_identical_cpt_count': 3, 'non_identical_cpts': ['Execution_Integrity', 'Program_Anomaly', 'Root_Causes'], 'missing_in_proposed': [], 'agent_change_report': {'verdict': 'very_good', 'total_cpts': 20, 'expected_changed_count': 2, 'expected_changed_cpts': ['Execution_Integrity', 'Root_Causes'], 'actual_changed_count': 3, 'actual_changed_cpts': ['Execution_Integrity', 'Program_Anomaly', 'Root_Causes'], 'matched_expected_count': 2, 'matched_expected_cpts': ['Execution_Integrity', 'Root_Causes'], 'missed_expected_count': 0, 'missed_expected_cpts': [], 'unexpected_changed_count': 1, 'unexpected_changed_cpts': ['Program_Anomaly'], 'unflawed_cpt_count': 18, 'untouched_unflawed_count': 17, 'untouched_unflawed_cpts': ['Deviation_in_Dispatch', 'Deviation_in_Response', 'GPTN_1', 'GPTN_2', 'GPTN_3', 'GPTN_5', 'LPTN_1_i', 'LPTN_1_ii', 'LPTN_1_iii', 'LPTN_1_iv', 'LPTN_1_ix', 'LPTN_1_v', 'LPTN_1_vi', 'LPTN_1_viii', 'LPTN_1_x', 'Network_Manipulation', 'Physical_Anomaly'], 'expected_change_recall': 1.0, 'unexpected_change_rate': 0.0556, 'unflawed_preservation_rate': 0.9444}}
+======================================================================
+Deviation_in_Dispatch          0.00000000
+Deviation_in_Response          0.00000000
+Execution_Integrity            0.12194856
+Network_Manipulation           0.00000000
+Physical_Anomaly               0.00000000
+Program_Anomaly                0.15673766
+Root_Causes                    0.15194455
+======================================================================
+Overall Average CPT KL = 0.03478639
+======================================================================
+Deviation_in_Dispatch          RMSE = 0.00000000
+Deviation_in_Response          RMSE = 0.00000000
+Execution_Integrity            RMSE = 0.19678669
+Network_Manipulation           RMSE = 0.00000000
+Physical_Anomaly               RMSE = 0.00000000
+Program_Anomaly                RMSE = 0.25000000
+Root_Causes                    RMSE = 0.18140654
+======================================================================
+Overall CPT RMSE = 0.10448495
+======================================================================
+Deviation_in_Dispatch          Hellinger = 0.00000000
+Deviation_in_Response          Hellinger = 0.00000000
+Execution_Integrity            Hellinger = 0.18282820
+Network_Manipulation           Hellinger = 0.00000000
+Physical_Anomaly               Hellinger = 0.00000000
+Program_Anomaly                Hellinger = 0.17918898
+Root_Causes                    Hellinger = 0.18013086
+======================================================================
+Overall Average Hellinger = 0.04530626
+###------------------------------###
+
+Restart 1 finished.
+###------------------------------###
+
+==============================
+PIPELINE RESTART #2
+==============================
+Cleared: bn_analysis.json
+Cleared: last_proposed_bn.jsonl
+Cleared: dangerous_cpt_report.json
+Cleared: failure_parameter_statistics.json
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 68.06 %
+Total: 72
+Successes: 49
+Failures: 23
+Flawed BN Accuracy: 68.06%
+Initial Acceptance Threshold: 77.64%
+
+Initial Generation Attempt 0
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 68.06%
+
+Workflow analysis for BN #0 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.35, 0.15, 0.15, 0.2, 0.65, 0.2], [0.2, 0.2, 0.45, 0.65, 0.1, 0.1, 0.2, 0.2], [0.55, 0.6, 0.2, 0.2, 0.75, 0.7, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.35, 0.25, 0.35, 0.15, 0.2, 0.3, 0.6, 0.25], [0.25, 0.35, 0.45, 0.65, 0.1, 0.1, 0.2, 0.2], [0.4, 0.4, 0.2, 0.2, 0.7, 0.6, 0.2, 0.55]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.15, 0.4, 0.1, 0.15, 0.25, 0.7, 0.15], [0.15, 0.15, 0.4, 0.75, 0.1, 0.1, 0.15, 0.15], [0.6, 0.7, 0.2, 0.15, 0.75, 0.65, 0.15, 0.7]]}}]}]}
+Selected baseline BN: 0
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 70.83 %
+Total: 72
+Successes: 51
+Failures: 21
+
+Candidate 1: Accuracy = 0.7083, Failures = 21, Successes = 51
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 52.78 %
+Total: 72
+Successes: 38
+Failures: 34
+
+Candidate 2: Accuracy = 0.5278, Failures = 34, Successes = 38
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 70.83 %
+Total: 72
+Successes: 51
+Failures: 21
+
+Candidate 3: Accuracy = 0.7083, Failures = 21, Successes = 51
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.7083
+Failures: 21
+Successes: 51
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 70.83 %
+Total: 72
+Successes: 51
+Failures: 21
+Accuracy = 70.83%
+
+Initial Generation Attempt 1
+Removed workflow analysis for BN #0 from bn_analysis.json
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 68.06%
+
+Workflow analysis for BN #0 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.2, 0.7, 0.2], [0.25, 0.35, 0.3, 0.6, 0.1, 0.1, 0.15, 0.2], [0.45, 0.45, 0.3, 0.25, 0.75, 0.7, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Network_Manipulation', 'cpt': {'parent_state_order': {'GPTN_1': ['Found', 'Not_Found'], 'GPTN_2': ['Found', 'Not_Found']}, 'values': [[0.8, 0.7, 0.7, 0.05], [0.2, 0.3, 0.3, 0.95]]}}, {'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.15, 0.35, 0.15, 0.15, 0.2, 0.75, 0.2], [0.35, 0.45, 0.45, 0.65, 0.1, 0.1, 0.1, 0.15], [0.4, 0.4, 0.2, 0.2, 0.75, 0.7, 0.15, 0.65]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Network_Manipulation', 'cpt': {'parent_state_order': {'GPTN_1': ['Found', 'Not_Found'], 'GPTN_2': ['Found', 'Not_Found']}, 'values': [[0.7, 0.75, 0.75, 0.05], [0.3, 0.25, 0.25, 0.95]]}}]}]}
+Selected baseline BN: 0
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 63.89 %
+Total: 72
+Successes: 46
+Failures: 26
+
+Candidate 1: Accuracy = 0.6389, Failures = 26, Successes = 46
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 63.89 %
+Total: 72
+Successes: 46
+Failures: 26
+
+Candidate 2: Accuracy = 0.6389, Failures = 26, Successes = 46
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 63.89 %
+Total: 72
+Successes: 46
+Failures: 26
+
+Candidate 3: Accuracy = 0.6389, Failures = 26, Successes = 46
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.6389
+Failures: 26
+Successes: 46
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 63.89 %
+Total: 72
+Successes: 46
+Failures: 26
+Accuracy = 63.89%
+
+Initial Generation Attempt 2
+Removed workflow analysis for BN #0 from bn_analysis.json
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 68.06%
+
+Workflow analysis for BN #0 stored in bn_analysis.json
+{'candidates': [{'candidate_id': 1, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.8, 0.7, 0.7, 0.15, 0.7, 0.7, 0.7, 0.05], [0.2, 0.3, 0.3, 0.85, 0.3, 0.3, 0.3, 0.95]]}}, {'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.3, 0.2, 0.4, 0.15, 0.15, 0.2, 0.75, 0.25], [0.2, 0.3, 0.5, 0.6, 0.1, 0.1, 0.1, 0.15], [0.5, 0.5, 0.1, 0.25, 0.75, 0.7, 0.15, 0.6]]}}]}, {'candidate_id': 2, 'modified_cpts': [{'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.2, 0.35, 0.15, 0.15, 0.3, 0.7, 0.2], [0.15, 0.25, 0.55, 0.65, 0.1, 0.1, 0.15, 0.2], [0.6, 0.55, 0.1, 0.2, 0.75, 0.6, 0.15, 0.6]]}}]}, {'candidate_id': 3, 'modified_cpts': [{'name': 'Execution_Integrity', 'cpt': {'parent_state_order': {'Program_Anomaly': ['Yes', 'No'], 'Deviation_in_Response': ['Yes', 'No'], 'Deviation_in_Dispatch': ['Yes', 'No']}, 'values': [[0.85, 0.75, 0.75, 0.2, 0.75, 0.75, 0.75, 0.05], [0.15, 0.25, 0.25, 0.8, 0.25, 0.25, 0.25, 0.95]]}}, {'name': 'Root_Causes', 'cpt': {'parent_state_order': {'Network_Manipulation': ['Yes', 'No'], 'Execution_Integrity': ['Compromised', 'Normal'], 'Physical_Anomaly': ['Yes', 'No']}, 'values': [[0.25, 0.15, 0.35, 0.1, 0.1, 0.25, 0.8, 0.25], [0.25, 0.25, 0.55, 0.75, 0.1, 0.1, 0.1, 0.15], [0.5, 0.6, 0.1, 0.15, 0.8, 0.65, 0.1, 0.6]]}}]}]}
+Selected baseline BN: 0
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 55.56 %
+Total: 72
+Successes: 40
+Failures: 32
+
+Candidate 1: Accuracy = 0.5556, Failures = 32, Successes = 40
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 65.28 %
+Total: 72
+Successes: 47
+Failures: 25
+
+Candidate 2: Accuracy = 0.6528, Failures = 25, Successes = 47
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 70.83 %
+Total: 72
+Successes: 51
+Failures: 21
+
+Candidate 3: Accuracy = 0.7083, Failures = 21, Successes = 51
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 3
+Accuracy: 0.7083
+Failures: 21
+Successes: 51
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 70.83 %
+Total: 72
+Successes: 51
+Failures: 21
+Accuracy = 70.83%
+Threshold (77.64%) not reached after 3 attempts. Using best generated BN (70.83%).
+Removed workflow analysis for BN #0 from bn_analysis.json
+
+Initial BN generated
+
+===== ITERATION 2 =====
+
+Checking model...
+True
+
+===================================================
+Dataset: combined_train_scenarios.csv
+===================================================
+Accuracy: 70.83 %
+Total: 72
+Successes: 51
+Failures: 21
+
+Activation trace saved to activation_trace.csv
+Failure parameter statistics saved to 'failure_parameter_statistics.json'
+
+===================================================
+
+Accuracy: 70.83%
+
+Workflow analysis for BN #1 stored in bn_analysis.json

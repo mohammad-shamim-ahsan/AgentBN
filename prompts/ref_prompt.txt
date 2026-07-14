@@ -35,9 +35,9 @@ Therefore, a scenario is considered a failure if any one of the following condit
 
 The selected baseline BN has already been determined by the workflow.
 
-The "cpt_danger_report" field is the fault-localization result and defines the allowable refinement search space.
+The "cpt_danger_report" field is the flawed CPT localization results and defines the allowable refinement search space.
 
-The reported CPTs are plausible refinement candidates identified during fault localization. Only these CPTs may be modified. Every other CPT must remain identical to the selected baseline BN.
+The reported CPTs are plausible refinement candidates identified during flawed CPT localization. Only these CPTs may be modified. Every other CPT must remain identical to the selected baseline BN.
 
 Determine whether all or a subset of the reported CPTs requires modification to correct the observed failures. Do not assume that every reported CPT must be modified.
 

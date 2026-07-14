@@ -18,69 +18,7 @@ from utils.json_utils import *
 from config.settings import *
 
 
-# -----------------------------
-# Step 2: Calling BN Tool for the Scenarios
-# -----------------------------
-def call_bn_inference(model, df):
-    results = []
-
-    for _, row in df.iterrows():
-
-        evidence = {}
-
-        for col in df.columns:
-            if col in ["Scenario #", "Ground Truth"]:
-                continue
-
-            val = row[col]
-
-            if pd.isna(val):
-                continue
-
-            evidence[col] = val.strip()
-
-        # print("Running inference for scenario:", row["Scenario #"])
-        # print(evidence)
-
-        result = run_inference(
-            model,
-            query="Root_Causes",
-            evidence=evidence
-        )
-
-        # print(result)
-
-        pred_idx = result.values.argmax()
-        pred_state = result.state_names["Root_Causes"][pred_idx]
-        confidence = result.values.max()
-
-        probs = sorted(result.values, reverse=True)
-        max_prob = probs[0]
-        second_prob = probs[1]
-        margin = max_prob - second_prob
-
-        # Store posterior probabilities
-        posterior_probs = {
-            state: float(prob)
-            for state, prob in zip(
-                result.state_names["Root_Causes"],
-                result.values
-            )
-        }
-
-        results.append({
-            "Scenario": row["Scenario #"],
-            "Prediction": pred_state,
-            "Confidence": float(confidence),
-            "Margin": float(margin),
-            "Ground Truth": row["Ground Truth"],
-            "Posterior": posterior_probs
-        })
-
-    return results
-
-
-###--------Step 3: Getting Analysis Results for LLM---------------------
+###--------Step: Getting Analysis Results for LLM---------------------
 def format_results_for_llm(results_df, original_df):
 
     lines = []
@@ -97,12 +35,7 @@ def format_results_for_llm(results_df, original_df):
         original_row.pop("Scenario #", None)
         original_row.pop("Ground Truth", None)
 
-        is_success = (
-            row["Prediction"] == row["Ground Truth"]
-            and row["Confidence"] >= 0.50
-            and row["Margin"] >= 0.20
-        )
-        status = "SUCCESS" if is_success else "FAILURE"
+        status = "SUCCESS" if row["Success"] else "FAILURE"
 
         lines.append(
             f"Scenario {row['Scenario']}:\n"
@@ -115,16 +48,6 @@ def format_results_for_llm(results_df, original_df):
     return "\n".join(lines)
 
 
-def clean_text(text):
-    return (
-        text.replace("\\n", " ")
-            .replace("\n", " ")
-            .replace("- ", "")
-            .strip()
-    )
-
-
-###-----------------------------
 def generate_activation_trace_csv(
     bn_json,
     scenarios_df,
@@ -181,9 +104,11 @@ def generate_activation_trace_csv(
             if indegree[child] == 0:
                 q.append(child)
 
+    
     # ----------------------------------------------------
     # Trace every scenario
     # ----------------------------------------------------
+    
     rows = []
 
     for (_, scenario), inference in zip(
@@ -198,16 +123,9 @@ def generate_activation_trace_csv(
         activated["Confidence"] = inference["Confidence"]
         activated["Ground Truth"] = inference["Ground Truth"]
         activated["Confidence"] = float(inference["Confidence"])
-        activated["Margin"] = float(inference["Margin"])
 
         activated["Status"] = (
-            "SUCCESS"
-            if (
-                inference["Prediction"] == inference["Ground Truth"]
-                and inference["Confidence"] >= 0.50
-                and inference["Margin"] >= 0.20
-            )
-            else "FAILURE"
+            "SUCCESS" if inference["Success"] else "FAILURE"
         )
 
         # --------------------------------------------
@@ -377,17 +295,17 @@ def generate_failure_parameter_statistics(
                     "state": state
                 }
 
-            failure_scenarios = (
-                failure_rows["Scenario"]
-                .astype(int)
-                .tolist()
-            )
+            # failure_scenarios = (
+            #     failure_rows["Scenario"]
+            #     .astype(int)
+            #     .tolist()
+            # )
 
-            success_scenarios = (
-                success_rows["Scenario"]
-                .astype(int)
-                .tolist()
-            )
+            # success_scenarios = (
+            #     success_rows["Scenario"]
+            #     .astype(int)
+            #     .tolist()
+            # )
 
             # ----------------------------------------------
             # Argmax probability
@@ -467,6 +385,7 @@ def generate_failure_parameter_statistics(
                 key = tuple(sorted(common.items()))
                 pattern_map[key].extend([s1, s2])
 
+    
     # --------------------------------------------------
     # Convert to JSON-friendly format
     # --------------------------------------------------
@@ -697,6 +616,7 @@ If no CPT is selected for the refinement search space, return:
 
 
 ### -----------------------------
+
 def run_evaluation(bn_json, bn_number=None, temperature=0.3, dataset_file=None):
 
     if dataset_file is None:
@@ -746,17 +666,8 @@ def run_evaluation(bn_json, bn_number=None, temperature=0.3, dataset_file=None):
     # --------------------------------------------------
     # Evaluation
     # --------------------------------------------------
-    failures = results_df[
-        (results_df["Prediction"] != results_df["Ground Truth"])
-        |
-        (
-            (results_df["Confidence"] < 0.50)
-            |
-            (results_df["Margin"] < 0.20)
-        )
-    ]
-
-    successes = results_df.drop(failures.index)
+    successes = results_df[results_df["Success"]]
+    failures = results_df[~results_df["Success"]]
 
     accuracy = (
         len(successes) / len(results_df)
@@ -802,6 +713,7 @@ def store_analysis(bn_number, evaluation_output):
 
 
 ### ------------------------------MAIN--------------------------------------
+
 if __name__ == "__main__":
     
     bn_number = 1

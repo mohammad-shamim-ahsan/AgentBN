@@ -76,3 +76,71 @@ def run_inference(model, query, evidence=None):
     )
 
     return result
+
+
+def call_bn_inference(model, df):
+
+    results = []
+
+    for _, row in df.iterrows():
+
+        evidence = {}
+
+        for col in df.columns:
+
+            if col in ["Scenario #", "Ground Truth"]:
+                continue
+
+            val = row[col]
+
+            if pd.isna(val):
+                continue
+
+            evidence[col] = str(val).strip()
+
+        # print(f"\nRunning inference for Scenario: {row['Scenario #']}")
+        # print("Evidence:", evidence)
+
+        result = run_inference(
+            model,
+            query="Root_Causes",
+            evidence=evidence
+        )
+
+        pred_idx = np.argmax(result.values)
+        pred_state = result.state_names["Root_Causes"][pred_idx]
+        confidence = result.values[pred_idx]
+
+        probs = sorted(result.values, reverse=True)
+        max_prob = probs[0]
+        second_prob = probs[1]
+        margin = max_prob - second_prob
+
+        posterior_probs = {
+            state: float(prob)
+            for state, prob in zip(
+                result.state_names["Root_Causes"],
+                result.values
+            )
+        }
+
+        # Success only if:
+        # 1. Predicted class matches Ground Truth
+        # 2. Confidence >= 50%
+        # 3. Margin >= 20%
+        is_success = (
+            pred_state == row["Ground Truth"]
+            and confidence >= 0.50
+            and margin >= 0.20
+        )
+
+        results.append({
+            "Scenario": row["Scenario #"],
+            "Prediction": pred_state,
+            "Confidence": confidence,
+            "Ground Truth": row["Ground Truth"],
+            "Posterior": posterior_probs,
+            "Success": is_success
+        })
+
+    return results

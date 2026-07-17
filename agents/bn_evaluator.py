@@ -433,6 +433,69 @@ def generate_failure_parameter_statistics(
     return output
 
 
+MAX_FORMAT_RETRIES = 3
+MAX_REPAIR_RETRIES = 2
+
+DANGER_REPORT_SCHEMA = """
+{{
+  "reported_risk_level":  "high | high_medium | medium | none",
+
+  "dangerous_cpts": [
+    {{
+      "cpt": "",
+
+      "risk_level": "high | high_medium | medium | low",
+
+      "number_of_failure_scenarios": 0,
+
+      "main_problem": "...",
+
+      "suspicious_parameters": [
+        {{
+          "rank": 1,
+
+          "parameter": "Column X → ChildState",
+
+          "failure_weight": 0,
+
+          "success_weight": 0,
+
+          "failure_to_success_ratio": 0.0,
+
+          "argmax_probability": 0.0,
+
+          "recommended_adjustment":
+              "increase | decrease | slightly_increase | slightly_decrease",
+
+          "justification": "..."
+        }}
+      ]
+    }}
+  ],
+
+  "overall_summary": ""
+}}
+"""
+
+
+def validate_danger_report(response):
+    report = json.loads(response)
+
+    required_fields = [
+        "reported_risk_level",
+        "dangerous_cpts",
+        "overall_summary"
+    ]
+
+    for field in required_fields:
+        if field not in report:
+            raise ValueError(
+                f"Missing required field '{field}'."
+            )
+
+    return report
+
+
 def generate_cpt_danger_report(
     bn_json,
     statistics_json,
@@ -595,15 +658,139 @@ If no CPT is selected for the refinement search space, return:
 
     response = llm(prompt, temperature=temperature)
 
-    report = safe_json_loads(response)
+    last_response = None
+    last_error = None
 
-    if report is None:
-        report = {
-            "reported_risk_level": "none",
-            "dangerous_cpts": [],
-            "overall_summary": "Unable to parse LLM response.",
-            "raw_response": str(response)
-        }
+    # ==================================================
+    # STAGE 1
+    # Retry the original evaluation prompt
+    # ==================================================
+    for attempt in range(1, MAX_FORMAT_RETRIES + 1):
+
+        if attempt > 1:
+            response = llm(
+                prompt,
+                temperature=temperature
+            )
+
+        last_response = response
+
+        try:
+
+            report = validate_danger_report(
+                response
+            )
+
+            print(
+                f"Valid danger report received on attempt {attempt}."
+            )
+
+            with open(
+                DANGER_REPORT_FILE,
+                "w",
+                encoding="utf-8"
+            ) as f:
+                json.dump(report, f, indent=4)
+
+            return report
+
+        except (json.JSONDecodeError, ValueError) as error:
+
+            last_error = error
+
+            print(
+                f"[Format Retry "
+                f"{attempt}/{MAX_FORMAT_RETRIES}] "
+                f"{error}"
+            )
+
+    # ==================================================
+    # STAGE 2
+    # Repair the formatting of the final invalid response
+    # ==================================================
+    for repair_attempt in range(1, MAX_REPAIR_RETRIES + 1):
+
+        repair_prompt = f"""
+Your previous response was generated for a Bayesian Network evaluation task.
+
+The response violates the required JSON format.
+
+Validation error:
+{last_error}
+
+Previous response:
+{last_response}
+
+Your task is ONLY to repair the JSON formatting.
+
+Do NOT:
+- modify any reported risk level;
+- modify any CPT;
+- modify any suspicious parameter;
+- modify any probability;
+- modify any recommendation;
+- modify any explanation;
+- add or remove any field;
+- change the Bayesian Network evaluation content in any way.
+
+Repair only the JSON syntax and structure so that the response conforms to the required output format.
+
+The required output format is:
+
+{DANGER_REPORT_SCHEMA}
+
+Return ONLY the repaired JSON.
+    """
+
+        repaired_response = llm(
+            repair_prompt,
+            temperature=0.0
+        )
+
+        last_response = repaired_response
+
+        try:
+
+            report = validate_danger_report(
+                repaired_response
+            )
+
+            print(
+                f"Response successfully repaired "
+                f"on attempt {repair_attempt}."
+            )
+
+            with open(
+                DANGER_REPORT_FILE,
+                "w",
+                encoding="utf-8"
+            ) as f:
+                json.dump(report, f, indent=4)
+
+            return report
+
+        except (json.JSONDecodeError, ValueError) as error:
+
+            last_error = error
+
+            print(
+                f"[Repair Retry "
+                f"{repair_attempt}/{MAX_REPAIR_RETRIES}] "
+                f"{error}"
+            )
+
+    # ==================================================
+    # Final fallback
+    # ==================================================
+    report = {
+        "reported_risk_level": "none",
+        "dangerous_cpts": [],
+        "overall_summary": (
+            "Unable to obtain a valid JSON response after "
+            "format verification and repair."
+        ),
+        "raw_response": str(last_response)
+    }
 
     with open(
         DANGER_REPORT_FILE,
@@ -713,7 +900,6 @@ def store_analysis(bn_number, evaluation_output):
 
 
 ### ------------------------------MAIN--------------------------------------
-
 if __name__ == "__main__":
     
     bn_number = 1

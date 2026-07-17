@@ -1,6 +1,8 @@
 from pgmpy.models import DiscreteBayesianNetwork
 from pgmpy.factors.discrete import TabularCPD
 from pgmpy.inference import VariableElimination
+import pandas as pd
+import numpy as np
 
 
 def build_model(bn):

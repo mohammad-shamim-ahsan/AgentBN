@@ -10,6 +10,83 @@ from config.settings import *
 from utils.llm import *
 from evaluation.automatic_bn_reasoning_old import run_evaluation as initial_run_evaluation
 
+# -----------------------------------------------
+
+MAX_FORMAT_RETRIES = 3
+MAX_REPAIR_RETRIES = 2
+
+OUTPUT_SCHEMA = """
+{
+  "candidates": [
+    {
+      "candidate_id": 1,
+      "modified_cpts": [
+        {
+          "name": "...",
+          "cpt": {
+            "parent_state_order": {},
+            "values": [
+              [...],
+              [...]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "candidate_id": 2,
+      "modified_cpts": [
+        ...
+      ]
+    },
+    {
+      "candidate_id": 3,
+      "modified_cpts": [
+        ...
+      ]
+    }
+  ]
+}
+"""
+
+
+def validate_refinement_response(response):
+    """
+    Perform top-level format verification.
+
+    Returns:
+        Parsed JSON object if valid.
+
+    Raises:
+        json.JSONDecodeError
+        ValueError
+    """
+    response_json = json.loads(response)
+
+    if not isinstance(response_json, dict):
+        raise ValueError("The top-level JSON value must be an object.")
+
+    if "candidates" not in response_json:
+        raise ValueError("Missing required top-level field: 'candidates'.")
+
+    if not isinstance(response_json["candidates"], list):
+        raise ValueError("'candidates' must be a list.")
+
+    if len(response_json["candidates"]) != 3:
+        raise ValueError(
+            "'candidates' must contain exactly 3 refinement candidates."
+        )
+
+    return response_json
+
+
+def build_return_object(best_bn_number, baseline_bn, response_json):
+    return {
+        "best_bn_number": best_bn_number,
+        "baseline_bn": baseline_bn,
+        "candidates": response_json["candidates"]
+    }
+
 
 def read_all_analysis_records(filename=PROPOSED_BN_FILE):
     records = []
@@ -90,7 +167,10 @@ def generate_refined_cpt_patch(
     bn_analysis_filename=BN_ANALYSIS_FILE,
     temperature=0.3
 ):
-    # Deterministically select the baseline BN
+    
+    # --------------------------------------------------
+    # Deterministically Select the baseline BN
+    # --------------------------------------------------
     best_bn_number = get_best_bn_number(
         bn_analysis_filename
     )
@@ -109,6 +189,9 @@ def generate_refined_cpt_patch(
         analysis_record
     )
 
+    # --------------------------------------------------
+    # Build refinement prompt
+    # --------------------------------------------------
     prompt_gen_template = PromptTemplate(
         input_variables=[
             "full_context",
@@ -127,17 +210,126 @@ def generate_refined_cpt_patch(
         analysis_record=formatted_analysis_record
     )
 
-    response = llm(prompt, temperature=temperature)
+    last_response = None
+    last_error = None
 
-    response_json = json.loads(response)
+    # ==================================================
+    # STAGE 1
+    # Retry the original refinement prompt
+    # ==================================================
+    for attempt in range(1, MAX_FORMAT_RETRIES + 1):
 
-    print(response_json)
+        response = llm(
+            prompt,
+            temperature=temperature
+        )
 
-    return {
-        "best_bn_number": best_bn_number,
-        "baseline_bn": baseline_bn,
-        "candidates": response_json["candidates"]
-    }
+        last_response = response
+
+        try:
+            response_json = validate_refinement_response(
+                response
+            )
+
+            print(
+                f"Valid response received on attempt {attempt}."
+            )
+
+            return build_return_object(
+                best_bn_number,
+                baseline_bn,
+                response_json
+            )
+
+        except (json.JSONDecodeError, ValueError) as error:
+
+            last_error = error
+
+            print(
+                f"[Format Retry "
+                f"{attempt}/{MAX_FORMAT_RETRIES}] "
+                f"{error}"
+            )
+
+    # ==================================================
+    # STAGE 2
+    # Repair the formatting of the final invalid response
+    # ==================================================
+    for repair_attempt in range(1, MAX_REPAIR_RETRIES + 1):
+
+        repair_prompt = f"""
+Your previous response was generated for a Bayesian Network refinement task.
+
+The response violates the required JSON format.
+
+Validation error:
+{last_error}
+
+Previous response:
+{last_response}
+
+Your task is ONLY to repair the formatting.
+
+Do NOT:
+- modify any candidate;
+- modify any CPT;
+- modify any probability;
+- modify candidate IDs;
+- add or remove candidates;
+- change any Bayesian Network content.
+
+Repair only the JSON syntax and structure so that the response conforms to the required output format.
+
+The required output format is:
+
+{OUTPUT_SCHEMA}
+
+Return ONLY the repaired valid JSON.
+"""
+
+        repaired_response = llm(
+            repair_prompt,
+            temperature=0.0
+        )
+
+        last_response = repaired_response
+
+        try:
+
+            response_json = validate_refinement_response(
+                repaired_response
+            )
+
+            print(
+                f"Response successfully repaired "
+                f"on attempt {repair_attempt}."
+            )
+
+            return build_return_object(
+                best_bn_number,
+                baseline_bn,
+                response_json
+            )
+
+        except (json.JSONDecodeError, ValueError) as error:
+
+            last_error = error
+
+            print(
+                f"[Repair Retry "
+                f"{repair_attempt}/{MAX_REPAIR_RETRIES}] "
+                f"{error}"
+            )
+
+    # ==================================================
+    # Failure
+    # ==================================================
+    raise RuntimeError(
+        "The LLM failed to produce a valid refinement response after "
+        f"{MAX_FORMAT_RETRIES} generation attempt(s) and "
+        f"{MAX_REPAIR_RETRIES} repair attempt(s). "
+        f"Last validation error: {last_error}"
+    )
 
 
 def integrate_modified_cpts(baseline_bn, patch):

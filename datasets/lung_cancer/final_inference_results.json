@@ -1,0 +1,123 @@
+[
+  {
+    "Scenario": 1,
+    "Prediction": "yes",
+    "Confidence": 0.8397860931734317,
+    "Ground Truth": "yes",
+    "Matched": true,
+    "Posterior": {
+      "yes": 0.8397860931734317,
+      "no": 0.16021390682656822
+    }
+  },
+  {
+    "Scenario": 2,
+    "Prediction": "no",
+    "Confidence": 0.9944013862337198,
+    "Ground Truth": "no",
+    "Matched": true,
+    "Posterior": {
+      "yes": 0.005598613766280243,
+      "no": 0.9944013862337198
+    }
+  },
+  {
+    "Scenario": 3,
+    "Prediction": "no",
+    "Confidence": 0.9986629166858776,
+    "Ground Truth": "no",
+    "Matched": true,
+    "Posterior": {
+      "yes": 0.0013370833141223661,
+      "no": 0.9986629166858776
+    }
+  },
+  {
+    "Scenario": 4,
+    "Prediction": "yes",
+    "Confidence": 0.7524720532963399,
+    "Ground Truth": "yes",
+    "Matched": true,
+    "Posterior": {
+      "yes": 0.7524720532963399,
+      "no": 0.24752794670366007
+    }
+  },
+  {
+    "Scenario": 5,
+    "Prediction": "no",
+    "Confidence": 0.9967453770337119,
+    "Ground Truth": "no",
+    "Matched": true,
+    "Posterior": {
+      "yes": 0.0032546229662879862,
+      "no": 0.9967453770337119
+    }
+  },
+  {
+    "Scenario": 6,
+    "Prediction": "no",
+    "Confidence": 0.9995369524809643,
+    "Ground Truth": "no",
+    "Matched": true,
+    "Posterior": {
+      "yes": 0.00046304751903565496,
+      "no": 0.9995369524809643
+    }
+  },
+  {
+    "Scenario": 7,
+    "Prediction": "yes",
+    "Confidence": 0.7908420490003467,
+    "Ground Truth": "yes",
+    "Matched": true,
+    "Posterior": {
+      "yes": 0.7908420490003467,
+      "no": 0.20915795099965329
+    }
+  },
+  {
+    "Scenario": 8,
+    "Prediction": "no",
+    "Confidence": 0.9959551216721847,
+    "Ground Truth": "no",
+    "Matched": true,
+    "Posterior": {
+      "yes": 0.004044878327815259,
+      "no": 0.9959551216721847
+    }
+  },
+  {
+    "Scenario": 9,
+    "Prediction": "no",
+    "Confidence": 0.999035133532208,
+    "Ground Truth": "no",
+    "Matched": true,
+    "Posterior": {
+      "yes": 0.0009648664677920491,
+      "no": 0.999035133532208
+    }
+  },
+  {
+    "Scenario": 10,
+    "Prediction": "no",
+    "Confidence": 0.998953146052565,
+    "Ground Truth": "no",
+    "Matched": true,
+    "Posterior": {
+      "yes": 0.0010468539474350435,
+      "no": 0.998953146052565
+    }
+  },
+  {
+    "Scenario": 11,
+    "Prediction": "no",
+    "Confidence": 0.9998513425555419,
+    "Ground Truth": "no",
+    "Matched": true,
+    "Posterior": {
+      "yes": 0.0001486574444580724,
+      "no": 0.9998513425555419
+    }
+  }
+]

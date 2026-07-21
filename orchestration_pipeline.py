@@ -197,22 +197,6 @@ def create_constrained_train(
 
 train_csv = TRAIN_CSV
 
-TARGET_NODES_FOR_VALIDATION = {
-        "Network_Manipulation",
-        "Physical_Anomaly",
-        "Program_Anomaly",
-        "Execution_Integrity",
-        "Deviation_in_Response",
-        "Deviation_in_Dispatch",
-        "Root_Causes",
-    }
-
-
-EXPECTED_CHANGED_CPTS = {
-        "Execution_Integrity",
-        "Root_Causes"
-    }
-
 
 # --------------------------------------------------
 # Experiment configuration
@@ -235,7 +219,7 @@ SFR = args.SFR
 # Create constrained training set
 # ----------------------------------------
 
-flawed_bn = safe_json_loads(FLAWED_BN_FILE)
+flawed_bn = safe_json_loads(read_file(FLAWED_BN_FILE))
 
 if use_ratio_constraint:
     failures, successes, flawed_accuracy, _ = initial_run_evaluation(flawed_bn, TRAIN_CSV)

@@ -1,0 +1,1829 @@
+Cleared: /home/shamim_ist/BN_Agent/workspace/der/bn_analysis.json
+Cleared: /home/shamim_ist/BN_Agent/workspace/der/last_proposed_bn.jsonl
+Cleared: /home/shamim_ist/BN_Agent/workspace/der/dangerous_cpt_report.json
+Cleared: /home/shamim_ist/BN_Agent/workspace/der/failure_parameter_statistics.json
+Cleared: /home/shamim_ist/BN_Agent/workspace/der/restart_final_bns.jsonl
+
+==============================
+PIPELINE RESTART #0
+==============================
+Cleared: /home/shamim_ist/BN_Agent/workspace/der/bn_analysis.json
+Cleared: /home/shamim_ist/BN_Agent/workspace/der/last_proposed_bn.jsonl
+Cleared: /home/shamim_ist/BN_Agent/workspace/der/dangerous_cpt_report.json
+Cleared: /home/shamim_ist/BN_Agent/workspace/der/failure_parameter_statistics.json
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 68.06 %
+Total: 72
+Successes: 49
+Failures: 23
+Flawed BN Accuracy: 68.06%
+Initial Acceptance Threshold: 77.64%
+
+Initial Generation Attempt 0
+
+Activation trace saved to /home/shamim_ist/BN_Agent/workspace/der/activation_trace.csv
+Failure parameter statistics saved to '/home/shamim_ist/BN_Agent/workspace/der/failure_parameter_statistics.json'
+Valid danger report received on attempt 1.
+
+===================================================
+
+Accuracy: 68.06%
+
+Workflow analysis for BN #0 stored in /home/shamim_ist/BN_Agent/workspace/der/bn_analysis.json
+Valid response received on attempt 1.
+Selected baseline BN: 0
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 68.06 %
+Total: 72
+Successes: 49
+Failures: 23
+
+Candidate 1: Accuracy = 0.6806, Failures = 23, Successes = 49
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 77.78 %
+Total: 72
+Successes: 56
+Failures: 16
+
+Candidate 2: Accuracy = 0.7778, Failures = 16, Successes = 56
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 47.22 %
+Total: 72
+Successes: 34
+Failures: 38
+
+Candidate 3: Accuracy = 0.4722, Failures = 38, Successes = 34
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 2
+Accuracy: 0.7778
+Failures: 16
+Successes: 56
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 77.78 %
+Total: 72
+Successes: 56
+Failures: 16
+Accuracy = 77.78%
+Initial BN accepted.
+Accepted initial BN (77.78%).
+Removed workflow analysis for BN #0 from /home/shamim_ist/BN_Agent/workspace/der/bn_analysis.json
+
+Initial BN generated
+
+===== ITERATION 2 =====
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 77.78 %
+Total: 72
+Successes: 56
+Failures: 16
+
+Activation trace saved to /home/shamim_ist/BN_Agent/workspace/der/activation_trace.csv
+Failure parameter statistics saved to '/home/shamim_ist/BN_Agent/workspace/der/failure_parameter_statistics.json'
+Valid danger report received on attempt 1.
+
+===================================================
+
+Accuracy: 77.78%
+
+Workflow analysis for BN #1 stored in /home/shamim_ist/BN_Agent/workspace/der/bn_analysis.json
+Valid response received on attempt 1.
+Selected baseline BN: 1
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 76.39 %
+Total: 72
+Successes: 55
+Failures: 17
+
+Candidate 1: Accuracy = 0.7639, Failures = 17, Successes = 55
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 30.56 %
+Total: 72
+Successes: 22
+Failures: 50
+
+Candidate 2: Accuracy = 0.3056, Failures = 50, Successes = 22
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 76.39 %
+Total: 72
+Successes: 55
+Failures: 17
+
+Candidate 3: Accuracy = 0.7639, Failures = 17, Successes = 55
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.7639
+Failures: 17
+Successes: 55
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 76.39 %
+Total: 72
+Successes: 55
+Failures: 17
+
+Accuracy did not improve. Need improvement from 77.78% 
+Removed 1 record(s) with bn_number=2
+Valid response received on attempt 1.
+Selected baseline BN: 1
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 1: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 2: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 3: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.7917
+Failures: 15
+Successes: 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Accuracy improved from 77.78% to 79.17%.
+
+===== ITERATION 3 =====
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Activation trace saved to /home/shamim_ist/BN_Agent/workspace/der/activation_trace.csv
+Failure parameter statistics saved to '/home/shamim_ist/BN_Agent/workspace/der/failure_parameter_statistics.json'
+Valid danger report received on attempt 1.
+
+===================================================
+
+Accuracy: 79.17%
+
+Workflow analysis for BN #2 stored in /home/shamim_ist/BN_Agent/workspace/der/bn_analysis.json
+Valid response received on attempt 1.
+Selected baseline BN: 2
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 77.78 %
+Total: 72
+Successes: 56
+Failures: 16
+
+Candidate 1: Accuracy = 0.7778, Failures = 16, Successes = 56
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 2: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 3: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 2
+Accuracy: 0.7917
+Failures: 15
+Successes: 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Accuracy did not improve. Need improvement from 79.17% 
+Removed 1 record(s) with bn_number=3
+Valid response received on attempt 1.
+Selected baseline BN: 2
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 77.78 %
+Total: 72
+Successes: 56
+Failures: 16
+
+Candidate 1: Accuracy = 0.7778, Failures = 16, Successes = 56
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 81.94 %
+Total: 72
+Successes: 59
+Failures: 13
+
+Candidate 2: Accuracy = 0.8194, Failures = 13, Successes = 59
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Candidate 3: Accuracy = 0.8333, Failures = 12, Successes = 60
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 3
+Accuracy: 0.8333
+Failures: 12
+Successes: 60
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Accuracy improved from 79.17% to 83.33%.
+
+===== ITERATION 4 =====
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Activation trace saved to /home/shamim_ist/BN_Agent/workspace/der/activation_trace.csv
+Failure parameter statistics saved to '/home/shamim_ist/BN_Agent/workspace/der/failure_parameter_statistics.json'
+Valid danger report received on attempt 1.
+
+===================================================
+
+Accuracy: 83.33%
+
+Workflow analysis for BN #3 stored in /home/shamim_ist/BN_Agent/workspace/der/bn_analysis.json
+Valid response received on attempt 1.
+Selected baseline BN: 3
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 88.89 %
+Total: 72
+Successes: 64
+Failures: 8
+
+Candidate 1: Accuracy = 0.8889, Failures = 8, Successes = 64
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Candidate 2: Accuracy = 0.8333, Failures = 12, Successes = 60
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 88.89 %
+Total: 72
+Successes: 64
+Failures: 8
+
+Candidate 3: Accuracy = 0.8889, Failures = 8, Successes = 64
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.8889
+Failures: 8
+Successes: 64
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 88.89 %
+Total: 72
+Successes: 64
+Failures: 8
+
+Accuracy improved from 83.33% to 88.89%.
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 68.06 %
+Total: 72
+Successes: 49
+Failures: 23
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 77.78 %
+Total: 72
+Successes: 56
+Failures: 16
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 88.89 %
+Total: 72
+Successes: 64
+Failures: 8
+
+
+Best BN Number: 4
+Best BN Accuracy: 0.8888888888888888
+Saved CPT identity comparison to /home/shamim_ist/BN_Agent/workspace/der/cpt_comparison_analysis.json
+BN number: 4
+Agent change verdict: very_good
+Expected changed CPTs: ['Execution_Integrity', 'Root_Causes']
+Actual changed CPTs: ['Execution_Integrity', 'Network_Manipulation', 'Root_Causes']
+Unexpected changed CPTs: ['Network_Manipulation']
+{'bn_number': 4, 'non_identical_cpt_count': 3, 'non_identical_cpts': ['Execution_Integrity', 'Network_Manipulation', 'Root_Causes'], 'missing_in_proposed': [], 'agent_change_report': {'verdict': 'very_good', 'total_cpts': 20, 'expected_changed_count': 2, 'expected_changed_cpts': ['Execution_Integrity', 'Root_Causes'], 'actual_changed_count': 3, 'actual_changed_cpts': ['Execution_Integrity', 'Network_Manipulation', 'Root_Causes'], 'matched_expected_count': 2, 'matched_expected_cpts': ['Execution_Integrity', 'Root_Causes'], 'missed_expected_count': 0, 'missed_expected_cpts': [], 'unexpected_changed_count': 1, 'unexpected_changed_cpts': ['Network_Manipulation'], 'unflawed_cpt_count': 18, 'untouched_unflawed_count': 17, 'untouched_unflawed_cpts': ['Deviation_in_Dispatch', 'Deviation_in_Response', 'GPTN_1', 'GPTN_2', 'GPTN_3', 'GPTN_5', 'LPTN_1_i', 'LPTN_1_ii', 'LPTN_1_iii', 'LPTN_1_iv', 'LPTN_1_ix', 'LPTN_1_v', 'LPTN_1_vi', 'LPTN_1_viii', 'LPTN_1_x', 'Physical_Anomaly', 'Program_Anomaly'], 'expected_change_recall': 1.0, 'unexpected_change_rate': 0.0556, 'unflawed_preservation_rate': 0.9444}}
+======================================================================
+Deviation_in_Dispatch          0.00000000
+Deviation_in_Response          0.00000000
+Execution_Integrity            0.17452906
+Network_Manipulation           0.03776518
+Physical_Anomaly               0.00000000
+Program_Anomaly                0.00000000
+Root_Causes                    0.16404487
+======================================================================
+Overall Average CPT KL = 0.03971739
+======================================================================
+Deviation_in_Dispatch          RMSE = 0.00000000
+Deviation_in_Response          RMSE = 0.00000000
+Execution_Integrity            RMSE = 0.24515301
+Network_Manipulation           RMSE = 0.11169154
+Physical_Anomaly               RMSE = 0.00000000
+Program_Anomaly                RMSE = 0.00000000
+Root_Causes                    RMSE = 0.18364368
+======================================================================
+Overall CPT RMSE = 0.11094095
+======================================================================
+Deviation_in_Dispatch          Hellinger = 0.00000000
+Deviation_in_Response          Hellinger = 0.00000000
+Execution_Integrity            Hellinger = 0.21196081
+Network_Manipulation           Hellinger = 0.08688916
+Physical_Anomaly               Hellinger = 0.00000000
+Program_Anomaly                Hellinger = 0.00000000
+Root_Causes                    Hellinger = 0.19118579
+======================================================================
+Overall Average Hellinger = 0.04962124
+###------------------------------###
+
+Restart 0 finished.
+###------------------------------###
+
+==============================
+PIPELINE RESTART #1
+==============================
+Cleared: /home/shamim_ist/BN_Agent/workspace/der/bn_analysis.json
+Cleared: /home/shamim_ist/BN_Agent/workspace/der/last_proposed_bn.jsonl
+Cleared: /home/shamim_ist/BN_Agent/workspace/der/dangerous_cpt_report.json
+Cleared: /home/shamim_ist/BN_Agent/workspace/der/failure_parameter_statistics.json
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 68.06 %
+Total: 72
+Successes: 49
+Failures: 23
+Flawed BN Accuracy: 68.06%
+Initial Acceptance Threshold: 77.64%
+
+Initial Generation Attempt 0
+
+Activation trace saved to /home/shamim_ist/BN_Agent/workspace/der/activation_trace.csv
+Failure parameter statistics saved to '/home/shamim_ist/BN_Agent/workspace/der/failure_parameter_statistics.json'
+Valid danger report received on attempt 1.
+
+===================================================
+
+Accuracy: 68.06%
+
+Workflow analysis for BN #0 stored in /home/shamim_ist/BN_Agent/workspace/der/bn_analysis.json
+Valid response received on attempt 1.
+Selected baseline BN: 0
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 63.89 %
+Total: 72
+Successes: 46
+Failures: 26
+
+Candidate 1: Accuracy = 0.6389, Failures = 26, Successes = 46
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 70.83 %
+Total: 72
+Successes: 51
+Failures: 21
+
+Candidate 2: Accuracy = 0.7083, Failures = 21, Successes = 51
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 77.78 %
+Total: 72
+Successes: 56
+Failures: 16
+
+Candidate 3: Accuracy = 0.7778, Failures = 16, Successes = 56
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 3
+Accuracy: 0.7778
+Failures: 16
+Successes: 56
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 77.78 %
+Total: 72
+Successes: 56
+Failures: 16
+Accuracy = 77.78%
+Initial BN accepted.
+Accepted initial BN (77.78%).
+Removed workflow analysis for BN #0 from /home/shamim_ist/BN_Agent/workspace/der/bn_analysis.json
+
+Initial BN generated
+
+===== ITERATION 2 =====
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 77.78 %
+Total: 72
+Successes: 56
+Failures: 16
+
+Activation trace saved to /home/shamim_ist/BN_Agent/workspace/der/activation_trace.csv
+Failure parameter statistics saved to '/home/shamim_ist/BN_Agent/workspace/der/failure_parameter_statistics.json'
+Valid danger report received on attempt 1.
+
+===================================================
+
+Accuracy: 77.78%
+
+Workflow analysis for BN #1 stored in /home/shamim_ist/BN_Agent/workspace/der/bn_analysis.json
+Valid response received on attempt 1.
+Selected baseline BN: 1
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 1: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 2: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 3: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.7917
+Failures: 15
+Successes: 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Accuracy improved from 77.78% to 79.17%.
+
+===== ITERATION 3 =====
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Activation trace saved to /home/shamim_ist/BN_Agent/workspace/der/activation_trace.csv
+Failure parameter statistics saved to '/home/shamim_ist/BN_Agent/workspace/der/failure_parameter_statistics.json'
+Valid danger report received on attempt 1.
+
+===================================================
+
+Accuracy: 79.17%
+
+Workflow analysis for BN #2 stored in /home/shamim_ist/BN_Agent/workspace/der/bn_analysis.json
+Valid response received on attempt 1.
+Selected baseline BN: 2
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 1: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 77.78 %
+Total: 72
+Successes: 56
+Failures: 16
+
+Candidate 2: Accuracy = 0.7778, Failures = 16, Successes = 56
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 77.78 %
+Total: 72
+Successes: 56
+Failures: 16
+
+Candidate 3: Accuracy = 0.7778, Failures = 16, Successes = 56
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.7917
+Failures: 15
+Successes: 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Accuracy did not improve. Need improvement from 79.17% 
+Removed 1 record(s) with bn_number=3
+Valid response received on attempt 1.
+Selected baseline BN: 2
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 77.78 %
+Total: 72
+Successes: 56
+Failures: 16
+
+Candidate 1: Accuracy = 0.7778, Failures = 16, Successes = 56
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 77.78 %
+Total: 72
+Successes: 56
+Failures: 16
+
+Candidate 2: Accuracy = 0.7778, Failures = 16, Successes = 56
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 3: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 3
+Accuracy: 0.7917
+Failures: 15
+Successes: 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+Removed 1 record(s) with bn_number=3
+Valid response received on attempt 1.
+Selected baseline BN: 2
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 1: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 77.78 %
+Total: 72
+Successes: 56
+Failures: 16
+
+Candidate 2: Accuracy = 0.7778, Failures = 16, Successes = 56
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 3: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.7917
+Failures: 15
+Successes: 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+Removed 1 record(s) with bn_number=3
+Valid response received on attempt 1.
+Selected baseline BN: 2
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 1: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 2: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 3: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.7917
+Failures: 15
+Successes: 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+No improvement after 3 retries. Selecting best retry candidate (accuracy=79.17%).
+Removed 1 record(s) with bn_number=3
+Continuing with retry candidate (accuracy=79.17%).
+
+===== ITERATION 4 =====
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Activation trace saved to /home/shamim_ist/BN_Agent/workspace/der/activation_trace.csv
+Failure parameter statistics saved to '/home/shamim_ist/BN_Agent/workspace/der/failure_parameter_statistics.json'
+Valid danger report received on attempt 1.
+
+===================================================
+
+Accuracy: 79.17%
+
+Workflow analysis for BN #3 stored in /home/shamim_ist/BN_Agent/workspace/der/bn_analysis.json
+Valid response received on attempt 1.
+Selected baseline BN: 2
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 1: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 77.78 %
+Total: 72
+Successes: 56
+Failures: 16
+
+Candidate 2: Accuracy = 0.7778, Failures = 16, Successes = 56
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 3: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.7917
+Failures: 15
+Successes: 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Accuracy did not improve. Need improvement from 79.17% 
+Removed 1 record(s) with bn_number=4
+Valid response received on attempt 1.
+Selected baseline BN: 2
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 1: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 2: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 77.78 %
+Total: 72
+Successes: 56
+Failures: 16
+
+Candidate 3: Accuracy = 0.7778, Failures = 16, Successes = 56
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.7917
+Failures: 15
+Successes: 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+Removed 1 record(s) with bn_number=4
+Valid response received on attempt 1.
+Selected baseline BN: 2
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 1: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 2: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 3: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.7917
+Failures: 15
+Successes: 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+Removed 1 record(s) with bn_number=4
+Valid response received on attempt 1.
+Selected baseline BN: 2
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 1: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 77.78 %
+Total: 72
+Successes: 56
+Failures: 16
+
+Candidate 2: Accuracy = 0.7778, Failures = 16, Successes = 56
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 3: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.7917
+Failures: 15
+Successes: 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+No improvement after 3 retries. Selecting best retry candidate (accuracy=79.17%).
+Removed 1 record(s) with bn_number=4
+Continuing with retry candidate (accuracy=79.17%).
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 68.06 %
+Total: 72
+Successes: 49
+Failures: 23
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 77.78 %
+Total: 72
+Successes: 56
+Failures: 16
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+
+Best BN Number: 4
+Best BN Accuracy: 0.7916666666666666
+Saved CPT identity comparison to /home/shamim_ist/BN_Agent/workspace/der/cpt_comparison_analysis.json
+BN number: 4
+Agent change verdict: very_good
+Expected changed CPTs: ['Execution_Integrity', 'Root_Causes']
+Actual changed CPTs: ['Execution_Integrity', 'Network_Manipulation', 'Root_Causes']
+Unexpected changed CPTs: ['Network_Manipulation']
+{'bn_number': 4, 'non_identical_cpt_count': 3, 'non_identical_cpts': ['Execution_Integrity', 'Network_Manipulation', 'Root_Causes'], 'missing_in_proposed': [], 'agent_change_report': {'verdict': 'very_good', 'total_cpts': 20, 'expected_changed_count': 2, 'expected_changed_cpts': ['Execution_Integrity', 'Root_Causes'], 'actual_changed_count': 3, 'actual_changed_cpts': ['Execution_Integrity', 'Network_Manipulation', 'Root_Causes'], 'matched_expected_count': 2, 'matched_expected_cpts': ['Execution_Integrity', 'Root_Causes'], 'missed_expected_count': 0, 'missed_expected_cpts': [], 'unexpected_changed_count': 1, 'unexpected_changed_cpts': ['Network_Manipulation'], 'unflawed_cpt_count': 18, 'untouched_unflawed_count': 17, 'untouched_unflawed_cpts': ['Deviation_in_Dispatch', 'Deviation_in_Response', 'GPTN_1', 'GPTN_2', 'GPTN_3', 'GPTN_5', 'LPTN_1_i', 'LPTN_1_ii', 'LPTN_1_iii', 'LPTN_1_iv', 'LPTN_1_ix', 'LPTN_1_v', 'LPTN_1_vi', 'LPTN_1_viii', 'LPTN_1_x', 'Physical_Anomaly', 'Program_Anomaly'], 'expected_change_recall': 1.0, 'unexpected_change_rate': 0.0556, 'unflawed_preservation_rate': 0.9444}}
+======================================================================
+Deviation_in_Dispatch          0.00000000
+Deviation_in_Response          0.00000000
+Execution_Integrity            0.20102997
+Network_Manipulation           0.12459930
+Physical_Anomaly               0.00000000
+Program_Anomaly                0.00000000
+Root_Causes                    0.14089475
+======================================================================
+Overall Average CPT KL = 0.04491382
+======================================================================
+Deviation_in_Dispatch          RMSE = 0.00000000
+Deviation_in_Response          RMSE = 0.00000000
+Execution_Integrity            RMSE = 0.26417324
+Network_Manipulation           RMSE = 0.21650635
+Physical_Anomaly               RMSE = 0.00000000
+Program_Anomaly                RMSE = 0.00000000
+Root_Causes                    RMSE = 0.16990193
+======================================================================
+Overall CPT RMSE = 0.11987933
+======================================================================
+Deviation_in_Dispatch          Hellinger = 0.00000000
+Deviation_in_Response          Hellinger = 0.00000000
+Execution_Integrity            Hellinger = 0.23811946
+Network_Manipulation           Hellinger = 0.16340355
+Physical_Anomaly               Hellinger = 0.00000000
+Program_Anomaly                Hellinger = 0.00000000
+Root_Causes                    Hellinger = 0.18924442
+======================================================================
+Overall Average Hellinger = 0.05656285
+###------------------------------###
+
+Restart 1 finished.
+###------------------------------###
+
+==============================
+PIPELINE RESTART #2
+==============================
+Cleared: /home/shamim_ist/BN_Agent/workspace/der/bn_analysis.json
+Cleared: /home/shamim_ist/BN_Agent/workspace/der/last_proposed_bn.jsonl
+Cleared: /home/shamim_ist/BN_Agent/workspace/der/dangerous_cpt_report.json
+Cleared: /home/shamim_ist/BN_Agent/workspace/der/failure_parameter_statistics.json
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 68.06 %
+Total: 72
+Successes: 49
+Failures: 23
+Flawed BN Accuracy: 68.06%
+Initial Acceptance Threshold: 77.64%
+
+Initial Generation Attempt 0
+
+Activation trace saved to /home/shamim_ist/BN_Agent/workspace/der/activation_trace.csv
+Failure parameter statistics saved to '/home/shamim_ist/BN_Agent/workspace/der/failure_parameter_statistics.json'
+Valid danger report received on attempt 1.
+
+===================================================
+
+Accuracy: 68.06%
+
+Workflow analysis for BN #0 stored in /home/shamim_ist/BN_Agent/workspace/der/bn_analysis.json
+Valid response received on attempt 1.
+Selected baseline BN: 0
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 72.22 %
+Total: 72
+Successes: 52
+Failures: 20
+
+Candidate 1: Accuracy = 0.7222, Failures = 20, Successes = 52
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 69.44 %
+Total: 72
+Successes: 50
+Failures: 22
+
+Candidate 2: Accuracy = 0.6944, Failures = 22, Successes = 50
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 80.56 %
+Total: 72
+Successes: 58
+Failures: 14
+
+Candidate 3: Accuracy = 0.8056, Failures = 14, Successes = 58
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 3
+Accuracy: 0.8056
+Failures: 14
+Successes: 58
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 80.56 %
+Total: 72
+Successes: 58
+Failures: 14
+Accuracy = 80.56%
+Initial BN accepted.
+Accepted initial BN (80.56%).
+Removed workflow analysis for BN #0 from /home/shamim_ist/BN_Agent/workspace/der/bn_analysis.json
+
+Initial BN generated
+
+===== ITERATION 2 =====
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 80.56 %
+Total: 72
+Successes: 58
+Failures: 14
+
+Activation trace saved to /home/shamim_ist/BN_Agent/workspace/der/activation_trace.csv
+Failure parameter statistics saved to '/home/shamim_ist/BN_Agent/workspace/der/failure_parameter_statistics.json'
+Valid danger report received on attempt 1.
+
+===================================================
+
+Accuracy: 80.56%
+
+Workflow analysis for BN #1 stored in /home/shamim_ist/BN_Agent/workspace/der/bn_analysis.json
+Valid response received on attempt 1.
+Selected baseline BN: 1
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 79.17 %
+Total: 72
+Successes: 57
+Failures: 15
+
+Candidate 1: Accuracy = 0.7917, Failures = 15, Successes = 57
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 80.56 %
+Total: 72
+Successes: 58
+Failures: 14
+
+Candidate 2: Accuracy = 0.8056, Failures = 14, Successes = 58
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 77.78 %
+Total: 72
+Successes: 56
+Failures: 16
+
+Candidate 3: Accuracy = 0.7778, Failures = 16, Successes = 56
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 2
+Accuracy: 0.8056
+Failures: 14
+Successes: 58
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 80.56 %
+Total: 72
+Successes: 58
+Failures: 14
+
+Accuracy did not improve. Need improvement from 80.56% 
+Removed 1 record(s) with bn_number=2
+Valid response received on attempt 1.
+Selected baseline BN: 1
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Candidate 1: Accuracy = 0.8333, Failures = 12, Successes = 60
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 80.56 %
+Total: 72
+Successes: 58
+Failures: 14
+
+Candidate 2: Accuracy = 0.8056, Failures = 14, Successes = 58
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Candidate 3: Accuracy = 0.8333, Failures = 12, Successes = 60
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.8333
+Failures: 12
+Successes: 60
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Accuracy improved from 80.56% to 83.33%.
+
+===== ITERATION 3 =====
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+Activation trace saved to /home/shamim_ist/BN_Agent/workspace/der/activation_trace.csv
+Failure parameter statistics saved to '/home/shamim_ist/BN_Agent/workspace/der/failure_parameter_statistics.json'
+Valid danger report received on attempt 1.
+
+===================================================
+
+Accuracy: 83.33%
+
+Workflow analysis for BN #2 stored in /home/shamim_ist/BN_Agent/workspace/der/bn_analysis.json
+Valid response received on attempt 1.
+Selected baseline BN: 2
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 86.11 %
+Total: 72
+Successes: 62
+Failures: 10
+
+Candidate 1: Accuracy = 0.8611, Failures = 10, Successes = 62
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 87.5 %
+Total: 72
+Successes: 63
+Failures: 9
+
+Candidate 2: Accuracy = 0.8750, Failures = 9, Successes = 63
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 90.28 %
+Total: 72
+Successes: 65
+Failures: 7
+
+Candidate 3: Accuracy = 0.9028, Failures = 7, Successes = 65
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 3
+Accuracy: 0.9028
+Failures: 7
+Successes: 65
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 90.28 %
+Total: 72
+Successes: 65
+Failures: 7
+
+Accuracy improved from 83.33% to 90.28%.
+
+===== ITERATION 4 =====
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 90.28 %
+Total: 72
+Successes: 65
+Failures: 7
+
+Activation trace saved to /home/shamim_ist/BN_Agent/workspace/der/activation_trace.csv
+Failure parameter statistics saved to '/home/shamim_ist/BN_Agent/workspace/der/failure_parameter_statistics.json'
+Valid danger report received on attempt 1.
+
+===================================================
+
+Accuracy: 90.28%
+
+Workflow analysis for BN #3 stored in /home/shamim_ist/BN_Agent/workspace/der/bn_analysis.json
+Valid response received on attempt 1.
+Selected baseline BN: 3
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 90.28 %
+Total: 72
+Successes: 65
+Failures: 7
+
+Candidate 1: Accuracy = 0.9028, Failures = 7, Successes = 65
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 90.28 %
+Total: 72
+Successes: 65
+Failures: 7
+
+Candidate 2: Accuracy = 0.9028, Failures = 7, Successes = 65
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 90.28 %
+Total: 72
+Successes: 65
+Failures: 7
+
+Candidate 3: Accuracy = 0.9028, Failures = 7, Successes = 65
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9028
+Failures: 7
+Successes: 65
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 90.28 %
+Total: 72
+Successes: 65
+Failures: 7
+
+Accuracy did not improve. Need improvement from 90.28% 
+Removed 1 record(s) with bn_number=4
+Valid response received on attempt 1.
+Selected baseline BN: 3
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 90.28 %
+Total: 72
+Successes: 65
+Failures: 7
+
+Candidate 1: Accuracy = 0.9028, Failures = 7, Successes = 65
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 90.28 %
+Total: 72
+Successes: 65
+Failures: 7
+
+Candidate 2: Accuracy = 0.9028, Failures = 7, Successes = 65
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 90.28 %
+Total: 72
+Successes: 65
+Failures: 7
+
+Candidate 3: Accuracy = 0.9028, Failures = 7, Successes = 65
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9028
+Failures: 7
+Successes: 65
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 90.28 %
+Total: 72
+Successes: 65
+Failures: 7
+Removed 1 record(s) with bn_number=4
+Valid response received on attempt 1.
+Selected baseline BN: 3
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 90.28 %
+Total: 72
+Successes: 65
+Failures: 7
+
+Candidate 1: Accuracy = 0.9028, Failures = 7, Successes = 65
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 90.28 %
+Total: 72
+Successes: 65
+Failures: 7
+
+Candidate 2: Accuracy = 0.9028, Failures = 7, Successes = 65
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 90.28 %
+Total: 72
+Successes: 65
+Failures: 7
+
+Candidate 3: Accuracy = 0.9028, Failures = 7, Successes = 65
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9028
+Failures: 7
+Successes: 65
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 90.28 %
+Total: 72
+Successes: 65
+Failures: 7
+Removed 1 record(s) with bn_number=4
+Valid response received on attempt 1.
+Selected baseline BN: 3
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 90.28 %
+Total: 72
+Successes: 65
+Failures: 7
+
+Candidate 1: Accuracy = 0.9028, Failures = 7, Successes = 65
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 90.28 %
+Total: 72
+Successes: 65
+Failures: 7
+
+Candidate 2: Accuracy = 0.9028, Failures = 7, Successes = 65
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 90.28 %
+Total: 72
+Successes: 65
+Failures: 7
+
+Candidate 3: Accuracy = 0.9028, Failures = 7, Successes = 65
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate 1
+Accuracy: 0.9028
+Failures: 7
+Successes: 65
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 90.28 %
+Total: 72
+Successes: 65
+Failures: 7
+
+No improvement after 3 retries. Selecting best retry candidate (accuracy=90.28%).
+Removed 1 record(s) with bn_number=4
+Continuing with retry candidate (accuracy=90.28%).
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 68.06 %
+Total: 72
+Successes: 49
+Failures: 23
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 80.56 %
+Total: 72
+Successes: 58
+Failures: 14
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 83.33 %
+Total: 72
+Successes: 60
+Failures: 12
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 90.28 %
+Total: 72
+Successes: 65
+Failures: 7
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_train_scenarios.csv
+===================================================
+Accuracy: 90.28 %
+Total: 72
+Successes: 65
+Failures: 7
+
+
+Best BN Number: 4
+Best BN Accuracy: 0.9027777777777778
+Saved CPT identity comparison to /home/shamim_ist/BN_Agent/workspace/der/cpt_comparison_analysis.json
+BN number: 4
+Agent change verdict: excellent
+Expected changed CPTs: ['Execution_Integrity', 'Root_Causes']
+Actual changed CPTs: ['Execution_Integrity', 'Root_Causes']
+Unexpected changed CPTs: []
+{'bn_number': 4, 'non_identical_cpt_count': 2, 'non_identical_cpts': ['Execution_Integrity', 'Root_Causes'], 'missing_in_proposed': [], 'agent_change_report': {'verdict': 'excellent', 'total_cpts': 20, 'expected_changed_count': 2, 'expected_changed_cpts': ['Execution_Integrity', 'Root_Causes'], 'actual_changed_count': 2, 'actual_changed_cpts': ['Execution_Integrity', 'Root_Causes'], 'matched_expected_count': 2, 'matched_expected_cpts': ['Execution_Integrity', 'Root_Causes'], 'missed_expected_count': 0, 'missed_expected_cpts': [], 'unexpected_changed_count': 0, 'unexpected_changed_cpts': [], 'unflawed_cpt_count': 18, 'untouched_unflawed_count': 18, 'untouched_unflawed_cpts': ['Deviation_in_Dispatch', 'Deviation_in_Response', 'GPTN_1', 'GPTN_2', 'GPTN_3', 'GPTN_5', 'LPTN_1_i', 'LPTN_1_ii', 'LPTN_1_iii', 'LPTN_1_iv', 'LPTN_1_ix', 'LPTN_1_v', 'LPTN_1_vi', 'LPTN_1_viii', 'LPTN_1_x', 'Network_Manipulation', 'Physical_Anomaly', 'Program_Anomaly'], 'expected_change_recall': 1.0, 'unexpected_change_rate': 0.0, 'unflawed_preservation_rate': 1.0}}
+======================================================================
+Deviation_in_Dispatch          0.00000000
+Deviation_in_Response          0.00000000
+Execution_Integrity            0.13520926
+Network_Manipulation           0.00000000
+Physical_Anomaly               0.00000000
+Program_Anomaly                0.00000000
+Root_Causes                    0.12692639
+======================================================================
+Overall Average CPT KL = 0.02912618
+======================================================================
+Deviation_in_Dispatch          RMSE = 0.00000000
+Deviation_in_Response          RMSE = 0.00000000
+Execution_Integrity            RMSE = 0.20533509
+Network_Manipulation           RMSE = 0.00000000
+Physical_Anomaly               RMSE = 0.00000000
+Program_Anomaly                RMSE = 0.00000000
+Root_Causes                    RMSE = 0.16031220
+======================================================================
+Overall CPT RMSE = 0.09217403
+======================================================================
+Deviation_in_Dispatch          Hellinger = 0.00000000
+Deviation_in_Response          Hellinger = 0.00000000
+Execution_Integrity            Hellinger = 0.19038537
+Network_Manipulation           Hellinger = 0.00000000
+Physical_Anomaly               Hellinger = 0.00000000
+Program_Anomaly                Hellinger = 0.00000000
+Root_Causes                    Hellinger = 0.17624641
+======================================================================
+Overall Average Hellinger = 0.04073686
+###------------------------------###
+
+Restart 2 finished.
+###------------------------------###
+Restart: 0
+BN keys: dict_keys(['edges', 'nodes'])
+Evaluating restart 0
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_test_scenarios.csv
+===================================================
+Accuracy: 80.0 %
+Total: 20
+Successes: 16
+Failures: 4
+Restart: 1
+BN keys: dict_keys(['edges', 'nodes'])
+Evaluating restart 1
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_test_scenarios.csv
+===================================================
+Accuracy: 75.0 %
+Total: 20
+Successes: 15
+Failures: 5
+Restart: 2
+BN keys: dict_keys(['edges', 'nodes'])
+Evaluating restart 2
+
+===================================================
+Dataset: /home/shamim_ist/BN_Agent/datasets/der/combined_test_scenarios.csv
+===================================================
+Accuracy: 75.0 %
+Total: 20
+Successes: 15
+Failures: 5
+
+===================================
+BEST RESTART
+===================================
+Restart: 0
+Accuracy: 0.8
+Failures: 4
+Saved CPT identity comparison to /home/shamim_ist/BN_Agent/workspace/der/cpt_comparison_analysis.json
+BN number: None
+Agent change verdict: very_good
+Expected changed CPTs: ['Execution_Integrity', 'Root_Causes']
+Actual changed CPTs: ['Execution_Integrity', 'Network_Manipulation', 'Root_Causes']
+Unexpected changed CPTs: ['Network_Manipulation']
+{'bn_number': None, 'non_identical_cpt_count': 3, 'non_identical_cpts': ['Execution_Integrity', 'Network_Manipulation', 'Root_Causes'], 'missing_in_proposed': [], 'agent_change_report': {'verdict': 'very_good', 'total_cpts': 20, 'expected_changed_count': 2, 'expected_changed_cpts': ['Execution_Integrity', 'Root_Causes'], 'actual_changed_count': 3, 'actual_changed_cpts': ['Execution_Integrity', 'Network_Manipulation', 'Root_Causes'], 'matched_expected_count': 2, 'matched_expected_cpts': ['Execution_Integrity', 'Root_Causes'], 'missed_expected_count': 0, 'missed_expected_cpts': [], 'unexpected_changed_count': 1, 'unexpected_changed_cpts': ['Network_Manipulation'], 'unflawed_cpt_count': 18, 'untouched_unflawed_count': 17, 'untouched_unflawed_cpts': ['Deviation_in_Dispatch', 'Deviation_in_Response', 'GPTN_1', 'GPTN_2', 'GPTN_3', 'GPTN_5', 'LPTN_1_i', 'LPTN_1_ii', 'LPTN_1_iii', 'LPTN_1_iv', 'LPTN_1_ix', 'LPTN_1_v', 'LPTN_1_vi', 'LPTN_1_viii', 'LPTN_1_x', 'Physical_Anomaly', 'Program_Anomaly'], 'expected_change_recall': 1.0, 'unexpected_change_rate': 0.0556, 'unflawed_preservation_rate': 0.9444}}
+======================================================================
+Deviation_in_Dispatch          0.00000000
+Deviation_in_Response          0.00000000
+Execution_Integrity            0.17452906
+Network_Manipulation           0.03776518
+Physical_Anomaly               0.00000000
+Program_Anomaly                0.00000000
+Root_Causes                    0.16404487
+======================================================================
+Overall Average CPT KL = 0.03971739
+======================================================================
+Deviation_in_Dispatch          RMSE = 0.00000000
+Deviation_in_Response          RMSE = 0.00000000
+Execution_Integrity            RMSE = 0.24515301
+Network_Manipulation           RMSE = 0.11169154
+Physical_Anomaly               RMSE = 0.00000000
+Program_Anomaly                RMSE = 0.00000000
+Root_Causes                    RMSE = 0.18364368
+======================================================================
+Overall CPT RMSE = 0.11094095
+======================================================================
+Deviation_in_Dispatch          Hellinger = 0.00000000
+Deviation_in_Response          Hellinger = 0.00000000
+Execution_Integrity            Hellinger = 0.21196081
+Network_Manipulation           Hellinger = 0.08688916
+Physical_Anomaly               Hellinger = 0.00000000
+Program_Anomaly                Hellinger = 0.00000000
+Root_Causes                    Hellinger = 0.19118579
+======================================================================
+Overall Average Hellinger = 0.04962124
+###------------------------------###
+
+Pipeline finished.
+###------------------------------###

@@ -1,0 +1,4 @@
+Scenario #,asia,smoke,xray,dysp,Ground Truth
+1,no,yes,no,no,no
+2,no,yes,no,yes,no
+3,yes,no,yes,yes,yes

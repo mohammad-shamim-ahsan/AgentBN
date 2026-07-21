@@ -1,0 +1,258 @@
+{
+  "edges": [
+    [
+      "asia",
+      "tub"
+    ],
+    [
+      "tub",
+      "either"
+    ],
+    [
+      "smoke",
+      "lung"
+    ],
+    [
+      "smoke",
+      "bronc"
+    ],
+    [
+      "lung",
+      "either"
+    ],
+    [
+      "bronc",
+      "dysp"
+    ],
+    [
+      "either",
+      "xray"
+    ],
+    [
+      "either",
+      "dysp"
+    ]
+  ],
+  "nodes": [
+    {
+      "name": "asia",
+      "states": [
+        "yes",
+        "no"
+      ],
+      "cpt": {
+        "values": [
+          [
+            0.01
+          ],
+          [
+            0.99
+          ]
+        ]
+      }
+    },
+    {
+      "name": "tub",
+      "states": [
+        "yes",
+        "no"
+      ],
+      "parents": [
+        "asia"
+      ],
+      "cpt": {
+        "parent_state_order": {
+          "asia": [
+            "yes",
+            "no"
+          ]
+        },
+        "values": [
+          [
+            0.05,
+            0.01
+          ],
+          [
+            0.95,
+            0.99
+          ]
+        ]
+      }
+    },
+    {
+      "name": "smoke",
+      "states": [
+        "yes",
+        "no"
+      ],
+      "cpt": {
+        "values": [
+          [
+            0.5
+          ],
+          [
+            0.5
+          ]
+        ]
+      }
+    },
+    {
+      "name": "lung",
+      "states": [
+        "yes",
+        "no"
+      ],
+      "parents": [
+        "smoke"
+      ],
+      "cpt": {
+        "parent_state_order": {
+          "smoke": [
+            "yes",
+            "no"
+          ]
+        },
+        "values": [
+          [
+            0.1,
+            0.01
+          ],
+          [
+            0.9,
+            0.99
+          ]
+        ]
+      }
+    },
+    {
+      "name": "bronc",
+      "states": [
+        "yes",
+        "no"
+      ],
+      "parents": [
+        "smoke"
+      ],
+      "cpt": {
+        "parent_state_order": {
+          "smoke": [
+            "yes",
+            "no"
+          ]
+        },
+        "values": [
+          [
+            0.6,
+            0.3
+          ],
+          [
+            0.4,
+            0.7
+          ]
+        ]
+      }
+    },
+    {
+      "name": "either",
+      "states": [
+        "yes",
+        "no"
+      ],
+      "parents": [
+        "lung",
+        "tub"
+      ],
+      "cpt": {
+        "parent_state_order": {
+          "lung": [
+            "yes",
+            "no"
+          ],
+          "tub": [
+            "yes",
+            "no"
+          ]
+        },
+        "values": [
+          [
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "xray",
+      "states": [
+        "yes",
+        "no"
+      ],
+      "parents": [
+        "either"
+      ],
+      "cpt": {
+        "parent_state_order": {
+          "either": [
+            "yes",
+            "no"
+          ]
+        },
+        "values": [
+          [
+            0.98,
+            0.05
+          ],
+          [
+            0.02,
+            0.95
+          ]
+        ]
+      }
+    },
+    {
+      "name": "dysp",
+      "states": [
+        "yes",
+        "no"
+      ],
+      "parents": [
+        "bronc",
+        "either"
+      ],
+      "cpt": {
+        "parent_state_order": {
+          "bronc": [
+            "yes",
+            "no"
+          ],
+          "either": [
+            "yes",
+            "no"
+          ]
+        },
+        "values": [
+          [
+            0.9,
+            0.8,
+            0.7,
+            0.1
+          ],
+          [
+            0.1,
+            0.2,
+            0.3,
+            0.9
+          ]
+        ]
+      }
+    }
+  ]
+}

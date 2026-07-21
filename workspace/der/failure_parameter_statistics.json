@@ -1,0 +1,82 @@
+{
+    "bn_number": 3,
+    "parameter_statistics": {
+        "Program_Anomaly": [
+            {
+                "column": 1,
+                "state": "No",
+                "argmax_probability": 0.9,
+                "failure_weight": 4,
+                "success_weight": 3
+            }
+        ],
+        "Execution_Integrity": [
+            {
+                "column": 7,
+                "state": "Normal",
+                "argmax_probability": 0.9,
+                "failure_weight": 4,
+                "success_weight": 1
+            }
+        ],
+        "Root_Causes": [
+            {
+                "column": 6,
+                "state": "System_Fault",
+                "argmax_probability": 0.7,
+                "failure_weight": 2,
+                "success_weight": 0
+            },
+            {
+                "column": 3,
+                "state": "FDI",
+                "argmax_probability": 0.7,
+                "failure_weight": 2,
+                "success_weight": 1
+            },
+            {
+                "column": 0,
+                "state": "Memory_Corruption",
+                "argmax_probability": 0.45,
+                "failure_weight": 2,
+                "success_weight": 0
+            }
+        ]
+    },
+    "common_activation_patterns": [
+        {
+            "pattern": {
+                "Execution_Integrity": 7,
+                "Program_Anomaly": 1
+            },
+            "failure_scenarios": [
+                4,
+                28,
+                29,
+                39
+            ]
+        },
+        {
+            "pattern": {
+                "Execution_Integrity": 7,
+                "Program_Anomaly": 1,
+                "Root_Causes": 6
+            },
+            "failure_scenarios": [
+                4,
+                39
+            ]
+        },
+        {
+            "pattern": {
+                "Execution_Integrity": 7,
+                "Program_Anomaly": 1,
+                "Root_Causes": 3
+            },
+            "failure_scenarios": [
+                28,
+                29
+            ]
+        }
+    ]
+}

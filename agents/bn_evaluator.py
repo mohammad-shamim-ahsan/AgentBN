@@ -148,19 +148,28 @@ def generate_activation_trace_csv(
         # --------------------------------------------
         for node_name in topo_order:
 
-            if node_name in activated:
-                continue
-
             node = node_lookup[node_name]
-
             parents = node.get("parents", [])
 
-            parent_state_order = node["cpt"].get(
-                "parent_state_order",
-                {}
-            )
+            # --------------------------------------------------
+            # Root nodes (no parents)
+            # --------------------------------------------------
+            if len(parents) == 0:
 
-            # Determine CPT column
+                # Root nodes are expected to be observed.
+                # Their priors are not analyzed.
+                if node_name in activated:
+                    continue
+
+                raise ValueError(
+                    f"Root node '{node_name}' has no observed value."
+                )
+
+            parent_state_order = node["cpt"]["parent_state_order"]
+
+            # --------------------------------------------------
+            # Determine active CPT column
+            # --------------------------------------------------
             column = 0
             multiplier = 1
 
@@ -179,16 +188,35 @@ def generate_activation_trace_csv(
                 for row in node["cpt"]["values"]
             ]
 
+            # --------------------------------------------------
+            # Evidence node:
+            # keep observed state but record the active CPT entry.
+            # --------------------------------------------------
+            if node_name in activated:
+
+                observed_state = activated[node_name]
+
+                state_idx = node["states"].index(observed_state)
+
+                activated[f"{node_name}_col"] = column
+                activated[f"{node_name}_selected_prob"] = probs[state_idx]
+
+                continue
+
+            # --------------------------------------------------
+            # Hidden node:
+            # deterministic forward propagation.
+            # --------------------------------------------------
             best_idx = probs.index(max(probs))
 
             selected_state = node["states"][best_idx]
             selected_prob = probs[best_idx]
 
-            # Store everything
             activated[node_name] = selected_state
             activated[f"{node_name}_col"] = column
-            activated[f"{node_name}_argmax_prob"] = selected_prob
+            activated[f"{node_name}_selected_prob"] = selected_prob
 
+        
         rows.append(activated)
 
         activation_df = pd.DataFrame(rows)
@@ -313,7 +341,7 @@ def generate_failure_parameter_statistics(
             # ----------------------------------------------
             argmax_prob = float(
                 failure_rows.iloc[0][
-                    f"{cpt}_argmax_prob"
+                    f"{cpt}_selected_prob"
                 ]
             )
 
@@ -433,9 +461,6 @@ def generate_failure_parameter_statistics(
     return output
 
 
-MAX_FORMAT_RETRIES = 3
-MAX_REPAIR_RETRIES = 2
-
 DANGER_REPORT_SCHEMA = """
 {{
   "reported_risk_level":  "high | high_medium | medium | none",
@@ -514,6 +539,8 @@ def generate_cpt_danger_report(
             "common_activation_patterns": []
         }
 
+    context = read_file(CONTEXT_AGENT_FILE)
+
     prompt = f"""
 You are analyzing deterministic Bayesian Network (BN) parameter statistics.
 
@@ -529,7 +556,7 @@ You are given:
 
 1. Domain context.
 
-{CONTEXT_AGENT_FILE}
+{context}
 
 2. The complete Bayesian Network.
 
@@ -807,7 +834,7 @@ Return ONLY the repaired JSON.
 def run_evaluation(bn_json, bn_number=None, temperature=0.3, dataset_file=None):
 
     if dataset_file is None:
-        dataset_file = "combined_train_scenarios.csv"
+        dataset_file = TRAIN_CSV
     
     df = pd.read_csv(dataset_file)
     
@@ -900,6 +927,7 @@ def store_analysis(bn_number, evaluation_output):
 
 
 ### ------------------------------MAIN--------------------------------------
+
 if __name__ == "__main__":
     
     bn_number = 1

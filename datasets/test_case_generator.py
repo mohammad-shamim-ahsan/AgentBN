@@ -3,40 +3,39 @@ import json
 import re
 import os
 from io import StringIO
-
+import numpy as np
 import pandas as pd
 from langchain_core.prompts import PromptTemplate
-from openai import OpenAI
+from sklearn.model_selection import train_test_split
 
-from pgmpy.models import DiscreteBayesianNetwork
-from pgmpy.factors.discrete import TabularCPD
-from pgmpy.inference import VariableElimination
+from pathlib import Path
+import sys
 
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(PROJECT_ROOT))
 
-client = OpenAI(api_key="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")
-
-MODEL = "gpt-5.4"
-
-INITIAL_SCENARIOS_FILE = "Scenarios.csv"
-CONTEXT_FILE = "context_agent.txt"
-PROMPT_FILE = "scenario_gen_prompt.txt"
-# proposed_bn_filename = "last_proposed_bn.jsonl"
-BN_FILE = "BN_gt.json"
-
-CANDIDATE_OUTPUT_FILE = "candidate_generated_scenarios.csv"
-VALIDATED_OUTPUT_FILE = "validated_generated_scenarios.csv"
-INFERENCE_OUTPUT_FILE = "scenario_inference_results.json"
+from config.settings import *
+from utils.llm import *
+from utils.pgmpy_tool import *
 
 
-def llm(prompt, temperature=0.3, max_tokens=4000):
-    response = client.responses.create(
-        model=MODEL,
-        input=prompt,
-        temperature=temperature,
-        max_output_tokens=max_tokens,
-    )
+NUM_ITERATIONS = 5
 
-    return response.output[0].content[0].text.strip()
+DATASET_DIR = Path("datasets") / EXPERIMENT
+PROMPT_DIR = Path("prompts") / EXPERIMENT
+
+INITIAL_SCENARIOS_FILE = DATASET_DIR / "Scenarios.csv"
+CONTEXT_FILE = PROMPT_DIR / "context_agent.txt"
+PROMPT_FILE = Path("prompts") / "scenario_gen_prompt.txt"
+BN_FILE = DATASET_DIR / "BN_gt.json"
+
+CANDIDATE_OUTPUT_FILE = DATASET_DIR / "candidate_generated_scenarios.csv"
+VALIDATED_OUTPUT_FILE = DATASET_DIR / "validated_generated_scenarios.csv"
+INFERENCE_OUTPUT_FILE = DATASET_DIR / "scenario_inference_results.json"
+FINAL_OUTPUT_FILE = DATASET_DIR / "final_validated_dataset.csv"
+FINAL_INFERENCE_FILE = DATASET_DIR / "final_inference_results.json"
+
+FINAL_NOT_VALIDATED_FILE = DATASET_DIR / "final_not_validated_scenarios.json"
 
 
 def read_file(filename):
@@ -52,24 +51,6 @@ def clean_csv_output(text):
     return text
 
 
-# def get_last_bn(filename):
-#     last_record = None
-
-#     with open(filename, "r", encoding="utf-8") as f:
-#         for line in f:
-#             if line.strip():
-#                 last_record = json.loads(line.strip())
-
-#     if last_record is None:
-#         raise ValueError(f"No BN found in {filename}")
-
-#     return last_record["bn"]
-
-
-# def get_last_bn_as_text(filename):
-#     bn = get_last_bn(filename)
-#     return json.dumps(bn, indent=2)
-
 def read_bn(filename=BN_FILE):
     with open(filename, "r", encoding="utf-8") as f:
         return json.load(f)
@@ -83,69 +64,6 @@ def read_bn_as_text(filename=BN_FILE):
 def store_text(text, filename):
     with open(filename, "w", encoding="utf-8", newline="") as f:
         f.write(text.strip() + "\n")
-
-
-def build_model(bn):
-    edges = bn["edges"]
-    model = DiscreteBayesianNetwork(edges)
-
-    cpds = []
-
-    for node in bn["nodes"]:
-        name = node["name"]
-        states = node["states"]
-        parents = node.get("parents", [])
-        cpt = node["cpt"]
-
-        state_names = {name: states}
-
-        if parents:
-            parent_order = cpt["parent_state_order"]
-
-            for p in parents:
-                state_names[p] = parent_order[p]
-
-            evidence_card = [
-                len(parent_order[p])
-                for p in parents
-            ]
-        else:
-            evidence_card = None
-
-        if not parents:
-            cpd = TabularCPD(
-                variable=name,
-                variable_card=len(states),
-                values=cpt["values"],
-                state_names=state_names
-            )
-        else:
-            cpd = TabularCPD(
-                variable=name,
-                variable_card=len(states),
-                values=cpt["values"],
-                evidence=parents,
-                evidence_card=evidence_card,
-                state_names=state_names
-            )
-
-        cpds.append(cpd)
-
-    model.add_cpds(*cpds)
-    model.check_model()
-
-    return model
-
-
-def run_inference(model, query, evidence=None):
-    infer = VariableElimination(model)
-
-    result = infer.query(
-        variables=[query],
-        evidence=evidence or {}
-    )
-
-    return result
 
 
 def call_bn_inference(model, df):
@@ -171,30 +89,33 @@ def call_bn_inference(model, df):
 
         result = run_inference(
             model,
-            query="Root_Causes",
+            query=TARGET_NODE,
             evidence=evidence
         )
 
-        pred_idx = result.values.argmax()
-        pred_state = result.state_names["Root_Causes"][pred_idx]
-        confidence = float(result.values.max())
+        pred_idx = np.argmax(result.values)
+        pred_state = result.state_names[TARGET_NODE][pred_idx]
+        confidence = result.values[pred_idx]
+
+        probs = sorted(result.values, reverse=True)
+        max_prob = probs[0]
+        second_prob = probs[1]
+        margin = max_prob - second_prob
 
         posterior_probs = {
             state: float(prob)
             for state, prob in zip(
-                result.state_names["Root_Causes"],
+                result.state_names[TARGET_NODE],
                 result.values
             )
         }
 
         ground_truth = str(row["Ground Truth"]).strip()
 
-        # Success only if:
-        # 1. Predicted class matches Ground Truth
-        # 2. Confidence >= 60%
         is_success = bool(
             pred_state == ground_truth
-            and confidence >= 0.60
+            and confidence >= MIN_CONFIDENCE
+            and margin >= MIN_MARGIN
         )
 
         results.append({
@@ -225,7 +146,10 @@ def generate_candidate_scenarios(examples_csv_text):
             "full_context",
             "examples_csv",
             "columns",
-            "latest_bn"
+            "latest_bn",
+            "target_node",
+            "min_confidence",
+            "min_margin",
         ],
         template=prompt_template_text
     )
@@ -233,8 +157,11 @@ def generate_candidate_scenarios(examples_csv_text):
     prompt = prompt_template.format(
         full_context=full_context,
         examples_csv=examples_csv_text,
+        latest_bn=latest_bn_text,
+        target_node=TARGET_NODE,
+        min_confidence=MIN_CONFIDENCE,
+        min_margin=MIN_MARGIN,
         columns=",".join(expected_columns),
-        latest_bn=latest_bn_text
     )
 
     return llm(prompt)
@@ -281,8 +208,6 @@ def store_inference_results(results, filename=INFERENCE_OUTPUT_FILE):
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2)
 
-
-NUM_ITERATIONS = 5
 
 def main():
     bn = read_bn(BN_FILE)
@@ -408,7 +333,7 @@ def main():
 
     store_inference_results(
         final_inference_results,
-        filename="final_inference_results.json"
+        filename=FINAL_INFERENCE_FILE
     )
 
     not_validated = [
@@ -420,7 +345,7 @@ def main():
         print("\nWARNING: Some merged scenarios are NOT BN-validated.")
         print(f"Number of non-validated scenarios: {len(not_validated)}")
 
-        with open("final_not_validated_scenarios.json", "w", encoding="utf-8") as f:
+        with open(FINAL_NOT_VALIDATED_FILE, "w", encoding="utf-8") as f:
             json.dump(not_validated, f, indent=2)
 
     else:
@@ -438,7 +363,7 @@ def main():
     )
 
     final_df.to_csv(
-        "final_validated_dataset.csv",
+        FINAL_OUTPUT_FILE,
         index=False
     )
 
@@ -463,45 +388,99 @@ def main():
     print("\nIntermediate iteration files removed.")
 
 
+def remove_seed_scenarios():
+    # Read files
+    scenarios_df = pd.read_csv(INITIAL_SCENARIOS_FILE)
+    final_df = pd.read_csv(FINAL_OUTPUT_FILE)
+
+    before_count = len(final_df)
+
+    # Ignore Scenario # when comparing
+    compare_cols = [c for c in final_df.columns if c != "Scenario #"]
+
+    # Remove rows that exist in Scenarios.csv
+    remaining_df = (
+        final_df.merge(
+            scenarios_df[compare_cols].drop_duplicates(),
+            on=compare_cols,
+            how="left",
+            indicator=True
+        )
+    )
+
+    remaining_df = (
+        remaining_df[remaining_df["_merge"] == "left_only"]
+        .drop(columns=["_merge"])
+    )
+
+    # Renumber Scenario #
+    remaining_df = remaining_df.reset_index(drop=True)
+    if "Scenario #" in remaining_df.columns:
+        remaining_df["Scenario #"] = range(1, len(remaining_df) + 1)
+
+    after_count = len(remaining_df)
+
+    # Save
+    remaining_df.to_csv(FINAL_OUTPUT_FILE, index=False)
+
+    print(f"Rows before removal: {before_count}")
+    print(f"Rows after removal:  {after_count}")
+    print(f"Rows removed:        {before_count - after_count}")
+
+
+def combine_and_split():
+    # Read files
+    seed_df = pd.read_csv(INITIAL_SCENARIOS_FILE)
+    generated_df = pd.read_csv(FINAL_OUTPUT_FILE)
+
+    # Combine
+    combined_df = pd.concat([seed_df, generated_df], ignore_index=True)
+
+    # Shuffle
+    combined_df = combined_df.sample(frac=1, random_state=42).reset_index(drop=True)
+
+    if "Scenario #" in combined_df.columns:
+        combined_df["Scenario #"] = range(1, len(combined_df) + 1)
+
+    # Check class distribution
+    class_counts = combined_df["Ground Truth"].value_counts()
+
+    print("\nGround Truth distribution:")
+    print(class_counts)
+
+    # Decide whether to stratify
+    if class_counts.min() >= 2:
+        print("\nUsing stratified train/test split.")
+        stratify = combined_df["Ground Truth"]
+    else:
+        print("\nNot enough samples for stratification. Using random split.")
+        stratify = None
+
+    train_df, test_df = train_test_split(
+        combined_df,
+        test_size=0.20,
+        random_state=42,
+        shuffle=True,
+        stratify=stratify,
+    )
+
+    # Renumber
+    train_df = train_df.reset_index(drop=True)
+    test_df = test_df.reset_index(drop=True)
+
+    train_df["Scenario #"] = range(1, len(train_df) + 1)
+    test_df["Scenario #"] = range(1, len(test_df) + 1)
+
+    train_df.to_csv(TRAIN_CSV, index=False)
+    test_df.to_csv(TEST_CSV, index=False)
+
+    print(f"\nTotal : {len(combined_df)}")
+    print(f"Train : {len(train_df)}")
+    print(f"Test  : {len(test_df)}")
+
+
+### --------------------------------------------------------
 if __name__ == "__main__":
     main()
-
-# import pandas as pd
-
-# # Read files
-# scenarios_df = pd.read_csv("Scenarios.csv")
-# final_df = pd.read_csv("final_validated_dataset.csv")
-
-# before_count = len(final_df)
-
-# # Ignore Scenario # when comparing
-# compare_cols = [c for c in final_df.columns if c != "Scenario #"]
-
-# # Remove rows that exist in Scenarios.csv
-# remaining_df = (
-#     final_df.merge(
-#         scenarios_df[compare_cols].drop_duplicates(),
-#         on=compare_cols,
-#         how="left",
-#         indicator=True
-#     )
-# )
-
-# remaining_df = (
-#     remaining_df[remaining_df["_merge"] == "left_only"]
-#     .drop(columns=["_merge"])
-# )
-
-# # Renumber Scenario #
-# remaining_df = remaining_df.reset_index(drop=True)
-# if "Scenario #" in remaining_df.columns:
-#     remaining_df["Scenario #"] = range(1, len(remaining_df) + 1)
-
-# after_count = len(remaining_df)
-
-# # Save
-# remaining_df.to_csv("final_validated_dataset.csv", index=False)
-
-# print(f"Rows before removal: {before_count}")
-# print(f"Rows after removal:  {after_count}")
-# print(f"Rows removed:        {before_count - after_count}")
+    remove_seed_scenarios()
+    combine_and_split()

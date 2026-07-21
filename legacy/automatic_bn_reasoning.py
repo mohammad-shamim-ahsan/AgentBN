@@ -7,6 +7,9 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 
+from config.settings import *
+from utils.pgmpy_tool import run_inference, build_model
+
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_colwidth', None)
@@ -20,73 +23,6 @@ import json
 def load_bn(filename):
     with open(filename, "r") as f:
         return json.load(f)
-
-# ============================================================
-# Step 2: Building BN Tool
-# ============================================================
-
-def build_model(bn):
-    edges = bn["edges"]
-    model = DiscreteBayesianNetwork(edges)
-
-    cpds = []
-
-    for node in bn["nodes"]:
-
-        name = node["name"]
-        states = node["states"]
-        parents = node.get("parents", [])
-        cpt = node["cpt"]
-
-        state_names = {name: states}
-
-        if parents:
-
-            parent_order = cpt["parent_state_order"]
-
-            for p in parents:
-                state_names[p] = parent_order[p]
-
-            evidence_card = [
-                len(parent_order[p])
-                for p in parents
-            ]
-
-        else:
-            evidence_card = None
-
-        cpd = TabularCPD(
-            variable=name,
-            variable_card=len(states),
-            values=cpt["values"],
-            evidence=parents if parents else None,
-            evidence_card=evidence_card,
-            state_names=state_names
-        )
-
-        cpds.append(cpd)
-
-    model.add_cpds(*cpds)
-
-    print("\nChecking model...")
-    print(model.check_model())
-
-    return model
-
-# ============================================================
-# Step 3: Inference
-# ============================================================
-
-def run_inference(model, query, evidence=None):
-
-    infer = VariableElimination(model)
-
-    result = infer.query(
-        variables=[query],
-        evidence=evidence or {}
-    )
-
-    return result
 
 # ============================================================
 # Step 4: Batch Evaluation
@@ -144,8 +80,8 @@ def call_bn_inference(model, df):
         # 3. Margin >= 20%
         is_success = (
             pred_state == row["Ground Truth"]
-            and confidence >= 0.50
-            and margin >= 0.20
+            and confidence >= MIN_CONFIDENCE
+            and margin >= MIN_MARGIN
         )
 
         results.append({

@@ -20,15 +20,15 @@ SUCCESS AND FAILURE DEFINITION
 
 A scenario is considered successful only if all of the following conditions are satisfied:
 
-1. The predicted root cause, defined as the argmax posterior of "Root_Causes", matches the "Ground Truth";
-2. The posterior probability of the predicted root cause is at least 0.50; and
-3. The difference between the posterior probability of the predicted root cause and that of the second most probable root cause is at least 0.20.
+1. The predicted root cause, defined as the argmax posterior of "{target_node}", matches the "Ground Truth";
+2. The posterior probability of the predicted root cause is at least {min_confidence}; and
+3. The difference between the posterior probability of the predicted root cause and that of the second most probable root cause is at least {min_margin}.
 
 Therefore, a scenario is considered a failure if any one of the following conditions holds:
 
 1. The predicted root cause does not match the "Ground Truth";
-2. The posterior probability of the predicted root cause is less than 0.50; or
-3. The difference between the posterior probabilities of the most probable and the second most probable root causes is less than 0.20.
+2. The posterior probability of the predicted root cause is less than {min_confidence}; or
+3. The difference between the posterior probabilities of the most probable and the second most probable root causes is less than {min_margin}.
 
 ---
 ## REFINEMENT TASK

@@ -1,37 +1,53 @@
-You are generating synthetic Bayesian-network test scenarios.
+You are generating synthetic test scenarios for a Bayesian Network.
 
-Use this domain context:
+Use the following domain context:
 
 {full_context}
 
-Use the following Bayesian Network definition:
+Use the following Bayesian Network metadata:
 
 {latest_bn}
+
+Target node:
+{target_node}
+
+Minimum confidence:
+{min_confidence}
+
+Minimum posterior margin:
+{min_margin}
 
 Use the following existing CSV scenarios as examples:
 
 {examples_csv}
 
-Generate as many new valid scenarios as possible.
+Generate as many new valid and diverse scenarios as possible.
 
 Rules:
+
 1. Output CSV only.
-2. Do not wrap output in markdown.
+2. Do not wrap the output in markdown.
 3. Use exactly this header:
 {columns}
 4. Do not add spaces after commas.
 
-5. Evidence values must be only Found or Not_Found.
-6. Ground Truth must be one of the Root_Causes states in the BN.
+5. Every scenario must contain valid states for every evidence variable.
+6. Do not leave evidence cells empty.
+7. Ground Truth must be one of the valid states of {target_node}.
 
-7. Every generated scenario must satisfy the same success criterion used during evaluation:
-   - Ground Truth = argmax posterior Root_Causes label
-   - max posterior probability >= 0.60
+8. Every generated scenario must satisfy the evaluation criterion:
+   - Ground Truth equals the argmax posterior state of {target_node}.
+   - The posterior probability of the Ground Truth state is at least {min_confidence}.
+   - The posterior margin is at least {min_margin}.
 
-8. Ground Truth must match the argmax posterior Root_Causes label implied by the evidence.
-9. The posterior probability of the Ground Truth label must be at least 0.60.
+9. Ground Truth must be consistent with the probabilistic relationships encoded by the Bayesian Network.
 
-10. Preserve realistic probabilistic dependencies implied by the BN.
-11. Keep the same structure and style as the examples.
-12. Do not repeat existing scenarios exactly.
-13. Generate diverse combinations of evidence values.
+10. Preserve realistic dependencies among variables implied by the Bayesian Network.
+11. Keep the same structure and style as the example scenarios.
+12. Do not repeat any existing scenario.
+13. Do not repeat any newly generated scenario.
+14. Generate diverse combinations of variable states.
+15. Produce scenarios covering a wide variety of evidence patterns instead of making only small modifications to the examples.
+16. Every scenario must be internally consistent and represent a plausible instance within the modeled domain.
+17. Scenario numbers must be unique positive integers.
+18. Generate only scenarios that are likely to satisfy the Bayesian Network validation step.

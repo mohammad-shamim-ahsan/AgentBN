@@ -12,9 +12,6 @@ from evaluation.automatic_bn_reasoning_old import run_evaluation as initial_run_
 
 # -----------------------------------------------
 
-MAX_FORMAT_RETRIES = 3
-MAX_REPAIR_RETRIES = 2
-
 OUTPUT_SCHEMA = """
 {
   "candidates": [
@@ -196,7 +193,10 @@ def generate_refined_cpt_patch(
         input_variables=[
             "full_context",
             "baseline_bn",
-            "analysis_record"
+            "analysis_record",
+            "target_node",
+            "min_confidence",
+            "min_margin"
         ],
         template=read_file(REF_PROMPT_FILE)
     )
@@ -207,7 +207,10 @@ def generate_refined_cpt_patch(
             baseline_bn,
             indent=2
         ),
-        analysis_record=formatted_analysis_record
+        analysis_record=formatted_analysis_record,
+        target_node=TARGET_NODE,
+        min_confidence=MIN_CONFIDENCE,
+        min_margin=MIN_MARGIN
     )
 
     last_response = None
@@ -435,6 +438,7 @@ def generate_and_select_best_candidate(
 
 
 ### -----------------------------
+
 if __name__ == "__main__":
 
     new_bn = generate_and_select_best_candidate(

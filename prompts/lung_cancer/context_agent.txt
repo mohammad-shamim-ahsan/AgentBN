@@ -1,0 +1,146 @@
+# === Domain Overview ===
+
+## Introduce the Domain
+
+The Bayesian Network models the diagnosis of pulmonary diseases based on patient risk factors, diseases, clinical findings, and symptoms.
+
+The network represents causal relationships among:
+
+1. Patient risk factors
+2. Pulmonary diseases
+3. Diagnostic findings
+4. Clinical symptoms
+
+The network captures probabilistic relationships among patient risk factors, pulmonary diseases, clinical findings, and symptoms.
+
+The network is a benchmark Bayesian Network commonly known as the Asia (Lung Cancer) network.
+
+------------------------------------------------------------
+
+# === Medical Variables ===
+
+The Bayesian Network contains variables representing patient history, diseases, diagnostic findings, and clinical symptoms.
+
+## asia
+
+Indicates whether the patient has recently visited Asia.
+
+Travel history is considered a risk factor for tuberculosis because certain regions have a higher prevalence of the disease.
+
+States:
+- yes
+- no
+
+## smoke
+
+Indicates whether the patient is a smoker.
+
+Smoking increases the likelihood of several respiratory diseases, particularly lung cancer and bronchitis.
+
+States:
+- yes
+- no
+
+## tub
+
+Represents whether the patient has tuberculosis.
+
+Tuberculosis is an infectious disease affecting the lungs.
+
+States:
+- yes
+- no
+
+## lung
+
+Represents whether the patient has lung cancer.
+
+Lung cancer is strongly associated with smoking.
+
+States:
+- yes
+- no
+
+## bronc
+
+Represents whether the patient has bronchitis.
+
+Bronchitis is inflammation of the bronchial tubes and is more common among smokers.
+
+States:
+- yes
+- no
+
+## either
+
+Represents whether the patient has at least one of the following diseases:
+
+- Tuberculosis
+OR
+- Lung cancer
+
+This variable represents whether the patient has at least one of the two diseases. It is introduced because tuberculosis and lung cancer can produce similar clinical findings.
+
+States:
+- yes
+- no
+
+## xray
+
+Represents the result of a chest X-ray examination.
+
+An abnormal chest X-ray may indicate the presence of tuberculosis or lung cancer.
+
+States:
+- yes
+- no
+
+## dysp
+
+Represents whether the patient experiences dyspnea (shortness of breath).
+
+Dyspnea may be caused by bronchitis, tuberculosis, or lung cancer.
+
+States:
+- yes
+- no
+
+------------------------------------------------------------
+
+# === Medical Relationships ===
+
+General causal flow:
+
+Risk Factors
+        ↓
+Diseases
+        ↓
+Clinical Findings
+        ↓
+Symptoms
+
+Travel history influences the likelihood of tuberculosis.
+
+Smoking influences the likelihood of lung cancer and bronchitis.
+
+Tuberculosis and lung cancer may produce abnormal chest X-rays.
+
+Tuberculosis, lung cancer, and bronchitis may all contribute to shortness of breath.
+
+------------------------------------------------------------
+
+# === Important Characteristics ===
+
+The network models uncertainty using probabilistic relationships rather than deterministic rules.
+
+Observed symptoms may have multiple possible underlying causes.
+
+Not every smoker develops lung cancer.
+
+Not every traveler develops tuberculosis.
+
+An abnormal chest X-ray does not guarantee disease.
+
+Dyspnea has multiple possible causes.
+
+The network combines all available evidence to compute the most probable explanation.

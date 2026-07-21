@@ -1,0 +1,24 @@
+{
+    "reported_risk_level": "high_medium",
+    "dangerous_cpts": [
+        {
+            "cpt": "Execution_Integrity",
+            "risk_level": "high_medium",
+            "number_of_failure_scenarios": 4,
+            "main_problem": "The same Execution_Integrity parameter is repeatedly activated across four failure scenarios with very limited support from successful scenarios, and it sits on the key causal path from program/local deviations to the final diagnosis. Column 7 corresponds to Program_Anomaly=No, Deviation_in_Response=No, Deviation_in_Dispatch=No, yet the CPT strongly selects Normal (0.9). In this domain, repeated misclassification under an all-clear execution pattern is plausible if upstream evidence is incomplete or noisy; a very strong Normal assignment can then suppress Memory_Corruption or other execution-related diagnoses at the root node. This CPT therefore has independent leverage over final predictions and is not just a passive reflection of upstream evidence.",
+            "suspicious_parameters": [
+                {
+                    "rank": 1,
+                    "parameter": "Column 7 \u2192 Normal",
+                    "failure_weight": 4,
+                    "success_weight": 1,
+                    "failure_to_success_ratio": 4.0,
+                    "argmax_probability": 0.9,
+                    "recommended_adjustment": "slightly_decrease",
+                    "justification": "This parameter is the most recurrent failure-associated activation pattern and has a strong deterministic preference. Because Execution_Integrity is a direct parent of Root_Causes, an overly confident Normal assignment can independently bias the diagnosis away from execution-compromise explanations when evidence nodes fail to fire."
+                }
+            ]
+        }
+    ],
+    "overall_summary": "Execution_Integrity is the only CPT with sufficiently strong independent evidence for refinement. Program_Anomaly shows some failure association, but its signal is weaker because the same parameter also appears in several successful scenarios and its behavior is largely upstream of the more influential Execution_Integrity node. Root_Causes parameters appear failure-associated, but their activations are plausibly downstream consequences of the Execution_Integrity pattern rather than independent evidence of flawed root-cause probabilities."
+}

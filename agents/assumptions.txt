@@ -1,0 +1,16 @@
+# ==========================================================
+# Assumptions
+#
+# 1. Every root node is observed in every scenario.
+# 2. Every non-root node therefore has a unique active
+#    parent-state configuration.
+# 3. Observed non-root nodes retain their observed state,
+#    but their active CPT column is still recorded because
+#    the CPT contributes to inference through the likelihood
+#    P(evidence | parents).
+# ==========================================================
+
+The assumptions could read:
+Every root node is observed in every scenario.
+Root evidence nodes are excluded from deterministic activation tracing because they have no parent-state configuration and their prior CPTs do not contribute to CPT localization under hard evidence.
+Evidence child nodes retain their observed state, but their active CPT column is recorded because their CPT contributes to inference through the likelihood P(evidence∣parents).

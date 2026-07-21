@@ -1,0 +1,45 @@
+{
+  "bn_number": null,
+  "non_identical_cpt_count": 2,
+  "non_identical_cpts": [
+    "bronc",
+    "xray"
+  ],
+  "missing_in_proposed": [],
+  "agent_change_report": {
+    "verdict": "very_good",
+    "total_cpts": 8,
+    "expected_changed_count": 1,
+    "expected_changed_cpts": [
+      "xray"
+    ],
+    "actual_changed_count": 2,
+    "actual_changed_cpts": [
+      "bronc",
+      "xray"
+    ],
+    "matched_expected_count": 1,
+    "matched_expected_cpts": [
+      "xray"
+    ],
+    "missed_expected_count": 0,
+    "missed_expected_cpts": [],
+    "unexpected_changed_count": 1,
+    "unexpected_changed_cpts": [
+      "bronc"
+    ],
+    "unflawed_cpt_count": 7,
+    "untouched_unflawed_count": 6,
+    "untouched_unflawed_cpts": [
+      "asia",
+      "dysp",
+      "either",
+      "lung",
+      "smoke",
+      "tub"
+    ],
+    "expected_change_recall": 1.0,
+    "unexpected_change_rate": 0.1429,
+    "unflawed_preservation_rate": 0.8571
+  }
+}

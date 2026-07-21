@@ -1,6 +1,7 @@
+import os
 from openai import OpenAI
 
-client = OpenAI(api_key="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")
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def llm(prompt, temperature=0.3, max_tokens=4000):
     response = client.responses.create(

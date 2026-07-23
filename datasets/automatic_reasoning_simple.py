@@ -143,9 +143,9 @@ def run_evaluation(bn_json, dataset_file):
 
 if __name__ == "__main__":
 
-    print(f"EXPERIMENT = {EXPERIMENT!r}")
+    print(f"BENCHMARK = {BENCHMARK!r}")
 
-    DATASET_DIR = Path("datasets") / EXPERIMENT
+    DATASET_DIR = Path("datasets") / BENCHMARK
 
     INITIAL_SCENARIOS_FILE = DATASET_DIR / "Scenarios.csv"
     FINAL_OUTPUT_FILE = DATASET_DIR / "final_validated_dataset.csv"
@@ -153,8 +153,8 @@ if __name__ == "__main__":
     TRAIN_CSV = DATASET_DIR / "combined_train_scenarios.csv"
     TEST_CSV = DATASET_DIR / "combined_test_scenarios.csv"
     
-    BN_FILE = DATASET_DIR / "BN_gt.json"
-    FLAWED_BN_FILE = DATASET_DIR / "flawed_BN_0.json"
+    GT_BN_FILE = DATASET_DIR / "BN_gt.json"
+    FLAWED_BN_FILE = DATASET_DIR / "flawed_BN_1.json"
 
     bn_json = load_bn(FLAWED_BN_FILE)
     failures, successes, accuracy, results = run_evaluation(bn_json, TRAIN_CSV)

@@ -75,18 +75,18 @@ def cpt_values_identical(gt_node, proposed_node, tol=1e-9):
 def evaluate_agent_cpt_change_policy(
     all_cpts,
     expected_changed_cpts,
-    actual_changed_cpts
+    agent_changed_cpts
 ):
     all_cpts = set(all_cpts)
     expected_changed_cpts = set(expected_changed_cpts)
-    actual_changed_cpts = set(actual_changed_cpts)
+    agent_changed_cpts = set(agent_changed_cpts)
 
-    matched_expected = actual_changed_cpts & expected_changed_cpts
-    unexpected_changed = actual_changed_cpts - expected_changed_cpts
-    missed_expected = expected_changed_cpts - actual_changed_cpts
+    matched_expected = agent_changed_cpts & expected_changed_cpts
+    unexpected_changed = agent_changed_cpts - expected_changed_cpts
+    missed_expected = expected_changed_cpts - agent_changed_cpts
 
     unflawed_cpts = all_cpts - expected_changed_cpts
-    untouched_unflawed = unflawed_cpts - actual_changed_cpts
+    untouched_unflawed = unflawed_cpts - agent_changed_cpts
 
     expected_change_recall = (
         len(matched_expected) / len(expected_changed_cpts)
@@ -130,8 +130,8 @@ def evaluate_agent_cpt_change_policy(
         "expected_changed_count": len(expected_changed_cpts),
         "expected_changed_cpts": sorted(expected_changed_cpts),
 
-        "actual_changed_count": len(actual_changed_cpts),
-        "actual_changed_cpts": sorted(actual_changed_cpts),
+        "agent_changed_count": len(agent_changed_cpts),
+        "agent_changed_cpts": sorted(agent_changed_cpts),
 
         "matched_expected_count": len(matched_expected),
         "matched_expected_cpts": sorted(matched_expected),
@@ -155,36 +155,38 @@ def evaluate_agent_cpt_change_policy(
 def compare_all_cpts(bn_number=None, expected_changed_cpts=None, passed_bn=None, ):
 
     gt_bn = normalize_bn(read_json(GROUND_TRUTH_BN_FILE))
+    flawed_bn = normalize_bn(read_json(FLAWED_BN_FILE))
 
-    if bn_number!=None:
-        proposed_bn = normalize_bn(get_bn(PROPOSED_BN_FILE, bn_number=bn_number))
+    if bn_number is not None:
+        proposed_bn = normalize_bn(
+            get_bn(PROPOSED_BN_FILE, bn_number=bn_number)
+        )
     else:
         proposed_bn = normalize_bn(passed_bn)
 
-    non_identical_cpts = []
-    missing_in_proposed = []
+    agent_changed_cpts = []          # What the agent actually modified (Flawed → Proposed)
 
     for node_name in sorted(gt_bn.keys()):
-        if node_name not in proposed_bn:
-            missing_in_proposed.append(node_name)
-            continue
 
-        if not cpt_values_identical(gt_bn[node_name], proposed_bn[node_name]):
-            non_identical_cpts.append(node_name)
+        # Did the agent modify this CPT?
+        if not cpt_values_identical(
+            flawed_bn[node_name],
+            proposed_bn[node_name]
+        ):
+            agent_changed_cpts.append(node_name)
+
 
     agent_change_report = evaluate_agent_cpt_change_policy(
         all_cpts=set(gt_bn.keys()),
         expected_changed_cpts=expected_changed_cpts,
-        actual_changed_cpts=set(non_identical_cpts)
+        agent_changed_cpts=set(agent_changed_cpts)
     )
 
     final_output = {
         "bn_number": bn_number,
 
-        "non_identical_cpt_count": len(non_identical_cpts),
-        "non_identical_cpts": sorted(non_identical_cpts),
-
-        "missing_in_proposed": sorted(missing_in_proposed),
+        "agent_changed_cpt_count": len(agent_changed_cpts),
+        "agent_changed_cpts": sorted(agent_changed_cpts),
 
         "agent_change_report": agent_change_report
     }
@@ -196,7 +198,7 @@ def compare_all_cpts(bn_number=None, expected_changed_cpts=None, passed_bn=None,
     print("BN number:", bn_number)
     print("Agent change verdict:", agent_change_report["verdict"])
     print("Expected changed CPTs:", agent_change_report["expected_changed_cpts"])
-    print("Actual changed CPTs:", agent_change_report["actual_changed_cpts"])
+    print("Agent changed CPTs:", agent_change_report["agent_changed_cpts"])
     print("Unexpected changed CPTs:", agent_change_report["unexpected_changed_cpts"])
 
     return final_output
@@ -223,7 +225,7 @@ def build_node_dict(bn_json):
     return {node["name"]: node for node in bn_json["nodes"]}
 
 
-def compute_average_cpt_kl(gt_bn, prop_bn, target_nodes=None):
+def compute_average_cpt_kl(gt_bn, prop_bn, target_nodes=None, flawed_bn=FLAWED_BN_FILE):
 
     total_kl = 0.0
     total_columns = 0
@@ -259,7 +261,22 @@ def compute_average_cpt_kl(gt_bn, prop_bn, target_nodes=None):
             total_kl += kl
             total_columns += 1
 
-        print(f"{name:<30} {node_kl / gt_values.shape[1]:.8f}")
+        flawed_values = np.asarray(
+            flawed_bn[name]["cpt"]["values"],
+            dtype=float
+        )
+        
+        if node_kl > EPS:
+            print(f"{name:<30} {node_kl / gt_values.shape[1]:.8f}")
+
+            for col in range(gt_values.shape[1]):
+                if not np.allclose(gt_values[:, col], prop_values[:, col]):
+                    print(f"  Column {col}:")
+                    print(f"    Flawed : {flawed_values[:, col]}")
+                    print(f"    Prop   : {prop_values[:, col]}")
+                    print(f"    GT     : {gt_values[:, col]}")
+
+            print("-" * 70)
 
     print("=" * 70)
 
@@ -270,7 +287,7 @@ def compute_average_cpt_kl(gt_bn, prop_bn, target_nodes=None):
     return avg_kl
 
 
-def compute_average_cpt_rmse(gt_bn, prop_bn, target_nodes=None):
+def compute_average_cpt_rmse(gt_bn, prop_bn, target_nodes=None, flawed_bn=FLAWED_BN_FILE):
 
     total_squared_error = 0.0
     total_parameters = 0
@@ -293,7 +310,22 @@ def compute_average_cpt_rmse(gt_bn, prop_bn, target_nodes=None):
         total_squared_error += np.sum((gt_values - prop_values) ** 2)
         total_parameters += gt_values.size
 
-        print(f"{name:<30} RMSE = {node_rmse:.8f}")
+        flawed_values = np.asarray(
+            flawed_bn[name]["cpt"]["values"],
+            dtype=float
+        )
+
+        if node_rmse > EPS:
+            print(f"{name:<30} RMSE = {node_rmse:.8f}")
+
+            for col in range(gt_values.shape[1]):
+                if not np.allclose(gt_values[:, col], prop_values[:, col]):
+                    print(f"  Column {col}:")
+                    print(f"    Flawed : {flawed_values[:, col]}")
+                    print(f"    Prop   : {prop_values[:, col]}")
+                    print(f"    GT     : {gt_values[:, col]}")
+
+            print("-" * 70)
 
     print("=" * 70)
 
@@ -312,7 +344,7 @@ def hellinger_distance(p, q):
     return np.sqrt(np.sum((np.sqrt(p) - np.sqrt(q)) ** 2)) / np.sqrt(2)
 
 
-def compute_average_cpt_hellinger(gt_bn, prop_bn, target_nodes=None):
+def compute_average_cpt_hellinger(gt_bn, prop_bn, target_nodes=None, flawed_bn=FLAWED_BN_FILE):
 
     total = 0.0
     total_columns = 0
@@ -340,7 +372,22 @@ def compute_average_cpt_hellinger(gt_bn, prop_bn, target_nodes=None):
             total += h
             total_columns += 1
 
-        print(f"{name:<30} Hellinger = {node_total / gt_values.shape[1]:.8f}")
+        flawed_values = np.asarray(
+            flawed_bn[name]["cpt"]["values"],
+            dtype=float
+        )
+        
+        if node_total > EPS:
+            print(f"{name:<30} Hellinger = {node_total / gt_values.shape[1]:.8f}")
+
+            for col in range(gt_values.shape[1]):
+                if not np.allclose(gt_values[:, col], prop_values[:, col]):
+                    print(f"  Column {col}:")
+                    print(f"    Flawed : {flawed_values[:, col]}")
+                    print(f"    Prop   : {prop_values[:, col]}")
+                    print(f"    GT     : {gt_values[:, col]}")
+
+            print("-" * 70)
 
     print("=" * 70)
 
@@ -352,6 +399,7 @@ def compute_average_cpt_hellinger(gt_bn, prop_bn, target_nodes=None):
 
 
 ### ------------------------------
+
 if __name__ == "__main__":
 
     train_csv=TRAIN_CSV
@@ -368,31 +416,25 @@ if __name__ == "__main__":
 
     gt_bn = normalize_bn(read_json(GROUND_TRUTH_BN_FILE))
     prop_bn = normalize_bn(get_bn(PROPOSED_BN_FILE, bn_number=best_bn_number))
-
-    TARGET_NODES = {
-        "Network_Manipulation",
-        "Physical_Anomaly",
-        "Program_Anomaly",
-        "Execution_Integrity",
-        "Deviation_in_Response",
-        "Deviation_in_Dispatch",
-        "Root_Causes",
-    }
+    flawed_bn = normalize_bn(read_json(FLAWED_BN_FILE))
 
     compute_average_cpt_kl(
         gt_bn,
         prop_bn,
-        target_nodes=TARGET_NODES
+        target_nodes=TARGET_NODES_FOR_VALIDATION,
+        flawed_bn = flawed_bn
     )
 
     compute_average_cpt_rmse(
         gt_bn,
         prop_bn,
-        target_nodes=TARGET_NODES
+        target_nodes=TARGET_NODES_FOR_VALIDATION,
+        flawed_bn = flawed_bn
     )
 
     compute_average_cpt_hellinger(
         gt_bn,
         prop_bn,
-        target_nodes=TARGET_NODES
+        target_nodes=TARGET_NODES_FOR_VALIDATION,
+        flawed_bn = flawed_bn
     )

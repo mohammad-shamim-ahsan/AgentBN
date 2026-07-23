@@ -1,0 +1,546 @@
+<?xml version='1.0' encoding='utf-8'?>
+<smile version="1.0" id="alarm" numsamples="10000" discsamples="10000">
+	<nodes>
+		<cpt id="HYPOVOLEMIA">
+			<state id="Hypovolemia" />
+			<state id="No_Hypovolemia" />
+			<probabilities>0.2 0.8</probabilities>
+		</cpt>
+		<cpt id="LVFAILURE">
+			<state id="TRUE" />
+			<state id="FALSE" />
+			<probabilities>0.05 0.95</probabilities>
+		</cpt>
+		<cpt id="HISTORY">
+			<state id="TRUE" />
+			<state id="FALSE" />
+			<parents>LVFAILURE</parents>
+			<probabilities>0.9 0.1 0.01 0.99</probabilities>
+		</cpt>
+		<cpt id="LVEDVOLUME">
+			<state id="LOW" />
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<parents>HYPOVOLEMIA LVFAILURE</parents>
+			<probabilities>0.95 0.04 0.01 0.01 0.09 0.9 0.98 0.01 0.01 0.05 0.9 0.05</probabilities>
+		</cpt>
+		<cpt id="CVP">
+			<state id="LOW" />
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<parents>LVEDVOLUME</parents>
+			<probabilities>0.95 0.04 0.01 0.04 0.95 0.01 0.01 0.29 0.7</probabilities>
+		</cpt>
+		<cpt id="PCWP">
+			<state id="LOW" />
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<parents>LVEDVOLUME</parents>
+			<probabilities>0.95 0.04 0.01 0.04 0.95 0.01 0.01 0.04 0.95</probabilities>
+		</cpt>
+		<cpt id="STROKEVOLUME">
+			<state id="LOW" />
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<parents>HYPOVOLEMIA LVFAILURE</parents>
+			<probabilities>0.98 0.01 0.01 0.5 0.49 0.01 0.95 0.04 0.01 0.05 0.9 0.05</probabilities>
+		</cpt>
+		<cpt id="ERRLOWOUTPUT">
+			<state id="TRUE" />
+			<state id="FALSE" />
+			<probabilities>0.05 0.95</probabilities>
+		</cpt>
+		<cpt id="ERRCAUTER">
+			<state id="TRUE" />
+			<state id="FALSE" />
+			<probabilities>0.1 0.9</probabilities>
+		</cpt>
+		<cpt id="INSUFFANESTH">
+			<state id="TRUE" />
+			<state id="FALSE" />
+			<probabilities>0.1 0.9</probabilities>
+		</cpt>
+		<cpt id="ANAPHYLAXIS">
+			<state id="TRUE" />
+			<state id="FALSE" />
+			<probabilities>0.01 0.99</probabilities>
+		</cpt>
+		<cpt id="TPR">
+			<state id="LOW" />
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<parents>ANAPHYLAXIS</parents>
+			<probabilities>0.98 0.01 0.01 0.3 0.4 0.3</probabilities>
+		</cpt>
+		<cpt id="KINKEDTUBE">
+			<state id="TRUE" />
+			<state id="FALSE" />
+			<probabilities>0.04 0.96</probabilities>
+		</cpt>
+		<cpt id="FIO2">
+			<state id="LOW" />
+			<state id="NORMAL" />
+			<probabilities>0.05 0.95</probabilities>
+		</cpt>
+		<cpt id="PULMEMBOLUS">
+			<state id="TRUE" />
+			<state id="FALSE" />
+			<probabilities>0.01 0.99</probabilities>
+		</cpt>
+		<cpt id="PAP">
+			<state id="LOW" />
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<parents>PULMEMBOLUS</parents>
+			<probabilities>0.01 0.19 0.8 0.05 0.9 0.05</probabilities>
+		</cpt>
+		<cpt id="INTUBATION">
+			<state id="NORMAL" />
+			<state id="ESOPHAGEAL" />
+			<state id="ONESIDED" />
+			<probabilities>0.92 0.03 0.05</probabilities>
+		</cpt>
+		<cpt id="SHUNT">
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<parents>INTUBATION PULMEMBOLUS</parents>
+			<probabilities>0.1 0.9 0.95 0.05 0.1 0.9 0.95 0.05 0.01 0.99 0.05 0.95</probabilities>
+		</cpt>
+		<cpt id="DISCONNECT">
+			<state id="TRUE" />
+			<state id="FALSE" />
+			<probabilities>0.1 0.9</probabilities>
+		</cpt>
+		<cpt id="MINVOLSET">
+			<state id="LOW" />
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<probabilities>0.05 0.9 0.05</probabilities>
+		</cpt>
+		<cpt id="VENTMACH">
+			<state id="ZERO" />
+			<state id="LOW" />
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<parents>MINVOLSET</parents>
+			<probabilities>0.05 0.93 0.01 0.01 0.05 0.01 0.93 0.01 0.05 0.01 0.01 0.93</probabilities>
+		</cpt>
+		<cpt id="VENTTUBE">
+			<state id="ZERO" />
+			<state id="LOW" />
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<parents>DISCONNECT VENTMACH</parents>
+			<probabilities>0.97 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.01 0.01 0.97 0.01 0.97 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.01 0.01 0.97</probabilities>
+		</cpt>
+		<cpt id="PRESS">
+			<state id="ZERO" />
+			<state id="LOW" />
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<parents>INTUBATION KINKEDTUBE VENTTUBE</parents>
+			<probabilities>0.97 0.01 0.01 0.01 0.05 0.25 0.25 0.45 0.97 0.01 0.01 0.01 0.2 0.75 0.04 0.01 0.01 0.01 0.01 0.97 0.01 0.29 0.3 0.4 0.01 0.01 0.01 0.97 0.01 0.9 0.08 0.01 0.01 0.3 0.49 0.2 0.01 0.15 0.25 0.59 0.01 0.97 0.01 0.01 0.2 0.7 0.09 0.01 0.97 0.01 0.01 0.01 0.01 0.01 0.08 0.9 0.97 0.01 0.01 0.01 0.01 0.01 0.38 0.6 0.01 0.01 0.08 0.9 0.97 0.01 0.01 0.01 0.01 0.01 0.97 0.01 0.97 0.01 0.01 0.01 0.1 0.84 0.05 0.01 0.01 0.01 0.01 0.97 0.4 0.58 0.01 0.01 0.01 0.01 0.01 0.97</probabilities>
+		</cpt>
+		<cpt id="VENTLUNG">
+			<state id="ZERO" />
+			<state id="LOW" />
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<parents>INTUBATION KINKEDTUBE VENTTUBE</parents>
+			<probabilities>0.97 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.3 0.68 0.01 0.01 0.95 0.03 0.01 0.01 0.01 0.01 0.01 0.97 0.01 0.97 0.01 0.01 0.95 0.03 0.01 0.01 0.97 0.01 0.01 0.01 0.01 0.97 0.01 0.01 0.97 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.5 0.48 0.01 0.01 0.97 0.01 0.01 0.01 0.01 0.01 0.97 0.01 0.4 0.58 0.01 0.01 0.97 0.01 0.01 0.01 0.01 0.01 0.97 0.01 0.97 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.3 0.68 0.01 0.01 0.97 0.01 0.01 0.01 0.01 0.01 0.01 0.97</probabilities>
+		</cpt>
+		<cpt id="MINVOL">
+			<state id="ZERO" />
+			<state id="LOW" />
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<parents>INTUBATION VENTLUNG</parents>
+			<probabilities>0.97 0.01 0.01 0.01 0.01 0.01 0.01 0.97 0.5 0.48 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.97 0.01 0.01 0.97 0.01 0.01 0.01 0.5 0.48 0.01 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.97 0.01 0.6 0.38 0.01 0.01 0.97 0.01 0.01 0.01 0.01 0.01 0.01 0.97</probabilities>
+		</cpt>
+		<cpt id="VENTALV">
+			<state id="ZERO" />
+			<state id="LOW" />
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<parents>INTUBATION VENTLUNG</parents>
+			<probabilities>0.97 0.01 0.01 0.01 0.01 0.01 0.01 0.97 0.01 0.01 0.97 0.01 0.03 0.95 0.01 0.01 0.01 0.97 0.01 0.01 0.97 0.01 0.01 0.01 0.01 0.01 0.01 0.97 0.01 0.94 0.04 0.01 0.01 0.01 0.97 0.01 0.01 0.97 0.01 0.01 0.97 0.01 0.01 0.01 0.01 0.88 0.1 0.01</probabilities>
+		</cpt>
+		<cpt id="PVSAT">
+			<state id="LOW" />
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<parents>FIO2 VENTALV</parents>
+			<probabilities>1 0 0 0.95 0.04 0.01 1 0 0 0.01 0.95 0.04 0.99 0.01 0 0.95 0.04 0.01 0.95 0.04 0.01 0.01 0.01 0.98</probabilities>
+		</cpt>
+		<cpt id="SAO2">
+			<state id="LOW" />
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<parents>PVSAT SHUNT</parents>
+			<probabilities>0.98 0.01 0.01 0.98 0.01 0.01 0.01 0.98 0.01 0.98 0.01 0.01 0.01 0.01 0.98 0.69 0.3 0.01</probabilities>
+		</cpt>
+		<cpt id="ARTCO2">
+			<state id="LOW" />
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<parents>VENTALV</parents>
+			<probabilities>0.01 0.01 0.98 0.01 0.01 0.98 0.04 0.92 0.04 0.9 0.09 0.01</probabilities>
+		</cpt>
+		<cpt id="EXPCO2">
+			<state id="ZERO" />
+			<state id="LOW" />
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<parents>ARTCO2 VENTLUNG</parents>
+			<probabilities>0.97 0.01 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.01 0.97 0.01 0.97 0.01 0.01 0.97 0.01 0.01 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.01 0.97 0.01 0.97 0.01 0.01 0.01 0.01 0.97 0.01 0.97 0.01 0.01 0.01 0.01 0.01 0.01 0.97</probabilities>
+		</cpt>
+		<cpt id="CATECHOL">
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<parents>ARTCO2 INSUFFANESTH SAO2 TPR</parents>
+			<probabilities>0.01 0.99 0.01 0.99 0.7 0.3 0.01 0.99 0.05 0.95 0.7 0.3 0.01 0.99 0.05 0.95 0.95 0.05 0.01 0.99 0.05 0.95 0.7 0.3 0.01 0.99 0.05 0.95 0.95 0.05 0.05 0.95 0.05 0.95 0.95 0.05 0.01 0.99 0.01 0.99 0.7 0.3 0.01 0.99 0.05 0.95 0.7 0.3 0.01 0.99 0.05 0.95 0.99 0.01 0.01 0.99 0.05 0.95 0.7 0.3 0.01 0.99 0.05 0.95 0.99 0.01 0.05 0.95 0.05 0.95 0.99 0.01 0.01 0.99 0.01 0.99 0.1 0.9 0.01 0.99 0.01 0.99 0.1 0.9 0.01 0.99 0.01 0.99 0.3 0.7 0.01 0.99 0.01 0.99 0.1 0.9 0.01 0.99 0.01 0.99 0.3 0.7 0.01 0.99 0.01 0.99 0.3 0.7</probabilities>
+		</cpt>
+		<cpt id="HR">
+			<state id="LOW" />
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<parents>CATECHOL</parents>
+			<probabilities>0.05 0.9 0.05 0.01 0.09 0.9</probabilities>
+		</cpt>
+		<cpt id="HRBP">
+			<state id="LOW" />
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<parents>ERRLOWOUTPUT HR</parents>
+			<probabilities>0.98 0.01 0.01 0.3 0.4 0.3 0.01 0.98 0.01 0.4 0.59 0.01 0.98 0.01 0.01 0.01 0.01 0.98</probabilities>
+		</cpt>
+		<cpt id="HREKG">
+			<state id="LOW" />
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<parents>ERRCAUTER HR</parents>
+			<probabilities>0.3333333 0.3333333 0.3333333 0.3333333 0.3333333 0.3333333 0.01 0.98 0.01 0.3333333 0.3333333 0.3333333 0.98 0.01 0.01 0.01 0.01 0.98</probabilities>
+		</cpt>
+		<cpt id="HRSAT">
+			<state id="LOW" />
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<parents>ERRCAUTER HR</parents>
+			<probabilities>0.3333333 0.3333333 0.3333333 0.3333333 0.3333333 0.3333333 0.01 0.98 0.01 0.3333333 0.3333333 0.3333333 0.98 0.01 0.01 0.01 0.01 0.98</probabilities>
+		</cpt>
+		<cpt id="CO">
+			<state id="LOW" />
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<parents>HR STROKEVOLUME</parents>
+			<probabilities>0.98 0.01 0.01 0.95 0.04 0.01 0.3 0.69 0.01 0.95 0.04 0.01 0.04 0.95 0.01 0.01 0.3 0.69 0.8 0.19 0.01 0.01 0.04 0.95 0.01 0.01 0.98</probabilities>
+		</cpt>
+		<cpt id="BP">
+			<state id="LOW" />
+			<state id="NORMAL" />
+			<state id="HIGH" />
+			<parents>CO TPR</parents>
+			<probabilities>0.98 0.01 0.01 0.98 0.01 0.01 0.3 0.6 0.1 0.98 0.01 0.01 0.1 0.85 0.05 0.05 0.4 0.55 0.9 0.09 0.01 0.05 0.2 0.75 0.01 0.09 0.9</probabilities>
+		</cpt>
+	</nodes>
+	<extensions>
+		<genie version="1.0" app="GeNIe 5.0" name="alarm">
+			<node id="HYPOVOLEMIA">
+				<name>HYPOVOLEMIA</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>40 40 190 110</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="LVFAILURE">
+				<name>LVFAILURE</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>40 165 190 235</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="HISTORY">
+				<name>HISTORY</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>290 40 440 110</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="LVEDVOLUME">
+				<name>LVEDVOLUME</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>290 165 440 235</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="CVP">
+				<name>CVP</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>540 40 690 110</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="PCWP">
+				<name>PCWP</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>540 165 690 235</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="STROKEVOLUME">
+				<name>STROKEVOLUME</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>290 290 440 360</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="ERRLOWOUTPUT">
+				<name>ERRLOWOUTPUT</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>40 290 190 360</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="ERRCAUTER">
+				<name>ERRCAUTER</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>40 415 190 485</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="INSUFFANESTH">
+				<name>INSUFFANESTH</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>40 540 190 610</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="ANAPHYLAXIS">
+				<name>ANAPHYLAXIS</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>40 665 190 735</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="TPR">
+				<name>TPR</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>290 415 440 485</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="KINKEDTUBE">
+				<name>KINKEDTUBE</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>40 790 190 860</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="FIO2">
+				<name>FIO2</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>40 915 190 985</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="PULMEMBOLUS">
+				<name>PULMEMBOLUS</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>40 1040 190 1110</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="PAP">
+				<name>PAP</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>290 540 440 610</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="INTUBATION">
+				<name>INTUBATION</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>40 1165 190 1235</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="SHUNT">
+				<name>SHUNT</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>290 665 440 735</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="DISCONNECT">
+				<name>DISCONNECT</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>40 1290 190 1360</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="MINVOLSET">
+				<name>MINVOLSET</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>40 1415 190 1485</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="VENTMACH">
+				<name>VENTMACH</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>290 790 440 860</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="VENTTUBE">
+				<name>VENTTUBE</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>540 290 690 360</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="PRESS">
+				<name>PRESS</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>790 40 940 110</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="VENTLUNG">
+				<name>VENTLUNG</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>790 165 940 235</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="MINVOL">
+				<name>MINVOL</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>1040 40 1190 110</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="VENTALV">
+				<name>VENTALV</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>1040 165 1190 235</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="PVSAT">
+				<name>PVSAT</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>1290 40 1440 110</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="SAO2">
+				<name>SAO2</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>1540 165 1690 235</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="ARTCO2">
+				<name>ARTCO2</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>1290 165 1440 235</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="EXPCO2">
+				<name>EXPCO2</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>1540 40 1690 110</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="CATECHOL">
+				<name>CATECHOL</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>1790 40 1940 110</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="HR">
+				<name>HR</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>2040 40 2190 110</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="HRBP">
+				<name>HRBP</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>2290 40 2440 110</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="HREKG">
+				<name>HREKG</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>2290 165 2440 235</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="HRSAT">
+				<name>HRSAT</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>2290 290 2440 360</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="CO">
+				<name>CO</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>2290 415 2440 485</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+			<node id="BP">
+				<name>BP</name>
+				<interior color="e5f6f7" />
+				<outline color="000000" />
+				<font color="000000" name="Arial" size="11" />
+				<position>2540 40 2690 110</position>
+				<barchart active="true" width="128" height="64" />
+			</node>
+		</genie>
+	</extensions>
+</smile>

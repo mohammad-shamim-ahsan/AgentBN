@@ -2,23 +2,51 @@
     "reported_risk_level": "high_medium",
     "dangerous_cpts": [
         {
-            "cpt": "Execution_Integrity",
+            "cpt": "Root_Causes",
             "risk_level": "high_medium",
-            "number_of_failure_scenarios": 4,
-            "main_problem": "The same Execution_Integrity parameter is repeatedly activated across four failure scenarios with very limited support from successful scenarios, and it sits on the key causal path from program/local deviations to the final diagnosis. Column 7 corresponds to Program_Anomaly=No, Deviation_in_Response=No, Deviation_in_Dispatch=No, yet the CPT strongly selects Normal (0.9). In this domain, repeated misclassification under an all-clear execution pattern is plausible if upstream evidence is incomplete or noisy; a very strong Normal assignment can then suppress Memory_Corruption or other execution-related diagnoses at the root node. This CPT therefore has independent leverage over final predictions and is not just a passive reflection of upstream evidence.",
+            "number_of_failure_scenarios": 10,
+            "main_problem": "This CPT shows the strongest independent evidence of miscalibration. In repeated failure scenarios, it deterministically selects Memory_Corruption even when its assigned probability is only 0.2, which is inconsistent with the DER diagnosis semantics and suggests the relative class probabilities in those parent configurations are poorly aligned with observed failures. Because Root_Causes is the final diagnosis node, errors here cannot be fully explained by upstream activation alone.",
             "suspicious_parameters": [
                 {
                     "rank": 1,
-                    "parameter": "Column 7 \u2192 Normal",
-                    "failure_weight": 4,
-                    "success_weight": 1,
-                    "failure_to_success_ratio": 4.0,
-                    "argmax_probability": 0.9,
+                    "parameter": "Column 1 \u2192 Memory_Corruption",
+                    "failure_weight": 10,
+                    "success_weight": 0,
+                    "failure_to_success_ratio": 10.0,
+                    "argmax_probability": 0.2,
+                    "recommended_adjustment": "decrease",
+                    "justification": "This parameter is activated in many failure scenarios and never in success scenarios. Column 1 corresponds to Network_Manipulation=Yes, Execution_Integrity=Compromised, Physical_Anomaly=No, where the CPT currently favors FDI (0.5) over Memory_Corruption (0.2). The repeated association of this Memory_Corruption entry with failures indicates the root-cause distribution for this parent configuration is likely distorted and should place less mass on Memory_Corruption."
+                },
+                {
+                    "rank": 2,
+                    "parameter": "Column 0 \u2192 Memory_Corruption",
+                    "failure_weight": 2,
+                    "success_weight": 0,
+                    "failure_to_success_ratio": 2.0,
+                    "argmax_probability": 0.2,
                     "recommended_adjustment": "slightly_decrease",
-                    "justification": "This parameter is the most recurrent failure-associated activation pattern and has a strong deterministic preference. Because Execution_Integrity is a direct parent of Root_Causes, an overly confident Normal assignment can independently bias the diagnosis away from execution-compromise explanations when evidence nodes fail to fire."
+                    "justification": "This parameter appears only in failures and also assigns nontrivial probability to Memory_Corruption under the strongest anomaly combination. Although the evidence is weaker than for column 1, it supports the broader concern that Memory_Corruption may be overrepresented in some final diagnostic configurations."
+                }
+            ]
+        },
+        {
+            "cpt": "Execution_Integrity",
+            "risk_level": "high_medium",
+            "number_of_failure_scenarios": 7,
+            "main_problem": "This CPT repeatedly maps one mixed-evidence parent configuration to Compromised with only a weak majority probability (0.55), and that activation co-occurs with downstream root-cause failures. Since Execution_Integrity is a key intermediate aggregator between local/global evidence and final diagnosis, a borderline bias toward Compromised can systematically push the network toward wrong attack-oriented conclusions.",
+            "suspicious_parameters": [
+                {
+                    "rank": 1,
+                    "parameter": "Column 3 \u2192 Compromised",
+                    "failure_weight": 7,
+                    "success_weight": 4,
+                    "failure_to_success_ratio": 1.75,
+                    "argmax_probability": 0.55,
+                    "recommended_adjustment": "slightly_decrease",
+                    "justification": "Column 3 corresponds to Program_Anomaly=Yes, Deviation_in_Response=No, Deviation_in_Dispatch=No. Domain-wise, inconsistent execution logs without supporting response/dispatch deviations provide weaker evidence for compromised execution than the CPT currently encodes. The low-margin argmax and repeated failure co-occurrence suggest this column may overinfer compromise."
                 }
             ]
         }
     ],
-    "overall_summary": "Execution_Integrity is the only CPT with sufficiently strong independent evidence for refinement. Program_Anomaly shows some failure association, but its signal is weaker because the same parameter also appears in several successful scenarios and its behavior is largely upstream of the more influential Execution_Integrity node. Root_Causes parameters appear failure-associated, but their activations are plausibly downstream consequences of the Execution_Integrity pattern rather than independent evidence of flawed root-cause probabilities."
+    "overall_summary": "The most plausible refinement targets are the final Root_Causes CPT and, secondarily, the Execution_Integrity CPT. Root_Causes has the clearest independent evidence because repeated failures concentrate on Memory_Corruption entries with zero success support, indicating a likely misallocation of final diagnostic probability mass. Execution_Integrity is also plausible because a weak 0.55 preference for Compromised under limited supporting evidence appears repeatedly in failure paths and can propagate error downstream. In contrast, GPTN_1 and GPTN_2 are evidence nodes with prior-like 0.5 settings, and Network_Manipulation's suspicious activations are more plausibly explained by those upstream evidence activations rather than by a clearly independent flaw in its own CPT."
 }

@@ -1,5 +1,45 @@
 {
-    "bn_number": 3,
-    "parameter_statistics": {},
-    "common_activation_patterns": []
+    "bn_number": 0,
+    "parameter_statistics": {
+        "either": [
+            {
+                "column": 3,
+                "state": "yes",
+                "argmax_probability": 0.0,
+                "failure_weight": 2,
+                "success_weight": 0
+            }
+        ],
+        "xray": [
+            {
+                "column": 0,
+                "state": "yes",
+                "argmax_probability": 0.8,
+                "failure_weight": 2,
+                "success_weight": 0
+            }
+        ],
+        "dysp": [
+            {
+                "column": 0,
+                "state": "yes",
+                "argmax_probability": 0.9,
+                "failure_weight": 2,
+                "success_weight": 0
+            }
+        ]
+    },
+    "common_activation_patterns": [
+        {
+            "pattern": {
+                "dysp": 0,
+                "either": 3,
+                "xray": 0
+            },
+            "failure_scenarios": [
+                6,
+                7
+            ]
+        }
+    ]
 }

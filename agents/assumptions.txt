@@ -1,16 +1,33 @@
 # ==========================================================
 # Assumptions
 #
-# 1. Every root node is observed in every scenario.
-# 2. Every non-root node therefore has a unique active
-#    parent-state configuration.
-# 3. Observed non-root nodes retain their observed state,
-#    but their active CPT column is still recorded because
-#    the CPT contributes to inference through the likelihood
-#    P(evidence | parents).
+# Graph-based:
+# 1. Root nodes have no parents and therefore always activate
+#    the single column of their prior CPT (column 0).
+#
+# 2. Every non-root node has a unique active parent-state
+#    configuration determined by the realized states of its
+#    parents.
+#
+# Scenario-based:
+# 3. Every observed variable has a realized state provided by
+#    the scenario.
+#
+# 4. Every target variable has a realized state provided by
+#    the scenario's ground-truth label.
+#
+# 5. All remaining hidden variables obtain their realized
+#    states by deterministic propagation using the
+#    maximum-probability state of the active CPT column.
+#
+# Activation trace:
+# 6. Activation tracing is performed only for nodes in the
+#    selected relevant subgraph. Additional parent nodes may
+#    be included solely to satisfy parent-state dependencies
+#    during deterministic propagation.
+#
+# 7. For every realized node recorded in the activation trace
+#    (observed, target, or propagated), the corresponding
+#    active CPT column and the selected probability are
+#    recorded.
 # ==========================================================
-
-The assumptions could read:
-Every root node is observed in every scenario.
-Root evidence nodes are excluded from deterministic activation tracing because they have no parent-state configuration and their prior CPTs do not contribute to CPT localization under hard evidence.
-Evidence child nodes retain their observed state, but their active CPT column is recorded because their CPT contributes to inference through the likelihood P(evidence∣parents).

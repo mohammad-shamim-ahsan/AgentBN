@@ -19,10 +19,10 @@ from utils.llm import *
 from utils.pgmpy_tool import *
 
 
-NUM_ITERATIONS = 5
+NUM_ITERATIONS = 7
 
-DATASET_DIR = Path("datasets") / EXPERIMENT
-PROMPT_DIR = Path("prompts") / EXPERIMENT
+DATASET_DIR = Path("datasets") / BENCHMARK
+PROMPT_DIR = Path("prompts") / BENCHMARK
 
 INITIAL_SCENARIOS_FILE = DATASET_DIR / "Scenarios.csv"
 CONTEXT_FILE = PROMPT_DIR / "context_agent.txt"

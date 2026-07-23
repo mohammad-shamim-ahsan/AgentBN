@@ -1,0 +1,308 @@
+# === Domain Overview ===
+
+## Introduce the Domain
+
+The Bayesian Network models the physiological condition of patients receiving intensive care, particularly during anesthesia and mechanical ventilation. It represents the interactions among the cardiovascular, respiratory, and circulatory systems, as well as the effects of medical interventions and monitoring equipment.
+
+The network is designed to support patient monitoring by modeling a wide range of physiological conditions, hemodynamic variables, respiratory processes, ventilator settings, and clinical measurements that are routinely observed in intensive care units.
+
+The network is a benchmark Bayesian Network commonly known as the ALARM (A Logical Alarm Reduction Mechanism) network.
+
+------------------------------------------------------------
+
+# === Physiological Relationships ===
+
+The network models causal relationships among cardiovascular, respiratory, and circulatory processes.
+
+Underlying physiological conditions influence intermediate physiological variables, which in turn affect observable clinical measurements.
+
+Mechanical ventilation and airway conditions influence pulmonary ventilation and gas exchange.
+
+Cardiovascular variables collectively determine circulatory performance and blood pressure.
+
+Respiratory variables collectively determine oxygenation and carbon dioxide exchange.
+
+Monitoring equipment may introduce measurement errors without altering the patient's true physiological condition.
+
+------------------------------------------------------------
+
+# === Physiological Variables ===
+
+The Bayesian Network contains variables representing physiological conditions, cardiovascular and respiratory processes, ventilator settings, monitoring equipment, and clinical measurements.
+
+------------------------------------------------------------
+## HISTORY
+
+Indicates whether the patient has a history of left ventricular failure.
+
+A previous history of left ventricular failure increases the likelihood that the patient is currently experiencing left ventricular dysfunction.
+
+------------------------------------------------------------
+## CVP
+
+Represents the central venous pressure.
+
+Central venous pressure measures the pressure in the thoracic vena cava near the right atrium and reflects venous return and right-sided cardiac function.
+
+------------------------------------------------------------
+## PCWP
+
+Represents the pulmonary capillary wedge pressure.
+
+Pulmonary capillary wedge pressure is an indirect measure of left atrial pressure and is commonly used to assess left ventricular filling pressure.
+
+------------------------------------------------------------
+## HYPOVOLEMIA
+
+Represents whether the patient has hypovolemia.
+
+Hypovolemia is a condition characterized by reduced circulating blood volume, which can decrease cardiac filling and cardiac output.
+
+------------------------------------------------------------
+## LVEDVOLUME
+
+Represents the left ventricular end-diastolic volume.
+
+Left ventricular end-diastolic volume is the volume of blood contained in the left ventricle immediately before contraction and reflects ventricular filling.
+
+------------------------------------------------------------
+## LVFAILURE
+
+Represents whether the patient has left ventricular failure.
+
+Left ventricular failure is a condition in which the left ventricle cannot pump blood effectively, resulting in reduced cardiac performance and altered circulatory dynamics.
+
+------------------------------------------------------------
+## STROKEVOLUME
+
+Represents the stroke volume.
+
+Stroke volume is the amount of blood ejected by the left ventricle during a single heartbeat and is a major determinant of cardiac output.
+
+------------------------------------------------------------
+## ERRLOWOUTPUT
+
+Represents whether the cardiac output monitoring device has a low-output measurement error.
+
+A low-output error may cause the monitoring system to report inaccurate heart rate measurements derived from blood pressure signals.
+
+------------------------------------------------------------
+## HRBP
+
+Represents the heart rate estimated from the arterial blood pressure signal.
+
+Heart rate derived from blood pressure is one of several monitored measurements used to assess the patient's cardiovascular status.
+
+------------------------------------------------------------
+## HREKG
+
+Represents the heart rate estimated from the electrocardiogram (ECG) signal.
+
+Heart rate derived from the electrocardiogram provides an electrical measurement of cardiac activity and is routinely monitored during patient care.
+
+------------------------------------------------------------
+## ERRCAUTER
+
+Represents whether the electrocardiogram (ECG) monitoring device is affected by electrical interference from electrocautery equipment.
+
+Electrocautery interference may introduce noise into ECG-derived measurements, reducing their reliability.
+
+------------------------------------------------------------
+## HRSAT
+
+Represents the heart rate estimated from the oxygen saturation signal.
+
+Heart rate derived from the oxygen saturation waveform provides an independent estimate of cardiac activity and is routinely monitored during patient care.
+
+------------------------------------------------------------
+## INSUFFANESTH
+
+Represents whether the level of anesthesia is insufficient.
+
+Insufficient anesthesia may increase sympathetic nervous system activity and alter cardiovascular responses during surgical procedures.
+
+------------------------------------------------------------
+## ANAPHYLAXIS
+
+Represents whether the patient is experiencing an anaphylactic reaction.
+
+Anaphylaxis is a severe allergic reaction that can cause widespread vasodilation, reduced blood pressure, and respiratory compromise.
+
+------------------------------------------------------------
+## TPR
+
+Represents the total peripheral resistance.
+
+Total peripheral resistance reflects the resistance to blood flow within the systemic circulation and is an important determinant of arterial blood pressure.
+
+------------------------------------------------------------
+## EXPCO2
+
+Represents the concentration of expired carbon dioxide.
+
+Expired carbon dioxide measures the amount of carbon dioxide in exhaled air and provides an indication of the effectiveness of pulmonary ventilation.
+
+------------------------------------------------------------
+## KINKEDTUBE
+
+Represents whether the endotracheal tube is kinked or obstructed.
+
+A kinked or obstructed endotracheal tube restricts airflow and may impair mechanical ventilation.
+
+------------------------------------------------------------
+## MINVOL
+
+Represents the patient's minute ventilation.
+
+Minute ventilation is the total volume of air entering or leaving the lungs per minute and reflects the effectiveness of pulmonary ventilation.
+
+------------------------------------------------------------
+## FIO2
+
+Represents the fraction of inspired oxygen.
+
+The fraction of inspired oxygen is the concentration of oxygen delivered to the patient through the ventilator or breathing system.
+
+------------------------------------------------------------
+## PVSAT
+
+Represents the mixed venous oxygen saturation.
+
+Mixed venous oxygen saturation measures the oxygen saturation of venous blood returning to the lungs and reflects the balance between oxygen delivery and tissue oxygen consumption.
+
+------------------------------------------------------------
+## SAO2
+
+Represents the arterial oxygen saturation.
+
+Arterial oxygen saturation measures the percentage of hemoglobin in arterial blood that is saturated with oxygen and reflects the effectiveness of pulmonary gas exchange.
+
+------------------------------------------------------------
+## PAP
+
+Represents the pulmonary arterial pressure.
+
+Pulmonary arterial pressure is the blood pressure within the pulmonary arteries and reflects the workload of the right side of the heart and pulmonary circulation.
+
+------------------------------------------------------------
+## PULMEMBOLUS
+
+Represents whether the patient has a pulmonary embolism.
+
+Pulmonary embolism is the obstruction of one or more pulmonary arteries, typically by a blood clot, which impairs pulmonary blood flow and gas exchange.
+
+------------------------------------------------------------
+## SHUNT
+
+Represents the degree of pulmonary shunting.
+
+Pulmonary shunting occurs when blood passes through the lungs without being adequately oxygenated, reducing arterial oxygen saturation.
+
+------------------------------------------------------------
+## INTUBATION
+
+Represents the condition of the endotracheal tube placement.
+
+Endotracheal intubation provides an airway for mechanical ventilation. Incorrect tube placement may impair ventilation and oxygen delivery.
+
+------------------------------------------------------------
+## PRESS
+
+Represents the airway pressure measured within the mechanical ventilation system.
+
+Airway pressure reflects the pressure required to deliver air to the patient's lungs and is useful for detecting airway obstruction or ventilation problems.
+
+------------------------------------------------------------
+## DISCONNECT
+
+Represents whether the patient is disconnected from the mechanical ventilator.
+
+A ventilator disconnection interrupts the delivery of respiratory support and may result in inadequate ventilation.
+
+------------------------------------------------------------
+## MINVOLSET
+
+Represents the prescribed minute ventilation setting.
+
+The minute ventilation setting specifies the target amount of air that the ventilator is configured to deliver each minute.
+
+------------------------------------------------------------
+## VENTMACH
+
+Represents the minute ventilation delivered by the mechanical ventilator.
+
+Mechanical ventilator output reflects the amount of air supplied by the ventilator before considering the effects of the breathing circuit or the patient's airway.
+
+------------------------------------------------------------
+## VENTTUBE
+
+Represents the minute ventilation passing through the endotracheal tube.
+
+Minute ventilation through the endotracheal tube reflects airflow after accounting for factors such as ventilator disconnection or tube obstruction.
+
+------------------------------------------------------------
+## VENTLUNG
+
+Represents the minute ventilation reaching the lungs.
+
+Minute ventilation reaching the lungs reflects the amount of air that successfully enters the lungs after accounting for ventilator settings, airway conditions, and endotracheal tube placement.
+
+------------------------------------------------------------
+## VENTALV
+
+Represents the alveolar ventilation.
+
+Alveolar ventilation is the amount of air reaching the alveoli that participates in gas exchange. It determines the efficiency of carbon dioxide removal and oxygen uptake.
+
+------------------------------------------------------------
+## ARTCO2
+
+Represents the arterial carbon dioxide concentration.
+
+Arterial carbon dioxide reflects the concentration of carbon dioxide in arterial blood and is an important indicator of respiratory function and gas exchange.
+
+------------------------------------------------------------
+## CATECHOL
+
+Represents the level of circulating catecholamines.
+
+Catecholamines, such as epinephrine and norepinephrine, are hormones released by the sympathetic nervous system that regulate cardiovascular responses to physiological stress.
+
+------------------------------------------------------------
+## HR
+
+Represents the patient's heart rate.
+
+Heart rate is the number of heartbeats per minute and is a fundamental indicator of cardiovascular function.
+
+------------------------------------------------------------
+## CO
+
+Represents the cardiac output.
+
+Cardiac output is the volume of blood pumped by the heart per minute and reflects the combined effects of heart rate and stroke volume on circulatory function.
+
+------------------------------------------------------------
+## BP
+
+Represents the arterial blood pressure.
+
+Arterial blood pressure is the force exerted by circulating blood against the walls of the arteries and is a primary indicator of cardiovascular status.
+
+------------------------------------------------------------
+
+# === Important Characteristics ===
+
+The network models uncertainty using probabilistic relationships rather than deterministic rules.
+
+Physiological measurements may be influenced by multiple underlying conditions simultaneously.
+
+A single physiological condition may affect multiple organ systems and clinical measurements.
+
+Clinical observations are indirect indicators of the patient's physiological state and may not uniquely identify a single condition.
+
+Medical interventions and mechanical ventilation can influence physiological measurements independently of underlying disease.
+
+Monitoring equipment may introduce measurement errors that affect observed values without changing the patient's actual physiological condition.
+
+The network integrates all available information to estimate the probability of different physiological states.

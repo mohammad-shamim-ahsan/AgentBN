@@ -4,6 +4,38 @@ import copy
 import pandas as pd
 import argparse
 
+
+# --------------------------------------------------
+# Experiment configuration
+# --------------------------------------------------
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument(
+    "--benchmark",
+    type=str,
+    default="alarm",
+    choices=["alarm", "lung_cancer", "der"],
+    help="Benchmark to run."
+)
+
+parser.add_argument(
+    "--SFR",
+    type=int,
+    default=None,
+    help="Success:Failure ratio (e.g., 8). Omit for normal experiment."
+)
+
+args = parser.parse_args()
+
+# Pass benchmark to settings.py
+os.environ["BENCHMARK"] = args.benchmark
+
+use_ratio_constraint = args.SFR is not None
+SFR = args.SFR
+# --------------------------------------------------
+
+
 from config.settings import *
 from utils.json_utils import *
 from utils.bn_io import *
@@ -24,13 +56,15 @@ def store_restart_final_bn(
     best_bn_number,
     best_bn_accuracy,
     best_bn,
+    best_bn_analysis,
     filename
 ):
     record = {
         "restart_number": restart_count,
         "best_bn_number": best_bn_number,
         "best_bn_accuracy": best_bn_accuracy,
-        "bn": best_bn
+        "bn": best_bn,
+        "analysis": best_bn_analysis
     }
 
     with open(filename, "a", encoding="utf-8") as f:
@@ -196,24 +230,6 @@ def create_constrained_train(
 # ----------------------------------------
 
 train_csv = TRAIN_CSV
-
-
-# --------------------------------------------------
-# Experiment configuration
-# --------------------------------------------------
-
-parser = argparse.ArgumentParser()
-parser.add_argument(
-    "--SFR",
-    type=int,
-    default=None,
-    help="Success:Failure ratio (e.g., 8). Omit for normal experiment."
-)
-
-args = parser.parse_args()
-
-use_ratio_constraint = args.SFR is not None
-SFR = args.SFR
 
 # ----------------------------------------
 # Create constrained training set
@@ -486,7 +502,6 @@ while restart_count < MAX_RESTARTS:
     # -----------------------------
     # STEP 3: VALIDATION
     # -----------------------------
-    
     best_bn_number, best_bn_accuracy = get_best_bn_number(PROPOSED_BN_FILE, train_csv=train_csv)
     print("\n\nBest BN Number:", best_bn_number)
     print("Best BN Accuracy:", best_bn_accuracy)
@@ -502,11 +517,14 @@ while restart_count < MAX_RESTARTS:
     compute_average_cpt_rmse(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION)
     compute_average_cpt_hellinger(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION)
 
+    best_bn_analysis = get_analysis_record(best_bn_number)
+
     store_restart_final_bn(
         restart_count=restart_count,
         best_bn_number=best_bn_number,
         best_bn_accuracy=best_bn_accuracy,
         best_bn=best_bn,
+        best_bn_analysis=best_bn_analysis,
         filename=RESTART_FINAL_BN_FILE
     )
 

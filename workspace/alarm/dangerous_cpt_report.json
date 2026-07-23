@@ -1,0 +1,5 @@
+{
+    "reported_risk_level": "none",
+    "dangerous_cpts": [],
+    "overall_summary": "No individual CPT could be confidently localized as a refinement candidate based on the available evidence. The provided deterministic failure parameter statistics and common activation patterns are empty, so there is no scenario-level evidence linking any specific CPT parameter to repeated failures more than successes. Domain knowledge and network structure alone are insufficient to justify placing any CPT into the refinement search space."
+}

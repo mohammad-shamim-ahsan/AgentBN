@@ -35,29 +35,29 @@ Therefore, a scenario is considered a failure if any one of the following condit
 
 The selected baseline BN has already been determined by the workflow.
 
-The "cpt_danger_report" field is the flawed CPT localization results and defines the allowable refinement search space.
+The "cpt_danger_report" defines the refinement search space.
 
-The reported CPTs are plausible refinement candidates identified during flawed CPT localization. Only these CPTs may be modified. Every other CPT must remain identical to the selected baseline BN.
+If the "cpt_danger_report" is "none", it indicates that the localization stage could not identify any individual CPT with sufficient evidence for targeted refinement. It does not imply that the baseline BN is correct.
 
-Determine whether all or a subset of the reported CPTs requires modification to correct the observed failures. Do not assume that every reported CPT must be modified.
+If the baseline BN still performs unsatisfactorily, perform a conservative refinement by considering all CPTs as the refinement search space. Prefer minimal, well-justified parameter modifications that improve the recorded failure scenarios while preserving the recorded success scenarios.
 
-The graph structure, nodes, edges, states, parent lists, and parent_state_order are FIXED and must remain unchanged.
+Otherwise, only the reported CPTs may be modified. Every other CPT must remain identical to the selected baseline BN.
+
+Determine whether all or a subset of the reported CPTs should be modified. Do not assume that every reported CPT requires refinement.
+
+The graph structure, nodes, edges, states, parent lists, and `parent_state_order` are FIXED and must remain unchanged.
 
 Generate 3 independent refinement candidates.
 
-Each candidate represents one complete Bayesian Network refinement hypothesis. A candidate may modify one or more reported CPTs, depending on the proposed refinement strategy.
+Each candidate represents one complete BN refinement hypothesis and may modify one or more allowable CPTs.
 
-Different candidates should represent distinct refinement strategies rather than merely trivial numerical variations of the same parameter modifications.
+The candidates should represent distinct refinement strategies rather than minor numerical variations.
 
-For each candidate, determine the corresponding parameter modifications for the selected reported CPTs based on a distinct causal explanation of the observed failures, using the domain context, the Bayesian Network semantics, and the recorded failure and success scenarios.
+For each candidate, determine the parameter modifications using the domain context, BN semantics, and the recorded failure and success scenarios.
 
-Prefer the smallest sufficient set of parameter modifications that corrects the recorded failure scenarios while preserving the recorded success scenarios.
+Prefer the smallest set of modifications that corrects the recorded failure scenarios while preserving the recorded success scenarios.
 
-The recorded failure scenarios should be corrected under the evaluation definition.
-
-The recorded success scenarios should be preserved under the same evaluation definition.
-
-Each candidate will be evaluated independently by a deterministic evaluation pipeline, and only the best-performing candidate will be selected for the next iteration.
+Each candidate will be evaluated independently by a deterministic evaluation pipeline, and the best-performing candidate will be selected for the next iteration.
 
 ---
 ## CPT VALIDITY REQUIREMENTS

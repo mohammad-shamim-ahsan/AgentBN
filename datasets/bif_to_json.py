@@ -569,10 +569,10 @@ def convert_bif(
 
 if __name__ == "__main__":
 
-    directory = Path("datasets/lung_cancer")
+    directory = Path("datasets/alarm")
 
     convert_bif(
-        bif_file=directory / "asia.bif",
+        bif_file=directory / "alarm.bif",
         json_file=directory / "BN_gt.json",
         xdsl_file=directory / "BN_gt.xdsl",
     )

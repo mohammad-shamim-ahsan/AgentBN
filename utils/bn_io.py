@@ -1,6 +1,5 @@
 import os
 import json
-
 from config.settings import *
 
 
@@ -99,3 +98,43 @@ def normalize_bn(bn_obj):
         return {n["name"]: n for n in bn_obj["nodes"]}
 
     return bn_obj
+
+
+def read_all_analysis_records(filename=PROPOSED_BN_FILE):
+    records = []
+
+    with open(filename, "r", encoding="utf-8") as f:
+        for line in f:
+            if not line.strip():
+                continue
+
+            try:
+                records.append(json.loads(line))
+            except Exception:
+                continue
+
+    return records
+
+
+def get_best_bn_number(filename=PROPOSED_BN_FILE):
+    records = read_all_analysis_records(filename)
+
+    if not records:
+        raise ValueError("No analysis records found.")
+
+    best_record = min(
+        records,
+        key=lambda r: r.get("failure_count", float("inf"))
+    )
+
+    return best_record["bn_number"]
+
+
+def get_analysis_record(bn_number, filename=BN_ANALYSIS_FILE):
+    records = read_all_analysis_records(filename)
+
+    for record in records:
+        if record.get("bn_number") == bn_number:
+            return record
+
+    raise ValueError(f"No analysis record found for BN #{bn_number}")

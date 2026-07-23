@@ -52,6 +52,9 @@ def generate_activation_trace_csv(
     bn_json,
     scenarios_df,
     inference_results,
+    relevant_nodes,
+    path_nodes,
+    added_parent_nodes,
     output_csv=ACTIVATION_TRACE_FILE
 ):
     """
@@ -136,6 +139,10 @@ def generate_activation_trace_csv(
             if col in ["Scenario #", "Ground Truth"]:
                 continue
 
+            # Only keep evidence that belongs to the relevant subgraph
+            if col not in relevant_nodes:
+                continue
+
             value = scenario[col]
 
             if pd.isna(value):
@@ -143,45 +150,51 @@ def generate_activation_trace_csv(
 
             activated[col] = value.strip()
 
+        
+        # Ground-truth value of the target node
+        activated[TARGET_NODE] = inference["Ground Truth"]
+
         # --------------------------------------------
         # Deterministic forward propagation
         # --------------------------------------------
         for node_name in topo_order:
 
+            # Skip nodes that cannot influence the target
+            if node_name not in relevant_nodes:
+                continue
+
             node = node_lookup[node_name]
             parents = node.get("parents", [])
 
             # --------------------------------------------------
-            # Root nodes (no parents)
+            # Determine active CPT column
             # --------------------------------------------------
             if len(parents) == 0:
 
-                # Root nodes are expected to be observed.
-                # Their priors are not analyzed.
-                if node_name in activated:
-                    continue
+                # Root prior
+                column = 0
 
-                raise ValueError(
-                    f"Root node '{node_name}' has no observed value."
-                )
+            else:
 
-            parent_state_order = node["cpt"]["parent_state_order"]
+                parent_state_order = node["cpt"]["parent_state_order"]
 
-            # --------------------------------------------------
-            # Determine active CPT column
-            # --------------------------------------------------
-            column = 0
-            multiplier = 1
+                column = 0
+                multiplier = 1
 
-            for parent in reversed(parents):
+                for parent in reversed(parents):
 
-                state = activated[parent]
+                    if parent not in activated:
+                        raise ValueError(
+                            f"Parent '{parent}' of '{node_name}' has no assigned state."
+                        )
 
-                idx = parent_state_order[parent].index(state)
+                    state = activated[parent]
 
-                column += idx * multiplier
+                    idx = parent_state_order[parent].index(state)
 
-                multiplier *= len(parent_state_order[parent])
+                    column += idx * multiplier
+
+                    multiplier *= len(parent_state_order[parent])
 
             probs = [
                 row[column]
@@ -189,14 +202,14 @@ def generate_activation_trace_csv(
             ]
 
             # --------------------------------------------------
-            # Evidence node:
-            # keep observed state but record the active CPT entry.
+            # Node state already known
+            # (observed evidence or ground-truth target)
             # --------------------------------------------------
             if node_name in activated:
 
-                observed_state = activated[node_name]
+                state = activated[node_name]
 
-                state_idx = node["states"].index(observed_state)
+                state_idx = node["states"].index(state)
 
                 activated[f"{node_name}_col"] = column
                 activated[f"{node_name}_selected_prob"] = probs[state_idx]
@@ -205,19 +218,45 @@ def generate_activation_trace_csv(
 
             # --------------------------------------------------
             # Hidden node:
-            # deterministic forward propagation.
+            # deterministic forward propagation
             # --------------------------------------------------
             best_idx = probs.index(max(probs))
 
-            selected_state = node["states"][best_idx]
-            selected_prob = probs[best_idx]
-
-            activated[node_name] = selected_state
+            activated[node_name] = node["states"][best_idx]
             activated[f"{node_name}_col"] = column
-            activated[f"{node_name}_selected_prob"] = selected_prob
+            activated[f"{node_name}_selected_prob"] = probs[best_idx]
 
         
-        rows.append(activated)
+        # rows.append(activated)
+
+        output = {}
+
+        # Always keep metadata
+        for key in [
+            "Scenario",
+            "Prediction",
+            "Confidence",
+            "Ground Truth",
+            "Status",
+        ]:
+            output[key] = activated[key]
+
+        # Keep only path nodes
+        for node in path_nodes:
+
+            if node in activated:
+                output[node] = activated[node]
+
+            col_key = f"{node}_col"
+            prob_key = f"{node}_selected_prob"
+
+            if col_key in activated:
+                output[col_key] = activated[col_key]
+
+            if prob_key in activated:
+                output[prob_key] = activated[prob_key]
+
+        rows.append(output)
 
         activation_df = pd.DataFrame(rows)
 
@@ -302,9 +341,9 @@ def generate_failure_parameter_statistics(
 
             success_weight = len(success_rows)
 
-            # Keep only failure-dominant parameters
-            if failure_weight <= success_weight:
-                continue
+            # # Keep only failure-dominant parameters
+            # if failure_weight <= success_weight:
+            #     continue
 
             # ----------------------------------------------
             # Record cross-CPT activation signatures
@@ -548,7 +587,7 @@ The deterministic analysis has already identified candidate failure-associated C
 
 Your task is to determine which, if any, candidate CPTs are genuinely plausible contributors to the observed failure patterns. Base your judgment on the domain context, the Bayesian Network structure, and the provided deterministic statistics.
 
-The objective is to identify every CPT for which there is strong, independent evidence that its probability assignments may contribute to repeated incorrect predictions.
+The objective is to identify every CPT for which there is reasonable evidence that its probability assignments may contribute to repeated incorrect predictions.
 
 Report only CPTs that are plausible candidates for refinement. Do not attempt to determine the exact subset of CPTs that should ultimately be modified. That decision will be made during the refinement stage.
 
@@ -597,9 +636,9 @@ Reasoning principles:
 
 5. Use argmax_probability as supporting evidence rather than a standalone criterion. Whether a strongly activated CPT parameter is problematic should be judged together with the domain semantics and the overall causal reasoning path.
 
-6. Recommend modifying a CPT only when the collective evidence consistently indicates that its probability assignments are plausible contributors to repeated incorrect predictions and that modifying the CPT is likely to improve the overall diagnostic behavior of the Bayesian Network while preserving successful reasoning.
+6. Recommend a CPT when the available evidence reasonably suggests that its probability assignments are plausible refinement candidates. The objective is to construct a focused refinement search space rather than to determine whether the CPT is definitively incorrect.
 
-7. Report every CPT for which there is strong independent evidence of potential modeling error. If multiple CPTs belong to the same causal reasoning path, distinguish between CPTs whose apparent behavior is fully explained by upstream probability assignments and CPTs whose probability assignments themselves appear independently flawed.
+7. Report every CPT for which the available evidence reasonably suggests that its probability assignments may warrant refinement. If multiple CPTs belong to the same reasoning path, distinguish between CPTs that appear primarily influenced by upstream activations and CPTs whose own probability assignments appear to merit further investigation.
 
 Your task:
 
@@ -622,14 +661,12 @@ The assigned risk level should reflect the overall strength of evidence that the
 
 Step 4.
 Construct the refinement search space using the following priority:
-1. Prioritize HIGH-risk CPTs.
-2. If one or more HIGH-risk CPTs exist, report all HIGH-risk CPTs together with any HIGH_MEDIUM-risk CPTs.
-3. Otherwise, if one or more HIGH_MEDIUM-risk CPTs exist, report all HIGH_MEDIUM-risk CPTs.
-4. Otherwise, return "none".
+1. Report all HIGH-risk CPTs.
+2. If no HIGH-risk CPT exists, report all HIGH_MEDIUM-risk CPTs.
+3. If no HIGH or HIGH_MEDIUM-risk CPT exists, report the strongest MEDIUM-risk CPTs.
+4. Return "none" only when no CPT shows a plausible association with repeated failures.
 
 If no CPT is sufficiently supported for refinement, return "none".
-
-Do NOT blindly report all candidate CPTs.
 
 Return ONLY valid JSON.
 
@@ -679,7 +716,7 @@ If no CPT is selected for the refinement search space, return:
 {{
     "reported_risk_level": "none",
     "dangerous_cpts": [],
-    "overall_summary": "No CPTs were sufficiently supported for refinement."
+    "overall_summary": "No individual CPT could be confidently localized as a refinement candidate based on the available evidence."
 }}
 """
 
@@ -844,6 +881,19 @@ def run_evaluation(bn_json, bn_number=None, temperature=0.3, dataset_file=None):
     model = build_model(bn_json)
 
     # --------------------------------------------------
+    # Compute relevant nodes once
+    # --------------------------------------------------
+    evidence_nodes = [
+        col for col in df.columns
+        if col not in ["Scenario #", "Ground Truth"]
+    ]
+
+    relevant_nodes, path_nodes, added_parent_nodes = get_target_evidence_paths(
+        model,
+        evidence_nodes
+    )
+
+    # --------------------------------------------------
     # Step 2: Run BN inference
     # --------------------------------------------------
     results = call_bn_inference(model, df)
@@ -857,6 +907,9 @@ def run_evaluation(bn_json, bn_number=None, temperature=0.3, dataset_file=None):
         bn_json=bn_json,
         scenarios_df=df,
         inference_results=results,
+        relevant_nodes=relevant_nodes,
+        path_nodes = path_nodes, 
+        added_parent_nodes = added_parent_nodes,
         output_csv=ACTIVATION_TRACE_FILE
     )
 
@@ -931,7 +984,6 @@ def store_analysis(bn_number, evaluation_output):
 if __name__ == "__main__":
     
     bn_number = 1
-
     bn_json = find_proposed_bn(
         bn_number,
         PROPOSED_BN_FILE

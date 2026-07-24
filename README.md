@@ -16,21 +16,21 @@ The goal is to improve a deployed BN without rebuilding the entire model or allo
 
 AgentBN is designed as an end-to-end agentic AI system rather than a standalone LLM prompt. It combines probabilistic reasoning, specialized agents, structured context, and a deterministic control harness to support evidence-driven, post-deployment Bayesian Network repair.
 
-- **Multi-agent workflow:** Separates failure diagnosis from CPT refinement. The evaluator agent identifies plausible failure sources, while the refinement agent generates targeted repair candidates.
+- **[Multi-agent workflow](#agent-architecture):** Separates failure diagnosis from CPT refinement. The evaluator agent identifies plausible failure sources, while the refinement agent generates targeted repair candidates.
 
-- **Context engineering:** Builds task-specific context from domain knowledge, Bayesian Network structure, inference traces, failure statistics, prior proposals, and experiment history.
+- **[Context engineering](#context-engineering):** Builds task-specific context from domain knowledge, Bayesian Network structure, inference traces, failure statistics, prior proposals, and experiment history.
 
-- **Prompt engineering:** Uses role-specific prompts, explicit reasoning criteria, constrained CPT-editing instructions, and strict JSON output contracts.
+- **[Prompt engineering](#prompt-engineering):** Uses role-specific prompts, explicit reasoning criteria, constrained CPT-editing instructions, and strict JSON output contracts.
 
-- **Harness engineering:** Controls the complete agent lifecycle through schema validation, candidate evaluation, acceptance gates, bounded retries, output repair, state management, and experiment logging.
+- **[Harness engineering](#harness-engineering):** Controls the agent lifecycle through schema validation, deterministic evaluation, acceptance gates, bounded retries, output repair, state management, and logging.
 
-- **Deterministic verification:** Keeps numerical inference and candidate selection outside the LLM. Every proposed repair is evaluated using Bayesian inference against labeled scenarios.
+- **[Deterministic verification](#pipeline):** Keeps numerical inference and candidate selection outside the LLM. Every proposed repair is evaluated against labeled scenarios.
 
-- **Reflection and memory:** Preserves accepted networks and diagnostic results across refinement iterations, allowing later proposals to build on previous outcomes.
+- **[Reflection and memory](#context-engineering):** Preserves accepted networks and diagnostic results across refinement iterations.
 
-- **Post-deployment focus:** Targets Bayesian Networks that become inaccurate after deployment because of flawed, outdated, or miscalibrated CPT parameters.
+- **[Post-deployment focus](#objective):** Repairs flawed, outdated, or miscalibrated CPT parameters after deployment.
 
-- **Evaluation-driven development:** Measures both downstream prediction accuracy and parameter-level similarity using KL divergence, RMSE, Hellinger distance, and CPT-change analysis.
+- **[Evaluation-driven development](#outputs):** Measures prediction accuracy and CPT similarity using KL divergence, RMSE, Hellinger distance, and CPT-change analysis.
 
 ## Objective
 

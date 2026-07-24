@@ -25,8 +25,8 @@ CONTEXT_DIR = PROMPT_DIR / "contexts"
 
 GROUND_TRUTH_BN_FILE = DATASET_DIR / "BN_gt.json"
 
-# FLAWED_BN_FILE = DATASET_DIR / "flawed_BN_0.json"   
-FLAWED_BN_FILE = DATASET_DIR / "flawed_BN_1.json"
+FLAWED_BN_FILE = DATASET_DIR / "flawed_BN_0.json"   
+# FLAWED_BN_FILE = DATASET_DIR / "flawed_BN_1.json"
 
 TRAIN_CSV = DATASET_DIR / "combined_train_scenarios.csv"
 
@@ -53,6 +53,8 @@ BN_ANALYSIS_FILE = WORKSPACE_DIR / "bn_analysis.json"
 PROPOSED_BN_FILE = WORKSPACE_DIR / "last_proposed_bn.jsonl"
 
 RESTART_FINAL_BN_FILE = WORKSPACE_DIR / "restart_final_bns.jsonl"
+
+RESTART_BN_ANALYSIS_FILE = WORKSPACE_DIR / "restart_bn_analysis.jsonl"
 
 DANGER_REPORT_FILE = WORKSPACE_DIR / "dangerous_cpt_report.json"
 
@@ -214,6 +216,8 @@ else:
 
 MIN_CONFIDENCE = 0.50
 MIN_MARGIN = 0.20
+
+TARGET_ACCURACY = 0.98
 
 
 # ======================================================

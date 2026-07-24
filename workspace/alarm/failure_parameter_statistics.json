@@ -1,5 +1,89 @@
 {
-    "bn_number": 3,
-    "parameter_statistics": {},
-    "common_activation_patterns": []
+    "bn_number": 1,
+    "parameter_statistics": {
+        "STROKEVOLUME": [
+            {
+                "column": 3,
+                "state": "NORMAL",
+                "argmax_probability": 0.45,
+                "failure_weight": 6,
+                "success_weight": 42
+            }
+        ],
+        "LVEDVOLUME": [
+            {
+                "column": 3,
+                "state": "NORMAL",
+                "argmax_probability": 0.9,
+                "failure_weight": 6,
+                "success_weight": 42
+            }
+        ],
+        "PCWP": [
+            {
+                "column": 1,
+                "state": "NORMAL",
+                "argmax_probability": 0.95,
+                "failure_weight": 6,
+                "success_weight": 29
+            }
+        ],
+        "CO": [
+            {
+                "column": 7,
+                "state": "HIGH",
+                "argmax_probability": 0.95,
+                "failure_weight": 6,
+                "success_weight": 42
+            }
+        ],
+        "BP": [
+            {
+                "column": 7,
+                "state": "HIGH",
+                "argmax_probability": 0.65,
+                "failure_weight": 6,
+                "success_weight": 20
+            }
+        ],
+        "HYPOVOLEMIA": [
+            {
+                "column": 0,
+                "state": "No_Hypovolemia",
+                "argmax_probability": 0.7,
+                "failure_weight": 6,
+                "success_weight": 42
+            }
+        ],
+        "CVP": [
+            {
+                "column": 1,
+                "state": "HIGH",
+                "argmax_probability": 0.01,
+                "failure_weight": 6,
+                "success_weight": 0
+            }
+        ]
+    },
+    "common_activation_patterns": [
+        {
+            "pattern": {
+                "BP": 7,
+                "CO": 7,
+                "CVP": 1,
+                "HYPOVOLEMIA": 0,
+                "LVEDVOLUME": 3,
+                "PCWP": 1,
+                "STROKEVOLUME": 3
+            },
+            "failure_scenarios": [
+                6,
+                11,
+                14,
+                17,
+                46,
+                49
+            ]
+        }
+    ]
 }

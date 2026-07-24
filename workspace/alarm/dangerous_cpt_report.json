@@ -1,5 +1,24 @@
 {
-    "reported_risk_level": "none",
-    "dangerous_cpts": [],
-    "overall_summary": "No individual CPT could be confidently localized as a refinement candidate based on the available evidence. The provided deterministic failure parameter statistics and common activation patterns are empty, so there is no scenario-level evidence linking any specific CPT parameter to repeated failures more than successes. Domain knowledge and network structure alone are insufficient to justify placing any CPT into the refinement search space."
+    "reported_risk_level": "medium",
+    "dangerous_cpts": [
+        {
+            "cpt": "CVP",
+            "risk_level": "medium",
+            "number_of_failure_scenarios": 6,
+            "main_problem": "This is the only candidate parameter activated in all repeated failure scenarios with zero support from success scenarios. The selected parameter is also physiologically questionable in context: when LVEDVOLUME is NORMAL, the CPT assigns only 0.01 to CVP=HIGH, yet the failure pattern repeatedly propagates through this rare outcome. Because CVP is a direct observable downstream of LVEDVOLUME and can materially affect how the case is interpreted, this CPT is a plausible local contributor rather than merely an upstream passenger.",
+            "suspicious_parameters": [
+                {
+                    "rank": 1,
+                    "parameter": "Column 1 \u2192 HIGH",
+                    "failure_weight": 6,
+                    "success_weight": 0,
+                    "failure_to_success_ratio": 6.0,
+                    "argmax_probability": 0.01,
+                    "recommended_adjustment": "increase",
+                    "justification": "The parameter appears exclusively in failure scenarios and never in successes. Given the physiology, occasional elevated CVP with otherwise normal LV filling is not impossible in ICU settings, so a near-zero assignment may be overly restrictive and may contribute to repeated mismatches."
+                }
+            ]
+        }
+    ],
+    "overall_summary": "Most candidates belong to a common upstream hemodynamic path that is activated frequently in both failures and successes, so they are not well localized as independent causes of error. CVP stands out because its implicated parameter is failure-specific, directly tied to an observed measurement, and currently assigned an extremely small probability under the repeatedly failing parent configuration."
 }

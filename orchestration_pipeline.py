@@ -28,8 +28,7 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-# Pass benchmark to settings.py
-os.environ["BENCHMARK"] = args.benchmark
+os.environ["BENCHMARK"] = args.benchmark    # Pass benchmark to settings.py
 
 use_ratio_constraint = args.SFR is not None
 SFR = args.SFR
@@ -56,19 +55,38 @@ def store_restart_final_bn(
     best_bn_number,
     best_bn_accuracy,
     best_bn,
-    best_bn_analysis,
-    filename
+    filename,
+    bn_analysis_file,
+    restart_analysis_file,
 ):
     record = {
         "restart_number": restart_count,
         "best_bn_number": best_bn_number,
         "best_bn_accuracy": best_bn_accuracy,
         "bn": best_bn,
-        "analysis": best_bn_analysis
     }
 
     with open(filename, "a", encoding="utf-8") as f:
         f.write(json.dumps(record) + "\n")
+
+    # ------------------------------------------
+    # Store BN analysis for this restart
+    # ------------------------------------------
+    analysis = []
+
+    with open(bn_analysis_file, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if line:
+                analysis.append(json.loads(line))
+
+    restart_record = {
+        "restart_number": restart_count,
+        "analysis": analysis
+    }
+
+    with open(restart_analysis_file, "a", encoding="utf-8") as f:
+        f.write(json.dumps(restart_record) + "\n")
 
 
 def get_best_restart_bn(filename=RESTART_FINAL_BN_FILE):
@@ -236,6 +254,7 @@ train_csv = TRAIN_CSV
 # ----------------------------------------
 
 flawed_bn = safe_json_loads(read_file(FLAWED_BN_FILE))
+flawed_bn_nor = normalize_bn(read_json(FLAWED_BN_FILE))
 
 if use_ratio_constraint:
     failures, successes, flawed_accuracy, _ = initial_run_evaluation(flawed_bn, TRAIN_CSV)
@@ -261,11 +280,10 @@ clear_files([
     DANGER_REPORT_FILE,
     FAILURE_PARAMETER_FILE,
     RESTART_FINAL_BN_FILE,
+    RESTART_BN_ANALYSIS_FILE,
 ])
 
-
 restart_count = 0
-flawed_bn = safe_json_loads(read_file(FLAWED_BN_FILE))
 
 
 # ----------------------------------------
@@ -299,8 +317,7 @@ while restart_count < MAX_RESTARTS:
     # Store flawed BN
     # ----------------------------------------
     store_new_bn(
-        0,
-        flawed_bn
+        0, flawed_bn
     )
     
     # ----------------------------------------
@@ -367,6 +384,7 @@ while restart_count < MAX_RESTARTS:
 
     solved = False
     i = 1
+    EPSILON = 1e-9
 
 
     while i <= MAX_ITER:
@@ -391,6 +409,10 @@ while restart_count < MAX_RESTARTS:
             prev_bn_json, train_csv
         )
 
+        if accuracy >= TARGET_ACCURACY - EPSILON:
+            print(f"\nCurrent BN already has {100*accuracy:.2f}% accuracy. Refinement complete.")
+            break
+
         evaluation_output = run_evaluation(prev_bn_json, bn_number=bn_number, temperature=current_temperature, dataset_file=train_csv)
         
         store_analysis(bn_number, evaluation_output)
@@ -413,6 +435,10 @@ while restart_count < MAX_RESTARTS:
         failures, successes, new_accuracy, results = initial_run_evaluation(
             new_bn, train_csv
         )
+
+        if new_accuracy >= TARGET_ACCURACY - EPSILON:
+            print(f"\nReached {100*new_accuracy:.2f}% accuracy. Stopping refinement.")
+            break
 
         if new_accuracy > accuracy:
             print(
@@ -458,6 +484,11 @@ while restart_count < MAX_RESTARTS:
                 new_bn, train_csv
             )
 
+            if new_accuracy >= TARGET_ACCURACY - EPSILON:
+                print(f"\nReached {100*new_accuracy:.2f}% accuracy during retry. Stopping refinement.")
+                improved = True
+                break
+
             if new_accuracy > best_retry_accuracy:
                 best_retry_accuracy = new_accuracy
                 best_retry_bn = copy.deepcopy(new_bn)
@@ -490,6 +521,10 @@ while restart_count < MAX_RESTARTS:
                 new_bn= best_retry_bn
                 new_accuracy = best_retry_accuracy
 
+                if new_accuracy >= TARGET_ACCURACY - EPSILON:
+                    print(f"\nBest retry candidate achieved {100*new_accuracy:.2f}% accuracy. Stopping refinement.")
+                    break
+
                 print(
                     f"Continuing with retry candidate "
                     f"(accuracy={100*new_accuracy:.2f}%)."
@@ -511,21 +546,20 @@ while restart_count < MAX_RESTARTS:
 
     gt_bn = normalize_bn(read_json(GROUND_TRUTH_BN_FILE))
     best_bn = get_bn(PROPOSED_BN_FILE, bn_number=best_bn_number)
-    nor_best_bn =normalize_bn(best_bn)
+    nor_best_bn = normalize_bn(best_bn)
 
-    compute_average_cpt_kl(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION)
-    compute_average_cpt_rmse(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION)
-    compute_average_cpt_hellinger(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION)
-
-    best_bn_analysis = get_analysis_record(best_bn_number)
+    compute_average_cpt_kl(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION, flawed_bn=flawed_bn_nor)
+    compute_average_cpt_rmse(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION, flawed_bn=flawed_bn_nor)
+    compute_average_cpt_hellinger(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION, flawed_bn=flawed_bn_nor)
 
     store_restart_final_bn(
         restart_count=restart_count,
         best_bn_number=best_bn_number,
         best_bn_accuracy=best_bn_accuracy,
         best_bn=best_bn,
-        best_bn_analysis=best_bn_analysis,
-        filename=RESTART_FINAL_BN_FILE
+        filename=RESTART_FINAL_BN_FILE,
+        bn_analysis_file = BN_ANALYSIS_FILE,
+        restart_analysis_file = RESTART_BN_ANALYSIS_FILE,
     )
 
     print("###------------------------------###")
@@ -557,9 +591,9 @@ print(final_output)
 gt_bn = normalize_bn(read_json(GROUND_TRUTH_BN_FILE))
 nor_best_bn = normalize_bn(best_restart_bn)
 
-compute_average_cpt_kl(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION)
-compute_average_cpt_rmse(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION)
-compute_average_cpt_hellinger(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION)
+compute_average_cpt_kl(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION, flawed_bn=flawed_bn_nor)
+compute_average_cpt_rmse(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION, flawed_bn=flawed_bn_nor)
+compute_average_cpt_hellinger(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION, flawed_bn=flawed_bn_nor)
 
 print("###------------------------------###")
 print("\nPipeline finished.")

@@ -225,7 +225,7 @@ def build_node_dict(bn_json):
     return {node["name"]: node for node in bn_json["nodes"]}
 
 
-def compute_average_cpt_kl(gt_bn, prop_bn, target_nodes=None, flawed_bn=FLAWED_BN_FILE):
+def compute_average_cpt_kl(gt_bn, prop_bn, target_nodes=None, flawed_bn=normalize_bn(read_json(FLAWED_BN_FILE))):
 
     total_kl = 0.0
     total_columns = 0
@@ -287,7 +287,7 @@ def compute_average_cpt_kl(gt_bn, prop_bn, target_nodes=None, flawed_bn=FLAWED_B
     return avg_kl
 
 
-def compute_average_cpt_rmse(gt_bn, prop_bn, target_nodes=None, flawed_bn=FLAWED_BN_FILE):
+def compute_average_cpt_rmse(gt_bn, prop_bn, target_nodes=None, flawed_bn=normalize_bn(read_json(FLAWED_BN_FILE))):
 
     total_squared_error = 0.0
     total_parameters = 0
@@ -344,7 +344,7 @@ def hellinger_distance(p, q):
     return np.sqrt(np.sum((np.sqrt(p) - np.sqrt(q)) ** 2)) / np.sqrt(2)
 
 
-def compute_average_cpt_hellinger(gt_bn, prop_bn, target_nodes=None, flawed_bn=FLAWED_BN_FILE):
+def compute_average_cpt_hellinger(gt_bn, prop_bn, target_nodes=None, flawed_bn=normalize_bn(read_json(FLAWED_BN_FILE))):
 
     total = 0.0
     total_columns = 0

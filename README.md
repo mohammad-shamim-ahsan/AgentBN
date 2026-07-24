@@ -34,21 +34,24 @@ AgentBN is designed as an end-to-end agentic AI system rather than a standalone 
 
 ## Objective
 
-The project investigates whether an agentic refinement loop can recover faulty BN parameters while preserving the network's structure and probabilistic validity.
+AgentBN investigates whether an agentic refinement loop can perform **flawed CPT localization** and **evidence-driven repair** of deployed Bayesian Networks while preserving their structure and probabilistic validity.
 
 Given:
 
-- a Bayesian Network with one or more flawed CPTs;
+- a deployed BN with one or more flawed or miscalibrated CPTs;
 - domain context describing the variables and their relationships;
-- labeled train and test scenarios; and
-- a target node whose prediction is evaluated,
+- labeled training scenarios used for agent-guided diagnosis and refinement;
+- inference results, activation traces, and failure diagnostics derived from the flawed BN and supplied to the agents as context;
+- held-out testing scenarios used to evaluate the repaired BN; and
+- a target node whose predictions are evaluated.
 
 the framework attempts to:
 
-1. identify CPT parameters associated with repeated inference failures;
-2. generate focused, valid CPT modifications;
-3. improve scenario-level prediction accuracy through iterative refinement; and
-4. compare the repaired BN with a ground-truth network using CPT-level distance metrics.
+1. detect recurring inference failures from labeled operational scenarios;
+2. localize the CPTs and parameters most plausibly responsible for those failures;
+3. generate focused, probabilistically valid CPT repair candidates;
+4. improve scenario-level prediction accuracy through iterative refinement; and
+5. compare the repaired BN with a ground-truth network using CPT-level distance metrics.
 
 The current benchmarks are:
 

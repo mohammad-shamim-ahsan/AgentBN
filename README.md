@@ -1,18 +1,16 @@
 # AgentBN
 
-An agentic post-deployment framework for diagnosing and repairing the conditional probability tables (CPTs) of deployed Bayesian Networks (BNs).
+An agentic framework for diagnosing and repairing the conditional probability tables (CPTs) of deployed Bayesian Networks (BNs).
 
 A **Bayesian Network** is a probabilistic graphical model that represents variables and their conditional dependencies as a directed acyclic graph. Each node represents a variable—such as a symptom, equipment condition, or possible failure—while each directed edge represents a dependency between variables. CPTs quantify the strength of these relationships.
 
-BNs are particularly valuable in **safety-critical and high-stakes domains**, including power and energy systems, healthcare, manufacturing, industrial automation, cybersecurity, and infrastructure monitoring. They support tasks such as root-cause analysis, fault diagnosis, risk assessment, and medical diagnosis by reasoning under uncertainty. Given observed evidence—such as abnormal sensor readings, equipment alarms, process deviations, or patient symptoms—a BN updates the probabilities of possible underlying causes. This allows likely faults, failures, or diagnoses to be ranked even when the available evidence is incomplete, noisy, or uncertain.
+BNs are particularly valuable in **safety-critical and high-stakes domains**, including power and energy systems, healthcare, manufacturing, industrial automation, cybersecurity, and chemical engineering. They support tasks such as root-cause analysis, fault diagnosis, and medical diagnosis by reasoning under uncertainty. Given observed evidence—such as abnormal sensor readings, equipment alarms, process deviations, or patient symptoms—a BN updates the probabilities of possible underlying causes. This allows likely faults, failures, or diagnoses to be ranked even when the available evidence is incomplete, noisy, or uncertain. Their explicit graphical structure also makes BNs more interpretable than many black-box predictive models. Domain experts can inspect modeled relationships, trace how evidence influences a conclusion, and incorporate expert knowledge when historical data is limited.
 
-Their explicit graphical structure also makes BNs more interpretable than many black-box predictive models. Domain experts can inspect modeled relationships, trace how evidence influences a conclusion, and incorporate expert knowledge when historical data is limited.
-
-However, a BN that performed well during development may become unreliable after deployment. Changes in operating conditions, population characteristics, sensor behavior, or domain processes can cause its CPT parameters to become inaccurate. Even when the network structure remains valid, outdated or miscalibrated probabilities may lead to incorrect diagnoses and root-cause predictions.
+However, a BN that performed well during development may become unreliable after deployment. Even when the network structure remains valid, outdated or miscalibrated probabilities may lead to incorrect diagnoses and root-cause predictions.
 
 **AgentBN focuses on this post-deployment setting.** It uses labeled operational scenarios to identify recurring inference failures and localize the CPT parameters most plausibly associated with them. An LLM then proposes constrained CPT patches, while a deterministic evaluation harness validates every candidate, controls acceptance, manages retries, and records the complete refinement process.
 
-The objective is to improve a deployed BN without rebuilding the entire model or allowing the LLM to modify it without evidence. The LLM proposes; the harness measures, gates, retries, and records.
+The goal is to improve a deployed BN without rebuilding the entire model or allowing the LLM to modify it without evidence. The LLM proposes; the harness measures, gates, retries, and records.
 
 ## Objective
 

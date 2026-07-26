@@ -4,28 +4,28 @@
         {
             "cpt": "Root_Causes",
             "risk_level": "high_medium",
-            "number_of_failure_scenarios": 38,
-            "main_problem": "This CPT is the final diagnostic mapping from Network_Manipulation, Execution_Integrity, and Physical_Anomaly to incident type, and its activated parameters are highly failure-skewed with zero recorded success support. In particular, the BN repeatedly selects Memory_Corruption in parent configurations that, by domain semantics, can also plausibly correspond to FDI or fault-related situations. Because this node directly determines the final prediction, these probability assignments are strong refinement candidates rather than merely downstream reflections of upstream evidence.",
+            "number_of_failure_scenarios": 17,
+            "main_problem": "This CPT is the final decision point and several activated output choices appear failure-specific, especially for parent configurations that should strongly distinguish cyberattack versus fault behavior. The deterministic statistics show multiple Root_Causes parameters activated in failures with zero success support, suggesting that the final mapping from Network_Manipulation, Execution_Integrity, and Physical_Anomaly to incident class may be miscalibrated rather than merely reflecting upstream evidence.",
             "suspicious_parameters": [
                 {
                     "rank": 1,
-                    "parameter": "Column 4 \u2192 Memory_Corruption",
-                    "failure_weight": 26,
-                    "success_weight": 0,
-                    "failure_to_success_ratio": 26.0,
-                    "argmax_probability": 0.25,
-                    "recommended_adjustment": "decrease",
-                    "justification": "This parameter is activated often in failures and never in successes. Column 4 corresponds to Network_Manipulation=No, Execution_Integrity=Compromised, Physical_Anomaly=Yes. In DER diagnosis, simultaneous execution compromise and physical anomaly does not uniquely imply memory corruption; it can also arise in fault/FDI situations. Yet the CPT still lets Memory_Corruption win under deterministic argmax because competing class probabilities are even less suitable. This makes the final class mapping itself a plausible source of repeated misclassification."
-                },
-                {
-                    "rank": 2,
                     "parameter": "Column 1 \u2192 Memory_Corruption",
                     "failure_weight": 10,
                     "success_weight": 0,
                     "failure_to_success_ratio": 10.0,
-                    "argmax_probability": 0.15,
+                    "argmax_probability": 0.25,
                     "recommended_adjustment": "decrease",
-                    "justification": "This parameter also appears only in failures. Even though the probability is modest, it becomes the argmax in its parent configuration, indicating that the class ordering in this column is problematic. Since Root_Causes is the terminal decision node, such failure-only activations are especially meaningful."
+                    "justification": "This parameter is repeatedly selected only in failure cases despite weak support probability. In a DER diagnosis setting, when Network_Manipulation=Yes, Execution_Integrity=Compromised, and Physical_Anomaly=No, over-attributing cases to Memory_Corruption can plausibly confuse attack/fault discrimination."
+                },
+                {
+                    "rank": 2,
+                    "parameter": "Column 1 \u2192 FDI",
+                    "failure_weight": 3,
+                    "success_weight": 0,
+                    "failure_to_success_ratio": 3.0,
+                    "argmax_probability": 0.6,
+                    "recommended_adjustment": "slightly_decrease",
+                    "justification": "The same parent configuration also strongly favors FDI. Since both FDI and Memory_Corruption selections under this column appear in failures, the whole column likely deserves refinement. The issue is plausibly a misbalanced class allocation at the root-cause layer."
                 },
                 {
                     "rank": 3,
@@ -33,142 +33,50 @@
                     "failure_weight": 2,
                     "success_weight": 0,
                     "failure_to_success_ratio": 2.0,
-                    "argmax_probability": 0.2,
+                    "argmax_probability": 0.4,
                     "recommended_adjustment": "slightly_decrease",
-                    "justification": "This is weaker than the other two columns but still failure-only. It supports the broader pattern that Memory_Corruption may be over-preferred in several parent configurations."
+                    "justification": "Although less frequent, this failure-only activation at another cyber-oriented parent configuration reinforces that the final class mapping may be systematically overusing Memory_Corruption."
                 }
             ]
         },
         {
-            "cpt": "GPTN_5",
+            "cpt": "Network_Manipulation",
             "risk_level": "high_medium",
-            "number_of_failure_scenarios": 38,
-            "main_problem": "GPTN_5 is a root evidence prior for the physical side, and its prior is perfectly balanced at 0.5/0.5 despite strongly asymmetric deterministic behavior: Found is heavily associated with failures while Not_Found is mostly associated with successes. Because this evidence feeds directly into Physical_Anomaly and then Root_Causes, an uninformative prior at this node is a plausible contributor to repeated incorrect predictions.",
+            "number_of_failure_scenarios": 17,
+            "main_problem": "This CPT sits on a key causal path from global packet inconsistency evidence to final diagnosis. Its failure-associated parameters are concentrated in the 'Yes' output for all columns where either GPTN_1 or GPTN_2 is Found, and these activations have no success support. Given the domain semantics, the current CPT may be too eager to infer network manipulation from packet inconsistency evidence, which can propagate directly into false cyberattack diagnoses.",
             "suspicious_parameters": [
                 {
                     "rank": 1,
-                    "parameter": "Column 0 \u2192 Found",
-                    "failure_weight": 28,
-                    "success_weight": 2,
-                    "failure_to_success_ratio": 14.0,
-                    "argmax_probability": 0.5,
-                    "recommended_adjustment": "increase",
-                    "justification": "The deterministic statistics show that GPTN_5 being Found is strongly failure-associated, yet the CPT treats Found and Not_Found as equally likely. Since GPTN_5 represents whether PMU measurements and logs are consistent in a way tied to physical deviation patterns, underweighting this evidence can distort downstream physical-anomaly reasoning."
-                },
-                {
-                    "rank": 2,
-                    "parameter": "Column 0 \u2192 Not_Found",
-                    "failure_weight": 10,
-                    "success_weight": 32,
-                    "failure_to_success_ratio": 0.31,
-                    "argmax_probability": 0.5,
+                    "parameter": "Column 0 \u2192 Yes",
+                    "failure_weight": 7,
+                    "success_weight": 0,
+                    "failure_to_success_ratio": 7.0,
+                    "argmax_probability": 0.75,
                     "recommended_adjustment": "decrease",
-                    "justification": "Not_Found is much more common in successes, so keeping it tied with Found at 0.5 appears poorly calibrated. Adjusting both sides of this prior is plausible because the current balance does not reflect the observed failure/success asymmetry."
-                }
-            ]
-        },
-        {
-            "cpt": "Physical_Anomaly",
-            "risk_level": "high_medium",
-            "number_of_failure_scenarios": 38,
-            "main_problem": "This CPT converts GPTN_5 evidence into the intermediate physical-side diagnosis. Its activated parameters are strongly separated between failures and successes: Physical_Anomaly=Yes given GPTN_5 Found is overwhelmingly failure-associated, while Physical_Anomaly=No given GPTN_5 Not_Found is overwhelmingly success-associated. Because physical anomalies are central for distinguishing faults from cyber causes in DER systems, this mapping is a plausible contributor to repeated errors, especially where downstream root-cause selection appears unstable.",
-            "suspicious_parameters": [
-                {
-                    "rank": 1,
-                    "parameter": "Column 0 \u2192 Yes",
-                    "failure_weight": 28,
-                    "success_weight": 2,
-                    "failure_to_success_ratio": 14.0,
-                    "argmax_probability": 0.85,
-                    "recommended_adjustment": "slightly_increase",
-                    "justification": "This mapping is strongly failure-associated and semantically coherent, but because many failures still occur downstream, the exact strength of 0.85 may still be suboptimal. It is plausible that stronger physical-anomaly support is needed in some mixed evidence cases to prevent misclassification toward memory corruption or other causes."
+                    "justification": "When both GPTN_1 and GPTN_2 are Found, the CPT strongly asserts manipulation. Because this activation appears only in failures, the mapping may be overconfident for ambiguous or conflicting packet-level evidence."
                 },
                 {
                     "rank": 2,
-                    "parameter": "Column 1 \u2192 No",
-                    "failure_weight": 10,
-                    "success_weight": 32,
-                    "failure_to_success_ratio": 0.31,
-                    "argmax_probability": 0.9,
-                    "recommended_adjustment": "slightly_increase",
-                    "justification": "This parameter is mostly aligned with successes, suggesting it is not obviously wrong. However, because this CPT sits on a major diagnostic branch and was flagged by deterministic analysis, it remains a plausible refinement candidate at lower suspicion within the reported level. Small calibration changes may improve separation in borderline cases."
-                }
-            ]
-        },
-        {
-            "cpt": "GPTN_3",
-            "risk_level": "high_medium",
-            "number_of_failure_scenarios": 38,
-            "main_problem": "GPTN_3 is a root evidence node for inconsistent execution logs, a key signal for program-side compromise. Its prior is fixed at 0.5/0.5, yet the Found state is much more common in failures than successes. Since this evidence drives Program_Anomaly and then Execution_Integrity, an uninformative prior may weaken or distort the cyber/program branch of the diagnosis.",
-            "suspicious_parameters": [
-                {
-                    "rank": 1,
-                    "parameter": "Column 0 \u2192 Found",
-                    "failure_weight": 38,
-                    "success_weight": 27,
-                    "failure_to_success_ratio": 1.41,
-                    "argmax_probability": 0.5,
-                    "recommended_adjustment": "increase",
-                    "justification": "The failure association is not extreme, but it is substantial and persistent. Given the domain semantics, inconsistent application logs should be informative for program anomalies and memory corruption. A flat prior likely underuses this evidence."
-                }
-            ]
-        },
-        {
-            "cpt": "Program_Anomaly",
-            "risk_level": "high_medium",
-            "number_of_failure_scenarios": 38,
-            "main_problem": "This CPT maps inconsistent execution-log evidence to the intermediate program-side anomaly state. The parameter Program_Anomaly=Yes given GPTN_3 Found is activated frequently in failures, and this node is structurally important because it directly influences Execution_Integrity. Since DER cyber/physical diagnosis depends on correctly interpreting application-log inconsistency, this mapping is a plausible refinement candidate.",
-            "suspicious_parameters": [
-                {
-                    "rank": 1,
-                    "parameter": "Column 0 \u2192 Yes",
-                    "failure_weight": 38,
-                    "success_weight": 27,
-                    "failure_to_success_ratio": 1.41,
-                    "argmax_probability": 0.9,
+                    "parameter": "Column 1 \u2192 Yes",
+                    "failure_weight": 4,
+                    "success_weight": 0,
+                    "failure_to_success_ratio": 4.0,
+                    "argmax_probability": 0.65,
                     "recommended_adjustment": "slightly_decrease",
-                    "justification": "Although semantically reasonable, the strong 0.9 mapping may overcommit to program anomaly whenever GPTN_3 is Found, even though such evidence also appears in many successes. This can propagate excessive compromise belief into Execution_Integrity and ultimately distort root-cause classification."
-                }
-            ]
-        },
-        {
-            "cpt": "Execution_Integrity",
-            "risk_level": "high_medium",
-            "number_of_failure_scenarios": 38,
-            "main_problem": "Execution_Integrity is the key fusion node combining Program_Anomaly, Deviation_in_Response, and Deviation_in_Dispatch before final diagnosis. Several columns selecting Compromised are more failure-associated than success-associated, especially the fully abnormal configuration. Because this node mediates whether the system is interpreted as cyber-compromised versus normal, its probability assignments are plausible independent contributors to repeated incorrect predictions.",
-            "suspicious_parameters": [
-                {
-                    "rank": 1,
-                    "parameter": "Column 0 \u2192 Compromised",
-                    "failure_weight": 25,
-                    "success_weight": 16,
-                    "failure_to_success_ratio": 1.56,
-                    "argmax_probability": 0.8,
-                    "recommended_adjustment": "slightly_decrease",
-                    "justification": "When Program_Anomaly=Yes, Deviation_in_Response=Yes, and Deviation_in_Dispatch=Yes, the CPT strongly favors Compromised. This is sensible, but the repeated failures suggest the fusion may be too aggressive, especially when downstream Root_Causes then over-selects Memory_Corruption."
-                },
-                {
-                    "rank": 2,
-                    "parameter": "Column 2 \u2192 Compromised",
-                    "failure_weight": 6,
-                    "success_weight": 4,
-                    "failure_to_success_ratio": 1.5,
-                    "argmax_probability": 0.7,
-                    "recommended_adjustment": "slightly_decrease",
-                    "justification": "This also shows a modest failure skew and may contribute to over-propagating compromise from partial evidence combinations."
+                    "justification": "This failure-only activation indicates that even with GPTN_1=Found and GPTN_2=Not_Found, the CPT may still be too prone to infer manipulation. Since Network_Manipulation directly influences Root_Causes, such over-attribution is structurally important."
                 },
                 {
                     "rank": 3,
-                    "parameter": "Column 1 \u2192 Compromised",
-                    "failure_weight": 7,
-                    "success_weight": 6,
-                    "failure_to_success_ratio": 1.17,
-                    "argmax_probability": 0.7,
+                    "parameter": "Column 2 \u2192 Yes",
+                    "failure_weight": 4,
+                    "success_weight": 0,
+                    "failure_to_success_ratio": 4.0,
+                    "argmax_probability": 0.65,
                     "recommended_adjustment": "slightly_decrease",
-                    "justification": "This is weaker evidence, but as part of the same fusion pattern it remains a plausible calibration target."
+                    "justification": "The symmetric failure-only pattern for the alternate single-found condition suggests a broader calibration issue in this CPT rather than one isolated column."
                 }
             ]
         }
     ],
-    "overall_summary": "The strongest plausible refinement candidates are concentrated on the physical/program-to-diagnosis path rather than on the many local LPTN chain CPTs. Root_Causes is the most suspicious because failure-only activations repeatedly select Memory_Corruption at the final decision stage. GPTN_5 and Physical_Anomaly form a strongly failure-associated physical branch whose calibration may be suboptimal, while GPTN_3, Program_Anomaly, and Execution_Integrity form a program-compromise branch that may overcommit to compromise states. By contrast, the numerous local response/dispatch CPTs and Network_Manipulation candidates appear more mixed, more upstream-dependent, or too weakly separated from successes to prioritize at this stage."
+    "overall_summary": "The strongest plausible refinement candidates are the downstream decision CPTs Network_Manipulation and Root_Causes. Both show failure-specific activations with little or no success support, and both occupy structurally decisive positions in the BN where overconfident probability assignments can repeatedly turn packet/log evidence into incorrect cyberattack diagnoses. Other candidate CPTs are either evidence priors, heavily shared by successful cases, or more plausibly reflecting upstream activations than independently causing repeated errors."
 }

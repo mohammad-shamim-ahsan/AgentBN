@@ -55,11 +55,11 @@ the framework attempts to:
 
 The current benchmarks are:
 
-| Benchmark | Target node | Domain |
-| --- | --- | --- |
-| `alarm` | `HYPOVOLEMIA` | Clinical monitoring / ALARM network |
-| `lung_cancer` | `either` | Asia lung-cancer network |
-| `der` | `Root_Causes` | Distributed energy resource anomaly diagnosis |
+| Benchmark | Domain | Target Node | Total Nodes | Flawed CPTs | Flawed BN Accuracy (Train / Test) | Proposed BN Accuracy (Train / Test) | Accuracy Improvement (Train / Test) |
+|-----------|--------|-------------|------------:|------------:|-----------------------------------|-------------------------------------|-------------------------------------|
+| `der` | Distributed energy resource anomaly diagnosis | `Root_Causes` | 20 | 2 | 68.06 % / |  80.55 % / | 12.49 % / |
+| `lung_cancer` | Asia lung-cancer network | `either` | 8 | 1 | 75.0 % | 100 % / 100 % | 25 % / |
+| `alarm` | Clinical monitoring / ALARM network | `HYPOVOLEMIA` | 37 | 2 | 88.0 % / | 100 % / 100 % | 12 % / |
 
 ## Pipeline
 

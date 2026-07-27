@@ -154,7 +154,7 @@ if __name__ == "__main__":
     TEST_CSV = DATASET_DIR / "combined_test_scenarios.csv"
     
     GT_BN_FILE = DATASET_DIR / "BN_gt.json"
-    FLAWED_BN_FILE = DATASET_DIR / "flawed_BN_1.json"
+    FLAWED_BN_FILE = DATASET_DIR / "flawed_BN_0.json"
 
     bn_json = load_bn(FLAWED_BN_FILE)
     failures, successes, accuracy, results = run_evaluation(bn_json, TRAIN_CSV)

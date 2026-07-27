@@ -6,7 +6,7 @@ from pathlib import Path
 # BENCHMARK
 # ======================================================
 
-BENCHMARK = os.getenv("BENCHMARK", "alarm")
+BENCHMARK = os.getenv("BENCHMARK", "der")
 
 ROOT = Path(__file__).resolve().parent.parent
 

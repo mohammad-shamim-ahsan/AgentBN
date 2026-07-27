@@ -57,9 +57,9 @@ The current benchmarks are:
 
 | Benchmark | Domain | Target Node | Total Nodes | Flawed CPTs | Flawed BN Accuracy (Train / Test) | Proposed BN Accuracy (Train / Test) | Accuracy Improvement (Train / Test) |
 |-----------|--------|-------------|------------:|------------:|-----------------------------------|-------------------------------------|-------------------------------------|
-| `der` | Distributed energy resource anomaly diagnosis | `Root_Causes` | 20 | 2 | 68.06 % / |  80.55 % / | 12.49 % / |
-| `lung_cancer` | Asia lung-cancer network | `either` | 8 | 1 | 75.0 % | 100 % / 100 % | 25 % / |
-| `alarm` | Clinical monitoring / ALARM network | `HYPOVOLEMIA` | 37 | 2 | 88.0 % / | 100 % / 100 % | 12 % / |
+| `der` | Distributed energy resource anomaly diagnosis | `Root_Causes` | 20 | 2 | 68.06 % / 70 % |  80.55 % / 80 % | 12.49 % / 10 % |
+| `lung_cancer` | Asia lung-cancer network | `either` | 8 | 1 | 75.0 % / 66.67 % | 100 % / 100 % | 25 % /  33.33 %|
+| `alarm` | Clinical monitoring / ALARM network | `HYPOVOLEMIA` | 37 | 2 | 88.0 % / 61.54 % | 100 % / 100 % | 12 % / 39.46 % |
 
 ## Pipeline
 

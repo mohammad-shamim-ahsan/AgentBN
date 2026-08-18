@@ -1,13 +1,13 @@
 {
-  "bn_number": null,
+  "bn_number": 3,
   "agent_changed_cpt_count": 3,
   "agent_changed_cpts": [
-    "Execution_Integrity",
-    "Network_Manipulation",
+    "Deviation_in_Dispatch",
+    "Deviation_in_Response",
     "Root_Causes"
   ],
   "agent_change_report": {
-    "verdict": "very_good",
+    "verdict": "good",
     "total_cpts": 20,
     "expected_changed_count": 2,
     "expected_changed_cpts": [
@@ -16,26 +16,26 @@
     ],
     "agent_changed_count": 3,
     "agent_changed_cpts": [
-      "Execution_Integrity",
-      "Network_Manipulation",
-      "Root_Causes"
-    ],
-    "matched_expected_count": 2,
-    "matched_expected_cpts": [
-      "Execution_Integrity",
-      "Root_Causes"
-    ],
-    "missed_expected_count": 0,
-    "missed_expected_cpts": [],
-    "unexpected_changed_count": 1,
-    "unexpected_changed_cpts": [
-      "Network_Manipulation"
-    ],
-    "unflawed_cpt_count": 18,
-    "untouched_unflawed_count": 17,
-    "untouched_unflawed_cpts": [
       "Deviation_in_Dispatch",
       "Deviation_in_Response",
+      "Root_Causes"
+    ],
+    "matched_expected_count": 1,
+    "matched_expected_cpts": [
+      "Root_Causes"
+    ],
+    "missed_expected_count": 1,
+    "missed_expected_cpts": [
+      "Execution_Integrity"
+    ],
+    "unexpected_changed_count": 2,
+    "unexpected_changed_cpts": [
+      "Deviation_in_Dispatch",
+      "Deviation_in_Response"
+    ],
+    "unflawed_cpt_count": 18,
+    "untouched_unflawed_count": 16,
+    "untouched_unflawed_cpts": [
       "GPTN_1",
       "GPTN_2",
       "GPTN_3",
@@ -49,11 +49,12 @@
       "LPTN_1_vi",
       "LPTN_1_viii",
       "LPTN_1_x",
+      "Network_Manipulation",
       "Physical_Anomaly",
       "Program_Anomaly"
     ],
-    "expected_change_recall": 1.0,
-    "unexpected_change_rate": 0.0556,
-    "unflawed_preservation_rate": 0.9444
+    "expected_change_recall": 0.5,
+    "unexpected_change_rate": 0.1111,
+    "unflawed_preservation_rate": 0.8889
   }
 }

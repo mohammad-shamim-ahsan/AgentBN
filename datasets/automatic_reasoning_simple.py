@@ -147,8 +147,8 @@ if __name__ == "__main__":
 
     DATASET_DIR = Path("datasets") / BENCHMARK
 
-    INITIAL_SCENARIOS_FILE = DATASET_DIR / "Scenarios.csv"
-    FINAL_OUTPUT_FILE = DATASET_DIR / "final_validated_dataset.csv"
+    # INITIAL_SCENARIOS_FILE = DATASET_DIR / "Scenarios.csv"
+    # FINAL_OUTPUT_FILE = DATASET_DIR / "final_validated_dataset.csv"
 
     TRAIN_CSV = DATASET_DIR / "combined_train_scenarios.csv"
     TEST_CSV = DATASET_DIR / "combined_test_scenarios.csv"
@@ -156,7 +156,7 @@ if __name__ == "__main__":
     GT_BN_FILE = DATASET_DIR / "BN_gt.json"
     FLAWED_BN_FILE = DATASET_DIR / "flawed_BN_0.json"
 
-    bn_json = load_bn(FLAWED_BN_FILE)
-    failures, successes, accuracy, results = run_evaluation(bn_json, TRAIN_CSV)
+    bn_json = load_bn(FLAWED_BN_FILE) ### --- change manually
+    failures, successes, accuracy, results = run_evaluation(bn_json, TRAIN_CSV) ### --- change manually
     
     print("\nReasoning Completed.")

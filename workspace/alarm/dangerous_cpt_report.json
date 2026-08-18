@@ -1,24 +1,24 @@
 {
-    "reported_risk_level": "medium",
+    "reported_risk_level": "high",
     "dangerous_cpts": [
         {
-            "cpt": "CVP",
-            "risk_level": "medium",
-            "number_of_failure_scenarios": 6,
-            "main_problem": "This is the only candidate parameter activated in all repeated failure scenarios with zero support from success scenarios. The selected parameter is also physiologically questionable in context: when LVEDVOLUME is NORMAL, the CPT assigns only 0.01 to CVP=HIGH, yet the failure pattern repeatedly propagates through this rare outcome. Because CVP is a direct observable downstream of LVEDVOLUME and can materially affect how the case is interpreted, this CPT is a plausible local contributor rather than merely an upstream passenger.",
+            "cpt": "LVEDVOLUME",
+            "risk_level": "high",
+            "number_of_failure_scenarios": 55,
+            "main_problem": "The HYPOVOLEMIA=Hypovolemia, LVFAILURE=FALSE configuration strongly favors HIGH LVEDVOLUME, which is physiologically opposite to the expected effect of hypovolemia. This same parameter is implicated on multiple suspicious paths and is a likely upstream driver of downstream failures.",
             "suspicious_parameters": [
                 {
                     "rank": 1,
                     "parameter": "Column 1 \u2192 HIGH",
-                    "failure_weight": 6,
-                    "success_weight": 0,
-                    "failure_to_success_ratio": 6.0,
-                    "argmax_probability": 0.01,
-                    "recommended_adjustment": "increase",
-                    "justification": "The parameter appears exclusively in failure scenarios and never in successes. Given the physiology, occasional elevated CVP with otherwise normal LV filling is not impossible in ICU settings, so a near-zero assignment may be overly restrictive and may contribute to repeated mismatches."
+                    "failure_weight": 55,
+                    "success_weight": 34,
+                    "failure_to_success_ratio": 1.62,
+                    "argmax_probability": 0.9,
+                    "recommended_adjustment": "decrease",
+                    "justification": "Under hypovolemia without LV failure, HIGH LVEDVOLUME should not dominate. Reducing this probability is the most direct way to correct the implausible mediator state that propagates errors to CVP and PCWP."
                 }
             ]
         }
     ],
-    "overall_summary": "Most candidates belong to a common upstream hemodynamic path that is activated frequently in both failures and successes, so they are not well localized as independent causes of error. CVP stands out because its implicated parameter is failure-specific, directly tied to an observed measurement, and currently assigned an extremely small probability under the repeatedly failing parent configuration."
+    "overall_summary": "The best-supported refinement target is LVEDVOLUME, specifically the parameter making hypovolemia drive HIGH ventricular filling volume. Other flagged parameters are either downstream consequences of this implausible state or have weaker and less specific evidence, so they should be excluded to keep the search space minimal."
 }

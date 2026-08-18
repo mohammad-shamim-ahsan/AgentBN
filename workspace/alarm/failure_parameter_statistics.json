@@ -1,89 +1,89 @@
 {
-    "bn_number": 1,
+    "bn_number": 0,
     "parameter_statistics": {
-        "STROKEVOLUME": [
+        "BP": [
             {
-                "column": 3,
-                "state": "NORMAL",
-                "argmax_probability": 0.45,
-                "failure_weight": 6,
-                "success_weight": 42
-            }
-        ],
-        "LVEDVOLUME": [
+                "column": 1,
+                "state": "HIGH",
+                "argmax_probability": 0.01,
+                "failure_weight": 25,
+                "success_weight": 0
+            },
             {
-                "column": 3,
+                "column": 1,
                 "state": "NORMAL",
-                "argmax_probability": 0.9,
-                "failure_weight": 6,
-                "success_weight": 42
+                "argmax_probability": 0.01,
+                "failure_weight": 15,
+                "success_weight": 11
+            },
+            {
+                "column": 1,
+                "state": "LOW",
+                "argmax_probability": 0.98,
+                "failure_weight": 15,
+                "success_weight": 23
             }
         ],
         "PCWP": [
             {
-                "column": 1,
-                "state": "NORMAL",
-                "argmax_probability": 0.95,
-                "failure_weight": 6,
-                "success_weight": 29
-            }
-        ],
-        "CO": [
-            {
-                "column": 7,
+                "column": 2,
                 "state": "HIGH",
                 "argmax_probability": 0.95,
-                "failure_weight": 6,
-                "success_weight": 42
-            }
-        ],
-        "BP": [
-            {
-                "column": 7,
-                "state": "HIGH",
-                "argmax_probability": 0.65,
-                "failure_weight": 6,
-                "success_weight": 20
+                "failure_weight": 55,
+                "success_weight": 34
             }
         ],
         "HYPOVOLEMIA": [
             {
                 "column": 0,
-                "state": "No_Hypovolemia",
-                "argmax_probability": 0.7,
-                "failure_weight": 6,
-                "success_weight": 42
+                "state": "Hypovolemia",
+                "argmax_probability": 0.08,
+                "failure_weight": 55,
+                "success_weight": 34
+            }
+        ],
+        "STROKEVOLUME": [
+            {
+                "column": 1,
+                "state": "LOW",
+                "argmax_probability": 0.5,
+                "failure_weight": 55,
+                "success_weight": 34
+            }
+        ],
+        "CO": [
+            {
+                "column": 6,
+                "state": "LOW",
+                "argmax_probability": 0.8,
+                "failure_weight": 55,
+                "success_weight": 34
+            }
+        ],
+        "LVEDVOLUME": [
+            {
+                "column": 1,
+                "state": "HIGH",
+                "argmax_probability": 0.9,
+                "failure_weight": 55,
+                "success_weight": 34
             }
         ],
         "CVP": [
             {
-                "column": 1,
+                "column": 2,
+                "state": "NORMAL",
+                "argmax_probability": 0.29,
+                "failure_weight": 31,
+                "success_weight": 1
+            },
+            {
+                "column": 2,
                 "state": "HIGH",
-                "argmax_probability": 0.01,
-                "failure_weight": 6,
-                "success_weight": 0
+                "argmax_probability": 0.7,
+                "failure_weight": 24,
+                "success_weight": 33
             }
         ]
-    },
-    "common_activation_patterns": [
-        {
-            "pattern": {
-                "BP": 7,
-                "CO": 7,
-                "CVP": 1,
-                "HYPOVOLEMIA": 0,
-                "LVEDVOLUME": 3,
-                "PCWP": 1,
-                "STROKEVOLUME": 3
-            },
-            "failure_scenarios": [
-                6,
-                11,
-                14,
-                17,
-                46,
-                49
-            ]
-        }
-    ]
+    }
 }

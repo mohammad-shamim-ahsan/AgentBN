@@ -122,7 +122,8 @@ def generate_refined_cpt_patch(
     full_context,
     proposed_bn_filename=PROPOSED_BN_FILE,
     bn_analysis_filename=BN_ANALYSIS_FILE,
-    temperature=0.3
+    temperature=0.3,
+    oracle=None
 ):
     
     # --------------------------------------------------
@@ -154,6 +155,7 @@ def generate_refined_cpt_patch(
             "full_context",
             "baseline_bn",
             "analysis_record",
+            "oracle",
             "target_node",
             "min_confidence",
             "min_margin"
@@ -168,6 +170,7 @@ def generate_refined_cpt_patch(
             indent=2
         ),
         analysis_record=formatted_analysis_record,
+        oracle=json.dumps(oracle, indent=2),
         target_node=TARGET_NODE,
         min_confidence=MIN_CONFIDENCE,
         min_margin=MIN_MARGIN
@@ -323,11 +326,16 @@ def generate_and_select_best_candidate(
     train_csv=TRAIN_CSV,
     temperature=0.3
 ):
+
+    with open(ORACLE_FILE, "r") as f:
+        relevant_nodes = list(json.load(f))
+    
     refinement_output = generate_refined_cpt_patch(
         full_context=full_context,
         proposed_bn_filename=proposed_bn_filename,
         bn_analysis_filename=bn_analysis_filename,
-        temperature=temperature
+        temperature=temperature,
+        oracle= relevant_nodes
     )
 
     best_bn_number = refinement_output["best_bn_number"]

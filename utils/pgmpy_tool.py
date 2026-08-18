@@ -81,6 +81,9 @@ def get_target_evidence_paths(model, evidence_nodes, verbose=False):
 
     2. All additional ancestors required to determine the active
        CPT columns of those path nodes.
+
+    3. All directed target-evidence paths, represented in the
+       forward direction of the Bayesian Network.
     """
 
     if verbose:
@@ -103,6 +106,9 @@ def get_target_evidence_paths(model, evidence_nodes, verbose=False):
     }
 
     relevant_nodes = {TARGET_NODE}
+
+    # Store all discovered directed paths
+    path_list = []
 
     # --------------------------------------------------
     # DFS: enumerate all directed paths
@@ -156,9 +162,14 @@ def get_target_evidence_paths(model, evidence_nodes, verbose=False):
                 print(f"  Paths Found : {len(paths)}")
 
             for i, path in enumerate(paths, 1):
+
                 if verbose:
                     print(f"    Path {i}: {' -> '.join(path)}")
+
                 relevant_nodes.update(path)
+
+                # Already in BN-forward direction
+                path_list.append(path)
 
             continue
 
@@ -183,11 +194,17 @@ def get_target_evidence_paths(model, evidence_nodes, verbose=False):
 
             for i, path in enumerate(paths, 1):
 
+                # Reverse so path is stored in BN-forward direction
                 forward_path = list(reversed(path))
 
                 if verbose:
-                    print(f"    Path {i}: {' -> '.join(forward_path)}")
+                    print(
+                        f"    Path {i}: "
+                        f"{' -> '.join(forward_path)}"
+                    )
+
                 relevant_nodes.update(path)
+                path_list.append(forward_path)
 
         else:
             if verbose:
@@ -218,32 +235,36 @@ def get_target_evidence_paths(model, evidence_nodes, verbose=False):
     if verbose:
         print("\n" + "=" * 70)
         print(f"Path Nodes ({len(path_nodes)})")
-        
+
         for node in sorted(path_nodes):
             print(f"  {node}")
 
-    print("\nAdditional Parent Nodes Required for CPT Activation "
-          f"({len(added_parent_nodes)})")
+        print(
+            "\nAdditional Parent Nodes Required for CPT Activation "
+            f"({len(added_parent_nodes)})"
+        )
 
-    if verbose:
         if added_parent_nodes:
             for node in sorted(added_parent_nodes):
                 print(f"  {node}")
         else:
             print("  None")
 
-    if verbose:
         print("\n" + "-" * 70)
         print(f"Final Relevant Nodes ({len(relevant_nodes)})")
 
-    if verbose:
         for node in sorted(relevant_nodes):
             print(f"  {node}")
 
-    if verbose:
+        print("\n" + "-" * 70)
+        print(f"Directed Paths ({len(path_list)})")
+
+        for i, path in enumerate(path_list, 1):
+            print(f"  P{i}: {' -> '.join(path)}")
+
         print("=" * 70)
 
-    return relevant_nodes, path_nodes, added_parent_nodes
+    return relevant_nodes, path_nodes, added_parent_nodes, path_list
 
 
 def run_inference(model, query, evidence=None):

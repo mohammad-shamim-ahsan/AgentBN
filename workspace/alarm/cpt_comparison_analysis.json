@@ -1,42 +1,40 @@
 {
   "bn_number": null,
-  "agent_changed_cpt_count": 2,
+  "agent_changed_cpt_count": 1,
   "agent_changed_cpts": [
-    "BP",
-    "CVP"
+    "LVEDVOLUME"
   ],
   "agent_change_report": {
-    "verdict": "poor",
+    "verdict": "good",
     "total_cpts": 37,
     "expected_changed_count": 2,
     "expected_changed_cpts": [
       "HYPOVOLEMIA",
-      "STROKEVOLUME"
+      "LVEDVOLUME"
     ],
-    "agent_changed_count": 2,
+    "agent_changed_count": 1,
     "agent_changed_cpts": [
-      "BP",
-      "CVP"
+      "LVEDVOLUME"
     ],
-    "matched_expected_count": 0,
-    "matched_expected_cpts": [],
-    "missed_expected_count": 2,
+    "matched_expected_count": 1,
+    "matched_expected_cpts": [
+      "LVEDVOLUME"
+    ],
+    "missed_expected_count": 1,
     "missed_expected_cpts": [
-      "HYPOVOLEMIA",
-      "STROKEVOLUME"
+      "HYPOVOLEMIA"
     ],
-    "unexpected_changed_count": 2,
-    "unexpected_changed_cpts": [
-      "BP",
-      "CVP"
-    ],
+    "unexpected_changed_count": 0,
+    "unexpected_changed_cpts": [],
     "unflawed_cpt_count": 35,
-    "untouched_unflawed_count": 33,
+    "untouched_unflawed_count": 35,
     "untouched_unflawed_cpts": [
       "ANAPHYLAXIS",
       "ARTCO2",
+      "BP",
       "CATECHOL",
       "CO",
+      "CVP",
       "DISCONNECT",
       "ERRCAUTER",
       "ERRLOWOUTPUT",
@@ -50,7 +48,6 @@
       "INSUFFANESTH",
       "INTUBATION",
       "KINKEDTUBE",
-      "LVEDVOLUME",
       "LVFAILURE",
       "MINVOL",
       "MINVOLSET",
@@ -61,14 +58,15 @@
       "PVSAT",
       "SAO2",
       "SHUNT",
+      "STROKEVOLUME",
       "TPR",
       "VENTALV",
       "VENTLUNG",
       "VENTMACH",
       "VENTTUBE"
     ],
-    "expected_change_recall": 0.0,
-    "unexpected_change_rate": 0.0571,
-    "unflawed_preservation_rate": 0.9429
+    "expected_change_recall": 0.5,
+    "unexpected_change_rate": 0.0,
+    "unflawed_preservation_rate": 1.0
   }
 }

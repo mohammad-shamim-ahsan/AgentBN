@@ -1,82 +1,60 @@
 {
-    "reported_risk_level": "high_medium",
+    "reported_risk_level": "high",
     "dangerous_cpts": [
         {
-            "cpt": "Root_Causes",
-            "risk_level": "high_medium",
-            "number_of_failure_scenarios": 17,
-            "main_problem": "This CPT is the final decision point and several activated output choices appear failure-specific, especially for parent configurations that should strongly distinguish cyberattack versus fault behavior. The deterministic statistics show multiple Root_Causes parameters activated in failures with zero success support, suggesting that the final mapping from Network_Manipulation, Execution_Integrity, and Physical_Anomaly to incident class may be miscalibrated rather than merely reflecting upstream evidence.",
+            "cpt": "Execution_Integrity",
+            "risk_level": "high",
+            "number_of_failure_scenarios": 7,
+            "main_problem": "A repeated failure-associated parameter favors Execution_Integrity=Normal when Program_Anomaly=Yes and both local deviation aggregators are No. This semantically suppresses anomaly propagation at a key bottleneck directly upstream of Root_Causes.",
             "suspicious_parameters": [
                 {
                     "rank": 1,
-                    "parameter": "Column 1 \u2192 Memory_Corruption",
-                    "failure_weight": 10,
-                    "success_weight": 0,
-                    "failure_to_success_ratio": 10.0,
-                    "argmax_probability": 0.25,
+                    "parameter": "Column 3 \u2192 Normal",
+                    "failure_weight": 7,
+                    "success_weight": 4,
+                    "failure_to_success_ratio": 1.75,
+                    "argmax_probability": 0.7,
                     "recommended_adjustment": "decrease",
-                    "justification": "This parameter is repeatedly selected only in failure cases despite weak support probability. In a DER diagnosis setting, when Network_Manipulation=Yes, Execution_Integrity=Compromised, and Physical_Anomaly=No, over-attributing cases to Memory_Corruption can plausibly confuse attack/fault discrimination."
-                },
-                {
-                    "rank": 2,
-                    "parameter": "Column 1 \u2192 FDI",
-                    "failure_weight": 3,
-                    "success_weight": 0,
-                    "failure_to_success_ratio": 3.0,
-                    "argmax_probability": 0.6,
-                    "recommended_adjustment": "slightly_decrease",
-                    "justification": "The same parent configuration also strongly favors FDI. Since both FDI and Memory_Corruption selections under this column appear in failures, the whole column likely deserves refinement. The issue is plausibly a misbalanced class allocation at the root-cause layer."
-                },
-                {
-                    "rank": 3,
-                    "parameter": "Column 0 \u2192 Memory_Corruption",
-                    "failure_weight": 2,
-                    "success_weight": 0,
-                    "failure_to_success_ratio": 2.0,
-                    "argmax_probability": 0.4,
-                    "recommended_adjustment": "slightly_decrease",
-                    "justification": "Although less frequent, this failure-only activation at another cyber-oriented parent configuration reinforces that the final class mapping may be systematically overusing Memory_Corruption."
+                    "justification": "This parameter is independently flagged as suspicious on multiple suspicious paths and directly reinforces a normal execution conclusion despite Program_Anomaly=Yes. Reducing it should allow anomaly evidence to propagate more appropriately to Root_Causes."
                 }
             ]
         },
         {
-            "cpt": "Network_Manipulation",
-            "risk_level": "high_medium",
-            "number_of_failure_scenarios": 17,
-            "main_problem": "This CPT sits on a key causal path from global packet inconsistency evidence to final diagnosis. Its failure-associated parameters are concentrated in the 'Yes' output for all columns where either GPTN_1 or GPTN_2 is Found, and these activations have no success support. Given the domain semantics, the current CPT may be too eager to infer network manipulation from packet inconsistency evidence, which can propagate directly into false cyberattack diagnoses.",
+            "cpt": "Deviation_in_Response",
+            "risk_level": "high",
+            "number_of_failure_scenarios": 10,
+            "main_problem": "The response-side deviation aggregator appears semantically inverted for the all-Found parent configuration, assigning very high probability to Deviation_in_Response=No when all response-chain expected deviations are present. Because this node feeds Execution_Integrity directly, the parameter can suppress valid local anomaly evidence.",
             "suspicious_parameters": [
                 {
                     "rank": 1,
-                    "parameter": "Column 0 \u2192 Yes",
-                    "failure_weight": 7,
-                    "success_weight": 0,
-                    "failure_to_success_ratio": 7.0,
-                    "argmax_probability": 0.75,
+                    "parameter": "Column 0 \u2192 No",
+                    "failure_weight": 10,
+                    "success_weight": 10,
+                    "failure_to_success_ratio": 1.0,
+                    "argmax_probability": 0.95,
                     "recommended_adjustment": "decrease",
-                    "justification": "When both GPTN_1 and GPTN_2 are Found, the CPT strongly asserts manipulation. Because this activation appears only in failures, the mapping may be overconfident for ambiguous or conflicting packet-level evidence."
-                },
+                    "justification": "Although activated in both failures and successes, the semantic mismatch is severe: all five response-side LPTN parents being Found should not strongly imply no response deviation. A decrease is well supported because this parameter likely blocks evidence before it reaches Execution_Integrity."
+                }
+            ]
+        },
+        {
+            "cpt": "Deviation_in_Dispatch",
+            "risk_level": "high",
+            "number_of_failure_scenarios": 11,
+            "main_problem": "The dispatch-side deviation aggregator strongly favors Deviation_in_Dispatch=No when all dispatch-chain expected deviations are Found, which conflicts with its intended aggregation semantics. This can directly suppress dispatch-side evidence before it influences Execution_Integrity and Root_Causes.",
+            "suspicious_parameters": [
                 {
-                    "rank": 2,
-                    "parameter": "Column 1 \u2192 Yes",
-                    "failure_weight": 4,
-                    "success_weight": 0,
-                    "failure_to_success_ratio": 4.0,
-                    "argmax_probability": 0.65,
-                    "recommended_adjustment": "slightly_decrease",
-                    "justification": "This failure-only activation indicates that even with GPTN_1=Found and GPTN_2=Not_Found, the CPT may still be too prone to infer manipulation. Since Network_Manipulation directly influences Root_Causes, such over-attribution is structurally important."
-                },
-                {
-                    "rank": 3,
-                    "parameter": "Column 2 \u2192 Yes",
-                    "failure_weight": 4,
-                    "success_weight": 0,
-                    "failure_to_success_ratio": 4.0,
-                    "argmax_probability": 0.65,
-                    "recommended_adjustment": "slightly_decrease",
-                    "justification": "The symmetric failure-only pattern for the alternate single-found condition suggests a broader calibration issue in this CPT rather than one isolated column."
+                    "rank": 1,
+                    "parameter": "Column 0 \u2192 No",
+                    "failure_weight": 11,
+                    "success_weight": 8,
+                    "failure_to_success_ratio": 1.375,
+                    "argmax_probability": 0.95,
+                    "recommended_adjustment": "decrease",
+                    "justification": "This parameter is semantically inverted and moderately failure-skewed, making it a strong refinement target. Lowering this probability should help dispatch-side deviations propagate instead of being suppressed."
                 }
             ]
         }
     ],
-    "overall_summary": "The strongest plausible refinement candidates are the downstream decision CPTs Network_Manipulation and Root_Causes. Both show failure-specific activations with little or no success support, and both occupy structurally decisive positions in the BN where overconfident probability assignments can repeatedly turn packet/log evidence into incorrect cyberattack diagnoses. Other candidate CPTs are either evidence priors, heavily shared by successful cases, or more plausibly reflecting upstream activations than independently causing repeated errors."
+    "overall_summary": "The best-supported refinement space is concentrated in three HIGH-risk CPTs that suppress anomaly propagation at key aggregation stages. Network_Manipulation is not included because its flagged parameters are either only uncertain or semantically plausible, whereas the selected CPTs show stronger structural and semantic evidence of harmful probability assignments."
 }

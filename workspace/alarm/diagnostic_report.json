@@ -1,0 +1,152 @@
+{
+    "path_diagnostics": [
+        {
+            "path_id": "P1",
+            "path": [
+                "HYPOVOLEMIA",
+                "STROKEVOLUME",
+                "CO",
+                "BP"
+            ],
+            "path_assessment": "suspicious",
+            "parameter_assessments": [
+                {
+                    "cpt": "HYPOVOLEMIA",
+                    "column": 0,
+                    "state": "Hypovolemia",
+                    "argmax_probability": 0.08,
+                    "failure_weight": 55,
+                    "success_weight": 34,
+                    "assessment": "uncertain",
+                    "justification": "This root prior is activated often in failures, but also frequently in successes, so the statistics alone do not isolate it. Semantically it is plausible as a low-prevalence condition, and any apparent issue on this path could also reflect downstream mappings rather than the prior itself."
+                },
+                {
+                    "cpt": "STROKEVOLUME",
+                    "column": 1,
+                    "state": "LOW",
+                    "argmax_probability": 0.5,
+                    "failure_weight": 55,
+                    "success_weight": 34,
+                    "assessment": "suspicious",
+                    "justification": "Column 1 corresponds to HYPOVOLEMIA=Hypovolemia and LVFAILURE=FALSE, where low stroke volume is physiologically expected, but assigning only 0.5 makes the effect relatively weak. Along the path from hypovolemia to CO to BP, this weak transmission could plausibly contribute to repeated inference failures."
+                },
+                {
+                    "cpt": "CO",
+                    "column": 6,
+                    "state": "LOW",
+                    "argmax_probability": 0.8,
+                    "failure_weight": 55,
+                    "success_weight": 34,
+                    "assessment": "uncertain",
+                    "justification": "Column 6 corresponds to HR=HIGH and STROKEVOLUME=LOW, and low CO being most likely is not obviously inconsistent, though the mixed parent pattern makes interpretation less direct. Its repeated activation in both failures and successes suggests it may be involved on the path without clearly being the main local source of error."
+                },
+                {
+                    "cpt": "BP",
+                    "column": 1,
+                    "state": "HIGH",
+                    "argmax_probability": 0.01,
+                    "failure_weight": 25,
+                    "success_weight": 0,
+                    "assessment": "uncertain",
+                    "justification": "Column 1 corresponds to CO=LOW and TPR=NORMAL, under which very low probability for HIGH BP is semantically appropriate, so the local entry itself does not look wrong. However, its exclusive association with failures indicates this activated parameter sits in a recurrent failure context on the path and cannot be ruled out purely from the available statistics."
+                },
+                {
+                    "cpt": "BP",
+                    "column": 1,
+                    "state": "NORMAL",
+                    "argmax_probability": 0.01,
+                    "failure_weight": 15,
+                    "success_weight": 11,
+                    "assessment": "uncertain",
+                    "justification": "For CO=LOW and TPR=NORMAL, assigning NORMAL BP a very small probability is directionally plausible, but the path-level failures suggest this mapping may still participate in misclassification when combined with upstream uncertainty. The failure/success counts are mixed, so evidence against this parameter is suggestive rather than clear."
+                }
+            ],
+            "path_summary": "This path is suspicious mainly because the hypovolemia-to-stroke-volume link appears weaker than expected for the activated parent configuration, potentially attenuating downstream effects on CO and BP. The BP and CO parameters are recurrently activated in failure cases, but their local semantics are less clearly problematic."
+        },
+        {
+            "path_id": "P2",
+            "path": [
+                "HYPOVOLEMIA",
+                "LVEDVOLUME",
+                "CVP"
+            ],
+            "path_assessment": "suspicious",
+            "parameter_assessments": [
+                {
+                    "cpt": "HYPOVOLEMIA",
+                    "column": 0,
+                    "state": "Hypovolemia",
+                    "argmax_probability": 0.08,
+                    "failure_weight": 55,
+                    "success_weight": 34,
+                    "assessment": "uncertain",
+                    "justification": "The prior for hypovolemia is repeatedly activated in failures, but it is also common in successes, so it is not specifically implicated by the statistics. Its low prior probability is semantically reasonable, making it only a contextual candidate on this path."
+                },
+                {
+                    "cpt": "LVEDVOLUME",
+                    "column": 1,
+                    "state": "HIGH",
+                    "argmax_probability": 0.9,
+                    "failure_weight": 55,
+                    "success_weight": 34,
+                    "assessment": "suspicious",
+                    "justification": "Column 1 corresponds to HYPOVOLEMIA=Hypovolemia and LVFAILURE=FALSE, where high left-ventricular end-diastolic volume is physiologically hard to reconcile with hypovolemia. Because this parameter strongly pushes LVEDVOLUME to HIGH along a path where reduced filling would be expected, it is a plausible contributor to recurrent errors."
+                },
+                {
+                    "cpt": "CVP",
+                    "column": 2,
+                    "state": "NORMAL",
+                    "argmax_probability": 0.29,
+                    "failure_weight": 31,
+                    "success_weight": 1,
+                    "assessment": "suspicious",
+                    "justification": "Column 2 corresponds to LVEDVOLUME=HIGH, and assigning a substantial probability to NORMAL CVP weakens the expected hemodynamic signal from elevated filling volume. Its strong imbalance toward failures with almost no successes makes it a plausible local contributor on this path."
+                }
+            ],
+            "path_summary": "This path is suspicious because the activated LVEDVOLUME parameter appears semantically inconsistent with hypovolemia, and the downstream CVP mapping is also disproportionately associated with failures. Together they could distort the expected low-volume to venous-pressure relationship."
+        },
+        {
+            "path_id": "P3",
+            "path": [
+                "HYPOVOLEMIA",
+                "LVEDVOLUME",
+                "PCWP"
+            ],
+            "path_assessment": "suspicious",
+            "parameter_assessments": [
+                {
+                    "cpt": "HYPOVOLEMIA",
+                    "column": 0,
+                    "state": "Hypovolemia",
+                    "argmax_probability": 0.08,
+                    "failure_weight": 55,
+                    "success_weight": 34,
+                    "assessment": "uncertain",
+                    "justification": "As on the other paths, this prior is activated often in both failures and successes, so it is not specifically diagnostic by itself. The prior is also semantically plausible for a relatively uncommon condition."
+                },
+                {
+                    "cpt": "LVEDVOLUME",
+                    "column": 1,
+                    "state": "HIGH",
+                    "argmax_probability": 0.9,
+                    "failure_weight": 55,
+                    "success_weight": 34,
+                    "assessment": "suspicious",
+                    "justification": "For HYPOVOLEMIA=Hypovolemia and LVFAILURE=FALSE, strongly favoring HIGH LVEDVOLUME conflicts with the expected reduction in ventricular filling under hypovolemia. Because LVEDVOLUME is the key mediator on this path, this parameter is a plausible source of repeated downstream inference errors."
+                },
+                {
+                    "cpt": "PCWP",
+                    "column": 2,
+                    "state": "HIGH",
+                    "argmax_probability": 0.95,
+                    "failure_weight": 55,
+                    "success_weight": 34,
+                    "assessment": "uncertain",
+                    "justification": "Column 2 corresponds to LVEDVOLUME=HIGH, and high PCWP is locally consistent with elevated filling volume, so this entry does not look semantically problematic on its own. Its association with failures may therefore mainly reflect the upstream LVEDVOLUME state being driven in an implausible direction."
+                }
+            ],
+            "path_summary": "This path is suspicious primarily because the hypovolemia-to-LVEDVOLUME mapping appears inconsistent with physiology, while the PCWP parameter looks largely downstream-consistent with that induced state. The main concern is therefore the mediator state activated before PCWP."
+        }
+    ],
+    "overall_summary": "Across the provided paths, the most plausible localized concerns are on the hypovolemia-to-LVEDVOLUME and hypovolemia-to-STROKEVOLUME links, with additional downstream concern on the LVEDVOLUME-to-CVP mapping. Several other activated parameters recur in failures but appear locally semantically consistent, so they remain uncertain rather than clearly faulty."
+}

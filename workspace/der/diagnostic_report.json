@@ -1,0 +1,162 @@
+{
+    "path_diagnostics": [
+        {
+            "path_id": "P1",
+            "path": [
+                "Network_Manipulation",
+                "Root_Causes"
+            ],
+            "path_assessment": "suspicious",
+            "parameter_assessments": [
+                {
+                    "cpt": "Network_Manipulation",
+                    "column": 0,
+                    "state": "Yes",
+                    "argmax_probability": 0.95,
+                    "failure_weight": 6,
+                    "success_weight": 1,
+                    "assessment": "suspicious",
+                    "justification": "This column corresponds to GPTN_1=Found and GPTN_2=Found, where inferring network manipulation is semantically plausible, but the very strong mapping is activated much more often in failures than successes. Because this node directly feeds Root_Causes on this path, the parameter itself is a plausible contributor rather than merely reflecting downstream behavior."
+                },
+                {
+                    "cpt": "Network_Manipulation",
+                    "column": 1,
+                    "state": "Yes",
+                    "argmax_probability": 0.85,
+                    "failure_weight": 3,
+                    "success_weight": 1,
+                    "assessment": "uncertain",
+                    "justification": "This column corresponds to GPTN_1=Found and GPTN_2=Not_Found, which still supports network manipulation semantically, so the local meaning is reasonable. However, its failure-skewed activation and direct influence on Root_Causes make it a plausible but not clearly established contributor."
+                },
+                {
+                    "cpt": "Network_Manipulation",
+                    "column": 2,
+                    "state": "Yes",
+                    "argmax_probability": 0.85,
+                    "failure_weight": 3,
+                    "success_weight": 1,
+                    "assessment": "uncertain",
+                    "justification": "This column corresponds to GPTN_1=Not_Found and GPTN_2=Found; assigning Network_Manipulation=Yes is still plausible because GPTN_2 indicates inconsistent packets without deviation. The parameter is somewhat associated with failures and lies directly on the path to Root_Causes, but the evidence is not strong enough to call it clearly problematic."
+                }
+            ],
+            "path_summary": "The path is suspicious because multiple activated Network_Manipulation parameters with strong support for manipulation are disproportionately associated with failures. Since this node directly determines downstream root-cause beliefs on this path, these parameters are plausible contributors."
+        },
+        {
+            "path_id": "P2",
+            "path": [
+                "Program_Anomaly",
+                "Execution_Integrity",
+                "Root_Causes"
+            ],
+            "path_assessment": "suspicious",
+            "parameter_assessments": [
+                {
+                    "cpt": "Execution_Integrity",
+                    "column": 3,
+                    "state": "Normal",
+                    "argmax_probability": 0.7,
+                    "failure_weight": 7,
+                    "success_weight": 4,
+                    "assessment": "suspicious",
+                    "justification": "This column corresponds to Program_Anomaly=Yes, Deviation_in_Response=No, and Deviation_in_Dispatch=No. Given an observed program anomaly, favoring Execution_Integrity=Normal is semantically questionable on this path, and the parameter is activated more often in failures than successes."
+                },
+                {
+                    "cpt": "Execution_Integrity",
+                    "column": 1,
+                    "state": "Compromised",
+                    "argmax_probability": 0.7,
+                    "failure_weight": 5,
+                    "success_weight": 12,
+                    "assessment": "uncertain",
+                    "justification": "This column corresponds to Program_Anomaly=Yes, Deviation_in_Response=Yes, Deviation_in_Dispatch=No, and inferring compromised execution is semantically aligned with the path. Its substantial success activation weakens the case that the parameter itself is faulty, though repeated failure activation keeps it diagnostically relevant."
+                },
+                {
+                    "cpt": "Execution_Integrity",
+                    "column": 2,
+                    "state": "Compromised",
+                    "argmax_probability": 0.7,
+                    "failure_weight": 5,
+                    "success_weight": 9,
+                    "assessment": "uncertain",
+                    "justification": "This column corresponds to Program_Anomaly=Yes, Deviation_in_Response=No, Deviation_in_Dispatch=Yes, where compromised execution is also semantically plausible. The failure association is noticeable but not disproportionate enough relative to successes to isolate the parameter as clearly problematic."
+                }
+            ],
+            "path_summary": "This path is suspicious mainly because one Execution_Integrity parameter maps a present Program_Anomaly to Normal execution under no local deviations, which is semantically weak and failure-associated. Other activated Execution_Integrity parameters are more consistent with the path and remain only uncertain."
+        },
+        {
+            "path_id": "P3",
+            "path": [
+                "Physical_Anomaly",
+                "Root_Causes"
+            ],
+            "path_assessment": "consistent",
+            "parameter_assessments": [],
+            "path_summary": "The activated Physical_Anomaly parameters are semantically aligned with GPTN_5 evidence and are more often seen in successes than failures. This path does not show clear parameter-level evidence of contributing to repeated incorrect predictions."
+        },
+        {
+            "path_id": "P4",
+            "path": [
+                "Deviation_in_Response",
+                "Execution_Integrity",
+                "Root_Causes"
+            ],
+            "path_assessment": "suspicious",
+            "parameter_assessments": [
+                {
+                    "cpt": "Deviation_in_Response",
+                    "column": 0,
+                    "state": "No",
+                    "argmax_probability": 0.95,
+                    "failure_weight": 10,
+                    "success_weight": 10,
+                    "assessment": "suspicious",
+                    "justification": "This column corresponds to all five response-side LPTN parents being Found, i.e., expected deviations are present throughout the response chain. Assigning Deviation_in_Response=No with very high probability is semantically inconsistent with the aggregation role of this node, and because it feeds Execution_Integrity directly, it is a plausible contributor despite balanced failure/success counts."
+                },
+                {
+                    "cpt": "Execution_Integrity",
+                    "column": 3,
+                    "state": "Normal",
+                    "argmax_probability": 0.7,
+                    "failure_weight": 7,
+                    "success_weight": 4,
+                    "assessment": "suspicious",
+                    "justification": "This column corresponds to Program_Anomaly=Yes, Deviation_in_Response=No, Deviation_in_Dispatch=No. On this path, if response deviation is suppressed upstream, this parameter further reinforces a normal execution conclusion despite program anomaly evidence, and its failure-skewed activation makes it a plausible contributor."
+                }
+            ],
+            "path_summary": "The response path is suspicious because the response-deviation aggregator appears semantically inverted when all response-side expected deviations are present, and this can propagate into a normal execution assessment downstream. The combination can plausibly drive repeated misclassification at Root_Causes."
+        },
+        {
+            "path_id": "P5",
+            "path": [
+                "Deviation_in_Dispatch",
+                "Execution_Integrity",
+                "Root_Causes"
+            ],
+            "path_assessment": "suspicious",
+            "parameter_assessments": [
+                {
+                    "cpt": "Deviation_in_Dispatch",
+                    "column": 0,
+                    "state": "No",
+                    "argmax_probability": 0.95,
+                    "failure_weight": 11,
+                    "success_weight": 8,
+                    "assessment": "suspicious",
+                    "justification": "This column corresponds to all four dispatch-side LPTN parents being Found, meaning expected deviations are present across the dispatch chain. Assigning Deviation_in_Dispatch=No with very high probability conflicts with the intended aggregation semantics and is moderately failure-associated."
+                },
+                {
+                    "cpt": "Execution_Integrity",
+                    "column": 3,
+                    "state": "Normal",
+                    "argmax_probability": 0.7,
+                    "failure_weight": 7,
+                    "success_weight": 4,
+                    "assessment": "suspicious",
+                    "justification": "This column corresponds to Program_Anomaly=Yes, Deviation_in_Response=No, Deviation_in_Dispatch=No. Along this path, an upstream suppression of dispatch deviation can combine with this parameter to preserve a normal execution conclusion despite anomaly evidence, and the failure-skew supports suspicion."
+                }
+            ],
+            "path_summary": "The dispatch path is suspicious because the dispatch-deviation aggregator strongly favors no deviation even when all dispatch-side expected deviations are found, and this can propagate into a normal execution judgment downstream. That pattern is compatible with repeated inference failures reaching Root_Causes."
+        }
+    ],
+    "overall_summary": "The main plausible contributors are on the Network_Manipulation, Deviation_in_Response, Deviation_in_Dispatch, and Execution_Integrity CPTs. In particular, several suspicious parameters appear to suppress deviation or preserve normal execution under parent configurations that semantically suggest anomaly evidence should propagate forward."
+}

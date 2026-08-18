@@ -569,10 +569,10 @@ def convert_bif(
 
 if __name__ == "__main__":
 
-    directory = Path("datasets/alarm")
+    directory = Path("datasets/hailfinder")
 
     convert_bif(
-        bif_file=directory / "alarm.bif",
+        bif_file=directory / "hailfinder.bif",
         json_file=directory / "BN_gt.json",
         xdsl_file=directory / "BN_gt.xdsl",
     )

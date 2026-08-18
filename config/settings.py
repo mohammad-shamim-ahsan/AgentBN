@@ -6,7 +6,7 @@ from pathlib import Path
 # BENCHMARK
 # ======================================================
 
-BENCHMARK = os.getenv("BENCHMARK", "der")
+BENCHMARK = os.getenv("BENCHMARK", "alarm")
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -26,7 +26,7 @@ CONTEXT_DIR = PROMPT_DIR / "contexts"
 GROUND_TRUTH_BN_FILE = DATASET_DIR / "BN_gt.json"
 
 FLAWED_BN_FILE = DATASET_DIR / "flawed_BN_0.json"   
-# FLAWED_BN_FILE = DATASET_DIR / "flawed_BN_1.json"
+# FLAWED_BN_FILE = DATASET_DIR / "flawed_BN_1.json"   
 
 TRAIN_CSV = DATASET_DIR / "combined_train_scenarios.csv"
 
@@ -58,11 +58,17 @@ RESTART_BN_ANALYSIS_FILE = WORKSPACE_DIR / "restart_bn_analysis.jsonl"
 
 DANGER_REPORT_FILE = WORKSPACE_DIR / "dangerous_cpt_report.json"
 
+DIAGNOSTIC_REPORT_FILE = WORKSPACE_DIR / "diagnostic_report.json"
+
 FAILURE_PARAMETER_FILE = WORKSPACE_DIR / "failure_parameter_statistics.json"
 
 ACTIVATION_TRACE_FILE = WORKSPACE_DIR / "activation_trace.csv"
 
 CPT_COMPARISON_FILE = WORKSPACE_DIR / "cpt_comparison_analysis.json"
+
+ORACLE_FILE = WORKSPACE_DIR / "oracle_nodes.json"
+
+FAILED_LLM_RESPONSE_FILE = WORKSPACE_DIR / "failed_llm_response.json"
 
 
 # ======================================================
@@ -80,6 +86,14 @@ MAX_INITIAL_RETRIES = 3
 INITIAL_IMPROVEMENT_RATIO = 0.30
 
 MAX_NO_IMPROVEMENT_RETRIES = 3
+
+
+if BENCHMARK == "der":
+    EXCLUDE_EVIDENCE_NODES = True
+elif BENCHMARK == "lung_cancer":
+    EXCLUDE_EVIDENCE_NODES = False
+elif BENCHMARK == "alarm":
+    EXCLUDE_EVIDENCE_NODES = False
 
 
 # ======================================================
@@ -135,8 +149,6 @@ elif BENCHMARK == "lung_cancer":
         "lung",
         "bronc",
         "either",
-        "xray",
-        "dysp",
     }
 
     EXPECTED_CHANGED_CPTS = {
@@ -158,21 +170,15 @@ elif BENCHMARK == "alarm":
 
     TARGET_NODES_FOR_VALIDATION = {
         "HISTORY",
-        "CVP",
-        "PCWP",
         "HYPOVOLEMIA",
         "LVEDVOLUME",
         "LVFAILURE",
         "STROKEVOLUME",
         "ERRLOWOUTPUT",
-        "HRBP",
-        "HREKG",
         "ERRCAUTER",
-        "HRSAT",
         "INSUFFANESTH",
         "ANAPHYLAXIS",
         "TPR",
-        "EXPCO2",
         "KINKEDTUBE",
         "MINVOL",
         "FIO2",
@@ -193,18 +199,20 @@ elif BENCHMARK == "alarm":
         "CATECHOL",
         "HR",
         "CO",
-        "BP",
     }
 
     if FLAWED_BN_FILE.name == "flawed_BN_0.json":
         EXPECTED_CHANGED_CPTS = {
             "HYPOVOLEMIA",
-            "STROKEVOLUME",
+            "LVEDVOLUME",
         }
-    elif FLAWED_BN_FILE.name == "flawed_BN_1.json":
-        EXPECTED_CHANGED_CPTS = {
-            "PCWP",
-        }
+
+    # elif FLAWED_BN_FILE.name == "flawed_BN_1.json":
+    #     EXPECTED_CHANGED_CPTS = {
+    #         "HYPOVOLEMIA",
+    #         "LVEDVOLUME",
+    #         "TPR",
+    #     }
 
 else:
     raise ValueError(f"Unknown experiment: {BENCHMARK}") 
@@ -224,5 +232,5 @@ TARGET_ACCURACY = 0.98
 # FORMATTING RETRIALS HYPERPARAMTERS
 # ======================================================
 
-MAX_FORMAT_RETRIES = 3
+MAX_FORMAT_RETRIES = 2
 MAX_REPAIR_RETRIES = 2

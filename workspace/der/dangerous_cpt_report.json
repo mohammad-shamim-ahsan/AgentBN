@@ -2,59 +2,33 @@
     "reported_risk_level": "high",
     "dangerous_cpts": [
         {
-            "cpt": "Execution_Integrity",
-            "risk_level": "high",
-            "number_of_failure_scenarios": 7,
-            "main_problem": "A repeated failure-associated parameter favors Execution_Integrity=Normal when Program_Anomaly=Yes and both local deviation aggregators are No. This semantically suppresses anomaly propagation at a key bottleneck directly upstream of Root_Causes.",
-            "suspicious_parameters": [
-                {
-                    "rank": 1,
-                    "parameter": "Column 3 \u2192 Normal",
-                    "failure_weight": 7,
-                    "success_weight": 4,
-                    "failure_to_success_ratio": 1.75,
-                    "argmax_probability": 0.7,
-                    "recommended_adjustment": "decrease",
-                    "justification": "This parameter is independently flagged as suspicious on multiple suspicious paths and directly reinforces a normal execution conclusion despite Program_Anomaly=Yes. Reducing it should allow anomaly evidence to propagate more appropriately to Root_Causes."
-                }
-            ]
-        },
-        {
-            "cpt": "Deviation_in_Response",
+            "cpt": "Root_Causes",
             "risk_level": "high",
             "number_of_failure_scenarios": 10,
-            "main_problem": "The response-side deviation aggregator appears semantically inverted for the all-Found parent configuration, assigning very high probability to Deviation_in_Response=No when all response-chain expected deviations are present. Because this node feeds Execution_Integrity directly, the parameter can suppress valid local anomaly evidence.",
+            "main_problem": "The strongest recurring problem is at the final diagnosis CPT under cyber-oriented parent configurations, where FDI and Memory_Corruption are weakly separated and the same ambiguous mappings are activated only in failures. This makes the target node the most direct and least disruptive refinement point.",
             "suspicious_parameters": [
                 {
                     "rank": 1,
-                    "parameter": "Column 0 \u2192 No",
+                    "parameter": "Column 1 \u2192 Memory_Corruption",
                     "failure_weight": 10,
-                    "success_weight": 10,
-                    "failure_to_success_ratio": 1.0,
-                    "argmax_probability": 0.95,
-                    "recommended_adjustment": "decrease",
-                    "justification": "Although activated in both failures and successes, the semantic mismatch is severe: all five response-side LPTN parents being Found should not strongly imply no response deviation. A decrease is well supported because this parameter likely blocks evidence before it reaches Execution_Integrity."
-                }
-            ]
-        },
-        {
-            "cpt": "Deviation_in_Dispatch",
-            "risk_level": "high",
-            "number_of_failure_scenarios": 11,
-            "main_problem": "The dispatch-side deviation aggregator strongly favors Deviation_in_Dispatch=No when all dispatch-chain expected deviations are Found, which conflicts with its intended aggregation semantics. This can directly suppress dispatch-side evidence before it influences Execution_Integrity and Root_Causes.",
-            "suspicious_parameters": [
+                    "success_weight": 0,
+                    "failure_to_success_ratio": 10.0,
+                    "argmax_probability": 0.4,
+                    "recommended_adjustment": "slightly_decrease",
+                    "justification": "For Network_Manipulation=Yes, Execution_Integrity=Compromised, Physical_Anomaly=No, Memory_Corruption is tied with FDI, which weakens discrimination exactly where failures recur. Slightly decreasing this parameter is well supported and should help reduce over-assignment of Memory_Corruption without broadly disturbing successful cases."
+                },
                 {
-                    "rank": 1,
-                    "parameter": "Column 0 \u2192 No",
-                    "failure_weight": 11,
-                    "success_weight": 8,
-                    "failure_to_success_ratio": 1.375,
-                    "argmax_probability": 0.95,
-                    "recommended_adjustment": "decrease",
-                    "justification": "This parameter is semantically inverted and moderately failure-skewed, making it a strong refinement target. Lowering this probability should help dispatch-side deviations propagate instead of being suppressed."
+                    "rank": 2,
+                    "parameter": "Column 1 \u2192 FDI",
+                    "failure_weight": 3,
+                    "success_weight": 0,
+                    "failure_to_success_ratio": 3.0,
+                    "argmax_probability": 0.4,
+                    "recommended_adjustment": "slightly_decrease",
+                    "justification": "This tied FDI entry participates in the same ambiguous cyber-cause mapping and is also failure-only. It should be refined jointly with the paired Memory_Corruption entry so the search can reallocate probability mass toward a more discriminative configuration."
                 }
             ]
         }
     ],
-    "overall_summary": "The best-supported refinement space is concentrated in three HIGH-risk CPTs that suppress anomaly propagation at key aggregation stages. Network_Manipulation is not included because its flagged parameters are either only uncertain or semantically plausible, whereas the selected CPTs show stronger structural and semantic evidence of harmful probability assignments."
+    "overall_summary": "Only the Root_Causes CPT is strongly supported for refinement at the highest priority level. Upstream CPT concerns are mostly semantically defensible and often reflect propagated evidence, whereas the final target mapping shows repeated failure-specific ambiguity with minimal risk to successful behavior if refined."
 }

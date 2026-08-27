@@ -1,5 +1,5 @@
 {
-    "bn_number": 1,
+    "bn_number": 3,
     "parameter_statistics": {
         "Physical_Anomaly": [
             {
@@ -13,8 +13,8 @@
                 "column": 1,
                 "state": "No",
                 "argmax_probability": 0.9,
-                "failure_weight": 10,
-                "success_weight": 32
+                "failure_weight": 13,
+                "success_weight": 29
             }
         ],
         "Network_Manipulation": [
@@ -29,138 +29,138 @@
                 "column": 2,
                 "state": "Yes",
                 "argmax_probability": 0.85,
-                "failure_weight": 3,
-                "success_weight": 1
+                "failure_weight": 4,
+                "success_weight": 0
             },
             {
                 "column": 0,
                 "state": "Yes",
                 "argmax_probability": 0.95,
-                "failure_weight": 6,
-                "success_weight": 1
+                "failure_weight": 7,
+                "success_weight": 0
             },
             {
                 "column": 1,
                 "state": "Yes",
                 "argmax_probability": 0.85,
-                "failure_weight": 3,
-                "success_weight": 1
+                "failure_weight": 4,
+                "success_weight": 0
             }
         ],
         "Deviation_in_Dispatch": [
             {
                 "column": 0,
-                "state": "No",
-                "argmax_probability": 0.95,
-                "failure_weight": 9,
-                "success_weight": 10
+                "state": "Yes",
+                "argmax_probability": 0.9,
+                "failure_weight": 12,
+                "success_weight": 7
             },
             {
                 "column": 15,
-                "state": "Yes",
+                "state": "No",
                 "argmax_probability": 0.9,
                 "failure_weight": 2,
                 "success_weight": 6
             },
             {
                 "column": 3,
-                "state": "Yes",
-                "argmax_probability": 0.6,
+                "state": "No",
+                "argmax_probability": 0.55,
                 "failure_weight": 2,
                 "success_weight": 6
             },
             {
                 "column": 7,
-                "state": "Yes",
-                "argmax_probability": 0.8,
+                "state": "No",
+                "argmax_probability": 0.75,
                 "failure_weight": 1,
                 "success_weight": 3
             }
         ],
         "Execution_Integrity": [
             {
-                "column": 7,
-                "state": "Normal",
-                "argmax_probability": 0.8,
-                "failure_weight": 2,
-                "success_weight": 3
-            },
-            {
-                "column": 2,
+                "column": 4,
                 "state": "Compromised",
-                "argmax_probability": 0.85,
-                "failure_weight": 1,
-                "success_weight": 13
-            },
-            {
-                "column": 0,
-                "state": "Compromised",
-                "argmax_probability": 0.9,
-                "failure_weight": 4,
-                "success_weight": 19
-            },
-            {
-                "column": 3,
-                "state": "Compromised",
-                "argmax_probability": 0.75,
+                "argmax_probability": 0.72,
                 "failure_weight": 5,
-                "success_weight": 6
+                "success_weight": 0
             },
             {
                 "column": 1,
                 "state": "Compromised",
-                "argmax_probability": 0.85,
+                "argmax_probability": 0.8,
                 "failure_weight": 2,
-                "success_weight": 15
+                "success_weight": 23
+            },
+            {
+                "column": 0,
+                "state": "Compromised",
+                "argmax_probability": 0.88,
+                "failure_weight": 6,
+                "success_weight": 12
+            },
+            {
+                "column": 3,
+                "state": "Compromised",
+                "argmax_probability": 0.55,
+                "failure_weight": 3,
+                "success_weight": 9
+            },
+            {
+                "column": 2,
+                "state": "Compromised",
+                "argmax_probability": 0.8,
+                "failure_weight": 1,
+                "success_weight": 9
             }
         ],
         "Deviation_in_Response": [
             {
                 "column": 0,
-                "state": "No",
-                "argmax_probability": 0.95,
-                "failure_weight": 7,
-                "success_weight": 13
+                "state": "Yes",
+                "argmax_probability": 0.9,
+                "failure_weight": 10,
+                "success_weight": 10
             },
             {
                 "column": 17,
                 "state": "Yes",
-                "argmax_probability": 0.5,
+                "argmax_probability": 0.55,
                 "failure_weight": 1,
                 "success_weight": 2
             },
             {
                 "column": 15,
-                "state": "Yes",
-                "argmax_probability": 0.85,
+                "state": "No",
+                "argmax_probability": 0.8,
                 "failure_weight": 1,
                 "success_weight": 3
             },
             {
                 "column": 31,
-                "state": "Yes",
+                "state": "No",
                 "argmax_probability": 0.9,
                 "failure_weight": 2,
                 "success_weight": 4
             },
             {
                 "column": 1,
-                "state": "No",
-                "argmax_probability": 0.7,
+                "state": "Yes",
+                "argmax_probability": 0.75,
                 "failure_weight": 1,
                 "success_weight": 3
             },
             {
                 "column": 7,
-                "state": "Yes",
-                "argmax_probability": 0.7,
+                "state": "No",
+                "argmax_probability": 0.65,
                 "failure_weight": 1,
                 "success_weight": 4
             },
             {
                 "column": 3,
                 "state": "Yes",
-                "argmax_probability": 0.5,
+                "argmax_probability": 0.55,
                 "failure_weight": 1,
                 "success_weight": 4
             }
@@ -170,8 +170,8 @@
                 "column": 1,
                 "state": "No",
                 "argmax_probability": 0.9,
-                "failure_weight": 2,
-                "success_weight": 5
+                "failure_weight": 5,
+                "success_weight": 2
             },
             {
                 "column": 0,
@@ -183,9 +183,9 @@
         ],
         "Root_Causes": [
             {
-                "column": 6,
+                "column": 4,
                 "state": "System_Fault",
-                "argmax_probability": 0.7,
+                "argmax_probability": 0.15,
                 "failure_weight": 2,
                 "success_weight": 0
             },
@@ -194,6 +194,13 @@
                 "state": "Memory_Corruption",
                 "argmax_probability": 0.4,
                 "failure_weight": 10,
+                "success_weight": 0
+            },
+            {
+                "column": 1,
+                "state": "FDI",
+                "argmax_probability": 0.4,
+                "failure_weight": 3,
                 "success_weight": 0
             },
             {

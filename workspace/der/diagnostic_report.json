@@ -13,33 +13,33 @@
                     "column": 0,
                     "state": "Yes",
                     "argmax_probability": 0.95,
-                    "failure_weight": 6,
-                    "success_weight": 1,
-                    "assessment": "suspicious",
-                    "justification": "This column corresponds to GPTN_1=Found and GPTN_2=Found, where inferring network manipulation is semantically plausible, but the very strong mapping is activated much more often in failures than successes. Because this node directly feeds Root_Causes on this path, the parameter itself is a plausible contributor rather than merely reflecting downstream behavior."
+                    "failure_weight": 7,
+                    "success_weight": 0,
+                    "assessment": "uncertain",
+                    "justification": "This column corresponds to GPTN_1=Found and GPTN_2=Found, where inferring network manipulation is semantically plausible, so the local meaning is reasonable. However, its repeated activation only in failures suggests it may still be involved in mispropagating strong network-manipulation evidence toward the root-cause node."
                 },
                 {
                     "cpt": "Network_Manipulation",
                     "column": 1,
                     "state": "Yes",
                     "argmax_probability": 0.85,
-                    "failure_weight": 3,
-                    "success_weight": 1,
+                    "failure_weight": 4,
+                    "success_weight": 0,
                     "assessment": "uncertain",
-                    "justification": "This column corresponds to GPTN_1=Found and GPTN_2=Not_Found, which still supports network manipulation semantically, so the local meaning is reasonable. However, its failure-skewed activation and direct influence on Root_Causes make it a plausible but not clearly established contributor."
+                    "justification": "This column represents GPTN_1=Found and GPTN_2=Not_Found, which is also compatible with network inconsistency evidence, so the parameter is not obviously semantically wrong. Its failure-only activation nevertheless makes it a plausible contributor on this path."
                 },
                 {
                     "cpt": "Network_Manipulation",
                     "column": 2,
                     "state": "Yes",
                     "argmax_probability": 0.85,
-                    "failure_weight": 3,
-                    "success_weight": 1,
+                    "failure_weight": 4,
+                    "success_weight": 0,
                     "assessment": "uncertain",
-                    "justification": "This column corresponds to GPTN_1=Not_Found and GPTN_2=Found; assigning Network_Manipulation=Yes is still plausible because GPTN_2 indicates inconsistent packets without deviation. The parameter is somewhat associated with failures and lies directly on the path to Root_Causes, but the evidence is not strong enough to call it clearly problematic."
+                    "justification": "This column corresponds to GPTN_1=Not_Found and GPTN_2=Found; assigning Network_Manipulation=Yes can be defensible because GPTN_2 still indicates inconsistent network packets. But the fact that this activated parameter appears only in failures makes it a plausible path-level contributor."
                 }
             ],
-            "path_summary": "The path is suspicious because multiple activated Network_Manipulation parameters with strong support for manipulation are disproportionately associated with failures. Since this node directly determines downstream root-cause beliefs on this path, these parameters are plausible contributors."
+            "path_summary": "The path is suspicious because several Network_Manipulation CPT entries are activated exclusively in failures and feed directly into Root_Causes. Their semantics are broadly reasonable, so the concern is associative rather than definitive."
         },
         {
             "path_id": "P2",
@@ -51,37 +51,57 @@
             "path_assessment": "suspicious",
             "parameter_assessments": [
                 {
-                    "cpt": "Execution_Integrity",
-                    "column": 3,
-                    "state": "Normal",
-                    "argmax_probability": 0.7,
-                    "failure_weight": 7,
-                    "success_weight": 4,
-                    "assessment": "suspicious",
-                    "justification": "This column corresponds to Program_Anomaly=Yes, Deviation_in_Response=No, and Deviation_in_Dispatch=No. Given an observed program anomaly, favoring Execution_Integrity=Normal is semantically questionable on this path, and the parameter is activated more often in failures than successes."
-                },
-                {
-                    "cpt": "Execution_Integrity",
+                    "cpt": "Program_Anomaly",
                     "column": 1,
-                    "state": "Compromised",
-                    "argmax_probability": 0.7,
+                    "state": "No",
+                    "argmax_probability": 0.9,
                     "failure_weight": 5,
-                    "success_weight": 12,
-                    "assessment": "uncertain",
-                    "justification": "This column corresponds to Program_Anomaly=Yes, Deviation_in_Response=Yes, Deviation_in_Dispatch=No, and inferring compromised execution is semantically aligned with the path. Its substantial success activation weakens the case that the parameter itself is faulty, though repeated failure activation keeps it diagnostically relevant."
+                    "success_weight": 2,
+                    "assessment": "suspicious",
+                    "justification": "This column means GPTN_3=Not_Found, so Program_Anomaly=No is locally sensible, but the parameter is disproportionately associated with failures. Along this path, suppressing program anomaly can materially reduce downstream compromise evidence and distort root-cause inference."
                 },
                 {
                     "cpt": "Execution_Integrity",
-                    "column": 2,
+                    "column": 4,
                     "state": "Compromised",
-                    "argmax_probability": 0.7,
+                    "argmax_probability": 0.72,
                     "failure_weight": 5,
-                    "success_weight": 9,
+                    "success_weight": 0,
                     "assessment": "uncertain",
-                    "justification": "This column corresponds to Program_Anomaly=Yes, Deviation_in_Response=No, Deviation_in_Dispatch=Yes, where compromised execution is also semantically plausible. The failure association is noticeable but not disproportionate enough relative to successes to isolate the parameter as clearly problematic."
+                    "justification": "This column corresponds to Program_Anomaly=No, Deviation_in_Response=Yes, and Deviation_in_Dispatch=Yes. Inferring compromised execution from both deviation nodes despite no program anomaly is semantically plausible, but failure-only activation suggests this integration pattern may contribute to incorrect downstream root-cause predictions."
+                },
+                {
+                    "cpt": "Root_Causes",
+                    "column": 1,
+                    "state": "Memory_Corruption",
+                    "argmax_probability": 0.4,
+                    "failure_weight": 10,
+                    "success_weight": 0,
+                    "assessment": "suspicious",
+                    "justification": "This column represents Network_Manipulation=Yes, Execution_Integrity=Compromised, Physical_Anomaly=No, a configuration where Memory_Corruption is plausible but tied with FDI at the same probability. The repeated failure-only activation and weak separation between competing cyber causes make this parameter a plausible contributor to repeated misclassification."
+                },
+                {
+                    "cpt": "Root_Causes",
+                    "column": 1,
+                    "state": "FDI",
+                    "argmax_probability": 0.4,
+                    "failure_weight": 3,
+                    "success_weight": 0,
+                    "assessment": "suspicious",
+                    "justification": "Under the same parent configuration as column 1, FDI is tied with Memory_Corruption, which weakens discriminative power at the target node. Its failure-only activation indicates that this ambiguous root-cause mapping is plausibly involved in incorrect predictions."
+                },
+                {
+                    "cpt": "Root_Causes",
+                    "column": 0,
+                    "state": "Memory_Corruption",
+                    "argmax_probability": 0.4,
+                    "failure_weight": 2,
+                    "success_weight": 0,
+                    "assessment": "uncertain",
+                    "justification": "This column corresponds to Network_Manipulation=Yes, Execution_Integrity=Compromised, Physical_Anomaly=Yes. Memory_Corruption remains plausible, but the same column also supports other causes substantially, so the issue is more about ambiguous downstream mapping than an obviously unreasonable local semantic choice."
                 }
             ],
-            "path_summary": "This path is suspicious mainly because one Execution_Integrity parameter maps a present Program_Anomaly to Normal execution under no local deviations, which is semantically weak and failure-associated. Other activated Execution_Integrity parameters are more consistent with the path and remain only uncertain."
+            "path_summary": "This path is suspicious because both intermediate and root-cause mappings show failure-heavy activations, especially where Program_Anomaly is suppressed or where Root_Causes weakly separates FDI from Memory_Corruption."
         },
         {
             "path_id": "P3",
@@ -89,9 +109,9 @@
                 "Physical_Anomaly",
                 "Root_Causes"
             ],
-            "path_assessment": "consistent",
+            "path_assessment": "uncertain",
             "parameter_assessments": [],
-            "path_summary": "The activated Physical_Anomaly parameters are semantically aligned with GPTN_5 evidence and are more often seen in successes than failures. This path does not show clear parameter-level evidence of contributing to repeated incorrect predictions."
+            "path_summary": "Physical_Anomaly columns are activated often in successes as well as failures, and their local semantics are straightforward. The available evidence does not clearly isolate this path as a source of repeated incorrect inference."
         },
         {
             "path_id": "P4",
@@ -105,25 +125,95 @@
                 {
                     "cpt": "Deviation_in_Response",
                     "column": 0,
-                    "state": "No",
-                    "argmax_probability": 0.95,
+                    "state": "Yes",
+                    "argmax_probability": 0.9,
                     "failure_weight": 10,
                     "success_weight": 10,
-                    "assessment": "suspicious",
-                    "justification": "This column corresponds to all five response-side LPTN parents being Found, i.e., expected deviations are present throughout the response chain. Assigning Deviation_in_Response=No with very high probability is semantically inconsistent with the aggregation role of this node, and because it feeds Execution_Integrity directly, it is a plausible contributor despite balanced failure/success counts."
+                    "assessment": "uncertain",
+                    "justification": "This column corresponds to all five response-side LPTN nodes being Found, so a strong response deviation is semantically coherent. Because it appears equally in failures and successes, the statistical evidence against the parameter itself is weak, but it remains relevant on a suspicious path due to its strong downstream influence."
+                },
+                {
+                    "cpt": "Execution_Integrity",
+                    "column": 4,
+                    "state": "Compromised",
+                    "argmax_probability": 0.72,
+                    "failure_weight": 5,
+                    "success_weight": 0,
+                    "assessment": "uncertain",
+                    "justification": "For Program_Anomaly=No, Deviation_in_Response=Yes, and Deviation_in_Dispatch=Yes, compromised execution is plausible, but this parameter is activated only in failures. Since this node mediates the path to Root_Causes, it is a plausible contributor even though the local semantics are not clearly wrong."
+                },
+                {
+                    "cpt": "Execution_Integrity",
+                    "column": 1,
+                    "state": "Compromised",
+                    "argmax_probability": 0.8,
+                    "failure_weight": 2,
+                    "success_weight": 23,
+                    "assessment": "uncertain",
+                    "justification": "This column represents Program_Anomaly=Yes, Deviation_in_Response=Yes, and Deviation_in_Dispatch=No, and compromised execution is semantically expected. The heavy success association weakens suspicion, but because it lies on a suspicious path and directly shapes the target inference, it cannot be ruled out entirely."
                 },
                 {
                     "cpt": "Execution_Integrity",
                     "column": 3,
-                    "state": "Normal",
-                    "argmax_probability": 0.7,
-                    "failure_weight": 7,
-                    "success_weight": 4,
+                    "state": "Compromised",
+                    "argmax_probability": 0.55,
+                    "failure_weight": 3,
+                    "success_weight": 9,
+                    "assessment": "uncertain",
+                    "justification": "This column corresponds to Program_Anomaly=Yes, Deviation_in_Response=No, and Deviation_in_Dispatch=No. A slight preference for compromised execution under absent local deviations may be semantically debatable, but the mixed success/failure record makes the evidence inconclusive."
+                },
+                {
+                    "cpt": "Execution_Integrity",
+                    "column": 0,
+                    "state": "Compromised",
+                    "argmax_probability": 0.88,
+                    "failure_weight": 6,
+                    "success_weight": 12,
+                    "assessment": "uncertain",
+                    "justification": "This column means Program_Anomaly=Yes, Deviation_in_Response=Yes, and Deviation_in_Dispatch=Yes, which strongly supports compromised execution. The parameter is not failure-specific, but its strong influence keeps it relevant when tracing repeated errors through this path."
+                },
+                {
+                    "cpt": "Execution_Integrity",
+                    "column": 2,
+                    "state": "Compromised",
+                    "argmax_probability": 0.8,
+                    "failure_weight": 1,
+                    "success_weight": 9,
+                    "assessment": "uncertain",
+                    "justification": "This column corresponds to Program_Anomaly=Yes, Deviation_in_Response=No, and Deviation_in_Dispatch=Yes. The local interpretation is plausible and the success-heavy activation weakens direct suspicion, but it still participates in the path's compromise signal."
+                },
+                {
+                    "cpt": "Root_Causes",
+                    "column": 1,
+                    "state": "Memory_Corruption",
+                    "argmax_probability": 0.4,
+                    "failure_weight": 10,
+                    "success_weight": 0,
                     "assessment": "suspicious",
-                    "justification": "This column corresponds to Program_Anomaly=Yes, Deviation_in_Response=No, Deviation_in_Dispatch=No. On this path, if response deviation is suppressed upstream, this parameter further reinforces a normal execution conclusion despite program anomaly evidence, and its failure-skewed activation makes it a plausible contributor."
+                    "justification": "When Network_Manipulation=Yes, Execution_Integrity=Compromised, and Physical_Anomaly=No, this target mapping gives Memory_Corruption only a tie with FDI rather than clear separation. That ambiguity is repeatedly associated with failures and is a plausible contributor to incorrect final predictions."
+                },
+                {
+                    "cpt": "Root_Causes",
+                    "column": 1,
+                    "state": "FDI",
+                    "argmax_probability": 0.4,
+                    "failure_weight": 3,
+                    "success_weight": 0,
+                    "assessment": "suspicious",
+                    "justification": "This tied FDI parameter under the same parent configuration reflects weak discrimination between two cyber causes. Its failure-only activation supports suspicion that the target CPT, rather than the upstream response-deviation semantics alone, contributes to repeated errors."
+                },
+                {
+                    "cpt": "Root_Causes",
+                    "column": 0,
+                    "state": "Memory_Corruption",
+                    "argmax_probability": 0.4,
+                    "failure_weight": 2,
+                    "success_weight": 0,
+                    "assessment": "uncertain",
+                    "justification": "With Network_Manipulation=Yes, Execution_Integrity=Compromised, and Physical_Anomaly=Yes, the target CPT still leaves substantial ambiguity among causes. The failure-only association is notable, but the evidence is weaker than for column 1."
                 }
             ],
-            "path_summary": "The response path is suspicious because the response-deviation aggregator appears semantically inverted when all response-side expected deviations are present, and this can propagate into a normal execution assessment downstream. The combination can plausibly drive repeated misclassification at Root_Causes."
+            "path_summary": "The response-deviation path is suspicious mainly because downstream Execution_Integrity and Root_Causes parameters can convert strong response evidence into ambiguous final diagnoses, especially in cyber-cause columns with failure-only activation."
         },
         {
             "path_id": "P5",
@@ -137,26 +227,96 @@
                 {
                     "cpt": "Deviation_in_Dispatch",
                     "column": 0,
-                    "state": "No",
-                    "argmax_probability": 0.95,
-                    "failure_weight": 11,
-                    "success_weight": 8,
-                    "assessment": "suspicious",
-                    "justification": "This column corresponds to all four dispatch-side LPTN parents being Found, meaning expected deviations are present across the dispatch chain. Assigning Deviation_in_Dispatch=No with very high probability conflicts with the intended aggregation semantics and is moderately failure-associated."
+                    "state": "Yes",
+                    "argmax_probability": 0.9,
+                    "failure_weight": 12,
+                    "success_weight": 7,
+                    "assessment": "uncertain",
+                    "justification": "This column corresponds to all four dispatch-side LPTN nodes being Found, so inferring dispatch deviation is locally well aligned with the semantics. Still, its relatively high failure association means it may contribute to repeated downstream errors on this path."
+                },
+                {
+                    "cpt": "Execution_Integrity",
+                    "column": 4,
+                    "state": "Compromised",
+                    "argmax_probability": 0.72,
+                    "failure_weight": 5,
+                    "success_weight": 0,
+                    "assessment": "uncertain",
+                    "justification": "For Program_Anomaly=No, Deviation_in_Response=Yes, and Deviation_in_Dispatch=Yes, compromised execution is plausible, but the failure-only activation makes this integration point noteworthy. It may be helping propagate dispatch-side deviation evidence into incorrect root-cause conclusions."
+                },
+                {
+                    "cpt": "Execution_Integrity",
+                    "column": 1,
+                    "state": "Compromised",
+                    "argmax_probability": 0.8,
+                    "failure_weight": 2,
+                    "success_weight": 23,
+                    "assessment": "uncertain",
+                    "justification": "This column represents Program_Anomaly=Yes, Deviation_in_Response=Yes, and Deviation_in_Dispatch=No, so it is only indirectly relevant to dispatch absence rather than dispatch presence. Its strong success association weakens suspicion, but it remains on-path and influential."
                 },
                 {
                     "cpt": "Execution_Integrity",
                     "column": 3,
-                    "state": "Normal",
-                    "argmax_probability": 0.7,
-                    "failure_weight": 7,
-                    "success_weight": 4,
+                    "state": "Compromised",
+                    "argmax_probability": 0.55,
+                    "failure_weight": 3,
+                    "success_weight": 9,
+                    "assessment": "uncertain",
+                    "justification": "This parent configuration has Program_Anomaly=Yes, Deviation_in_Response=No, and Deviation_in_Dispatch=No. A slight preference for compromised execution despite no local deviations is semantically less clear, though the mixed statistics prevent a stronger conclusion."
+                },
+                {
+                    "cpt": "Execution_Integrity",
+                    "column": 0,
+                    "state": "Compromised",
+                    "argmax_probability": 0.88,
+                    "failure_weight": 6,
+                    "success_weight": 12,
+                    "assessment": "uncertain",
+                    "justification": "This is the fully positive anomaly/deviation configuration, where compromised execution is expected. Because it is common in successes too, the evidence against the parameter itself is limited."
+                },
+                {
+                    "cpt": "Execution_Integrity",
+                    "column": 2,
+                    "state": "Compromised",
+                    "argmax_probability": 0.8,
+                    "failure_weight": 1,
+                    "success_weight": 9,
+                    "assessment": "uncertain",
+                    "justification": "This column corresponds to Program_Anomaly=Yes, Deviation_in_Response=No, and Deviation_in_Dispatch=Yes, which is semantically compatible with compromised execution. The success-heavy activation weakens direct suspicion."
+                },
+                {
+                    "cpt": "Root_Causes",
+                    "column": 1,
+                    "state": "Memory_Corruption",
+                    "argmax_probability": 0.4,
+                    "failure_weight": 10,
+                    "success_weight": 0,
                     "assessment": "suspicious",
-                    "justification": "This column corresponds to Program_Anomaly=Yes, Deviation_in_Response=No, Deviation_in_Dispatch=No. Along this path, an upstream suppression of dispatch deviation can combine with this parameter to preserve a normal execution conclusion despite anomaly evidence, and the failure-skew supports suspicion."
+                    "justification": "This target parameter is repeatedly activated only in failures under a cyber-oriented parent configuration and does not clearly separate Memory_Corruption from FDI. That weak discrimination is a plausible contributor to repeated incorrect predictions."
+                },
+                {
+                    "cpt": "Root_Causes",
+                    "column": 1,
+                    "state": "FDI",
+                    "argmax_probability": 0.4,
+                    "failure_weight": 3,
+                    "success_weight": 0,
+                    "assessment": "suspicious",
+                    "justification": "The same parent configuration gives FDI an equal probability to Memory_Corruption, indicating ambiguous target-level mapping. Its failure-only activation supports suspicion at the final diagnosis stage."
+                },
+                {
+                    "cpt": "Root_Causes",
+                    "column": 0,
+                    "state": "Memory_Corruption",
+                    "argmax_probability": 0.4,
+                    "failure_weight": 2,
+                    "success_weight": 0,
+                    "assessment": "uncertain",
+                    "justification": "This parameter is also failure-only, but the evidence is sparser and the local semantics remain plausible. It is therefore a weaker but still possible contributor on this path."
                 }
             ],
-            "path_summary": "The dispatch path is suspicious because the dispatch-deviation aggregator strongly favors no deviation even when all dispatch-side expected deviations are found, and this can propagate into a normal execution judgment downstream. That pattern is compatible with repeated inference failures reaching Root_Causes."
+            "path_summary": "The dispatch-deviation path is suspicious because strong dispatch evidence can flow through Execution_Integrity into Root_Causes columns that appear repeatedly in failures and provide limited separation between cyberattack classes."
         }
     ],
-    "overall_summary": "The main plausible contributors are on the Network_Manipulation, Deviation_in_Response, Deviation_in_Dispatch, and Execution_Integrity CPTs. In particular, several suspicious parameters appear to suppress deviation or preserve normal execution under parent configurations that semantically suggest anomaly evidence should propagate forward."
+    "overall_summary": "The most recurrent concerns are on paths that terminate in Root_Causes under cyber-oriented parent configurations, especially where FDI and Memory_Corruption are weakly separated. Intermediate nodes Network_Manipulation, Program_Anomaly, and Execution_Integrity also contain failure-associated activated parameters, but their local semantics are generally more defensible than the ambiguous target-level mappings."
 }

@@ -1,0 +1,141 @@
+{
+    "path_diagnostics": [
+        {
+            "path_id": "P1",
+            "path": [
+                "asia",
+                "tub",
+                "either"
+            ],
+            "path_assessment": "suspicious",
+            "parameter_assessments": [
+                {
+                    "cpt": "either",
+                    "column": 3,
+                    "state": "yes",
+                    "argmax_probability": 0.0,
+                    "failure_weight": 2,
+                    "success_weight": 0,
+                    "assessment": "suspicious",
+                    "justification": "This column corresponds to lung=no, tub=no, where either=yes is impossible by construction. Its repeated activation only in failures suggests the deterministic OR behavior at this parent configuration is directly implicated on this path rather than merely reflecting upstream noise."
+                },
+                {
+                    "cpt": "tub",
+                    "column": 1,
+                    "state": "no",
+                    "argmax_probability": 0.99,
+                    "failure_weight": 1,
+                    "success_weight": 2,
+                    "assessment": "uncertain",
+                    "justification": "This entry represents tub=no given asia=no, which is semantically reasonable because tuberculosis is uncommon without Asia travel. Since it appears in both failures and successes, the statistical evidence against the parameter itself is limited, though it lies on the active path."
+                },
+                {
+                    "cpt": "tub",
+                    "column": 0,
+                    "state": "no",
+                    "argmax_probability": 0.95,
+                    "failure_weight": 1,
+                    "success_weight": 4,
+                    "assessment": "uncertain",
+                    "justification": "This entry represents tub=no given asia=yes; although lower than the non-travel case, it still encodes tuberculosis as unlikely and is semantically plausible. Its stronger presence in successes than failures weakens the case that this parameter is itself faulty, but it remains path-relevant."
+                }
+            ],
+            "path_summary": "The main concern on this path is the activated deterministic either CPT entry for lung=no and tub=no, which is associated only with failures. The tub parameters on the path look semantically plausible and are only weakly associated with failure."
+        },
+        {
+            "path_id": "P2",
+            "path": [
+                "smoke",
+                "lung",
+                "either"
+            ],
+            "path_assessment": "suspicious",
+            "parameter_assessments": [
+                {
+                    "cpt": "lung",
+                    "column": 0,
+                    "state": "no",
+                    "argmax_probability": 0.9,
+                    "failure_weight": 2,
+                    "success_weight": 2,
+                    "assessment": "uncertain",
+                    "justification": "This entry corresponds to lung=no given smoke=yes. While it is plausible that most smokers still do not have lung cancer, this parameter directly controls whether the smoke-to-lung-to-either path transmits disease evidence and appears in failures as often as successes."
+                },
+                {
+                    "cpt": "either",
+                    "column": 3,
+                    "state": "yes",
+                    "argmax_probability": 0.0,
+                    "failure_weight": 2,
+                    "success_weight": 0,
+                    "assessment": "suspicious",
+                    "justification": "This column corresponds to lung=no, tub=no, forcing either=yes to zero. Because it is activated only in failures and sits at the endpoint of this path, it is a plausible contributor to incorrect inferences involving suppression of disease presence along the smoke-lung route."
+                }
+            ],
+            "path_summary": "This path is mainly flagged by the activated either entry for the no-disease configuration, which is failure-specific. The lung CPT entry for smokers is plausible but remains an uncertain contributor because its failure association is not disproportionate."
+        },
+        {
+            "path_id": "P3",
+            "path": [
+                "either",
+                "xray"
+            ],
+            "path_assessment": "suspicious",
+            "parameter_assessments": [
+                {
+                    "cpt": "either",
+                    "column": 3,
+                    "state": "yes",
+                    "argmax_probability": 0.0,
+                    "failure_weight": 2,
+                    "success_weight": 0,
+                    "assessment": "suspicious",
+                    "justification": "On this path, the no-disease parent configuration makes either=yes impossible, which strongly shapes downstream X-ray predictions. Its exclusive association with failures indicates this activated gate is a plausible contributor to repeated errors reaching xray."
+                },
+                {
+                    "cpt": "xray",
+                    "column": 0,
+                    "state": "yes",
+                    "argmax_probability": 0.7,
+                    "failure_weight": 2,
+                    "success_weight": 0,
+                    "assessment": "suspicious",
+                    "justification": "This entry represents xray=yes given either=yes, which is semantically reasonable because tuberculosis or lung cancer often produce abnormal X-rays. However, its activation only in failures suggests the strength or usage of this mapping may be implicated on the either-to-xray path."
+                }
+            ],
+            "path_summary": "Both the upstream either gate and the xray CPT are associated only with failures on this path. The xray parameter is semantically plausible, but the failure-only pattern makes it a credible localized contributor."
+        },
+        {
+            "path_id": "P4",
+            "path": [
+                "either",
+                "dysp"
+            ],
+            "path_assessment": "suspicious",
+            "parameter_assessments": [
+                {
+                    "cpt": "either",
+                    "column": 3,
+                    "state": "yes",
+                    "argmax_probability": 0.0,
+                    "failure_weight": 2,
+                    "success_weight": 0,
+                    "assessment": "suspicious",
+                    "justification": "This deterministic entry corresponds to lung=no and tub=no, blocking either=yes and therefore limiting disease-driven support for dyspnea. Because it appears only in failures, it is a plausible contributor on the either-to-dysp path."
+                },
+                {
+                    "cpt": "dysp",
+                    "column": 0,
+                    "state": "yes",
+                    "argmax_probability": 0.9,
+                    "failure_weight": 2,
+                    "success_weight": 0,
+                    "assessment": "suspicious",
+                    "justification": "This column corresponds to bronc=yes and either=yes, where high dyspnea probability is medically sensible because both causes support shortness of breath. Still, its exclusive activation in failures indicates this local mapping is plausibly involved in the repeated incorrect predictions on this path."
+                }
+            ],
+            "path_summary": "The path shows failure-only activation for both the upstream either gate and the dyspnea CPT entry. Although the dysp parameter is semantically reasonable, the observed statistics make both activated parameters plausible contributors."
+        }
+    ],
+    "overall_summary": "Across the provided paths, the most recurrent localized concern is the activated deterministic either CPT entry for lung=no and tub=no, which appears only in failures. Failure-only activation also appears for the xray and dysp path-end parameters, while tub and lung entries are more weakly implicated and remain uncertain."
+}

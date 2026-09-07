@@ -55,11 +55,11 @@ the framework attempts to:
 
 The current benchmarks are:
 
-| Benchmark | Domain | Target Node | Total Nodes | Flawed CPTs | Flawed BN Accuracy (Train / Test) | Proposed BN Accuracy (Train / Test) | Accuracy Improvement (Train / Test) |
-|-----------|--------|-------------|------------:|------------:|-----------------------------------|-------------------------------------|-------------------------------------|
-| `der` | Distributed energy resource anomaly diagnosis | `Root_Causes` | 20 | 2 | 68.06 % / 70 % |  80.55 % / 80 % | 12.49 % / 10 % |
-| `lung_cancer` | Asia lung-cancer network | `either` | 8 | 1 | 75.0 % / 66.67 % | 100 % / 100 % | 25 % /  33.33 %|
-| `alarm` | Clinical monitoring / ALARM network | `HYPOVOLEMIA` | 37 | 2 | 88.0 % / 61.54 % | 100 % / 100 % | 12 % / 39.46 % |
+| Benchmark | Domain | Target Node | Nodes | Flawed CPTs | Flawed Accuracy (Train / Test) | Proposed Accuracy (Train / Test) | Improvement (Train / Test) | Best Restart | Change Verdict | Expected Changed CPTs | Agent Changed CPTs | Avg. CPT KL | CPT RMSE | Avg. Hellinger |
+|---|---|---|---:|---:|---|---|---|---:|---|---|---|---:|---:|---:|
+| `der` | Distributed energy resource anomaly diagnosis | `Root_Causes` | 20 | 2 | 68.06% / 70.00% | **91.67% / 80.00%** | **+23.61 / +10.00 pp** | 1 | Excellent | `Execution_Integrity`, `Root_Causes` | `Execution_Integrity`, `Root_Causes` | 0.018813 | 0.071054 | 0.031326 |
+| `lung_cancer` | Asia lung-cancer network | `either` | 8 | 1 | 75.00% / 66.67% | **100.00% / 100.00%** | **+25.00 / +33.33 pp** | 2 | Very Good | `xray` | `either`, `xray` | 0.012550 | 0.044721 | 0.029769 |
+| `alarm` | Clinical monitoring / ALARM network | `HYPOVOLEMIA` | 37 | 2 | 81.29% / 76.14% | **99.32% / 98.86%** | **+18.03 / +22.72 pp** | 2 | Good | `HYPOVOLEMIA`, `LVEDVOLUME` | `LVEDVOLUME` | 0.011633 | 0.051602 | 0.007089 |
 
 ## Pipeline
 
@@ -372,7 +372,6 @@ To add a benchmark:
 2. Add `prompts/<benchmark>/context_agent.txt`.
 3. Add the benchmark name to the CLI choices in `orchestration_pipeline.py`.
 4. Define its target, evidence, expected-change, and validation nodes in `config/settings.py`.
-5. Run a small configuration first and inspect the generated activation trace and danger report.
 
 To use another model, update the model name and request parameters in `utils/llm.py`. Keep the structured-output validators and deterministic candidate evaluation in place when changing the agent layer.
 

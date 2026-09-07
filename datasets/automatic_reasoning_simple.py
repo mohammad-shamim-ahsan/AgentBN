@@ -157,6 +157,6 @@ if __name__ == "__main__":
     FLAWED_BN_FILE = DATASET_DIR / "flawed_BN_0.json"
 
     bn_json = load_bn(FLAWED_BN_FILE) ### --- change manually
-    failures, successes, accuracy, results = run_evaluation(bn_json, TRAIN_CSV) ### --- change manually
+    failures, successes, accuracy, results = run_evaluation(bn_json, TEST_CSV) ### --- change manually
     
     print("\nReasoning Completed.")

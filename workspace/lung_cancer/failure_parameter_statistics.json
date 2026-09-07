@@ -1,5 +1,5 @@
 {
-    "bn_number": 0,
+    "bn_number": 1,
     "parameter_statistics": {
         "either": [
             {
@@ -10,11 +10,27 @@
                 "success_weight": 0
             }
         ],
+        "tub": [
+            {
+                "column": 1,
+                "state": "no",
+                "argmax_probability": 0.99,
+                "failure_weight": 1,
+                "success_weight": 2
+            },
+            {
+                "column": 0,
+                "state": "no",
+                "argmax_probability": 0.95,
+                "failure_weight": 1,
+                "success_weight": 4
+            }
+        ],
         "xray": [
             {
                 "column": 0,
                 "state": "yes",
-                "argmax_probability": 0.8,
+                "argmax_probability": 0.7,
                 "failure_weight": 2,
                 "success_weight": 0
             }
@@ -27,19 +43,40 @@
                 "failure_weight": 2,
                 "success_weight": 0
             }
-        ]
-    },
-    "common_activation_patterns": [
-        {
-            "pattern": {
-                "dysp": 0,
-                "either": 3,
-                "xray": 0
+        ],
+        "lung": [
+            {
+                "column": 0,
+                "state": "no",
+                "argmax_probability": 0.9,
+                "failure_weight": 2,
+                "success_weight": 2
+            }
+        ],
+        "asia": [
+            {
+                "column": 0,
+                "state": "no",
+                "argmax_probability": 0.99,
+                "failure_weight": 1,
+                "success_weight": 2
             },
-            "failure_scenarios": [
-                6,
-                7
-            ]
-        }
-    ]
+            {
+                "column": 0,
+                "state": "yes",
+                "argmax_probability": 0.01,
+                "failure_weight": 1,
+                "success_weight": 4
+            }
+        ],
+        "smoke": [
+            {
+                "column": 0,
+                "state": "yes",
+                "argmax_probability": 0.5,
+                "failure_weight": 2,
+                "success_weight": 2
+            }
+        ]
+    }
 }

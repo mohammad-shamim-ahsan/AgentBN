@@ -55,13 +55,48 @@ the framework attempts to:
 
 The current benchmarks are:
 
-| Benchmark | Domain | Target Node | Nodes | Flawed CPTs | Flawed Accuracy (Train / Test) | Proposed Accuracy (Train / Test) | Improvement (Train / Test) | Best Restart | Change Verdict | Expected Changed CPTs | Agent Changed CPTs | Avg. CPT KL | CPT RMSE | Avg. Hellinger |
-|---|---|---|---:|---:|---|---|---|---:|---|---|---|---:|---:|---:|
-| `der` | Distributed energy resource anomaly diagnosis | `Root_Causes` | 20 | 2 | 68.06% / 70.00% | **91.67% / 80.00%** | **+23.61 / +10.00 pp** | 1 | Excellent | `Execution_Integrity`, `Root_Causes` | `Execution_Integrity`, `Root_Causes` | 0.018813 | 0.071054 | 0.031326 |
-| `lung_cancer` | Asia lung-cancer network | `either` | 8 | 1 | 75.00% / 66.67% | **100.00% / 100.00%** | **+25.00 / +33.33 pp** | 2 | Very Good | `xray` | `either`, `xray` | 0.012550 | 0.044721 | 0.029769 |
-| `alarm` | Clinical monitoring / ALARM network | `HYPOVOLEMIA` | 37 | 2 | 81.29% / 76.14% | **99.32% / 98.86%** | **+18.03 / +22.72 pp** | 2 | Good | `HYPOVOLEMIA`, `LVEDVOLUME` | `LVEDVOLUME` | 0.011633 | 0.051602 | 0.007089 |
+| Benchmark | Domain | Target Node | Reasoning Type | Evidence Nodes | Nodes | Flawed CPTs | Flawed Accuracy (Train / Test) | Proposed Accuracy (Train / Test) | Improvement (Train / Test) | Best Restart | Change Verdict | Expected Changed CPTs | Agent Changed CPTs | Avg. CPT KL | CPT RMSE | Avg. Hellinger |
+|---|---|---|---|---|---:|---:|---|---|---|---:|---|---|---|---:|---:|---:|
+| `der` | Distributed energy resources root cause analysis | `Root_Causes` | Predictive | `GPTN_1`, `GPTN_2`, `GPTN_3`, `GPTN_5`, `LPTN_1_i`, `LPTN_1_ii`, `LPTN_1_iii`, `LPTN_1_iv`, `LPTN_1_v`, `LPTN_1_vi`, `LPTN_1_viii`, `LPTN_1_ix`, `LPTN_1_x` | 20 | 2 | 68.06% / 70.00% | **91.67% / 80.00%** | **+23.61 / +10.00 pp** | 1 | Excellent | `Execution_Integrity`, `Root_Causes` | `Execution_Integrity`, `Root_Causes` | 0.018813 | 0.071054 | 0.031326 |
+| `lung_cancer` | Asia lung-cancer network | `either` | Mixed (Predictive + Diagnostic) | `asia`, `smoke`, `xray`, `dysp` | 8 | 1 | 75.00% / 66.67% | **100.00% / 100.00%** | **+25.00 / +33.33 pp** | 2 | Very Good | `xray` | `either`, `xray` | 0.012550 | 0.044721 | 0.029769 |
+| `alarm` | Clinical monitoring / ALARM network | `HYPOVOLEMIA` | Diagnostic | `BP`, `HRBP`, `HREKG`, `HRSAT`, `EXPCO2`, `CVP`, `PCWP` | 37 | 2 | 81.29% / 76.14% | **99.32% / 98.86%** | **+18.03 / +22.72 pp** | 2 | Good | `HYPOVOLEMIA`, `LVEDVOLUME` | `LVEDVOLUME` | 0.011633 | 0.051602 | 0.007089 |
+
+**Reasoning type.** Predictive reasoning follows the BN arc direction from evidence toward the target, diagnostic reasoning proceeds against the arc direction, and mixed reasoning involves both.
+
+The benchmark suite covers both predictive and diagnostic BN reasoning, including mixed-direction inference. The intentionally flawed CPTs also span different structural roles: target nodes (`Root_Causes`, `HYPOVOLEMIA`), an evidence node (`xray`), and non-evidence intermediate nodes (`Execution_Integrity`, `LVEDVOLUME`). In the current evaluation, the intentionally flawed CPTs lie on relevant evidence-to-target paths and therefore fall within the path-wise diagnostic search space.
+
+**CPT distance metrics.** CPT recovery is evaluated by comparing the refined BN with the ground-truth/reference BN. **KL divergence** measures the divergence between corresponding CPT probability distributions, **RMSE** measures parameter-wise probability error, and **Hellinger distance** measures distributional dissimilarity. For all three metrics, lower values indicate CPTs closer to the ground truth, with `0` indicating an exact match. These metrics measure parameter recovery, whereas train/test accuracy measures inference performance; therefore, improved inference accuracy does not necessarily require exact recovery of the ground-truth CPT parameters.
+
+## Assumptions
+
+The current AgentBN formulation and benchmark evaluation make the following assumptions:
+
+1. **Labeled operational scenarios are available.** Each scenario provides observed evidence and a ground-truth target state, enabling successful and failed BN inferences to be identified.
+
+2. **The BN structure is correct and fixed.** Post-deployment errors considered by AgentBN arise from flawed CPT parameters rather than structural errors.
+
+3. **Flawed CPTs may occur at different node roles.** A flawed CPT may belong to an evidence node, an intermediate non-evidence node, or the target node.
+
+4. **Flawed CPTs lie on relevant evidence-to-target paths.** CPTs responsible for the observed inference failures are assumed to lie on paths considered by the evaluator. The current pipeline does not consider flawed CPTs in off-path nodes that do not lie on any relevant evidence-to-target path.
+
+5. **Both predictive and diagnostic reasoning are supported.** Evidence may occur upstream or downstream of the target in the BN.
+
+6. **Each evaluation run uses a designated target variable.** The required scenario evidence for that target is assumed to be available for inference.
+
+7. **A ground-truth/reference BN is available for benchmark evaluation.** It is used to measure parameter-recovery quality, not to guide the refinement process.
 
 ## Pipeline
+
+<p align="center">
+  <img src="figures/AgentBN_framework.png" width="90%">
+</p>
+<p align="center">
+  <b>Figure 1. AgentBN framework.</b> The Evaluator Agent diagnoses inference failures and identifies CPT refinement targets, while the Generator Agent proposes localized CPT patches. Candidate BNs are evaluated and selected deterministically using training scenarios. The selected BN is iteratively refined, with intermediate results maintained in memory. The held-out test set is used only for final evaluation.
+</p>
+
+> **Note:** The framework figure was created with the assistance of ChatGPT and reviewed by the authors for technical accuracy.
+
+### Detailed workflow
 
 ```mermaid
 flowchart TD
@@ -359,7 +394,7 @@ Key controls live in `config/settings.py`:
 | `MIN_CONFIDENCE` | `0.50` | Confidence constraint passed to refinement |
 | `MIN_MARGIN` | `0.20` | Prediction-margin constraint passed to refinement |
 | `TARGET_ACCURACY` | `0.98` | Early-stop accuracy |
-| `MAX_FORMAT_RETRIES` | `3` | Structured-output generation attempts |
+| `MAX_FORMAT_RETRIES` | `2` | Structured-output generation attempts |
 | `MAX_REPAIR_RETRIES` | `2` | JSON repair attempts |
 
 ## Outputs
@@ -368,9 +403,10 @@ Each run writes benchmark-specific artifacts under `workspace/<benchmark>/`:
 
 | Artifact | Description |
 | --- | --- |
-| `activation_trace.csv` | Activated CPT columns and selected states per scenario |
-| `failure_parameter_statistics.json` | Failure/success weights and recurring activation patterns |
-| `dangerous_cpt_report.json` | Evaluator agent's ranked refinement targets |
+| `activation_trace.csv` | Activated CPT columns, selected states, and selected probabilities for nodes on relevant evidence-to-target paths |
+| `failure_parameter_statistics.json` | Failure/success activation statistics for CPT parameters represented in the activation trace |
+| `diagnostic_report.json` | Path-wise diagnoses with `suspicious`, `uncertain`, or `consistent` assessments for paths and their CPT parameters |
+| `dangerous_cpt_report.json` | Aggregated refinement recommendations with CPT-level risk (`high`, `high_medium`, `medium`, `low`) |
 | `bn_analysis.json` | Per-BN accuracy and diagnostic memory |
 | `last_proposed_bn.jsonl` | Candidate BN history |
 | `restart_final_bns.jsonl` | Best BN retained from each restart |

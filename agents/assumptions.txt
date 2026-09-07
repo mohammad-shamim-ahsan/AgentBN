@@ -1,33 +1,32 @@
 # ==========================================================
 # Assumptions
 #
-# Graph-based:
-# 1. Root nodes have no parents and therefore always activate
-#    the single column of their prior CPT (column 0).
+# 1. Labeled operational scenarios are available, providing
+#    the observed evidence and the ground-truth target state
+#    needed to identify successful and failed BN inferences.
 #
-# 2. Every non-root node has a unique active parent-state
-#    configuration determined by the realized states of its
-#    parents.
+# 2. The BN structure is assumed to be correct and fixed;
+#    post-deployment errors considered by AgentBN arise from
+#    flawed CPT parameters rather than structural errors.
 #
-# Scenario-based:
-# 3. Every observed variable has a realized state provided by
-#    the scenario.
+# 3. Flawed CPTs may belong to evidence nodes, intermediate
+#    non-evidence nodes, or the target node.
 #
-# 4. Every target variable has a realized state provided by
-#    the scenario's ground-truth label.
+# 4. Flawed CPTs responsible for the observed inference
+#    failures are assumed to lie on relevant
+#    evidence-to-target paths. The current pipeline does not
+#    consider flawed CPTs in off-path nodes that do not lie
+#    on any relevant evidence-to-target path.
 #
-# 5. All remaining hidden variables obtain their realized
-#    states by deterministic propagation using the
-#    maximum-probability state of the active CPT column.
+# 5. The pipeline supports both predictive and diagnostic
+#    reasoning, including cases where evidence is upstream
+#    or downstream of the target in the BN.
 #
-# Activation trace:
-# 6. Activation tracing is performed only for nodes in the
-#    selected relevant subgraph. Additional parent nodes may
-#    be included solely to satisfy parent-state dependencies
-#    during deterministic propagation.
+# 6. Each evaluation run uses a designated target variable,
+#    and the required scenario evidence is available for
+#    inference.
 #
-# 7. For every realized node recorded in the activation trace
-#    (observed, target, or propagated), the corresponding
-#    active CPT column and the selected probability are
-#    recorded.
+# 7. A ground-truth/reference BN is available in the
+#    benchmarks for measuring parameter-recovery quality;
+#    this reference is used for evaluation, not refinement.
 # ==========================================================

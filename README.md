@@ -66,24 +66,42 @@ The current benchmarks are:
 ```mermaid
 flowchart TD
     A["Load flawed BN, domain context, and train scenarios"] --> B["Run deterministic BN inference"]
+
     B --> C["Separate successes and failures"]
+
     C --> D["Trace activated CPT columns and parameters"]
+
     D --> E["Evaluator agent creates a CPT danger report"]
+
     E --> F["Refinement agent proposes candidate CPT patches"]
+
     F --> G["Harness validates and integrates each patch"]
-    G --> H["Evaluate every candidate on the train set"]
+
+    G --> H["Evaluate candidate BNs on the train set"]
+
     H --> I{"Accuracy improved?"}
+
     I -- "Yes" --> J["Store candidate as refinement memory"]
     I -- "No" --> K["Retry and retain the best candidate"]
+
     J --> L{"Target accuracy or iteration limit?"}
     K --> L
+
     L -- "Continue" --> B
-    L -- "Stop" --> M["Select best BN for this restart"]
-    M --> N{"More restarts?"}
-    N -- "Yes" --> A
-    N -- "No" --> O["Select best restart on held-out test set"]
-    O --> P["Report accuracy and CPT distance metrics"]
-```
+    L -- "Stop" --> M["Restart-level model selection using train accuracy"]
+
+    M --> N["Store restart-final BN and train accuracy"]
+
+    N --> O{"More restarts?"}
+
+    O -- "Yes" --> A
+    O -- "No" --> P["Cross-restart model selection using train accuracy"]
+
+    P --> Q["Evaluate selected BN once on held-out test set"]
+
+    Q --> R["Report train/test accuracy, CPT-change verdict, and CPT distance metrics"]
+
+**Dataset usage.** The training set is used throughout refinement, including candidate evaluation, restart-level model selection, and cross-restart model selection. The held-out test set is used only once, after the final BN has been selected, to evaluate generalization performance.
 
 ### 1. Initialize
 

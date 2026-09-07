@@ -89,7 +89,7 @@ def store_restart_final_bn(
         f.write(json.dumps(restart_record) + "\n")
 
 
-def get_best_restart_bn(filename=RESTART_FINAL_BN_FILE):
+def get_best_restart_bn(filename=RESTART_FINAL_BN_FILE, dataset_file=TRAIN_CSV):
 
     best_restart = None
     best_accuracy = -1
@@ -113,7 +113,7 @@ def get_best_restart_bn(filename=RESTART_FINAL_BN_FILE):
 
             failures, successes, accuracy, _ = initial_run_evaluation(
                 bn,
-                TEST_CSV
+                dataset_file
             )
 
             failure_count = len(failures)
@@ -248,6 +248,7 @@ def create_constrained_train(
 # ----------------------------------------
 
 train_csv = TRAIN_CSV
+test_csv = TEST_CSV
 
 # ----------------------------------------
 # Create constrained training set
@@ -537,7 +538,7 @@ while restart_count < MAX_RESTARTS:
 
     
     # -----------------------------
-    # STEP 3: VALIDATION
+    # STEP 3: RESTART-LEVEL MODEL SELECTION
     # -----------------------------
     best_bn_number, best_bn_accuracy = get_best_bn_number(PROPOSED_BN_FILE, train_csv=train_csv)
     print("\n\nBest BN Number:", best_bn_number)
@@ -571,12 +572,13 @@ while restart_count < MAX_RESTARTS:
     restart_count += 1
 
 
-### -----------------------------
-# FINAL EVALUATION (on TEST set)
-### -----------------------------
+# ---------------------------------
+# AFTER ALL RESTARTS:
+# MODEL SELECTION USING TRAIN SET
+# ---------------------------------
 
-best_restart, best_restart_bn, accuracy, failures = (
-    get_best_restart_bn()
+best_restart, best_restart_bn, train_accuracy = (
+    get_best_restart_bn(dataset_file=train_csv)
 )
 
 print("\n===================================")
@@ -584,10 +586,26 @@ print("BEST RESTART")
 print("===================================")
 
 print("Restart:", best_restart)
-print("Accuracy:", accuracy)
-print("Failures:", failures)
+print("Train Accuracy:", train_accuracy)
 
-final_output = compare_all_cpts(bn_number=None, expected_changed_cpts=EXPECTED_CHANGED_CPTS, passed_bn=best_restart_bn)
+
+# ---------------------------------
+# FINAL EVALUATION ON HELD-OUT TEST SET
+# ---------------------------------
+
+failures, successes, test_accuracy, _ = initial_run_evaluation(
+    best_restart_bn,
+    test_csv
+)
+
+print("Test Accuracy:", test_accuracy)
+print("Test Failures:", failures)
+
+final_output = compare_all_cpts(
+    bn_number=None,
+    expected_changed_cpts=EXPECTED_CHANGED_CPTS,
+    passed_bn=best_restart_bn,
+)
 print(final_output)
 
 gt_bn = normalize_bn(read_json(GROUND_TRUTH_BN_FILE))
@@ -595,7 +613,7 @@ nor_best_bn = normalize_bn(best_restart_bn)
 
 compute_average_cpt_kl(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION, flawed_bn=flawed_bn_nor)
 compute_average_cpt_rmse(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION, flawed_bn=flawed_bn_nor)
-compute_average_cpt_hellinger(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION, flawed_bn=flawed_bn_nor)
+compute_average_cpt_hellinger( gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION, flawed_bn=flawed_bn_nor)
 
 print("###------------------------------###")
 print("\nPipeline finished.")

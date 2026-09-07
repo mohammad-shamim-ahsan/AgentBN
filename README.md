@@ -8,7 +8,7 @@ BNs are particularly valuable in **safety-critical and high-stakes domains**, in
 
 However, a BN that performed well during development may become unreliable after deployment. Even when the network structure remains valid, outdated or miscalibrated probabilities may lead to incorrect diagnoses and root-cause predictions.
 
-**AgentBN focuses on this post-deployment setting.** It uses labeled operational scenarios to identify recurring inference failures and localize the CPT parameters most plausibly associated with them. An LLM then proposes constrained CPT patches, while a deterministic evaluation harness validates every candidate, controls acceptance, manages retries, and records the complete refinement process.
+**AgentBN focuses on this post-deployment setting.** It uses labeled operational scenarios and path-wise inference analysis to identify recurring failures and localize the CPT parameters most plausibly associated with them. An LLM then proposes constrained CPT patches, while a deterministic evaluation harness validates every candidate, controls acceptance, manages retries, and records the complete refinement process.
 
 The goal is to improve a deployed BN without rebuilding the entire model or allowing the LLM to modify it without evidence. The LLM proposes; the harness measures, gates, retries, and records.
 
@@ -41,8 +41,8 @@ Given:
 - a deployed BN with one or more flawed or miscalibrated CPTs;
 - domain context describing the variables and their relationships;
 - labeled training scenarios used for agent-guided diagnosis and refinement;
-- inference results, activation traces, and failure diagnostics derived from the flawed BN and supplied to the agents as context;
-- held-out testing scenarios used to evaluate the repaired BN; and
+- inference results, evidence-to-target paths, activation traces, and failure diagnostics derived from the flawed BN and supplied to the agents as context;
+- held-out testing scenarios used only to evaluate the final repaired BN; and
 - a target node whose predictions are evaluated.
 
 the framework attempts to:
@@ -69,37 +69,42 @@ flowchart TD
 
     B --> C["Separate successes and failures"]
 
-    C --> D["Trace activated CPT columns and parameters"]
+    C --> D["Extract relevant evidence-to-target paths"]
 
-    D --> E["Evaluator agent creates a CPT danger report"]
+    D --> E["Trace activated CPT columns and parameters along each path"]
 
-    E --> F["Refinement agent proposes candidate CPT patches"]
+    E --> F["Evaluator performs path-wise CPT diagnosis"]
 
-    F --> G["Harness validates and integrates each patch"]
+    F --> G["Aggregate path-wise evidence into a CPT danger report"]
 
-    G --> H["Evaluate candidate BNs on the train set"]
+    G --> H["Refinement agent proposes candidate CPT patches"]
 
-    H --> I{"Accuracy improved?"}
+    H --> I["Harness validates and integrates each patch"]
 
-    I -- "Yes" --> J["Store candidate as refinement memory"]
-    I -- "No" --> K["Retry and retain the best candidate"]
+    I --> J["Evaluate candidate BNs on the train set"]
 
-    J --> L{"Target accuracy or iteration limit?"}
-    K --> L
+    J --> K{"Accuracy improved?"}
 
-    L -- "Continue" --> B
-    L -- "Stop" --> M["Restart-level model selection using train accuracy"]
+    K -- "Yes" --> L["Store candidate as refinement memory"]
+    K -- "No" --> M["Retry and retain the best candidate"]
 
-    M --> N["Store restart-final BN and train accuracy"]
+    L --> N{"Target accuracy or iteration limit?"}
+    M --> N
 
-    N --> O{"More restarts?"}
+    N -- "Continue" --> B
+    N -- "Stop" --> O["Restart-level model selection using train accuracy"]
 
-    O -- "Yes" --> A
-    O -- "No" --> P["Cross-restart model selection using train accuracy"]
+    O --> P["Store restart-final BN and train accuracy"]
 
-    P --> Q["Evaluate selected BN once on held-out test set"]
+    P --> Q{"More restarts?"}
 
-    Q --> R["Report train/test accuracy, CPT-change verdict, and CPT distance metrics"]
+    Q -- "Yes" --> A
+    Q -- "No" --> R["Cross-restart model selection using train accuracy"]
+
+    R --> S["Evaluate selected BN once on held-out test set"]
+
+    S --> T["Report train/test accuracy, CPT-change verdict, and CPT distance metrics"]
+```
 
 **Dataset usage.** The training set is used throughout refinement, including candidate evaluation, restart-level model selection, and cross-restart model selection. The held-out test set is used only once, after the final BN has been selected, to evaluate generalization performance.
 
@@ -113,11 +118,13 @@ flawed_accuracy + INITIAL_IMPROVEMENT_RATIO × (1 - flawed_accuracy)
 
 ### 2. Diagnose
 
-The evaluator builds the BN with `pgmpy`, runs inference, and records which CPT column and child state were activated for each relevant node. It aggregates those traces into failure and success weights and detects recurring cross-CPT activation patterns.
+The evaluator builds the BN with `pgmpy`, runs inference, and extracts relevant evidence-to-target paths for each scenario. Along each path, it records the activated CPT columns, parameters, and child states. These traces are aggregated into failure and success statistics that provide deterministic evidence for path-wise diagnosis.
 
 ### 3. Localize
 
-The evaluator agent receives the deterministic statistics, full BN, and domain context. It returns a structured danger report that ranks plausible CPT refinement targets and suggests adjustment directions. Deterministic evidence narrows the search space before the LLM is asked to reason.
+The evaluator agent receives the path-wise activation evidence, deterministic failure/success statistics, BN structure, and domain context. It diagnoses CPT behavior along relevant evidence-to-target paths and classifies the evidence associated with potential refinement targets. The path-wise diagnostic evidence is then aggregated into a structured CPT danger report that ranks plausible refinement targets and suggests adjustment directions.
+
+Deterministic evidence narrows and grounds the search space before the refinement agent is asked to modify CPT parameters.
 
 ### 4. Generate and select
 
@@ -132,9 +139,9 @@ The refinement agent receives the best accepted BN, its analysis record, domain 
 
 Accepted BNs and their analyses become episodic memory for later iterations. If a candidate does not improve accuracy, it is removed from proposal memory and regenerated up to the configured retry limit. Each restart raises the LLM temperature slightly to diversify the search.
 
-### 6. Validate
+### 6. Select and evaluate
 
-The best BN from each restart is retained. After all restarts, the harness evaluates each restart winner on the held-out test set and selects the result with the fewest failures. It then compares repaired CPTs with the ground truth using:
+The best BN from each restart is retained based on train-set performance. After all restarts, the harness performs cross-restart model selection using train accuracy. The selected BN is then evaluated once on the held-out test set. Finally, the repaired BN is compared with the ground-truth network using:
 
 - Kullback–Leibler divergence;
 - root mean squared error (RMSE);
@@ -147,7 +154,7 @@ The best BN from each restart is retained. After all restarts, the harness evalu
 
 Implemented in `agents/bn_evaluator.py`.
 
-Its role is diagnostic, not generative. It combines deterministic activation traces with domain reasoning to produce a focused CPT danger report. This separation prevents the generator from changing arbitrary parts of the network without evidence.
+Its role is diagnostic, not generative. It combines deterministic path-wise activation traces, failure/success statistics, BN structure, and domain reasoning to diagnose plausible failure sources and produce a focused CPT danger report. This separation prevents the refinement agent from changing arbitrary parts of the network without diagnostic evidence.
 
 ### Refinement agent
 
@@ -209,7 +216,8 @@ The harness is responsible for correctness and control around probabilistic LLM 
 - **Content-preserving repair:** a separate call repairs JSON formatting at temperature `0.0`.
 - **State isolation:** benchmark-specific workspaces prevent cross-experiment contamination.
 - **Restart diversity:** independent runs use gradually higher temperatures.
-- **Held-out selection:** restart winners are compared on the test set.
+- **Train-based model selection:** restart-level and cross-restart model selection use training performance.
+- **Held-out evaluation:** the test set is used only after the final BN has been selected.
 - **Artifact logging:** traces, diagnoses, proposals, restart winners, and CPT comparisons remain inspectable.
 
 The central design principle is:
@@ -378,7 +386,7 @@ Console output is captured under `logs/<benchmark>/` when using `run.sh`.
 - Dataset sampling for `--SFR` uses a fixed random seed (`42`).
 - LLM generation remains stochastic; restart temperature increases by `0.1` per restart.
 - Generated JSON is schema-checked, but domain correctness still depends on the supplied context and evaluation scenarios.
-- Final restart selection uses the held-out test set. For strict research evaluation, consider selecting with a validation split and reserving the test set for one final, non-selective report.
+- The training scenarios are used both to guide refinement and to select candidate/restart BNs. A separate validation split may be introduced in future experiments for model selection, while continuing to reserve the test set exclusively for final evaluation.
 - The repository currently declares dependencies in this README rather than a lock file; pin versions before running controlled experiments.
 - API calls may incur cost and send the prompt context, BN data, and derived statistics to the configured model provider. Review data sensitivity before use.
 

@@ -88,7 +88,7 @@ The current AgentBN formulation and benchmark evaluation make the following assu
 ## Pipeline
 
 <p align="center">
-  <img src="figures/AgentBN_framework.png" width="90%">
+  <img src="figures/AgentBN_framework.png" width="100%">
 </p>
 <p align="center">
   <b>Figure 1. AgentBN framework.</b> The Evaluator Agent diagnoses inference failures and identifies CPT refinement targets, while the Generator Agent proposes localized CPT patches. Candidate BNs are evaluated and selected deterministically using training scenarios. The selected BN is iteratively refined, with intermediate results maintained in memory. The held-out test set is used only for final evaluation.

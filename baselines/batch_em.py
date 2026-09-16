@@ -1,12 +1,50 @@
+import os
+import argparse
 import numpy as np
 import pandas as pd
 
 from itertools import product
 from pgmpy.inference import VariableElimination
 
+
+# ==================================================
+# Arguments
+# ==================================================
+parser = argparse.ArgumentParser()
+
+parser.add_argument(
+    "--benchmark",
+    type=str,
+    default="alarm",
+    help="Benchmark dataset",
+)
+
+parser.add_argument(
+    "--iterations",
+    type=int,
+    default=20,
+    help="Number of Batch EM iterations",
+)
+
+args = parser.parse_args()
+
+os.environ["BENCHMARK"] = args.benchmark
+
+EM_MAX_ITER = args.iterations
+
+
+# ==================================================
+# Project imports
+# ==================================================
 from utils.pgmpy_tool import *
 from utils.bn_io import *
 from config.settings import *
+
+# EM convergence tolerance: commonly used to stop EM when the change in log-likelihood between 
+# consecutive iterations becomes sufficiently small (e.g., 1e-3 to 1e-6, depending on the 
+# implementation and desired precision). We do not use a convergence tolerance because 
+# the baseline is evaluated at a fixed number of EM iterations for consistent and reproducible comparison.
+# EM_TOL = 1e-6
 
 
 # ==================================================
@@ -14,15 +52,8 @@ from config.settings import *
 # ==================================================
 print("\n" + "=" * 60)
 print(f"BATCH EM BASELINE — BENCHMARK: {BENCHMARK.upper()}")
+print(f"EM ITERATIONS: {EM_MAX_ITER}")
 print("=" * 60)
-
-
-# ==================================================
-# Settings
-# ==================================================
-EM_MAX_ITER = 20
-EM_TOL = 1e-6
-
 
 # ==================================================
 # Step 1: Load deployed/flawed BN
@@ -81,7 +112,6 @@ print("\n✓ All observed variable states match the BN.")
 # ==================================================
 observed_nodes = set(train_data.columns)
 latent_nodes = set(model.nodes()) - observed_nodes
-
 model.latents = latent_nodes
 
 print("\n=== Observed and latent variables ===")
@@ -280,7 +310,6 @@ def update_cpd_from_counts(cpd, expected_counts):
 
     return updated_cpd
 
-
 # ==================================================
 # Step 7: Compute observed-data log-likelihood
 # ==================================================
@@ -317,10 +346,35 @@ def compute_log_likelihood(model, train_data):
     return log_likelihood
 
 # ==================================================
-# Step 8: Run Batch EM until convergence
+# Step 8: Convert learned model to BN JSON
+# ==================================================
+def update_bn_json_from_model(bn_json, model):
+
+    bn_new = {
+        "edges": bn_json["edges"],
+        "nodes": []
+    }
+
+    for node in bn_json["nodes"]:
+
+        node_new = node.copy()
+        node_new["cpt"] = node["cpt"].copy()
+
+        cpd = model.get_cpds(node["name"])
+
+        node_new["cpt"]["values"] = (
+            cpd.get_values().tolist()
+        )
+
+        bn_new["nodes"].append(node_new)
+
+    return bn_new
+
+# ==================================================
+# Step 9: Run Batch EM for fixed iterations
 # ==================================================
 current_model = model.copy()
-convergence_history = []
+parameter_change_history = []
 
 previous_log_likelihood = compute_log_likelihood(
     model=current_model,
@@ -418,7 +472,7 @@ for iteration in range(1, EM_MAX_ITER + 1):
             max_change = variable_change
             max_change_variable = variable
 
-    convergence_history.append(max_change)
+    parameter_change_history.append(max_change)
 
     print(
         f"Iteration {iteration:3d}: "
@@ -436,34 +490,48 @@ for iteration in range(1, EM_MAX_ITER + 1):
     # ----------------------------------------------
     # Convergence check
     # ----------------------------------------------
-    if max_change < EM_TOL:
-        print(
-            f"\n✓ Batch EM converged after "
-            f"{iteration} iterations."
-        )
-        break
+    # if max_change < EM_TOL:
+    #     print(
+    #         f"\n✓ Batch EM converged after "
+    #         f"{iteration} iterations."
+    #     )
+    #     break
 
-else:
-    print(
-        f"\nBatch EM reached the maximum of "
-        f"{EM_MAX_ITER} iterations without convergence."
-    )
+# else:
+#     print(
+#         f"\nBatch EM reached the maximum of "
+#         f"{EM_MAX_ITER} iterations without convergence."
+#     )
 
 # =================================================
-# Step 9: Finalize learned BN
+# Step 10: Finalize learned BN
 # ==================================================
 learned_model = current_model
 
 if not learned_model.check_model():
     raise ValueError("Final learned BN is invalid.")
 
+learned_bn_json = update_bn_json_from_model(
+    bn_json=bn_json,
+    model=learned_model,
+)
+
+store_new_bn(
+    bn_number=EM_MAX_ITER,
+    bn_new=learned_bn_json,
+    filename=BATCH_EM_BN_FILE,
+    overwrite=True,
+)
+
+print("\n✓ Learned Batch EM BN saved.")
+
 # ==================================================
-# Step 10: Print final summary
+# Step 11: Print final summary
 # ==================================================
-print("\n=== Convergence history ===")
+print("\n=== Parameter change history ===")
 
 for i, change in enumerate(
-    convergence_history,
+    parameter_change_history,
     start=1,
 ):
     print(

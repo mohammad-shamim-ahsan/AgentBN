@@ -18,6 +18,9 @@ WORKSPACE_DIR.mkdir(parents=True, exist_ok=True)
 PROMPT_DIR = ROOT / "prompts"
 CONTEXT_DIR = PROMPT_DIR / "contexts"
 
+BASELINE_RESULTS_DIR = ROOT / "baselines" / "results" / BENCHMARK
+BASELINE_RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+
 
 # ======================================================
 # INPUT FILES
@@ -69,6 +72,13 @@ CPT_COMPARISON_FILE = WORKSPACE_DIR / "cpt_comparison_analysis.json"
 ORACLE_FILE = WORKSPACE_DIR / "oracle_nodes.json"
 
 FAILED_LLM_RESPONSE_FILE = WORKSPACE_DIR / "failed_llm_response.json"
+
+
+# ======================================================
+# BASELINES RESULTS
+# ======================================================
+
+BATCH_EM_BN_FILE = BASELINE_RESULTS_DIR / "batch_em_bn.jsonl"
 
 
 # ======================================================

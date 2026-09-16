@@ -42,14 +42,39 @@ def remove_bn(bn_number, filename=PROPOSED_BN_FILE):
     )
 
 
-def store_new_bn(bn_number, bn_new):
+def store_new_bn(
+    bn_number,
+    bn_new,
+    filename=PROPOSED_BN_FILE,
+    overwrite=False,
+):
     record = {
         "bn_number": bn_number,
         "bn": bn_new
     }
 
-    with open(PROPOSED_BN_FILE, "a", encoding="utf-8") as f:
-        f.write(json.dumps(record) + "\n")
+    if overwrite and os.path.exists(filename):
+        records = []
+
+        with open(filename, "r", encoding="utf-8") as f:
+            for line in f:
+                if not line.strip():
+                    continue
+
+                old_record = json.loads(line)
+
+                if old_record.get("bn_number") != bn_number:
+                    records.append(old_record)
+
+        records.append(record)
+
+        with open(filename, "w", encoding="utf-8") as f:
+            for item in records:
+                f.write(json.dumps(item) + "\n")
+
+    else:
+        with open(filename, "a", encoding="utf-8") as f:
+            f.write(json.dumps(record) + "\n")
 
 
 def find_proposed_bn(bn_number, filename=PROPOSED_BN_FILE):

@@ -13,6 +13,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from utils.pgmpy_tool import *
+from utils.bn_io import *
 from config.settings import *
 
 
@@ -140,9 +141,7 @@ def run_evaluation(bn_json, dataset_file):
 # ============================================================
 # MAIN
 # ============================================================
-
 if __name__ == "__main__":
-
     print(f"BENCHMARK = {BENCHMARK!r}")
 
     DATASET_DIR = Path("datasets") / BENCHMARK
@@ -156,7 +155,14 @@ if __name__ == "__main__":
     GT_BN_FILE = DATASET_DIR / "BN_gt.json"
     FLAWED_BN_FILE = DATASET_DIR / "flawed_BN_0.json"
 
-    bn_json = load_bn(FLAWED_BN_FILE) ### --- change manually
+    # bn_json = load_bn(FLAWED_BN_FILE) ### --- change manually
+
+    # Batch EM BN (bn_number = number of EM iterations)
+    bn_json = get_bn(
+        BATCH_EM_BN_FILE,
+        bn_number=100,
+    )
+
     failures, successes, accuracy, results = run_evaluation(bn_json, TEST_CSV) ### --- change manually
     
     print("\nReasoning Completed.")

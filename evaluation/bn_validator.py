@@ -404,19 +404,33 @@ if __name__ == "__main__":
 
     train_csv=TRAIN_CSV
 
-    best_bn_number, best_bn_accuracy = get_best_bn_number(
-        PROPOSED_BN_FILE, train_csv=train_csv
-    )
+    # best_bn_number, best_bn_accuracy = get_best_bn_number(
+    #     PROPOSED_BN_FILE, train_csv=train_csv
+    # )
 
-    print("Best BN Number:", best_bn_number)
-    print("Best BN Accuracy:", best_bn_accuracy)
+    # print("Best BN Number:", best_bn_number)
+    # print("Best BN Accuracy:", best_bn_accuracy)
 
     # final_output = compare_all_cpts(bn_number=best_bn_number)
     # print(final_output)
 
     gt_bn = normalize_bn(read_json(GROUND_TRUTH_BN_FILE))
-    prop_bn = normalize_bn(get_bn(PROPOSED_BN_FILE, bn_number=best_bn_number))
+    # prop_bn = normalize_bn(get_bn(PROPOSED_BN_FILE, bn_number=best_bn_number))
     flawed_bn = normalize_bn(read_json(FLAWED_BN_FILE))
+
+    EM_ITERATIONS = 100
+    prop_bn = normalize_bn(
+        get_bn(
+            BATCH_EM_BN_FILE,
+            bn_number=EM_ITERATIONS,
+        )
+    )
+
+    print(
+        f"\nValidating Batch EM BN "
+        f"({EM_ITERATIONS} iterations)"
+    )
+    
 
     compute_average_cpt_kl(
         gt_bn,

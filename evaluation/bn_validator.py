@@ -419,10 +419,13 @@ if __name__ == "__main__":
     flawed_bn = normalize_bn(read_json(FLAWED_BN_FILE))
 
     EM_ITERATIONS = 100
+    ORACLE_SIZE = 4
+
     prop_bn = normalize_bn(
         get_bn(
             BATCH_EM_BN_FILE,
             bn_number=EM_ITERATIONS,
+            oracle_size=ORACLE_SIZE,
         )
     )
 
@@ -431,7 +434,6 @@ if __name__ == "__main__":
         f"({EM_ITERATIONS} iterations)"
     )
     
-
     compute_average_cpt_kl(
         gt_bn,
         prop_bn,

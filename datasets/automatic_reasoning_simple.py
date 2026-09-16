@@ -157,10 +157,12 @@ if __name__ == "__main__":
 
     # bn_json = load_bn(FLAWED_BN_FILE) ### --- change manually
 
-    # Batch EM BN (bn_number = number of EM iterations)
+    # Batch EM BN
+    # bn_number = number of EM iterations, oracle_size = number of oracle-selected CPTs
     bn_json = get_bn(
         BATCH_EM_BN_FILE,
         bn_number=100,
+        oracle_size=4,
     )
 
     failures, successes, accuracy, results = run_evaluation(bn_json, TEST_CSV) ### --- change manually

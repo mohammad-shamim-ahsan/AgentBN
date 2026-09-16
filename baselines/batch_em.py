@@ -1,7 +1,9 @@
 import os
 import argparse
+
 import numpy as np
 import pandas as pd
+import random
 
 from itertools import product
 from pgmpy.inference import VariableElimination
@@ -26,11 +28,20 @@ parser.add_argument(
     help="Number of Batch EM iterations",
 )
 
+parser.add_argument(
+    "--oracle-size",
+    type=int,
+    default=5,
+    help="Number of CPTs included in the oracle set",
+)
+
 args = parser.parse_args()
 
 os.environ["BENCHMARK"] = args.benchmark
 
 EM_MAX_ITER = args.iterations
+
+ORACLE_SIZE = args.oracle_size
 
 
 # ==================================================
@@ -383,6 +394,58 @@ previous_log_likelihood = compute_log_likelihood(
 
 print("\n=== Running Batch EM ===")
 
+# Actual flawed CPTs from benchmark settings
+FLAWED_CPTS = list(EXPECTED_CHANGED_CPTS)
+
+# --------------------------------------------------
+# Determine CPTs available for EM updates
+# --------------------------------------------------
+if ORACLE_SIZE == 0:
+
+    # Standard Batch EM:
+    # all CPTs are available for parameter learning.
+    EM_CPTS = list(current_model.nodes())
+    ORACLE_CPTS = None
+
+    print("Mode: Standard Batch EM")
+    print(f"CPTs available for update: {len(EM_CPTS)}")
+
+else:
+
+    # Oracle-restricted Batch EM:
+    # all actually flawed CPTs are always included.
+    if ORACLE_SIZE < len(FLAWED_CPTS):
+        raise ValueError(
+            f"Oracle size must be 0 or at least "
+            f"{len(FLAWED_CPTS)}."
+        )
+
+    if ORACLE_SIZE > len(current_model.nodes()):
+        raise ValueError(
+            f"Oracle size cannot exceed "
+            f"{len(current_model.nodes())}."
+        )
+
+    candidate_cpts = [
+        variable
+        for variable in current_model.nodes()
+        if variable not in FLAWED_CPTS
+    ]
+
+    random.seed(42)
+
+    ORACLE_CPTS = FLAWED_CPTS + random.sample(
+        candidate_cpts,
+        ORACLE_SIZE - len(FLAWED_CPTS),
+    )
+
+    EM_CPTS = ORACLE_CPTS
+
+    print("Mode: Oracle-restricted Batch EM")
+    print(f"Oracle size: {ORACLE_SIZE}")
+    print(f"Oracle CPTs: {ORACLE_CPTS}")
+
+
 for iteration in range(1, EM_MAX_ITER + 1):
 
     inference = VariableElimination(current_model)
@@ -391,7 +454,7 @@ for iteration in range(1, EM_MAX_ITER + 1):
     # ----------------------------------------------
     # E-step + M-step
     # ----------------------------------------------
-    for variable in current_model.nodes():
+    for variable in EM_CPTS:
 
         cpd = current_model.get_cpds(variable)
 
@@ -427,10 +490,16 @@ for iteration in range(1, EM_MAX_ITER + 1):
     # ----------------------------------------------
     next_model = current_model.copy()
 
-    for cpd in list(next_model.get_cpds()):
-        next_model.remove_cpds(cpd)
+    # Replace only the CPTs selected for EM updates.
+    # For standard Batch EM, this replaces all CPTs.
+    for updated_cpd in updated_cpds:
 
-    next_model.add_cpds(*updated_cpds)
+        old_cpd = next_model.get_cpds(
+            updated_cpd.variable
+        )
+
+        next_model.remove_cpds(old_cpd)
+        next_model.add_cpds(updated_cpd)
 
     if not next_model.check_model():
         raise ValueError(
@@ -503,6 +572,7 @@ for iteration in range(1, EM_MAX_ITER + 1):
 #         f"{EM_MAX_ITER} iterations without convergence."
 #     )
 
+
 # =================================================
 # Step 10: Finalize learned BN
 # ==================================================
@@ -521,6 +591,10 @@ store_new_bn(
     bn_new=learned_bn_json,
     filename=BATCH_EM_BN_FILE,
     overwrite=True,
+    metadata={
+        "oracle_size": ORACLE_SIZE,
+        "oracle_cpts": ORACLE_CPTS
+    },
 )
 
 print("\n✓ Learned Batch EM BN saved.")
@@ -528,8 +602,20 @@ print("\n✓ Learned Batch EM BN saved.")
 # ==================================================
 # Step 11: Print final summary
 # ==================================================
-print("\n=== Parameter change history ===")
+print("\n=== CPT changes from flawed BN ===")
 
+for variable in EM_CPTS:
+    old_cpd = initial_model.get_cpds(variable).get_values()
+    new_cpd = current_model.get_cpds(variable).get_values()
+
+    max_change = np.max(np.abs(new_cpd - old_cpd))
+
+    print(
+        f"{variable:<20} "
+        f"max change = {max_change:.10f}"
+    )
+
+print("\n=== Parameter change history ===")
 for i, change in enumerate(
     parameter_change_history,
     start=1,

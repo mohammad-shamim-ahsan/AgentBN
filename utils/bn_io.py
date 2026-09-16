@@ -47,14 +47,24 @@ def store_new_bn(
     bn_new,
     filename=PROPOSED_BN_FILE,
     overwrite=False,
+    metadata=None,
 ):
     record = {
         "bn_number": bn_number,
         "bn": bn_new
     }
 
+    if metadata is not None:
+        record["metadata"] = metadata
+
     if overwrite and os.path.exists(filename):
         records = []
+
+        new_oracle_size = (
+            metadata.get("oracle_size")
+            if metadata is not None
+            else None
+        )
 
         with open(filename, "r", encoding="utf-8") as f:
             for line in f:
@@ -63,7 +73,18 @@ def store_new_bn(
 
                 old_record = json.loads(line)
 
-                if old_record.get("bn_number") != bn_number:
+                old_oracle_size = (
+                    old_record
+                    .get("metadata", {})
+                    .get("oracle_size")
+                )
+
+                same_record = (
+                    old_record.get("bn_number") == bn_number
+                    and old_oracle_size == new_oracle_size
+                )
+
+                if not same_record:
                     records.append(old_record)
 
         records.append(record)
@@ -91,7 +112,11 @@ def find_proposed_bn(bn_number, filename=PROPOSED_BN_FILE):
     raise ValueError(f"No proposed BN found for BN #{bn_number}")
 
 
-def get_bn(path, bn_number=None):
+def get_bn(
+    path,
+    bn_number=None,
+    oracle_size=None,
+):
     last_record = None
 
     with open(path, "r", encoding="utf-8") as f:
@@ -101,18 +126,26 @@ def get_bn(path, bn_number=None):
 
             record = json.loads(line)
 
-            if bn_number is not None and record.get("bn_number") == bn_number:
-                return record["bn"]
+            if bn_number is not None:
+                if record.get("bn_number") != bn_number:
+                    continue
+
+            if oracle_size is not None:
+                if (
+                    record.get("metadata", {}).get("oracle_size")
+                    != oracle_size
+                ):
+                    continue
+
+            return record["bn"]
 
             last_record = record
 
-    if bn_number is not None:
-        raise ValueError(f"BN #{bn_number} not found.")
-
-    if last_record is None:
-        raise ValueError("No BN records found.")
-
-    return last_record["bn"]
+    raise ValueError(
+        f"BN not found for "
+        f"bn_number={bn_number}, "
+        f"oracle_size={oracle_size}."
+    )
 
 
 def normalize_bn(bn_obj):

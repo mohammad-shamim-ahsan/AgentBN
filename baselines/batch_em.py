@@ -605,7 +605,7 @@ print("\n✓ Learned Batch EM BN saved.")
 print("\n=== CPT changes from flawed BN ===")
 
 for variable in EM_CPTS:
-    old_cpd = initial_model.get_cpds(variable).get_values()
+    old_cpd = model.get_cpds(variable).get_values()
     new_cpd = current_model.get_cpds(variable).get_values()
 
     max_change = np.max(np.abs(new_cpd - old_cpd))
@@ -627,6 +627,8 @@ for i, change in enumerate(
 
 print("\n=== Batch EM finished ===")
 print(f"Iterations completed:     {iteration}")
-print(f"Final maximum CPT change: {max_change:.10f}")
+
+cpt_change = np.max(np.abs(new_cpd - old_cpd))
+print(f"{variable:<20} "f"max change = {cpt_change:.10f}")
 print(f"Largest-changing CPT:     {max_change_variable}")
 print("✓ Final learned BN is valid.")

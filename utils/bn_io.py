@@ -3,6 +3,7 @@ import json
 from config.settings import *
 
 
+# -----------------------------------------------
 def load_bn(filename):
     with open(filename, "r") as f:
         return json.load(f)
@@ -116,9 +117,8 @@ def get_bn(
     path,
     bn_number=None,
     oracle_size=None,
+    subset_id=None,
 ):
-    last_record = None
-
     with open(path, "r", encoding="utf-8") as f:
         for line in f:
             if not line.strip():
@@ -130,21 +130,23 @@ def get_bn(
                 if record.get("bn_number") != bn_number:
                     continue
 
+            metadata = record.get("metadata", {})
+
             if oracle_size is not None:
-                if (
-                    record.get("metadata", {}).get("oracle_size")
-                    != oracle_size
-                ):
+                if metadata.get("oracle_size") != oracle_size:
+                    continue
+
+            if subset_id is not None:
+                if metadata.get("subset_id") != subset_id:
                     continue
 
             return record["bn"]
 
-            last_record = record
-
     raise ValueError(
         f"BN not found for "
         f"bn_number={bn_number}, "
-        f"oracle_size={oracle_size}."
+        f"oracle_size={oracle_size}, "
+        f"subset_id={subset_id}."
     )
 
 

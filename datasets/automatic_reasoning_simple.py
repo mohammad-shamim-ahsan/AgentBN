@@ -104,7 +104,11 @@ def run_evaluation(bn_json, dataset_file):
 
     model = build_model(bn_json)
 
-    df = pd.read_csv(dataset_file)
+    if isinstance(dataset_file, pd.DataFrame):
+        df = dataset_file.copy()
+    else:
+        df = pd.read_csv(dataset_file)
+        
     df.columns = df.columns.str.strip()
 
     results = call_bn_inference(model, df)
@@ -121,19 +125,19 @@ def run_evaluation(bn_json, dataset_file):
 
     accuracy = len(successes) / len(results_df)
 
-    print("\n===================================================")
-    print("RESULTS")
-    print("===================================================")
+    # print("\n===================================================")
+    # print("RESULTS")
+    # print("===================================================")
 
-    print(results_df)
+    # print(results_df)
 
     print("\nAccuracy:", round(accuracy * 100, 2), "%")
 
-    print("\nFailures:")
-    if failures.empty:
-        print("No failures!")
-    else:
-        print(failures)
+    # print("\nFailures:")
+    # if failures.empty:
+    #     print("No failures!")
+    # else:
+    #     print(failures)
 
     return failures, successes, accuracy, results
 
@@ -157,14 +161,116 @@ if __name__ == "__main__":
 
     # bn_json = load_bn(FLAWED_BN_FILE) ### --- change manually
 
-    # Batch EM BN
-    # bn_number = number of EM iterations, oracle_size = number of oracle-selected CPTs
-    bn_json = get_bn(
-        BATCH_EM_BN_FILE,
-        bn_number=100,
-        oracle_size=4,
+    # failures, successes, accuracy, results = run_evaluation(bn_json, TEST_CSV) ### --- change manually
+    
+    # # ============================================================
+    # # Batch EM evaluation
+    # # ============================================================
+    
+    full_train_data = pd.read_csv(TRAIN_CSV)
+
+    # Must exactly match batch_em.py
+    full_train_data = full_train_data.sample(
+        frac=1,
+        random_state=42,
+    ).reset_index(drop=True)
+
+    train_subsets = np.array_split(
+        full_train_data,
+        4,
     )
 
-    failures, successes, accuracy, results = run_evaluation(bn_json, TEST_CSV) ### --- change manually
+    # ============================================================
+    # Evaluate each independently learned Batch EM BN
+    # ============================================================
+    for learned_subset_id in range(1, 5):
+
+        print("\n" + "=" * 60)
+        print(
+            f"BN LEARNED FROM SUBSET "
+            f"{learned_subset_id}"
+        )
+        print("=" * 60)
+
+        # Load the BN learned from this subset
+        bn_json = get_bn(
+            BATCH_EM_BN_FILE,
+            bn_number=100,
+            oracle_size=2,
+            subset_id=learned_subset_id,
+        )
+
+        # --------------------------------------------------------
+        # Evaluate on all training subsets
+        # --------------------------------------------------------
+        for eval_subset_id, subset_df in enumerate(
+            train_subsets,
+            start=1,
+        ):
+
+            failures, successes, accuracy, results = run_evaluation(
+                bn_json,
+                subset_df,
+            )
+
+            if eval_subset_id == learned_subset_id:
+                label = "Own training"
+            else:
+                label = "Cross-training"
+
+            print(
+                f"{label} subset "
+                f"{eval_subset_id}: "
+                f"{accuracy * 100:.2f}%"
+            )
+
+        # --------------------------------------------------------
+        # Evaluate on common held-out test set
+        # --------------------------------------------------------
+        failures, successes, accuracy, results = run_evaluation(
+            bn_json,
+            TEST_CSV,
+        )
+
+        print(
+            f"Held-out test: "
+            f"{accuracy * 100:.2f}%"
+        )
+
+    # # ============================================================
+    # # Evaluate original flawed BN
+    # # ============================================================
     
+    # print("\n" + "=" * 60)
+    # print("ORIGINAL FLAWED BN")
+    # print("=" * 60)
+
+    # flawed_bn_json = load_bn(FLAWED_BN_FILE)
+
+    # # Evaluate on all four training/refinement subsets
+    # for subset_id, subset_df in enumerate(
+    #     train_subsets,
+    #     start=1,
+    # ):
+    #     failures, successes, accuracy, results = run_evaluation(
+    #         flawed_bn_json,
+    #         subset_df,
+    #     )
+
+    #     print(
+    #         f"Training subset {subset_id}: "
+    #         f"{accuracy * 100:.2f}%"
+    #     )
+
+    # # Evaluate on common held-out test set
+    # failures, successes, accuracy, results = run_evaluation(
+    #     flawed_bn_json,
+    #     TEST_CSV,
+    # )
+
+    # print(
+    #     f"Held-out test: "
+    #     f"{accuracy * 100:.2f}%"
+    # )
+
     print("\nReasoning Completed.")

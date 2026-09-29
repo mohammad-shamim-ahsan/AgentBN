@@ -1,53 +1,12 @@
 {
     "bn_number": 0,
     "parameter_statistics": {
-        "BP": [
-            {
-                "column": 1,
-                "state": "HIGH",
-                "argmax_probability": 0.01,
-                "failure_weight": 25,
-                "success_weight": 0
-            },
-            {
-                "column": 1,
-                "state": "NORMAL",
-                "argmax_probability": 0.01,
-                "failure_weight": 15,
-                "success_weight": 11
-            },
-            {
-                "column": 1,
-                "state": "LOW",
-                "argmax_probability": 0.98,
-                "failure_weight": 15,
-                "success_weight": 23
-            }
-        ],
         "PCWP": [
             {
                 "column": 2,
                 "state": "HIGH",
                 "argmax_probability": 0.95,
-                "failure_weight": 55,
-                "success_weight": 34
-            }
-        ],
-        "HYPOVOLEMIA": [
-            {
-                "column": 0,
-                "state": "Hypovolemia",
-                "argmax_probability": 0.08,
-                "failure_weight": 55,
-                "success_weight": 34
-            }
-        ],
-        "STROKEVOLUME": [
-            {
-                "column": 1,
-                "state": "LOW",
-                "argmax_probability": 0.5,
-                "failure_weight": 55,
+                "failure_weight": 79,
                 "success_weight": 34
             }
         ],
@@ -56,17 +15,31 @@
                 "column": 6,
                 "state": "LOW",
                 "argmax_probability": 0.8,
-                "failure_weight": 55,
+                "failure_weight": 79,
                 "success_weight": 34
             }
         ],
-        "LVEDVOLUME": [
+        "BP": [
+            {
+                "column": 1,
+                "state": "LOW",
+                "argmax_probability": 0.98,
+                "failure_weight": 23,
+                "success_weight": 15
+            },
+            {
+                "column": 1,
+                "state": "NORMAL",
+                "argmax_probability": 0.01,
+                "failure_weight": 21,
+                "success_weight": 19
+            },
             {
                 "column": 1,
                 "state": "HIGH",
-                "argmax_probability": 0.9,
-                "failure_weight": 55,
-                "success_weight": 34
+                "argmax_probability": 0.01,
+                "failure_weight": 35,
+                "success_weight": 0
             }
         ],
         "CVP": [
@@ -74,15 +47,49 @@
                 "column": 2,
                 "state": "NORMAL",
                 "argmax_probability": 0.29,
-                "failure_weight": 31,
-                "success_weight": 1
+                "failure_weight": 45,
+                "success_weight": 0
             },
             {
                 "column": 2,
                 "state": "HIGH",
                 "argmax_probability": 0.7,
-                "failure_weight": 24,
-                "success_weight": 33
+                "failure_weight": 30,
+                "success_weight": 34
+            },
+            {
+                "column": 2,
+                "state": "LOW",
+                "argmax_probability": 0.01,
+                "failure_weight": 4,
+                "success_weight": 0
+            }
+        ],
+        "LVEDVOLUME": [
+            {
+                "column": 1,
+                "state": "HIGH",
+                "argmax_probability": 0.9,
+                "failure_weight": 79,
+                "success_weight": 34
+            }
+        ],
+        "STROKEVOLUME": [
+            {
+                "column": 1,
+                "state": "LOW",
+                "argmax_probability": 0.5,
+                "failure_weight": 79,
+                "success_weight": 34
+            }
+        ],
+        "HYPOVOLEMIA": [
+            {
+                "column": 0,
+                "state": "Hypovolemia",
+                "argmax_probability": 0.08,
+                "failure_weight": 79,
+                "success_weight": 34
             }
         ]
     }

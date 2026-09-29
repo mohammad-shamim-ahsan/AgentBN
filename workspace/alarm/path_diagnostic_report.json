@@ -1,0 +1,36 @@
+{
+    "path_diagnostics": [
+        {
+            "path_id": "P1",
+            "path": [
+                "HYPOVOLEMIA",
+                "STROKEVOLUME",
+                "CO",
+                "BP"
+            ],
+            "path_assessment": "suspicious",
+            "path_summary": "This path shows repeated activation of deterministic parameters that are heavily represented in failures across multiple consecutive nodes, especially the hypovolemia-to-low stroke volume and downstream low-output chain to CO and BP. While the qualitative physiology is plausible, the concentration of failure weight along the full path suggests problematic parameter behavior affecting inference on this route."
+        },
+        {
+            "path_id": "P2",
+            "path": [
+                "HYPOVOLEMIA",
+                "LVEDVOLUME",
+                "CVP"
+            ],
+            "path_assessment": "uncertain",
+            "path_summary": "The path is physiologically coherent, and although HYPOVOLEMIA and LVEDVOLUME parameters appear often in failures, the downstream CVP behavior is mixed and not strongly failure-specific. The available evidence does not clearly distinguish this path as either problematic or clearly well-behaved."
+        },
+        {
+            "path_id": "P3",
+            "path": [
+                "HYPOVOLEMIA",
+                "LVEDVOLUME",
+                "PCWP"
+            ],
+            "path_assessment": "consistent",
+            "path_summary": "The path follows expected physiology, with hypovolemia tending to reduce filling volume and low filling volume strongly implying low wedge pressure. Although upstream parameters are activated in both failures and successes, there is no clear path-level evidence that this route behaves anomalously."
+        }
+    ],
+    "overall_summary": "Among the three paths, the strongest evidence of problematic behavior is on the hemodynamic path from HYPOVOLEMIA through STROKEVOLUME and CO to BP. The two filling-pressure paths appear more compatible with expected physiology, with the CVP path remaining ambiguous and the PCWP path looking broadly consistent."
+}

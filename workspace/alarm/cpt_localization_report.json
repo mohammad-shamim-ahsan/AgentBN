@@ -1,0 +1,20 @@
+{
+    "cpt_localizations": [
+        {
+            "cpt": "STROKEVOLUME",
+            "assessment": "suspicious",
+            "justification": "STROKEVOLUME lies on the only path assessed as suspicious and contains a heavily failure-associated deterministic parameter: for HYPOVOLEMIA=Hypovolemia and LVFAILURE=FALSE, STROKEVOLUME=LOW has probability 0.86 with failure_weight 65 versus success_weight 48. Because the parallel filling-pressure route through LVEDVOLUME to PCWP is path-wise consistent, the evidence concentrates more on the hypovolemia-to-low-stroke-volume branch than on HYPOVOLEMIA alone."
+        },
+        {
+            "cpt": "CO",
+            "assessment": "suspicious",
+            "justification": "CO is the next downstream CPT on the suspicious hemodynamic chain and has a repeatedly activated failure-associated parameter: for HR=HIGH and STROKEVOLUME=LOW, CO=LOW has probability 0.68 with failure_weight 65 versus success_weight 48. This places CO at a key convergence point where the suspicious low-output behavior is expressed before reaching BP, making it a plausible contributor rather than BP alone."
+        },
+        {
+            "cpt": "BP",
+            "assessment": "suspicious",
+            "justification": "BP is the terminal CPT on the suspicious path and shows strongly failure-skewed activation in the column for CO=LOW and TPR=NORMAL, especially BP=HIGH with probability 0.002 and failure_weight 35 versus success_weight 0, alongside abnormal failure concentration across the same column. Even allowing for upstream effects from STROKEVOLUME and CO, the pattern indicates the BP CPT itself is implicated in the observed failures."
+        }
+    ],
+    "overall_summary": "Localization evidence is concentrated on the suspicious hemodynamic path HYPOVOLEMIA \u2192 STROKEVOLUME \u2192 CO \u2192 BP. The strongest candidate flawed CPTs are STROKEVOLUME, CO, and BP, while HYPOVOLEMIA and the LVEDVOLUME-based filling-pressure routes are not sufficiently implicated to report as suspicious."
+}

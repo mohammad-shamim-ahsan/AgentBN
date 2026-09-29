@@ -1,0 +1,45 @@
+{
+    "cpt_recommendations": [
+        {
+            "cpt": "BP",
+            "candidate_parameters": [
+                {
+                    "column": 1,
+                    "state": "HIGH",
+                    "current_probability": 0.002,
+                    "direction": "increase",
+                    "justification": "This parameter is activated in many failure cases and no success cases, making it the most failure-specific anomaly among the localized candidates. For CO=LOW and TPR=NORMAL, assigning almost zero probability to HIGH BP appears overly rigid and is the clearest target for refinement."
+                },
+                {
+                    "column": 1,
+                    "state": "NORMAL",
+                    "current_probability": 0.008,
+                    "direction": "increase",
+                    "justification": "The same BP column shows very little mass on NORMAL despite mixed physiological possibilities under low cardiac output with normal peripheral resistance. Increasing this probability would soften an excessively deterministic column that is disproportionately represented in failures."
+                },
+                {
+                    "column": 1,
+                    "state": "LOW",
+                    "current_probability": 0.99,
+                    "direction": "decrease",
+                    "justification": "This column currently forces BP=LOW almost deterministically when CO=LOW and TPR=NORMAL. Because the entire column is implicated and the alternative states are nearly excluded, a modest decrease is well supported to rebalance the distribution."
+                }
+            ],
+            "cpt_summary": "BP has the strongest direct refinement support. The suspicious path terminates here, and the activated column for CO=LOW and TPR=NORMAL is unusually extreme and strongly failure-skewed, especially for the near-impossible HIGH and NORMAL outcomes."
+        },
+        {
+            "cpt": "STROKEVOLUME",
+            "candidate_parameters": [
+                {
+                    "column": 1,
+                    "state": "LOW",
+                    "current_probability": 0.86,
+                    "direction": "decrease",
+                    "justification": "This parameter corresponds to HYPOVOLEMIA=Hypovolemia and LVFAILURE=FALSE and is repeatedly activated on the only suspicious path. The probability of LOW stroke volume is high and heavily represented in failures, suggesting the hypovolemia-to-low-stroke-volume effect may be overstated."
+                }
+            ],
+            "cpt_summary": "STROKEVOLUME should be included because it is the earliest localized CPT on the suspicious hemodynamic chain and is more specifically implicated than HYPOVOLEMIA itself. Refinement should focus narrowly on the hypovolemia/no-LV-failure column rather than the whole CPT."
+        }
+    ],
+    "overall_summary": "Refinement should focus on the smallest well-supported set: BP and STROKEVOLUME. BP has the strongest evidence, centered on the CO=LOW, TPR=NORMAL column, which appears overly deterministic and failure-specific. STROKEVOLUME is also supported as an upstream contributor on the suspicious hemodynamic path. CO is not included because its flagged parameter is only moderately extreme and is plausibly downstream propagation from the STROKEVOLUME and BP issues rather than a clearly independent CPT defect."
+}

@@ -1,7 +1,8 @@
 {
-  "bn_number": null,
-  "agent_changed_cpt_count": 1,
+  "bn_number": 4,
+  "agent_changed_cpt_count": 2,
   "agent_changed_cpts": [
+    "CVP",
     "LVEDVOLUME"
   ],
   "agent_change_report": {
@@ -12,8 +13,9 @@
       "HYPOVOLEMIA",
       "LVEDVOLUME"
     ],
-    "agent_changed_count": 1,
+    "agent_changed_count": 2,
     "agent_changed_cpts": [
+      "CVP",
       "LVEDVOLUME"
     ],
     "matched_expected_count": 1,
@@ -24,17 +26,18 @@
     "missed_expected_cpts": [
       "HYPOVOLEMIA"
     ],
-    "unexpected_changed_count": 0,
-    "unexpected_changed_cpts": [],
+    "unexpected_changed_count": 1,
+    "unexpected_changed_cpts": [
+      "CVP"
+    ],
     "unflawed_cpt_count": 35,
-    "untouched_unflawed_count": 35,
+    "untouched_unflawed_count": 34,
     "untouched_unflawed_cpts": [
       "ANAPHYLAXIS",
       "ARTCO2",
       "BP",
       "CATECHOL",
       "CO",
-      "CVP",
       "DISCONNECT",
       "ERRCAUTER",
       "ERRLOWOUTPUT",
@@ -66,7 +69,7 @@
       "VENTTUBE"
     ],
     "expected_change_recall": 0.5,
-    "unexpected_change_rate": 0.0,
-    "unflawed_preservation_rate": 1.0
+    "unexpected_change_rate": 0.0286,
+    "unflawed_preservation_rate": 0.9714
   }
 }

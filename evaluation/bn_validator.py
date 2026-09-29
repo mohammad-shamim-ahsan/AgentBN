@@ -419,38 +419,46 @@ if __name__ == "__main__":
     flawed_bn = normalize_bn(read_json(FLAWED_BN_FILE))
 
     EM_ITERATIONS = 100
-    ORACLE_SIZE = 4
+    ORACLE_SIZE = 2
+    NUM_SUBSETS = 4
 
-    prop_bn = normalize_bn(
-        get_bn(
-            BATCH_EM_BN_FILE,
-            bn_number=EM_ITERATIONS,
-            oracle_size=ORACLE_SIZE,
+    for subset_id in range(1, NUM_SUBSETS + 1):
+
+        prop_bn = normalize_bn(
+            get_bn(
+                BATCH_EM_BN_FILE,
+                bn_number=EM_ITERATIONS,
+                oracle_size=ORACLE_SIZE,
+                subset_id=subset_id,
+            )
         )
-    )
 
-    print(
-        f"\nValidating Batch EM BN "
-        f"({EM_ITERATIONS} iterations)"
-    )
-    
-    compute_average_cpt_kl(
-        gt_bn,
-        prop_bn,
-        target_nodes=TARGET_NODES_FOR_VALIDATION,
-        flawed_bn = flawed_bn
-    )
+        print("\n" + "=" * 60)
+        print(
+            f"Validating Batch EM BN "
+            f"(iterations={EM_ITERATIONS}, "
+            f"oracle_size={ORACLE_SIZE}, "
+            f"subset_id={subset_id})"
+        )
+        print("=" * 60)
 
-    compute_average_cpt_rmse(
-        gt_bn,
-        prop_bn,
-        target_nodes=TARGET_NODES_FOR_VALIDATION,
-        flawed_bn = flawed_bn
-    )
+        compute_average_cpt_kl(
+            gt_bn,
+            prop_bn,
+            target_nodes=None,
+            flawed_bn=flawed_bn,
+        )
 
-    compute_average_cpt_hellinger(
-        gt_bn,
-        prop_bn,
-        target_nodes=TARGET_NODES_FOR_VALIDATION,
-        flawed_bn = flawed_bn
-    )
+        compute_average_cpt_rmse(
+            gt_bn,
+            prop_bn,
+            target_nodes=None,
+            flawed_bn=flawed_bn,
+        )
+
+        compute_average_cpt_hellinger(
+            gt_bn,
+            prop_bn,
+            target_nodes=None,
+            flawed_bn=flawed_bn,
+        )

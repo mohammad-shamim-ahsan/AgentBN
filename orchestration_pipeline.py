@@ -2,6 +2,7 @@ import os
 import json
 import copy
 import pandas as pd
+import numpy as np
 import argparse
 
 
@@ -20,6 +21,14 @@ parser.add_argument(
 )
 
 parser.add_argument(
+    "--subset",
+    type=int,
+    choices=[1, 2, 3, 4],
+    default=None,
+    help="Run AgentBN on one of four deterministic training subsets."
+)
+
+parser.add_argument(
     "--SFR",
     type=int,
     default=None,
@@ -29,6 +38,8 @@ parser.add_argument(
 args = parser.parse_args()
 
 os.environ["BENCHMARK"] = args.benchmark    # Pass benchmark to settings.py
+
+SUBSET_ID = args.subset
 
 use_ratio_constraint = args.SFR is not None
 SFR = args.SFR
@@ -250,6 +261,39 @@ def create_constrained_train(
 train_csv = TRAIN_CSV
 test_csv = TEST_CSV
 
+if SUBSET_ID is not None:
+
+    full_train_data = pd.read_csv(TRAIN_CSV)
+
+    # EXACTLY reproduce Batch EM split
+    full_train_data = full_train_data.sample(
+        frac=1,
+        random_state=42,
+    ).reset_index(drop=True)
+
+    train_subsets = np.array_split(
+        full_train_data,
+        4,
+    )
+
+    subset_df = train_subsets[SUBSET_ID - 1]
+
+    subset_train_csv = (
+        f"agentbn_train_subset_{SUBSET_ID}.csv"
+    )
+
+    subset_df.to_csv(
+        subset_train_csv,
+        index=False,
+    )
+
+    train_csv = subset_train_csv
+
+    print(
+        f"AgentBN subset {SUBSET_ID}: "
+        f"{len(subset_df)} scenarios"
+    )
+
 # ----------------------------------------
 # Create constrained training set
 # ----------------------------------------
@@ -291,6 +335,8 @@ restart_count = 0
 # ----------------------------------------
 # Main orchestration loop
 # ----------------------------------------
+
+agent_context = read_file(CONTEXT_AGENT_FILE)
 
 while restart_count < MAX_RESTARTS:
 
@@ -349,7 +395,7 @@ while restart_count < MAX_RESTARTS:
         evaluation_output = run_evaluation(flawed_bn, bn_number=bn_number, temperature=current_temperature, dataset_file=train_csv)
         store_analysis(bn_number, evaluation_output)
 
-        new_bn = generate_and_select_best_candidate(CONTEXT_AGENT_FILE, PROPOSED_BN_FILE, BN_ANALYSIS_FILE, train_csv, temperature=current_temperature) 
+        new_bn = generate_and_select_best_candidate(agent_context, PROPOSED_BN_FILE, BN_ANALYSIS_FILE, train_csv, temperature=current_temperature) 
         
         failures, successes, accuracy, _ = initial_run_evaluation(new_bn, train_csv)
 
@@ -392,7 +438,7 @@ while restart_count < MAX_RESTARTS:
 
     while i <= MAX_ITER:
 
-        print(f"\n===== ITERATION {i+1} =====")
+        print(f"\n===== ITERATION {i} =====")
 
         best_retry_bn = None
         best_retry_accuracy = float("-inf")
@@ -421,7 +467,7 @@ while restart_count < MAX_RESTARTS:
         store_analysis(bn_number, evaluation_output)
 
         new_bn = generate_and_select_best_candidate(
-                CONTEXT_AGENT_FILE,
+                agent_context,
                 PROPOSED_BN_FILE,
                 BN_ANALYSIS_FILE,
                 train_csv,
@@ -471,7 +517,7 @@ while restart_count < MAX_RESTARTS:
             remove_bn(bn_number, PROPOSED_BN_FILE)
 
             new_bn = generate_and_select_best_candidate(
-                CONTEXT_AGENT_FILE,
+                agent_context,
                 PROPOSED_BN_FILE,
                 BN_ANALYSIS_FILE,
                 train_csv,
@@ -551,9 +597,9 @@ while restart_count < MAX_RESTARTS:
     best_bn = get_bn(PROPOSED_BN_FILE, bn_number=best_bn_number)
     nor_best_bn = normalize_bn(best_bn)
 
-    compute_average_cpt_kl(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION, flawed_bn=flawed_bn_nor)
-    compute_average_cpt_rmse(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION, flawed_bn=flawed_bn_nor)
-    compute_average_cpt_hellinger(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION, flawed_bn=flawed_bn_nor)
+    compute_average_cpt_kl(gt_bn, nor_best_bn, target_nodes=None, flawed_bn=flawed_bn_nor)
+    compute_average_cpt_rmse(gt_bn, nor_best_bn, target_nodes=None, flawed_bn=flawed_bn_nor)
+    compute_average_cpt_hellinger(gt_bn, nor_best_bn, target_nodes=None, flawed_bn=flawed_bn_nor)
 
     store_restart_final_bn(
         restart_count=restart_count,
@@ -577,9 +623,30 @@ while restart_count < MAX_RESTARTS:
 # MODEL SELECTION USING TRAIN SET
 # ---------------------------------
 
-best_restart, best_restart_bn, train_accuracy = (
+best_restart, best_restart_bn, train_accuracy, _ = (
     get_best_restart_bn(dataset_file=train_csv)
 )
+
+# ---------------------------------
+# STORE FINAL BN FOR THIS SUBSET
+# ---------------------------------
+if SUBSET_ID is not None:
+
+    record = {
+        "subset_id": SUBSET_ID,
+        "best_restart": best_restart,
+        "train_accuracy": train_accuracy,
+        "bn": best_restart_bn,
+    }
+
+    with open(AGENTBN_SUBSET_BN_FILE, "a", encoding="utf-8") as f:
+        f.write(json.dumps(record) + "\n")
+
+    print(
+        f"Stored final AgentBN for subset {SUBSET_ID} "
+        f"in {AGENTBN_SUBSET_BN_FILE}"
+    )
+
 
 print("\n===================================")
 print("BEST RESTART")
@@ -587,7 +654,6 @@ print("===================================")
 
 print("Restart:", best_restart)
 print("Train Accuracy:", train_accuracy)
-
 
 # ---------------------------------
 # FINAL EVALUATION ON HELD-OUT TEST SET
@@ -611,9 +677,15 @@ print(final_output)
 gt_bn = normalize_bn(read_json(GROUND_TRUTH_BN_FILE))
 nor_best_bn = normalize_bn(best_restart_bn)
 
-compute_average_cpt_kl(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION, flawed_bn=flawed_bn_nor)
-compute_average_cpt_rmse(gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION, flawed_bn=flawed_bn_nor)
-compute_average_cpt_hellinger( gt_bn, nor_best_bn, target_nodes=TARGET_NODES_FOR_VALIDATION, flawed_bn=flawed_bn_nor)
+compute_average_cpt_kl(gt_bn, nor_best_bn, target_nodes=None, flawed_bn=flawed_bn_nor)
+compute_average_cpt_rmse(gt_bn, nor_best_bn, target_nodes=None, flawed_bn=flawed_bn_nor)
+compute_average_cpt_hellinger( gt_bn, nor_best_bn, target_nodes=None, flawed_bn=flawed_bn_nor)
+
+# ---------------------------------
+# Cleanup
+# ---------------------------------
+if SUBSET_ID is not None and os.path.exists(subset_train_csv):
+    os.remove(subset_train_csv)
 
 print("###------------------------------###")
 print("\nPipeline finished.")

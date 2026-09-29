@@ -35,13 +35,20 @@ parser.add_argument(
     help="Number of CPTs included in the oracle set",
 )
 
+parser.add_argument(
+    "--num-subsets",
+    type=int,
+    default=4,
+    help="Number of independent training subsets",
+)
+
 args = parser.parse_args()
 
 os.environ["BENCHMARK"] = args.benchmark
 
 EM_MAX_ITER = args.iterations
-
 ORACLE_SIZE = args.oracle_size
+NUM_SUBSETS = args.num_subsets
 
 
 # ==================================================
@@ -51,10 +58,15 @@ from utils.pgmpy_tool import *
 from utils.bn_io import *
 from config.settings import *
 
-# EM convergence tolerance: commonly used to stop EM when the change in log-likelihood between 
-# consecutive iterations becomes sufficiently small (e.g., 1e-3 to 1e-6, depending on the 
-# implementation and desired precision). We do not use a convergence tolerance because 
-# the baseline is evaluated at a fixed number of EM iterations for consistent and reproducible comparison.
+
+# EM convergence tolerance: commonly used to stop EM
+# when the change in log-likelihood between consecutive
+# iterations becomes sufficiently small.
+#
+# We do not use a convergence tolerance because the
+# baseline is evaluated at a fixed number of EM
+# iterations for consistent and reproducible comparison.
+#
 # EM_TOL = 1e-6
 
 
@@ -64,7 +76,9 @@ from config.settings import *
 print("\n" + "=" * 60)
 print(f"BATCH EM BASELINE — BENCHMARK: {BENCHMARK.upper()}")
 print(f"EM ITERATIONS: {EM_MAX_ITER}")
+print(f"NUMBER OF TRAINING SUBSETS: {NUM_SUBSETS}")
 print("=" * 60)
+
 
 # ==================================================
 # Step 1: Load deployed/flawed BN
@@ -79,55 +93,93 @@ print(f"Number of CPTs:  {len(model.get_cpds())}")
 
 
 # ==================================================
-# Step 2: Load and prepare training data
+# Step 2: Load and split training data
 # ==================================================
-train_data = pd.read_csv(TRAIN_CSV)
+full_train_data = pd.read_csv(TRAIN_CSV)
 
 print("\n=== Original training data ===")
-print(f"Number of scenarios: {len(train_data)}")
-print(f"Columns: {list(train_data.columns)}")
+print(f"Number of scenarios: {len(full_train_data)}")
+print(f"Columns: {list(full_train_data.columns)}")
 
-train_data = train_data.drop(columns=["Scenario #"])
+# Deterministically shuffle the complete refinement set.
+full_train_data = full_train_data.sample(
+    frac=1,
+    random_state=42,
+).reset_index(drop=True)
 
-train_data = train_data.rename(
-    columns={"Ground Truth": TARGET_NODE}
+# Split into approximately equal subsets.
+train_subsets = np.array_split(
+    full_train_data,
+    NUM_SUBSETS,
 )
 
-print("\n=== EM training data ===")
-print(f"Shape: {train_data.shape}")
-print(f"Columns: {list(train_data.columns)}")
+print("\n=== Batch EM training subsets ===")
 
-
-# ==================================================
-# Step 3: Verify observed states against BN states
-# ==================================================
-for variable in train_data.columns:
-
-    data_states = set(train_data[variable].unique())
-    bn_states = set(
-        model.get_cpds(variable).state_names[variable]
+for subset_id, subset in enumerate(
+    train_subsets,
+    start=1,
+):
+    print(
+        f"Subset {subset_id}: "
+        f"{len(subset)} scenarios"
     )
 
-    if data_states != bn_states:
+
+# ==================================================
+# Step 3: Determine CPTs available for EM updates
+# ==================================================
+
+# Actual flawed CPTs from benchmark settings.
+FLAWED_CPTS = list(EXPECTED_CHANGED_CPTS)
+
+if ORACLE_SIZE == 0:
+
+    # Standard Batch EM:
+    # all CPTs are available for parameter learning.
+    EM_CPTS = list(model.nodes())
+    ORACLE_CPTS = None
+
+    print("\n=== EM configuration ===")
+    print("Mode: Standard Batch EM")
+    print(f"CPTs available for update: {len(EM_CPTS)}")
+
+else:
+
+    # Oracle-restricted Batch EM:
+    # all actually flawed CPTs are always included.
+    if ORACLE_SIZE < len(FLAWED_CPTS):
         raise ValueError(
-            f"State mismatch for {variable}: "
-            f"data states = {sorted(data_states)}, "
-            f"BN states = {sorted(bn_states)}"
+            f"Oracle size must be 0 or at least "
+            f"{len(FLAWED_CPTS)}."
         )
 
-print("\n✓ All observed variable states match the BN.")
+    if ORACLE_SIZE > len(model.nodes()):
+        raise ValueError(
+            f"Oracle size cannot exceed "
+            f"{len(model.nodes())}."
+        )
 
+    candidate_cpts = [
+        variable
+        for variable in model.nodes()
+        if variable not in FLAWED_CPTS
+    ]
 
-# ==================================================
-# Step 4: Identify observed and latent variables
-# ==================================================
-observed_nodes = set(train_data.columns)
-latent_nodes = set(model.nodes()) - observed_nodes
-model.latents = latent_nodes
+    # Fixed seed ensures that the same oracle CPT set
+    # is used across all training subsets.
+    random.seed(42)
 
-print("\n=== Observed and latent variables ===")
-print(f"Observed variables: {len(observed_nodes)}")
-print(f"Latent variables:   {len(latent_nodes)}")
+    ORACLE_CPTS = FLAWED_CPTS + random.sample(
+        candidate_cpts,
+        ORACLE_SIZE - len(FLAWED_CPTS),
+    )
+
+    EM_CPTS = ORACLE_CPTS
+
+    print("\n=== EM configuration ===")
+    print("Mode: Oracle-restricted Batch EM")
+    print(f"Oracle size: {ORACLE_SIZE}")
+    print(f"Oracle CPTs: {ORACLE_CPTS}")
 
 
 # ==================================================
@@ -180,7 +232,7 @@ print(f"Latent variables:   {len(latent_nodes)}")
 
 
 # ==================================================
-# Step 5: Compute expected sufficient statistics
+# Step 4: Compute expected sufficient statistics
 # ==================================================
 def compute_expected_counts(
     model,
@@ -296,16 +348,20 @@ def compute_expected_counts(
 
 
 # ==================================================
-# Step 6: Update CPT from expected counts
+# Step 5: Update CPT from expected counts
 # ==================================================
-def update_cpd_from_counts(cpd, expected_counts):
+def update_cpd_from_counts(
+    cpd,
+    expected_counts,
+):
 
     column_totals = expected_counts.sum(axis=0)
 
     if np.any(column_totals == 0):
         raise ValueError(
             f"Zero expected count for at least one "
-            f"parent configuration in CPT {cpd.variable}."
+            f"parent configuration in CPT "
+            f"{cpd.variable}."
         )
 
     new_values = expected_counts / column_totals
@@ -321,10 +377,14 @@ def update_cpd_from_counts(cpd, expected_counts):
 
     return updated_cpd
 
+
 # ==================================================
-# Step 7: Compute observed-data log-likelihood
+# Step 6: Compute observed-data log-likelihood
 # ==================================================
-def compute_log_likelihood(model, train_data):
+def compute_log_likelihood(
+    model,
+    train_data,
+):
 
     inference = VariableElimination(model)
 
@@ -350,20 +410,26 @@ def compute_log_likelihood(model, train_data):
             if probability <= 0.0:
                 return -np.inf
 
-            log_likelihood += np.log(probability)
+            log_likelihood += np.log(
+                probability
+            )
 
             evidence[variable] = row[variable]
 
     return log_likelihood
 
+
 # ==================================================
-# Step 8: Convert learned model to BN JSON
+# Step 7: Convert learned model to BN JSON
 # ==================================================
-def update_bn_json_from_model(bn_json, model):
+def update_bn_json_from_model(
+    bn_json,
+    model,
+):
 
     bn_new = {
         "edges": bn_json["edges"],
-        "nodes": []
+        "nodes": [],
     }
 
     for node in bn_json["nodes"]:
@@ -371,264 +437,514 @@ def update_bn_json_from_model(bn_json, model):
         node_new = node.copy()
         node_new["cpt"] = node["cpt"].copy()
 
-        cpd = model.get_cpds(node["name"])
+        cpd = model.get_cpds(
+            node["name"]
+        )
 
         node_new["cpt"]["values"] = (
             cpd.get_values().tolist()
         )
 
-        bn_new["nodes"].append(node_new)
+        bn_new["nodes"].append(
+            node_new
+        )
 
     return bn_new
 
+
 # ==================================================
-# Step 9: Run Batch EM for fixed iterations
+# Step 8: Run Batch EM independently per subset
 # ==================================================
-current_model = model.copy()
-parameter_change_history = []
+for subset_id, subset_df in enumerate(
+    train_subsets,
+    start=1,
+):
 
-previous_log_likelihood = compute_log_likelihood(
-    model=current_model,
-    train_data=train_data,
-)
+    print("\n" + "=" * 60)
+    print(
+        f"BATCH EM — SUBSET "
+        f"{subset_id}/{NUM_SUBSETS}"
+    )
+    print("=" * 60)
 
-print("\n=== Running Batch EM ===")
+    # ----------------------------------------------
+    # Prepare this training subset
+    # ----------------------------------------------
+    train_data = subset_df.copy()
 
-# Actual flawed CPTs from benchmark settings
-FLAWED_CPTS = list(EXPECTED_CHANGED_CPTS)
-
-# --------------------------------------------------
-# Determine CPTs available for EM updates
-# --------------------------------------------------
-if ORACLE_SIZE == 0:
-
-    # Standard Batch EM:
-    # all CPTs are available for parameter learning.
-    EM_CPTS = list(current_model.nodes())
-    ORACLE_CPTS = None
-
-    print("Mode: Standard Batch EM")
-    print(f"CPTs available for update: {len(EM_CPTS)}")
-
-else:
-
-    # Oracle-restricted Batch EM:
-    # all actually flawed CPTs are always included.
-    if ORACLE_SIZE < len(FLAWED_CPTS):
-        raise ValueError(
-            f"Oracle size must be 0 or at least "
-            f"{len(FLAWED_CPTS)}."
-        )
-
-    if ORACLE_SIZE > len(current_model.nodes()):
-        raise ValueError(
-            f"Oracle size cannot exceed "
-            f"{len(current_model.nodes())}."
-        )
-
-    candidate_cpts = [
-        variable
-        for variable in current_model.nodes()
-        if variable not in FLAWED_CPTS
-    ]
-
-    random.seed(42)
-
-    ORACLE_CPTS = FLAWED_CPTS + random.sample(
-        candidate_cpts,
-        ORACLE_SIZE - len(FLAWED_CPTS),
+    train_data = train_data.drop(
+        columns=["Scenario #"]
     )
 
-    EM_CPTS = ORACLE_CPTS
+    train_data = train_data.rename(
+        columns={
+            "Ground Truth": TARGET_NODE
+        }
+    )
 
-    print("Mode: Oracle-restricted Batch EM")
-    print(f"Oracle size: {ORACLE_SIZE}")
-    print(f"Oracle CPTs: {ORACLE_CPTS}")
-
-
-for iteration in range(1, EM_MAX_ITER + 1):
-
-    inference = VariableElimination(current_model)
-    updated_cpds = []
+    print("\n=== EM training data ===")
+    print(
+        f"Number of scenarios: "
+        f"{len(train_data)}"
+    )
+    print(
+        f"Shape: {train_data.shape}"
+    )
+    print(
+        f"Columns: "
+        f"{list(train_data.columns)}"
+    )
 
     # ----------------------------------------------
-    # E-step + M-step
+    # Restart from SAME original flawed BN
     # ----------------------------------------------
-    for variable in EM_CPTS:
+    bn_json = load_bn(
+        FLAWED_BN_FILE
+    )
 
-        cpd = current_model.get_cpds(variable)
+    initial_model = build_model(
+        bn_json
+    )
 
-        expected_counts = compute_expected_counts(
-            model=current_model,
-            inference=inference,
-            train_data=train_data,
-            variable=variable,
+    print("\n=== Flawed BN reloaded ===")
+    print(
+        f"Number of nodes: "
+        f"{len(initial_model.nodes())}"
+    )
+    print(
+        f"Number of edges: "
+        f"{len(initial_model.edges())}"
+    )
+    print(
+        f"Number of CPTs:  "
+        f"{len(initial_model.get_cpds())}"
+    )
+
+    # ----------------------------------------------
+    # Verify observed states against BN states
+    # ----------------------------------------------
+    for variable in train_data.columns:
+
+        data_states = set(
+            train_data[
+                variable
+            ].unique()
         )
 
-        # Each scenario contributes total
-        # probability mass 1 to each CPT.
-        if not np.isclose(
-            expected_counts.sum(),
-            len(train_data),
+        bn_states = set(
+            initial_model
+            .get_cpds(variable)
+            .state_names[variable]
+        )
+
+        # A subset does not necessarily contain
+        # every possible state. Therefore, only
+        # require observed states to be valid BN
+        # states.
+        if not data_states.issubset(
+            bn_states
         ):
             raise ValueError(
-                f"Expected-count total mismatch "
-                f"for {variable}: "
-                f"{expected_counts.sum()} "
-                f"!= {len(train_data)}"
+                f"State mismatch for "
+                f"{variable}: "
+                f"data states = "
+                f"{sorted(data_states)}, "
+                f"BN states = "
+                f"{sorted(bn_states)}"
             )
 
-        updated_cpd = update_cpd_from_counts(
-            cpd=cpd,
-            expected_counts=expected_counts,
-        )
-
-        updated_cpds.append(updated_cpd)
+    print(
+        "\n✓ All observed variable states "
+        "are valid BN states."
+    )
 
     # ----------------------------------------------
-    # Construct theta^(t+1)
+    # Identify observed and latent variables
     # ----------------------------------------------
-    next_model = current_model.copy()
+    observed_nodes = set(
+        train_data.columns
+    )
 
-    # Replace only the CPTs selected for EM updates.
-    # For standard Batch EM, this replaces all CPTs.
-    for updated_cpd in updated_cpds:
+    latent_nodes = (
+        set(initial_model.nodes())
+        - observed_nodes
+    )
 
-        old_cpd = next_model.get_cpds(
-            updated_cpd.variable
+    initial_model.latents = (
+        latent_nodes
+    )
+
+    print(
+        "\n=== Observed and latent variables ==="
+    )
+    print(
+        f"Observed variables: "
+        f"{len(observed_nodes)}"
+    )
+    print(
+        f"Latent variables:   "
+        f"{len(latent_nodes)}"
+    )
+
+    # ----------------------------------------------
+    # Initialize independent Batch EM run
+    # ----------------------------------------------
+    current_model = (
+        initial_model.copy()
+    )
+
+    parameter_change_history = []
+
+    previous_log_likelihood = (
+        compute_log_likelihood(
+            model=current_model,
+            train_data=train_data,
+        )
+    )
+
+    print(
+        "\n=== Running Batch EM ==="
+    )
+
+    # ----------------------------------------------
+    # EM iterations
+    # ----------------------------------------------
+    for iteration in range(
+        1,
+        EM_MAX_ITER + 1,
+    ):
+
+        inference = VariableElimination(
+            current_model
         )
 
-        next_model.remove_cpds(old_cpd)
-        next_model.add_cpds(updated_cpd)
+        updated_cpds = []
 
-    if not next_model.check_model():
+        # ==========================================
+        # E-step + M-step
+        # ==========================================
+        for variable in EM_CPTS:
+
+            cpd = (
+                current_model
+                .get_cpds(variable)
+            )
+
+            expected_counts = (
+                compute_expected_counts(
+                    model=current_model,
+                    inference=inference,
+                    train_data=train_data,
+                    variable=variable,
+                )
+            )
+
+            # Each scenario contributes total
+            # probability mass 1 to each CPT.
+            if not np.isclose(
+                expected_counts.sum(),
+                len(train_data),
+            ):
+                raise ValueError(
+                    f"Expected-count total "
+                    f"mismatch for "
+                    f"{variable}: "
+                    f"{expected_counts.sum()} "
+                    f"!= {len(train_data)}"
+                )
+
+            updated_cpd = (
+                update_cpd_from_counts(
+                    cpd=cpd,
+                    expected_counts=(
+                        expected_counts
+                    ),
+                )
+            )
+
+            updated_cpds.append(
+                updated_cpd
+            )
+
+        # ==========================================
+        # Construct theta^(t+1)
+        # ==========================================
+        next_model = (
+            current_model.copy()
+        )
+
+        # Replace only the CPTs selected
+        # for EM updates.
+        #
+        # For Standard Batch EM this
+        # replaces all CPTs.
+        for updated_cpd in updated_cpds:
+
+            old_cpd = (
+                next_model.get_cpds(
+                    updated_cpd.variable
+                )
+            )
+
+            next_model.remove_cpds(
+                old_cpd
+            )
+
+            next_model.add_cpds(
+                updated_cpd
+            )
+
+        if not next_model.check_model():
+            raise ValueError(
+                f"Batch EM model failed "
+                f"validation for subset "
+                f"{subset_id} at "
+                f"iteration {iteration}."
+            )
+
+        # ==========================================
+        # Log-likelihood
+        # ==========================================
+        current_log_likelihood = (
+            compute_log_likelihood(
+                model=next_model,
+                train_data=train_data,
+            )
+        )
+
+        log_likelihood_change = (
+            current_log_likelihood
+            - previous_log_likelihood
+        )
+
+        # ==========================================
+        # Measure parameter convergence
+        # ==========================================
+        max_change = 0.0
+        max_change_variable = None
+
+        for variable in (
+            current_model.nodes()
+        ):
+
+            old_values = (
+                current_model
+                .get_cpds(variable)
+                .get_values()
+            )
+
+            new_values = (
+                next_model
+                .get_cpds(variable)
+                .get_values()
+            )
+
+            variable_change = np.max(
+                np.abs(
+                    new_values
+                    - old_values
+                )
+            )
+
+            if (
+                variable_change
+                > max_change
+            ):
+                max_change = (
+                    variable_change
+                )
+
+                max_change_variable = (
+                    variable
+                )
+
+        parameter_change_history.append(
+            max_change
+        )
+
+        print(
+            f"Subset {subset_id} | "
+            f"Iteration {iteration:3d}: "
+            f"log-likelihood = "
+            f"{current_log_likelihood:.6f}, "
+            f"ΔLL = "
+            f"{log_likelihood_change:.6f}, "
+            f"max change = "
+            f"{max_change:.10f} "
+            f"({max_change_variable})"
+        )
+
+        previous_log_likelihood = (
+            current_log_likelihood
+        )
+
+        # Move to theta^(t+1)
+        current_model = next_model
+
+        # ------------------------------------------
+        # Convergence check intentionally disabled.
+        # All runs use the same fixed number of
+        # iterations.
+        # ------------------------------------------
+        #
+        # if max_change < EM_TOL:
+        #     break
+
+
+    # ==================================================
+    # Step 9: Finalize learned BN for this subset
+    # ==================================================
+    learned_model = current_model
+
+    if not learned_model.check_model():
         raise ValueError(
-            f"Batch EM model failed validation "
-            f"at iteration {iteration}."
+            f"Final learned BN for "
+            f"subset {subset_id} "
+            f"is invalid."
         )
 
-    current_log_likelihood = compute_log_likelihood(
-        model=next_model,
-        train_data=train_data,
+    learned_bn_json = (
+        update_bn_json_from_model(
+            bn_json=bn_json,
+            model=learned_model,
+        )
     )
 
-    log_likelihood_change = (
-        current_log_likelihood
-        - previous_log_likelihood
+
+    # ==================================================
+    # Step 10: Save learned BN
+    #
+    # bn_number == subset_id
+    # ==================================================
+    store_new_bn(
+        bn_number=EM_MAX_ITER,
+        bn_new=learned_bn_json,
+        filename=BATCH_EM_BN_FILE,
+        overwrite=(subset_id == 1),
+        metadata={
+            "subset_id": subset_id,
+            "train_size": len(train_data),
+            "iterations": EM_MAX_ITER,
+            "oracle_size": ORACLE_SIZE,
+            "oracle_cpts": ORACLE_CPTS,
+        },
     )
 
-    # ----------------------------------------------
-    # Measure parameter convergence
-    # ----------------------------------------------
-    max_change = 0.0
-    max_change_variable = None
+    print(
+        f"\n✓ Learned Batch EM BN "
+        f"for subset {subset_id} saved."
+    )
 
-    for variable in current_model.nodes():
 
-        old_values = current_model.get_cpds(
-            variable
-        ).get_values()
+    # ==================================================
+    # Step 11: Print CPT changes from flawed BN
+    # ==================================================
+    print(
+        "\n=== CPT changes from flawed BN ==="
+    )
 
-        new_values = next_model.get_cpds(
-            variable
-        ).get_values()
+    for variable in EM_CPTS:
 
-        variable_change = np.max(
-            np.abs(new_values - old_values)
+        old_cpd = (
+            initial_model
+            .get_cpds(variable)
+            .get_values()
         )
 
-        if variable_change > max_change:
-            max_change = variable_change
-            max_change_variable = variable
+        new_cpd = (
+            learned_model
+            .get_cpds(variable)
+            .get_values()
+        )
 
-    parameter_change_history.append(max_change)
+        cpt_change = np.max(
+            np.abs(
+                new_cpd
+                - old_cpd
+            )
+        )
 
+        print(
+            f"{variable:<20} "
+            f"max change = "
+            f"{cpt_change:.10f}"
+        )
+
+
+    # ==================================================
+    # Step 12: Print parameter change history
+    # ==================================================
     print(
-        f"Iteration {iteration:3d}: "
-        f"log-likelihood = {current_log_likelihood:.6f}, "
-        f"ΔLL = {log_likelihood_change:.6f}, "
-        f"max change = {max_change:.10f} "
-        f"({max_change_variable})"
+        "\n=== Parameter change history ==="
     )
 
-    previous_log_likelihood = current_log_likelihood
+    for i, change in enumerate(
+        parameter_change_history,
+        start=1,
+    ):
+        print(
+            f"Iteration {i:3d}: "
+            f"{change:.10f}"
+        )
 
-    # Move to theta^(t+1)
-    current_model = next_model
-
-    # ----------------------------------------------
-    # Convergence check
-    # ----------------------------------------------
-    # if max_change < EM_TOL:
-    #     print(
-    #         f"\n✓ Batch EM converged after "
-    #         f"{iteration} iterations."
-    #     )
-    #     break
-
-# else:
-#     print(
-#         f"\nBatch EM reached the maximum of "
-#         f"{EM_MAX_ITER} iterations without convergence."
-#     )
-
-
-# =================================================
-# Step 10: Finalize learned BN
-# ==================================================
-learned_model = current_model
-
-if not learned_model.check_model():
-    raise ValueError("Final learned BN is invalid.")
-
-learned_bn_json = update_bn_json_from_model(
-    bn_json=bn_json,
-    model=learned_model,
-)
-
-store_new_bn(
-    bn_number=EM_MAX_ITER,
-    bn_new=learned_bn_json,
-    filename=BATCH_EM_BN_FILE,
-    overwrite=True,
-    metadata={
-        "oracle_size": ORACLE_SIZE,
-        "oracle_cpts": ORACLE_CPTS
-    },
-)
-
-print("\n✓ Learned Batch EM BN saved.")
-
-# ==================================================
-# Step 11: Print final summary
-# ==================================================
-print("\n=== CPT changes from flawed BN ===")
-
-for variable in EM_CPTS:
-    old_cpd = model.get_cpds(variable).get_values()
-    new_cpd = current_model.get_cpds(variable).get_values()
-
-    max_change = np.max(np.abs(new_cpd - old_cpd))
 
     print(
-        f"{variable:<20} "
-        f"max change = {max_change:.10f}"
+        f"\n=== Batch EM subset "
+        f"{subset_id} finished ==="
     )
 
-print("\n=== Parameter change history ===")
-for i, change in enumerate(
-    parameter_change_history,
+    print(
+        f"Iterations completed:     "
+        f"{iteration}"
+    )
+
+    print(
+        f"Final maximum CPT change: "
+        f"{parameter_change_history[-1]:.10f}"
+    )
+
+    print(
+        f"Largest-changing CPT "
+        f"(final iteration): "
+        f"{max_change_variable}"
+    )
+
+    print(
+        "✓ Final learned BN is valid."
+    )
+
+
+# ==================================================
+# Final experiment summary
+# ==================================================
+print("\n" + "=" * 60)
+print("ALL BATCH EM SUBSETS FINISHED")
+print("=" * 60)
+
+print(
+    f"Training subsets: {NUM_SUBSETS}"
+)
+
+print(
+    f"Total training scenarios: "
+    f"{len(full_train_data)}"
+)
+
+print(
+    f"Learned BNs stored in: "
+    f"{BATCH_EM_BN_FILE}"
+)
+
+print("\nMapping:")
+
+for subset_id, subset in enumerate(
+    train_subsets,
     start=1,
 ):
     print(
-        f"Iteration {i:3d}: "
-        f"{change:.10f}"
+        f"  bn_number={EM_MAX_ITER}, "
+        f"subset_id={subset_id} "
+        f"({len(subset)} scenarios)"
     )
 
-print("\n=== Batch EM finished ===")
-print(f"Iterations completed:     {iteration}")
-
-cpt_change = np.max(np.abs(new_cpd - old_cpd))
-print(f"{variable:<20} "f"max change = {cpt_change:.10f}")
-print(f"Largest-changing CPT:     {max_change_variable}")
-print("✓ Final learned BN is valid.")
+print("\n✓ Batch EM experiment completed.")

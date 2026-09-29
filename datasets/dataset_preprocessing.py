@@ -14,7 +14,6 @@ DATASET_DIR = Path("datasets") / BENCHMARK
 TRAIN_CSV = DATASET_DIR / "combined_train_scenarios.csv"
 TEST_CSV = DATASET_DIR / "combined_test_scenarios.csv"
 
-
 TARGET_NODE = "HYPOVOLEMIA"
 
 EVIDENCE_NODES = {
@@ -27,27 +26,68 @@ EVIDENCE_NODES = {
     "PCWP",
 }
 
-df = pd.read_csv(DATASET_DIR / "alarm.0.csv")
-print(df.shape)
 
+# ============================================================
+# Select multiple ALARM CSV files
+# ============================================================
+
+CSV_DIR = DATASET_DIR / "csv"
+
+CSV_FILES = sorted(CSV_DIR.glob("alarm.*.csv"))
+
+# ============================================================
+# Load and combine all selected CSVs
+# ============================================================
+
+dfs = []
+
+for csv_file in CSV_FILES:
+    df_i = pd.read_csv(csv_file)
+    dfs.append(df_i)
+
+df = pd.concat(dfs, ignore_index=True)
+
+print(f"Number of CSVs: {len(CSV_FILES)}")
+print(f"Combined raw shape: {df.shape}")
+
+
+# ============================================================
 # Keep only target + evidence columns
+# ============================================================
+
 columns_to_keep = [TARGET_NODE] + list(EVIDENCE_NODES)
 
 df = df[columns_to_keep]
 
+
+# ============================================================
 # Rename target states
+# ============================================================
+
 df["HYPOVOLEMIA"] = df["HYPOVOLEMIA"].map({
     True: "Hypovolemia",
     False: "No_Hypovolemia"
 })
 
+
+# ============================================================
 # Rename target column
+# ============================================================
+
 df = df.rename(columns={"HYPOVOLEMIA": "Ground Truth"})
 
+
+# ============================================================
 # Add Scenario # starting from 1
+# ============================================================
+
 df.insert(0, "Scenario #", range(1, len(df) + 1))
 
+
+# ============================================================
 # Ensure exact column order
+# ============================================================
+
 df = df[
     [
         "Scenario #",
@@ -62,32 +102,44 @@ df = df[
     ]
 ]
 
-print(df.shape)
+print(f"Shape after column selection: {df.shape}")
+
 
 ### ----------------------- Environment Settings End -------------------------
+
+
+# ============================================================
+# Remove duplicate scenarios across ALL selected CSVs
+# ============================================================
 
 duplicate_count = df.drop(columns=["Scenario #"]).duplicated().sum()
 
 print(f"Number of duplicate rows: {duplicate_count}")
 
-# Remove Scenario # before checking duplicates
+
+# Remove Scenario # before duplicate removal
 df = df.drop(columns=["Scenario #"])
 
-# Remove duplicate rows
+
+# Global duplicate removal
 df = df.drop_duplicates().reset_index(drop=True)
+
 
 # Regenerate Scenario #
 df.insert(0, "Scenario #", range(1, len(df) + 1))
 
-print(f"Number of unique scenarios: {len(df)}")
 
+print(f"Number of unique scenarios: {len(df)}")
 print(df.shape)
 
-### --- Splitting
 
-# Check class distribution
+# ============================================================
+# Train/Test Split
+# ============================================================
+
 print("\nGround Truth distribution:")
 print(df["Ground Truth"].value_counts())
+
 
 # 80/20 stratified split
 train_df, test_df = train_test_split(
@@ -98,35 +150,50 @@ train_df, test_df = train_test_split(
     stratify=df["Ground Truth"]
 )
 
+
 # Reset indexes
 train_df = train_df.reset_index(drop=True)
 test_df = test_df.reset_index(drop=True)
+
 
 # Regenerate Scenario # separately for each dataset
 train_df["Scenario #"] = range(1, len(train_df) + 1)
 test_df["Scenario #"] = range(1, len(test_df) + 1)
 
-# Save
-train_df.to_csv(DATASET_DIR / "combined_train_scenarios.csv", index=False)
-test_df.to_csv(DATASET_DIR / "combined_test_scenarios.csv", index=False)
+
+# ============================================================
+# Save combined train/test scenarios before GT filtering
+# ============================================================
+
+train_df.to_csv(TRAIN_CSV, index=False)
+test_df.to_csv(TEST_CSV, index=False)
+
 
 print(f"\nTotal : {len(df)}")
 print(f"Train : {len(train_df)}")
 print(f"Test  : {len(test_df)}")
 
+
 print("\nTrain distribution:")
 print(train_df["Ground Truth"].value_counts())
+
 
 print("\nTest distribution:")
 print(test_df["Ground Truth"].value_counts())
 
 
-### ----------------
+# ============================================================
+# Load Ground-Truth BN
+# ============================================================
 
 GT_BN_FILE = DATASET_DIR / "BN_gt.json"
 
 bn_json = load_bn(GT_BN_FILE)
 
+
+# ============================================================
+# Keep only scenarios successfully inferred by GT BN
+# ============================================================
 
 def keep_success_cases(csv_file):
 
@@ -159,9 +226,16 @@ def keep_success_cases(csv_file):
     return df
 
 
-# Filter both datasets using ground-truth BN
+# ============================================================
+# Filter both combined datasets using Ground-Truth BN
+# ============================================================
 train_df = keep_success_cases(TRAIN_CSV)
 test_df = keep_success_cases(TEST_CSV)
+
+
+# ============================================================
+# Final Dataset Sizes
+# ============================================================
 
 print("\nFinal dataset sizes:")
 print(f"Train: {len(train_df)}")

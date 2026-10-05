@@ -1,0 +1,120 @@
+---
+## REFINEMENT CONTEXT
+
+You are refining an existing Bayesian Network (BN).
+
+The following information is provided:
+
+1. Domain context:
+{full_context}
+
+2. Selected baseline BN for refinement:
+{baseline_bn}
+
+3. Analysis record of the selected baseline BN:
+{analysis_record}
+
+4. Oracle-provided relevant nodes:
+{oracle}
+
+Use the oracle nodes as structural context. They define the fallback CPT search space only when the refinement recommendation is empty.
+
+---------------------------------------------------
+SUCCESS AND FAILURE DEFINITION
+---------------------------------------------------
+
+A scenario is successful if:
+1. the argmax posterior of "{target_node}" matches the "Ground Truth";
+2. its posterior probability is at least {min_confidence}; and
+3. its margin over the second-highest posterior is at least {min_margin}.
+
+Otherwise, the scenario is a failure.
+
+---
+## REFINEMENT TASK
+
+The selected baseline BN has already been determined by the workflow.
+
+The refinement recommendation defines the targeted refinement search space.
+
+If "cpt_recommendations" is non-empty:
+- Only the recommended CPTs may be refined.
+- Within each recommended CPT, only the reported candidate parameters may be intentionally modified.
+- Follow each reported adjustment direction ("increase" or "decrease"), while determining the magnitude of change.
+- Other states in the same CPT column may be changed only as necessary to preserve normalization.
+
+If "cpt_recommendations" is empty and the baseline BN still contains failures, use the oracle-identified nodes ({oracle}) as the fallback CPT search space and determine candidate parameters from the available evidence.
+
+The graph structure, nodes, edges, states, parent lists, and `parent_state_order` must remain unchanged.
+
+Generate 3 independent refinement candidates representing distinct refinement strategies.
+
+A candidate may refine any subset of the allowable CPTs and parameters. Prefer minimal modifications that correct failures while preserving successes.
+
+Determine the probability modifications using the refinement recommendation, domain context, BN semantics, and recorded failure and success scenarios.
+
+Each candidate will be evaluated independently by the deterministic evaluation pipeline, and the best-performing candidate will be selected for the next iteration.
+
+---
+## CPT VALIDITY REQUIREMENTS
+
+Any modified CPT must remain a valid conditional probability table.
+
+Specifically:
+
+- Every column represents a probability distribution over the child states.
+- Every probability must lie within [0, 1].
+- Every column must sum to exactly 1.
+
+---
+## OUTPUT REQUIREMENT
+
+Return 3 refinement candidates.
+
+Return ONLY valid JSON.
+
+Do NOT return the complete Bayesian Network.
+
+The output must follow this structure exactly:
+{{
+  "candidates": [
+    {{
+      "candidate_id": 1,
+      "modified_cpts": [
+        {{
+          "name": "X",
+          "cpt": {{
+            "parent_state_order": {{}},
+            "values": [
+              [...],
+              [...]
+            ]
+          }}
+        }},
+        {{
+          "name": "Y",
+          "cpt": {{
+            "parent_state_order": {{}},
+            "values": [
+              [...],
+              [...],
+              [...]
+            ]
+          }}
+        }}
+      ]
+    }},
+    {{
+      "candidate_id": 2,
+      "modified_cpts": [
+        ...
+      ]
+    }},
+    {{
+      "candidate_id": 3,
+      "modified_cpts": [
+        ...
+      ]
+    }}
+  ]
+}}

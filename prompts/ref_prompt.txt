@@ -17,43 +17,54 @@ The following information is provided:
 4. Oracle-provided relevant nodes:
 {oracle}
 
-Use the oracle nodes as structural context. They define the fallback CPT search space only when the refinement recommendation is empty.
+The oracle identifies BN nodes relevant to the current reasoning and decision-making task. Use these nodes ONLY as focused structural guidance when reasoning about parameter modifications, including their dependencies, causal paths, and effects on the target prediction.
+
+The oracle does not expand the refinement search space. The CPTs that may be modified are determined exclusively by the "cpt_danger_report" and the fallback rule below.
 
 ---------------------------------------------------
 SUCCESS AND FAILURE DEFINITION
 ---------------------------------------------------
 
-A scenario is successful if:
-1. the argmax posterior of "{target_node}" matches the "Ground Truth";
-2. its posterior probability is at least {min_confidence}; and
-3. its margin over the second-highest posterior is at least {min_margin}.
+A scenario is considered successful only if all of the following conditions are satisfied:
 
-Otherwise, the scenario is a failure.
+1. The predicted root cause, defined as the argmax posterior of "{target_node}", matches the "Ground Truth";
+2. The posterior probability of the predicted root cause is at least {min_confidence}; and
+3. The difference between the posterior probability of the predicted root cause and that of the second most probable root cause is at least {min_margin}.
+
+Therefore, a scenario is considered a failure if any one of the following conditions holds:
+
+1. The predicted root cause does not match the "Ground Truth";
+2. The posterior probability of the predicted root cause is less than {min_confidence}; or
+3. The difference between the posterior probabilities of the most probable and the second most probable root causes is less than {min_margin}.
 
 ---
 ## REFINEMENT TASK
 
 The selected baseline BN has already been determined by the workflow.
 
-The refinement recommendation defines the targeted refinement search space.
+The "cpt_danger_report" is produced by the refinement recommendation stage and defines the allowable CPT refinement search space.
 
-If "cpt_recommendations" is non-empty:
-- Only the recommended CPTs may be refined.
-- Within each recommended CPT, only the reported candidate parameters may be intentionally modified.
-- Follow each reported adjustment direction ("increase" or "decrease"), while determining the magnitude of change.
-- Other states in the same CPT column may be changed only as necessary to preserve normalization.
+If "reported_risk_level" is not "none", only CPTs listed in "dangerous_cpts" may be modified. Every other CPT must remain identical to the selected baseline BN.
 
-If "cpt_recommendations" is empty and the baseline BN still contains failures, use the oracle-identified nodes ({oracle}) as the fallback CPT search space and determine candidate parameters from the available evidence.
+If "reported_risk_level" is "none", the recommendation stage could not identify any individual CPT with sufficient evidence for targeted refinement. This does not imply that the baseline BN is correct.
 
-The graph structure, nodes, edges, states, parent lists, and `parent_state_order` must remain unchanged.
+Only in this case, if the baseline BN still contains failure scenarios, use CPTs corresponding to the oracle-identified nodes ({oracle}) as a fallback refinement search space. Prefer minimal, well-justified modifications.
 
-Generate 3 independent refinement candidates representing distinct refinement strategies.
+When "reported_risk_level" is not "none", the reported CPTs define the allowable refinement search space. A refinement candidate may modify one or more of the reported CPTs; it is not required to modify all of them. Use any "recommended_adjustment" directions as guidance, not as prescribed probability values.
 
-A candidate may refine any subset of the allowable CPTs and parameters. Prefer minimal modifications that correct failures while preserving successes.
+The graph structure, nodes, edges, states, parent lists, and `parent_state_order` are FIXED and must remain unchanged.
 
-Determine the probability modifications using the refinement recommendation, domain context, BN semantics, and recorded failure and success scenarios.
+Generate 3 independent refinement candidates.
 
-Each candidate will be evaluated independently by the deterministic evaluation pipeline, and the best-performing candidate will be selected for the next iteration.
+Each candidate represents one complete BN refinement hypothesis and may modify one or more allowable CPTs.
+
+The candidates should represent distinct refinement strategies rather than minor numerical variations.
+
+For each candidate, determine the parameter modifications using the "cpt_danger_report", domain context, BN semantics, and the recorded failure and success scenarios.
+
+Prefer the smallest set of modifications that corrects the recorded failure scenarios while preserving the recorded success scenarios.
+
+Each candidate will be evaluated independently by a deterministic evaluation pipeline, and the best-performing candidate will be selected for the next iteration.
 
 ---
 ## CPT VALIDITY REQUIREMENTS

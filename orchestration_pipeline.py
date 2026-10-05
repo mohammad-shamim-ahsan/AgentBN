@@ -336,7 +336,7 @@ restart_count = 0
 # Main orchestration loop
 # ----------------------------------------
 
-agent_context = read_file(CONTEXT_AGENT_FILE)
+agent_context = CONTEXT_AGENT_FILE # agent_context = read_file(CONTEXT_AGENT_FILE)
 
 while restart_count < MAX_RESTARTS:
 

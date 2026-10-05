@@ -1,0 +1,162 @@
+{
+    "path_diagnostics": [
+        {
+            "path_id": "P1",
+            "path": [
+                "HYPOVOLEMIA",
+                "STROKEVOLUME",
+                "CO",
+                "BP"
+            ],
+            "path_assessment": "suspicious",
+            "parameter_assessments": [
+                {
+                    "cpt": "HYPOVOLEMIA",
+                    "column": 0,
+                    "state": "Hypovolemia",
+                    "argmax_probability": 0.08,
+                    "failure_weight": 79,
+                    "success_weight": 34,
+                    "assessment": "uncertain",
+                    "justification": "This root prior is activated in many failures, but also in many successes, so the statistics alone do not isolate it as faulty. It can influence the whole path, yet the evidence is more indicative of repeated pathway activation than a clearly problematic prior."
+                },
+                {
+                    "cpt": "STROKEVOLUME",
+                    "column": 1,
+                    "state": "LOW",
+                    "argmax_probability": 0.5,
+                    "failure_weight": 79,
+                    "success_weight": 34,
+                    "assessment": "suspicious",
+                    "justification": "Column 1 corresponds to HYPOVOLEMIA=Hypovolemia and LVFAILURE=FALSE, where low stroke volume is plausible, but a 0.5 argmax is only weakly decisive for a clinically important downstream driver of CO and BP. Because this same parameter is activated across many failures on the direct hemodynamic path, it is a plausible contributor rather than merely a passive reflection of downstream behavior."
+                },
+                {
+                    "cpt": "CO",
+                    "column": 6,
+                    "state": "LOW",
+                    "argmax_probability": 0.8,
+                    "failure_weight": 79,
+                    "success_weight": 34,
+                    "assessment": "uncertain",
+                    "justification": "Column 6 corresponds to HR=HIGH and STROKEVOLUME=LOW, under which low CO can occur, but the path semantics are mixed because elevated HR may partially compensate for low stroke volume. The parameter is heavily activated in failures, yet substantial success activation weakens the case that this CPT entry itself is the main source of error."
+                },
+                {
+                    "cpt": "BP",
+                    "column": 1,
+                    "state": "HIGH",
+                    "argmax_probability": 0.01,
+                    "failure_weight": 35,
+                    "success_weight": 0,
+                    "assessment": "suspicious",
+                    "justification": "Column 1 corresponds to CO=LOW and TPR=NORMAL, where high BP is semantically unlikely, so this entry is not suspicious because of its value alone; however, its failure-only activation indicates repeated incorrect predictions are traversing this specific BP outcome under that parent configuration. That makes this activated parameter a plausible localization point on the final step of the path."
+                }
+            ],
+            "path_summary": "The hemodynamic path is suspicious because repeated failures concentrate on activated parameters governing the translation from hypovolemia to stroke volume and from cardiac output to blood pressure. Some activations may reflect upstream conditions, but the path contains plausible local contributors to the inference failures."
+        },
+        {
+            "path_id": "P2",
+            "path": [
+                "HYPOVOLEMIA",
+                "LVEDVOLUME",
+                "CVP"
+            ],
+            "path_assessment": "suspicious",
+            "parameter_assessments": [
+                {
+                    "cpt": "HYPOVOLEMIA",
+                    "column": 0,
+                    "state": "Hypovolemia",
+                    "argmax_probability": 0.08,
+                    "failure_weight": 79,
+                    "success_weight": 34,
+                    "assessment": "uncertain",
+                    "justification": "The prior participates in many failures but also many successes, so it is not clearly distinguishable as a faulty source. Its role is upstream and broad, making localization to this parameter alone uncertain."
+                },
+                {
+                    "cpt": "LVEDVOLUME",
+                    "column": 1,
+                    "state": "HIGH",
+                    "argmax_probability": 0.9,
+                    "failure_weight": 79,
+                    "success_weight": 34,
+                    "assessment": "suspicious",
+                    "justification": "Column 1 corresponds to HYPOVOLEMIA=Hypovolemia and LVFAILURE=FALSE, and assigning HIGH LVEDVOLUME with probability 0.9 is difficult to reconcile with the expected reduction in ventricular filling under hypovolemia absent failure. Since this parameter sits centrally on both filling-pressure paths and is repeatedly activated in failures, it is a plausible contributor."
+                },
+                {
+                    "cpt": "CVP",
+                    "column": 2,
+                    "state": "NORMAL",
+                    "argmax_probability": 0.29,
+                    "failure_weight": 45,
+                    "success_weight": 0,
+                    "assessment": "suspicious",
+                    "justification": "Column 2 corresponds to LVEDVOLUME=HIGH, where CVP would more naturally tend toward HIGH than NORMAL; the activated NORMAL entry is comparatively weak and appears only in failures. That failure-only association makes it a plausible contributor on this path."
+                },
+                {
+                    "cpt": "CVP",
+                    "column": 2,
+                    "state": "HIGH",
+                    "argmax_probability": 0.7,
+                    "failure_weight": 30,
+                    "success_weight": 34,
+                    "assessment": "uncertain",
+                    "justification": "Given LVEDVOLUME=HIGH, a high CVP outcome is semantically reasonable and aligns with the path. Because this parameter is activated often in both failures and successes, the evidence that it is itself problematic is weak."
+                },
+                {
+                    "cpt": "CVP",
+                    "column": 2,
+                    "state": "LOW",
+                    "argmax_probability": 0.01,
+                    "failure_weight": 4,
+                    "success_weight": 0,
+                    "assessment": "uncertain",
+                    "justification": "Low CVP under HIGH LVEDVOLUME is semantically inconsistent, but the activation count is very small. The failure-only pattern is notable, yet the limited support makes the evidence inconclusive."
+                }
+            ],
+            "path_summary": "This path is suspicious mainly because the activated LVEDVOLUME parameter appears semantically misaligned with hypovolemia, and some downstream CVP activations are failure-specific. The downstream CVP behavior may partly reflect the upstream LVEDVOLUME assignment, but both remain plausible localization points."
+        },
+        {
+            "path_id": "P3",
+            "path": [
+                "HYPOVOLEMIA",
+                "LVEDVOLUME",
+                "PCWP"
+            ],
+            "path_assessment": "suspicious",
+            "parameter_assessments": [
+                {
+                    "cpt": "HYPOVOLEMIA",
+                    "column": 0,
+                    "state": "Hypovolemia",
+                    "argmax_probability": 0.08,
+                    "failure_weight": 79,
+                    "success_weight": 34,
+                    "assessment": "uncertain",
+                    "justification": "As on the other paths, this prior is broadly activated in both failures and successes, so it is not clearly isolated as a faulty parameter. It remains only an upstream contextual contributor."
+                },
+                {
+                    "cpt": "LVEDVOLUME",
+                    "column": 1,
+                    "state": "HIGH",
+                    "argmax_probability": 0.9,
+                    "failure_weight": 79,
+                    "success_weight": 34,
+                    "assessment": "suspicious",
+                    "justification": "For HYPOVOLEMIA=Hypovolemia and LVFAILURE=FALSE, a strong preference for HIGH LVEDVOLUME is hard to reconcile with the expected effect of reduced circulating volume on ventricular filling. Because this parameter directly drives PCWP through the path and is repeatedly activated in failures, it is a plausible contributor."
+                },
+                {
+                    "cpt": "PCWP",
+                    "column": 2,
+                    "state": "HIGH",
+                    "argmax_probability": 0.95,
+                    "failure_weight": 79,
+                    "success_weight": 34,
+                    "assessment": "uncertain",
+                    "justification": "Column 2 corresponds to LVEDVOLUME=HIGH, and high PCWP is locally consistent with that parent state. Its strong failure association is therefore plausibly inherited from the upstream LVEDVOLUME activation rather than indicating that the PCWP CPT itself is problematic."
+                }
+            ],
+            "path_summary": "This path is suspicious primarily because the LVEDVOLUME activation appears semantically inconsistent with hypovolemia and then propagates coherently to PCWP. The downstream PCWP parameter looks locally reasonable, but it remains a plausible associated contributor because it is repeatedly activated in the failures."
+        }
+    ],
+    "overall_summary": "Across the provided paths, the most plausible localized contributors are activated parameters on LVEDVOLUME, STROKEVOLUME, and selected downstream measurement/target mappings on CVP and BP. Several other activations, especially root priors and downstream consequences of HIGH LVEDVOLUME, are better characterized as uncertain associations than clear local faults."
+}

@@ -1,12 +1,12 @@
 {
-  "bn_number": 4,
+  "bn_number": 1,
   "agent_changed_cpt_count": 2,
   "agent_changed_cpts": [
-    "CVP",
-    "LVEDVOLUME"
+    "BP",
+    "CVP"
   ],
   "agent_change_report": {
-    "verdict": "good",
+    "verdict": "poor",
     "total_cpts": 37,
     "expected_changed_count": 2,
     "expected_changed_cpts": [
@@ -15,27 +15,26 @@
     ],
     "agent_changed_count": 2,
     "agent_changed_cpts": [
-      "CVP",
-      "LVEDVOLUME"
+      "BP",
+      "CVP"
     ],
-    "matched_expected_count": 1,
-    "matched_expected_cpts": [
-      "LVEDVOLUME"
-    ],
-    "missed_expected_count": 1,
+    "matched_expected_count": 0,
+    "matched_expected_cpts": [],
+    "missed_expected_count": 2,
     "missed_expected_cpts": [
-      "HYPOVOLEMIA"
+      "HYPOVOLEMIA",
+      "LVEDVOLUME"
     ],
-    "unexpected_changed_count": 1,
+    "unexpected_changed_count": 2,
     "unexpected_changed_cpts": [
+      "BP",
       "CVP"
     ],
     "unflawed_cpt_count": 35,
-    "untouched_unflawed_count": 34,
+    "untouched_unflawed_count": 33,
     "untouched_unflawed_cpts": [
       "ANAPHYLAXIS",
       "ARTCO2",
-      "BP",
       "CATECHOL",
       "CO",
       "DISCONNECT",
@@ -68,8 +67,8 @@
       "VENTMACH",
       "VENTTUBE"
     ],
-    "expected_change_recall": 0.5,
-    "unexpected_change_rate": 0.0286,
-    "unflawed_preservation_rate": 0.9714
+    "expected_change_recall": 0.0,
+    "unexpected_change_rate": 0.0571,
+    "unflawed_preservation_rate": 0.9429
   }
 }

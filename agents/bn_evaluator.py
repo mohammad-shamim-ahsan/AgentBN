@@ -1241,13 +1241,12 @@ Refinement recommendation procedure:
 
 The risk level represents the strength of evidence that modifying parameters in that CPT is appropriate for correcting the observed inference failures while minimizing disruption to successful inference behavior.
 
-Construct the refinement search space by considering each CPT's risk level, supporting evidence, and the total number of plausible candidates.
+Construct the refinement search space using this priority:
 
-- Prioritize HIGH-risk CPTs, while also considering HIGH_MEDIUM-risk CPTs when their inclusion is justified by the evidence.
-- If no HIGH-risk CPTs exist, prioritize HIGH_MEDIUM-risk CPTs.
-- Consider MEDIUM-risk CPTs when higher-risk candidates are absent or insufficient to explain the observed failures.
-- Balance coverage and precision: include multiple CPTs when the evidence supports them, but avoid unnecessarily expanding the refinement search space.
-- Return `"none"` if no CPT is sufficiently supported for refinement.
+- If HIGH-risk CPTs exist, report all HIGH-risk CPTs.
+- Otherwise, if HIGH_MEDIUM-risk CPTs exist, report all HIGH_MEDIUM-risk CPTs.
+- Otherwise, report the strongest MEDIUM-risk CPTs.
+- Return "none" if no CPT is sufficiently supported for refinement.
 
 Return ONLY valid JSON.
 
@@ -1505,6 +1504,7 @@ def store_analysis(bn_number, evaluation_output):
 ### ------------------------------MAIN--------------------------------------
 
 if __name__ == "__main__":
+
     bn_number = 1
     bn_json = find_proposed_bn(
         bn_number,
@@ -1516,3 +1516,4 @@ if __name__ == "__main__":
     evaluation_output = run_evaluation(bn_json, bn_number=bn_number, temperature=0.3)
 
     store_analysis(bn_number, evaluation_output)
+    

@@ -362,6 +362,7 @@ def generate_and_select_best_candidate(
 
         candidate_results.append({
             "candidate_id": candidate["candidate_id"],
+            "patch": candidate,
             "bn": refined_bn,
             "accuracy": accuracy,
             "failure_count": len(failures),
@@ -387,7 +388,8 @@ def generate_and_select_best_candidate(
     print("\n========================================")
     print("BEST REFINEMENT CANDIDATE")
     print("========================================")
-    print(f"Candidate {best_candidate['candidate_id']}")
+    print(f"Candidate: {best_candidate['candidate_id']}")
+    print(f"Modified CPTs: {[x['name'] for x in best_candidate['patch']['modified_cpts']]}")
     print(f"Accuracy: {best_candidate['accuracy']:.4f}")
     print(f"Failures: {best_candidate['failure_count']}")
     print(f"Successes: {best_candidate['success_count']}")
@@ -418,3 +420,4 @@ if __name__ == "__main__":
     )
 
     store_new_bn(2, new_bn)
+    

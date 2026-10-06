@@ -1,4 +1,4 @@
-AgentBN subset 1: 330 scenarios
+AgentBN subset 4: 330 scenarios
 Cleared: /home/shamim_ist/AgentBN/workspace/alarm/bn_analysis.json
 Cleared: /home/shamim_ist/AgentBN/workspace/alarm/last_proposed_bn.jsonl
 Cleared: /home/shamim_ist/AgentBN/workspace/alarm/dangerous_cpt_report.json
@@ -17,14 +17,14 @@ Cleared: /home/shamim_ist/AgentBN/workspace/alarm/failure_parameter_statistics.j
 Cleared: /home/shamim_ist/AgentBN/workspace/alarm/diagnostic_report.json
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 76.06 %
+Accuracy: 79.09 %
 Total: 330
-Successes: 251
-Failures: 79
-Flawed BN Accuracy: 76.06%
-Initial Acceptance Threshold: 83.24%
+Successes: 261
+Failures: 69
+Flawed BN Accuracy: 79.09%
+Initial Acceptance Threshold: 85.36%
 
 Initial Generation Attempt 0
 
@@ -35,73 +35,74 @@ Valid response received on attempt 1.
 
 ===================================================
 
-Accuracy: 76.06%
+Accuracy: 79.09%
 
 Workflow analysis for BN #0 stored in /home/shamim_ist/AgentBN/workspace/alarm/bn_analysis.json
 Valid response received on attempt 1.
 Selected baseline BN: 0
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
-Candidate 1: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 80.61 %
+Accuracy: 83.94 %
 Total: 330
-Successes: 266
-Failures: 64
+Successes: 277
+Failures: 53
 
-Candidate 2: Accuracy = 0.8061, Failures = 64, Successes = 266
+Candidate 2: Accuracy = 0.8394, Failures = 53, Successes = 277
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 93.03 %
+Accuracy: 83.94 %
 Total: 330
-Successes: 307
-Failures: 23
+Successes: 277
+Failures: 53
 
-Candidate 3: Accuracy = 0.9303, Failures = 23, Successes = 307
+Candidate 3: Accuracy = 0.8394, Failures = 53, Successes = 277
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9758
-Failures: 8
-Successes: 322
+Candidate: 1
+Modified CPTs: ['LVEDVOLUME']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
-Accuracy = 97.58%
+Successes: 318
+Failures: 12
+Accuracy = 96.36%
 Initial BN accepted.
-Accepted initial BN (97.58%).
+Accepted initial BN (96.36%).
 Removed workflow analysis for BN #0 from /home/shamim_ist/AgentBN/workspace/alarm/bn_analysis.json
 
 Initial BN generated
 
-===== ITERATION 2 =====
+===== ITERATION 1 =====
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
 Activation trace saved to /home/shamim_ist/AgentBN/workspace/alarm/activation_trace.csv
 Failure parameter statistics saved to '/home/shamim_ist/AgentBN/workspace/alarm/failure_parameter_statistics.json'
@@ -110,220 +111,224 @@ Valid response received on attempt 1.
 
 ===================================================
 
-Accuracy: 97.58%
+Accuracy: 96.36%
 
 Workflow analysis for BN #1 stored in /home/shamim_ist/AgentBN/workspace/alarm/bn_analysis.json
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
-Candidate 1: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 95.15 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 314
-Failures: 16
+Successes: 318
+Failures: 12
 
-Candidate 2: Accuracy = 0.9515, Failures = 16, Successes = 314
+Candidate 2: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
-Candidate 3: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 3: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9758
-Failures: 8
-Successes: 322
+Candidate: 1
+Modified CPTs: ['BP']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
-Accuracy did not improve. Need improvement from 97.58% 
+Accuracy did not improve. Need improvement from 96.36% 
 Removed 1 record(s) with bn_number=2
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
-Candidate 1: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 95.15 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 314
-Failures: 16
+Successes: 318
+Failures: 12
 
-Candidate 2: Accuracy = 0.9515, Failures = 16, Successes = 314
+Candidate 2: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 93.33 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 308
-Failures: 22
+Successes: 318
+Failures: 12
 
-Candidate 3: Accuracy = 0.9333, Failures = 22, Successes = 308
+Candidate 3: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9758
-Failures: 8
-Successes: 322
+Candidate: 1
+Modified CPTs: ['BP']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 Removed 1 record(s) with bn_number=2
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 87.27 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 288
-Failures: 42
+Successes: 318
+Failures: 12
 
-Candidate 1: Accuracy = 0.8727, Failures = 42, Successes = 288
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 82.73 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 273
-Failures: 57
+Successes: 318
+Failures: 12
 
-Candidate 2: Accuracy = 0.8273, Failures = 57, Successes = 273
+Candidate 2: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 82.73 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 273
-Failures: 57
+Successes: 318
+Failures: 12
 
-Candidate 3: Accuracy = 0.8273, Failures = 57, Successes = 273
+Candidate 3: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.8727
-Failures: 42
-Successes: 288
+Candidate: 1
+Modified CPTs: ['BP']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 87.27 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 288
-Failures: 42
+Successes: 318
+Failures: 12
 Removed 1 record(s) with bn_number=2
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
-Candidate 1: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 95.15 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 314
-Failures: 16
+Successes: 318
+Failures: 12
 
-Candidate 2: Accuracy = 0.9515, Failures = 16, Successes = 314
+Candidate 2: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
-Candidate 3: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 3: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9758
-Failures: 8
-Successes: 322
+Candidate: 1
+Modified CPTs: ['BP']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
-No improvement after 3 retries. Selecting best retry candidate (accuracy=97.58%).
+No improvement after 3 retries. Selecting best retry candidate (accuracy=96.36%).
 Removed 1 record(s) with bn_number=2
-Continuing with retry candidate (accuracy=97.58%).
+Continuing with retry candidate (accuracy=96.36%).
 
-===== ITERATION 3 =====
+===== ITERATION 2 =====
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
 Activation trace saved to /home/shamim_ist/AgentBN/workspace/alarm/activation_trace.csv
 Failure parameter statistics saved to '/home/shamim_ist/AgentBN/workspace/alarm/failure_parameter_statistics.json'
@@ -332,220 +337,224 @@ Valid response received on attempt 1.
 
 ===================================================
 
-Accuracy: 97.58%
+Accuracy: 96.36%
 
 Workflow analysis for BN #2 stored in /home/shamim_ist/AgentBN/workspace/alarm/bn_analysis.json
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
-Candidate 1: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 95.15 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 314
-Failures: 16
+Successes: 318
+Failures: 12
 
-Candidate 2: Accuracy = 0.9515, Failures = 16, Successes = 314
+Candidate 2: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
-Candidate 3: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 3: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9758
-Failures: 8
-Successes: 322
+Candidate: 1
+Modified CPTs: ['BP']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
-Accuracy did not improve. Need improvement from 97.58% 
+Accuracy did not improve. Need improvement from 96.36% 
 Removed 1 record(s) with bn_number=3
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
-Candidate 1: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 95.15 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 314
-Failures: 16
+Successes: 318
+Failures: 12
 
-Candidate 2: Accuracy = 0.9515, Failures = 16, Successes = 314
+Candidate 2: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 93.33 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 308
-Failures: 22
+Successes: 318
+Failures: 12
 
-Candidate 3: Accuracy = 0.9333, Failures = 22, Successes = 308
+Candidate 3: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9758
-Failures: 8
-Successes: 322
+Candidate: 1
+Modified CPTs: ['BP']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 Removed 1 record(s) with bn_number=3
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 82.73 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 273
-Failures: 57
+Successes: 318
+Failures: 12
 
-Candidate 1: Accuracy = 0.8273, Failures = 57, Successes = 273
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 82.73 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 273
-Failures: 57
+Successes: 318
+Failures: 12
 
-Candidate 2: Accuracy = 0.8273, Failures = 57, Successes = 273
+Candidate 2: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 82.73 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 273
-Failures: 57
+Successes: 318
+Failures: 12
 
-Candidate 3: Accuracy = 0.8273, Failures = 57, Successes = 273
+Candidate 3: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.8273
-Failures: 57
-Successes: 273
+Candidate: 1
+Modified CPTs: ['BP']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 82.73 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 273
-Failures: 57
+Successes: 318
+Failures: 12
 Removed 1 record(s) with bn_number=3
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 82.73 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 273
-Failures: 57
+Successes: 318
+Failures: 12
 
-Candidate 1: Accuracy = 0.8273, Failures = 57, Successes = 273
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 82.73 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 273
-Failures: 57
+Successes: 318
+Failures: 12
 
-Candidate 2: Accuracy = 0.8273, Failures = 57, Successes = 273
+Candidate 2: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 82.73 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 273
-Failures: 57
+Successes: 318
+Failures: 12
 
-Candidate 3: Accuracy = 0.8273, Failures = 57, Successes = 273
+Candidate 3: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.8273
-Failures: 57
-Successes: 273
+Candidate: 1
+Modified CPTs: ['BP']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 82.73 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 273
-Failures: 57
+Successes: 318
+Failures: 12
 
-No improvement after 3 retries. Selecting best retry candidate (accuracy=97.58%).
+No improvement after 3 retries. Selecting best retry candidate (accuracy=96.36%).
 Removed 1 record(s) with bn_number=3
-Continuing with retry candidate (accuracy=97.58%).
+Continuing with retry candidate (accuracy=96.36%).
 
-===== ITERATION 4 =====
+===== ITERATION 3 =====
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
 Activation trace saved to /home/shamim_ist/AgentBN/workspace/alarm/activation_trace.csv
 Failure parameter statistics saved to '/home/shamim_ist/AgentBN/workspace/alarm/failure_parameter_statistics.json'
@@ -554,267 +563,271 @@ Valid response received on attempt 1.
 
 ===================================================
 
-Accuracy: 97.58%
+Accuracy: 96.36%
 
 Workflow analysis for BN #3 stored in /home/shamim_ist/AgentBN/workspace/alarm/bn_analysis.json
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 82.73 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 273
-Failures: 57
+Successes: 318
+Failures: 12
 
-Candidate 1: Accuracy = 0.8273, Failures = 57, Successes = 273
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 82.73 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 273
-Failures: 57
+Successes: 318
+Failures: 12
 
-Candidate 2: Accuracy = 0.8273, Failures = 57, Successes = 273
+Candidate 2: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 82.73 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 273
-Failures: 57
+Successes: 318
+Failures: 12
 
-Candidate 3: Accuracy = 0.8273, Failures = 57, Successes = 273
+Candidate 3: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.8273
-Failures: 57
-Successes: 273
+Candidate: 1
+Modified CPTs: ['BP']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 82.73 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 273
-Failures: 57
+Successes: 318
+Failures: 12
 
-Accuracy did not improve. Need improvement from 97.58% 
+Accuracy did not improve. Need improvement from 96.36% 
 Removed 1 record(s) with bn_number=4
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 82.73 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 273
-Failures: 57
+Successes: 318
+Failures: 12
 
-Candidate 1: Accuracy = 0.8273, Failures = 57, Successes = 273
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 82.73 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 273
-Failures: 57
+Successes: 318
+Failures: 12
 
-Candidate 2: Accuracy = 0.8273, Failures = 57, Successes = 273
+Candidate 2: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 82.73 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 273
-Failures: 57
+Successes: 318
+Failures: 12
 
-Candidate 3: Accuracy = 0.8273, Failures = 57, Successes = 273
+Candidate 3: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.8273
-Failures: 57
-Successes: 273
+Candidate: 1
+Modified CPTs: ['BP']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 82.73 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 273
-Failures: 57
+Successes: 318
+Failures: 12
 Removed 1 record(s) with bn_number=4
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
-Candidate 1: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 95.15 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 314
-Failures: 16
+Successes: 318
+Failures: 12
 
-Candidate 2: Accuracy = 0.9515, Failures = 16, Successes = 314
+Candidate 2: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
-Candidate 3: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 3: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9758
-Failures: 8
-Successes: 322
+Candidate: 1
+Modified CPTs: ['BP']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 Removed 1 record(s) with bn_number=4
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
-Candidate 1: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 95.15 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 314
-Failures: 16
+Successes: 318
+Failures: 12
 
-Candidate 2: Accuracy = 0.9515, Failures = 16, Successes = 314
+Candidate 2: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
-Candidate 3: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 3: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9758
-Failures: 8
-Successes: 322
+Candidate: 1
+Modified CPTs: ['BP']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
-No improvement after 3 retries. Selecting best retry candidate (accuracy=97.58%).
+No improvement after 3 retries. Selecting best retry candidate (accuracy=96.36%).
 Removed 1 record(s) with bn_number=4
-Continuing with retry candidate (accuracy=97.58%).
+Continuing with retry candidate (accuracy=96.36%).
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 76.06 %
+Accuracy: 79.09 %
 Total: 330
-Successes: 251
-Failures: 79
+Successes: 261
+Failures: 69
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
 
 Best BN Number: 4
-Best BN Accuracy: 0.9757575757575757
+Best BN Accuracy: 0.9636363636363636
 Saved CPT identity comparison to /home/shamim_ist/AgentBN/workspace/alarm/cpt_comparison_analysis.json
 BN number: 4
 Agent change verdict: good
 Expected changed CPTs: ['HYPOVOLEMIA', 'LVEDVOLUME']
-Agent changed CPTs: ['CVP', 'LVEDVOLUME']
-Unexpected changed CPTs: ['CVP']
-{'bn_number': 4, 'agent_changed_cpt_count': 2, 'agent_changed_cpts': ['CVP', 'LVEDVOLUME'], 'agent_change_report': {'verdict': 'good', 'total_cpts': 37, 'expected_changed_count': 2, 'expected_changed_cpts': ['HYPOVOLEMIA', 'LVEDVOLUME'], 'agent_changed_count': 2, 'agent_changed_cpts': ['CVP', 'LVEDVOLUME'], 'matched_expected_count': 1, 'matched_expected_cpts': ['LVEDVOLUME'], 'missed_expected_count': 1, 'missed_expected_cpts': ['HYPOVOLEMIA'], 'unexpected_changed_count': 1, 'unexpected_changed_cpts': ['CVP'], 'unflawed_cpt_count': 35, 'untouched_unflawed_count': 34, 'untouched_unflawed_cpts': ['ANAPHYLAXIS', 'ARTCO2', 'BP', 'CATECHOL', 'CO', 'DISCONNECT', 'ERRCAUTER', 'ERRLOWOUTPUT', 'EXPCO2', 'FIO2', 'HISTORY', 'HR', 'HRBP', 'HREKG', 'HRSAT', 'INSUFFANESTH', 'INTUBATION', 'KINKEDTUBE', 'LVFAILURE', 'MINVOL', 'MINVOLSET', 'PAP', 'PCWP', 'PRESS', 'PULMEMBOLUS', 'PVSAT', 'SAO2', 'SHUNT', 'STROKEVOLUME', 'TPR', 'VENTALV', 'VENTLUNG', 'VENTMACH', 'VENTTUBE'], 'expected_change_recall': 0.5, 'unexpected_change_rate': 0.0286, 'unflawed_preservation_rate': 0.9714}}
+Agent changed CPTs: ['BP', 'LVEDVOLUME']
+Unexpected changed CPTs: ['BP']
+{'bn_number': 4, 'agent_changed_cpt_count': 2, 'agent_changed_cpts': ['BP', 'LVEDVOLUME'], 'agent_change_report': {'verdict': 'good', 'total_cpts': 37, 'expected_changed_count': 2, 'expected_changed_cpts': ['HYPOVOLEMIA', 'LVEDVOLUME'], 'agent_changed_count': 2, 'agent_changed_cpts': ['BP', 'LVEDVOLUME'], 'matched_expected_count': 1, 'matched_expected_cpts': ['LVEDVOLUME'], 'missed_expected_count': 1, 'missed_expected_cpts': ['HYPOVOLEMIA'], 'unexpected_changed_count': 1, 'unexpected_changed_cpts': ['BP'], 'unflawed_cpt_count': 35, 'untouched_unflawed_count': 34, 'untouched_unflawed_cpts': ['ANAPHYLAXIS', 'ARTCO2', 'CATECHOL', 'CO', 'CVP', 'DISCONNECT', 'ERRCAUTER', 'ERRLOWOUTPUT', 'EXPCO2', 'FIO2', 'HISTORY', 'HR', 'HRBP', 'HREKG', 'HRSAT', 'INSUFFANESTH', 'INTUBATION', 'KINKEDTUBE', 'LVFAILURE', 'MINVOL', 'MINVOLSET', 'PAP', 'PCWP', 'PRESS', 'PULMEMBOLUS', 'PVSAT', 'SAO2', 'SHUNT', 'STROKEVOLUME', 'TPR', 'VENTALV', 'VENTLUNG', 'VENTMACH', 'VENTTUBE'], 'expected_change_recall': 0.5, 'unexpected_change_rate': 0.0286, 'unflawed_preservation_rate': 0.9714}}
 ======================================================================
-CVP                            0.07347569
-  Column 2:
-    Flawed : [0.01 0.29 0.7 ]
-    Prop   : [0.  0.3 0.7]
-    GT     : [0.01 0.29 0.7 ]
+BP                             0.01025906
+  Column 7:
+    Flawed : [0.05 0.2  0.75]
+    Prop   : [0.02 0.08 0.9 ]
+    GT     : [0.05 0.2  0.75]
 ----------------------------------------------------------------------
 HYPOVOLEMIA                    0.07144859
   Column 0:
@@ -837,13 +850,13 @@ LVEDVOLUME                     0.48551537
     GT     : [0.05 0.9  0.05]
 ----------------------------------------------------------------------
 ======================================================================
-Overall Average CPT KL = 0.00919316
+Overall Average CPT KL = 0.00866601
 ======================================================================
-CVP                            RMSE = 0.00471405
-  Column 2:
-    Flawed : [0.01 0.29 0.7 ]
-    Prop   : [0.  0.3 0.7]
-    GT     : [0.01 0.29 0.7 ]
+BP                             RMSE = 0.03741657
+  Column 7:
+    Flawed : [0.05 0.2  0.75]
+    Prop   : [0.02 0.08 0.9 ]
+    GT     : [0.05 0.2  0.75]
 ----------------------------------------------------------------------
 HYPOVOLEMIA                    RMSE = 0.12000000
   Column 0:
@@ -866,13 +879,13 @@ LVEDVOLUME                     RMSE = 0.34522939
     GT     : [0.05 0.9  0.05]
 ----------------------------------------------------------------------
 ======================================================================
-Overall CPT RMSE = 0.04405026
+Overall CPT RMSE = 0.04461419
 ======================================================================
-CVP                            Hellinger = 0.02366990
-  Column 2:
-    Flawed : [0.01 0.29 0.7 ]
-    Prop   : [0.  0.3 0.7]
-    GT     : [0.01 0.29 0.7 ]
+BP                             Hellinger = 0.01583179
+  Column 7:
+    Flawed : [0.05 0.2  0.75]
+    Prop   : [0.02 0.08 0.9 ]
+    GT     : [0.05 0.2  0.75]
 ----------------------------------------------------------------------
 HYPOVOLEMIA                    Hellinger = 0.12491785
   Column 0:
@@ -895,7 +908,7 @@ LVEDVOLUME                     Hellinger = 0.30886215
     GT     : [0.05 0.9  0.05]
 ----------------------------------------------------------------------
 ======================================================================
-Overall Average Hellinger = 0.00589044
+Overall Average Hellinger = 0.00618458
 ###------------------------------###
 
 Restart 0 finished.
@@ -911,14 +924,14 @@ Cleared: /home/shamim_ist/AgentBN/workspace/alarm/failure_parameter_statistics.j
 Cleared: /home/shamim_ist/AgentBN/workspace/alarm/diagnostic_report.json
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 76.06 %
+Accuracy: 79.09 %
 Total: 330
-Successes: 251
-Failures: 79
-Flawed BN Accuracy: 76.06%
-Initial Acceptance Threshold: 83.24%
+Successes: 261
+Failures: 69
+Flawed BN Accuracy: 79.09%
+Initial Acceptance Threshold: 85.36%
 
 Initial Generation Attempt 0
 
@@ -929,58 +942,59 @@ Valid response received on attempt 1.
 
 ===================================================
 
-Accuracy: 76.06%
+Accuracy: 79.09%
 
 Workflow analysis for BN #0 stored in /home/shamim_ist/AgentBN/workspace/alarm/bn_analysis.json
 Valid response received on attempt 1.
 Selected baseline BN: 0
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 73.94 %
+Accuracy: 79.09 %
 Total: 330
-Successes: 244
-Failures: 86
+Successes: 261
+Failures: 69
 
-Candidate 1: Accuracy = 0.7394, Failures = 86, Successes = 244
+Candidate 1: Accuracy = 0.7909, Failures = 69, Successes = 261
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 73.94 %
+Accuracy: 79.09 %
 Total: 330
-Successes: 244
-Failures: 86
+Successes: 261
+Failures: 69
 
-Candidate 2: Accuracy = 0.7394, Failures = 86, Successes = 244
+Candidate 2: Accuracy = 0.7909, Failures = 69, Successes = 261
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 73.94 %
+Accuracy: 79.09 %
 Total: 330
-Successes: 244
-Failures: 86
+Successes: 261
+Failures: 69
 
-Candidate 3: Accuracy = 0.7394, Failures = 86, Successes = 244
+Candidate 3: Accuracy = 0.7909, Failures = 69, Successes = 261
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.7394
-Failures: 86
-Successes: 244
+Candidate: 1
+Modified CPTs: ['LVEDVOLUME']
+Accuracy: 0.7909
+Failures: 69
+Successes: 261
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 73.94 %
+Accuracy: 79.09 %
 Total: 330
-Successes: 244
-Failures: 86
-Accuracy = 73.94%
+Successes: 261
+Failures: 69
+Accuracy = 79.09%
 
 Initial Generation Attempt 1
 Removed workflow analysis for BN #0 from /home/shamim_ist/AgentBN/workspace/alarm/bn_analysis.json
@@ -992,73 +1006,74 @@ Valid response received on attempt 1.
 
 ===================================================
 
-Accuracy: 76.06%
+Accuracy: 79.09%
 
 Workflow analysis for BN #0 stored in /home/shamim_ist/AgentBN/workspace/alarm/bn_analysis.json
 Valid response received on attempt 1.
 Selected baseline BN: 0
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
-Candidate 1: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 80.61 %
+Accuracy: 83.94 %
 Total: 330
-Successes: 266
-Failures: 64
+Successes: 277
+Failures: 53
 
-Candidate 2: Accuracy = 0.8061, Failures = 64, Successes = 266
+Candidate 2: Accuracy = 0.8394, Failures = 53, Successes = 277
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 80.61 %
+Accuracy: 83.94 %
 Total: 330
-Successes: 266
-Failures: 64
+Successes: 277
+Failures: 53
 
-Candidate 3: Accuracy = 0.8061, Failures = 64, Successes = 266
+Candidate 3: Accuracy = 0.8394, Failures = 53, Successes = 277
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9758
-Failures: 8
-Successes: 322
+Candidate: 1
+Modified CPTs: ['LVEDVOLUME']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
-Accuracy = 97.58%
+Successes: 318
+Failures: 12
+Accuracy = 96.36%
 Initial BN accepted.
-Accepted initial BN (97.58%).
+Accepted initial BN (96.36%).
 Removed workflow analysis for BN #0 from /home/shamim_ist/AgentBN/workspace/alarm/bn_analysis.json
 
 Initial BN generated
 
-===== ITERATION 2 =====
+===== ITERATION 1 =====
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 
 Activation trace saved to /home/shamim_ist/AgentBN/workspace/alarm/activation_trace.csv
 Failure parameter statistics saved to '/home/shamim_ist/AgentBN/workspace/alarm/failure_parameter_statistics.json'
@@ -1067,134 +1082,86 @@ Valid response received on attempt 1.
 
 ===================================================
 
-Accuracy: 97.58%
+Accuracy: 96.36%
 
 Workflow analysis for BN #1 stored in /home/shamim_ist/AgentBN/workspace/alarm/bn_analysis.json
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 96.36 %
+Total: 330
+Successes: 318
+Failures: 12
+
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 96.36 %
+Total: 330
+Successes: 318
+Failures: 12
+
+Candidate 2: Accuracy = 0.9636, Failures = 12, Successes = 318
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
 ===================================================
 Accuracy: 96.06 %
 Total: 330
 Successes: 317
 Failures: 13
 
-Candidate 1: Accuracy = 0.9606, Failures = 13, Successes = 317
-
-===================================================
-Dataset: agentbn_train_subset_1.csv
-===================================================
-Accuracy: 93.33 %
-Total: 330
-Successes: 308
-Failures: 22
-
-Candidate 2: Accuracy = 0.9333, Failures = 22, Successes = 308
-
-===================================================
-Dataset: agentbn_train_subset_1.csv
-===================================================
-Accuracy: 86.97 %
-Total: 330
-Successes: 287
-Failures: 43
-
-Candidate 3: Accuracy = 0.8697, Failures = 43, Successes = 287
+Candidate 3: Accuracy = 0.9606, Failures = 13, Successes = 317
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9606
-Failures: 13
-Successes: 317
+Candidate: 1
+Modified CPTs: ['CVP']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 96.06 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 317
-Failures: 13
+Successes: 318
+Failures: 12
 
-Accuracy did not improve. Need improvement from 97.58% 
+Accuracy did not improve. Need improvement from 96.36% 
 Removed 1 record(s) with bn_number=2
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 84.55 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 279
-Failures: 51
+Successes: 318
+Failures: 12
 
-Candidate 1: Accuracy = 0.8455, Failures = 51, Successes = 279
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 84.24 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 278
-Failures: 52
+Successes: 318
+Failures: 12
 
-Candidate 2: Accuracy = 0.8424, Failures = 52, Successes = 278
-
-===================================================
-Dataset: agentbn_train_subset_1.csv
-===================================================
-Accuracy: 93.33 %
-Total: 330
-Successes: 308
-Failures: 22
-
-Candidate 3: Accuracy = 0.9333, Failures = 22, Successes = 308
-
-========================================
-BEST REFINEMENT CANDIDATE
-========================================
-Candidate 3
-Accuracy: 0.9333
-Failures: 22
-Successes: 308
+Candidate 2: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
-===================================================
-Accuracy: 93.33 %
-Total: 330
-Successes: 308
-Failures: 22
-Removed 1 record(s) with bn_number=2
-Valid response received on attempt 1.
-Selected baseline BN: 1
-
-===================================================
-Dataset: agentbn_train_subset_1.csv
-===================================================
-Accuracy: 97.58 %
-Total: 330
-Successes: 322
-Failures: 8
-
-Candidate 1: Accuracy = 0.9758, Failures = 8, Successes = 322
-
-===================================================
-Dataset: agentbn_train_subset_1.csv
-===================================================
-Accuracy: 94.85 %
-Total: 330
-Successes: 313
-Failures: 17
-
-Candidate 2: Accuracy = 0.9485, Failures = 17, Successes = 313
-
-===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
 Accuracy: 96.36 %
 Total: 330
@@ -1206,81 +1173,133 @@ Candidate 3: Accuracy = 0.9636, Failures = 12, Successes = 318
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9758
-Failures: 8
-Successes: 322
+Candidate: 1
+Modified CPTs: ['CVP']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
 Removed 1 record(s) with bn_number=2
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 96.36 %
+Total: 330
+Successes: 318
+Failures: 12
+
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 96.36 %
+Total: 330
+Successes: 318
+Failures: 12
+
+Candidate 2: Accuracy = 0.9636, Failures = 12, Successes = 318
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
 ===================================================
 Accuracy: 96.06 %
 Total: 330
 Successes: 317
 Failures: 13
 
-Candidate 1: Accuracy = 0.9606, Failures = 13, Successes = 317
-
-===================================================
-Dataset: agentbn_train_subset_1.csv
-===================================================
-Accuracy: 93.33 %
-Total: 330
-Successes: 308
-Failures: 22
-
-Candidate 2: Accuracy = 0.9333, Failures = 22, Successes = 308
-
-===================================================
-Dataset: agentbn_train_subset_1.csv
-===================================================
-Accuracy: 86.97 %
-Total: 330
-Successes: 287
-Failures: 43
-
-Candidate 3: Accuracy = 0.8697, Failures = 43, Successes = 287
+Candidate 3: Accuracy = 0.9606, Failures = 13, Successes = 317
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9606
-Failures: 13
-Successes: 317
+Candidate: 1
+Modified CPTs: ['CVP']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 96.36 %
+Total: 330
+Successes: 318
+Failures: 12
+Removed 1 record(s) with bn_number=2
+Valid response received on attempt 1.
+Selected baseline BN: 1
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 96.36 %
+Total: 330
+Successes: 318
+Failures: 12
+
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 96.36 %
+Total: 330
+Successes: 318
+Failures: 12
+
+Candidate 2: Accuracy = 0.9636, Failures = 12, Successes = 318
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
 ===================================================
 Accuracy: 96.06 %
 Total: 330
 Successes: 317
 Failures: 13
 
-No improvement after 3 retries. Selecting best retry candidate (accuracy=97.58%).
-Removed 1 record(s) with bn_number=2
-Continuing with retry candidate (accuracy=97.58%).
+Candidate 3: Accuracy = 0.9606, Failures = 13, Successes = 317
 
-===== ITERATION 3 =====
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate: 1
+Modified CPTs: ['CVP']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
+
+No improvement after 3 retries. Selecting best retry candidate (accuracy=96.36%).
+Removed 1 record(s) with bn_number=2
+Continuing with retry candidate (accuracy=96.36%).
+
+===== ITERATION 2 =====
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 96.36 %
+Total: 330
+Successes: 318
+Failures: 12
 
 Activation trace saved to /home/shamim_ist/AgentBN/workspace/alarm/activation_trace.csv
 Failure parameter statistics saved to '/home/shamim_ist/AgentBN/workspace/alarm/failure_parameter_statistics.json'
@@ -1289,220 +1308,224 @@ Valid response received on attempt 1.
 
 ===================================================
 
-Accuracy: 97.58%
+Accuracy: 96.36%
 
 Workflow analysis for BN #2 stored in /home/shamim_ist/AgentBN/workspace/alarm/bn_analysis.json
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 84.55 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 279
-Failures: 51
+Successes: 318
+Failures: 12
 
-Candidate 1: Accuracy = 0.8455, Failures = 51, Successes = 279
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 83.94 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 277
-Failures: 53
+Successes: 318
+Failures: 12
 
-Candidate 2: Accuracy = 0.8394, Failures = 53, Successes = 277
+Candidate 2: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 84.55 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 279
-Failures: 51
+Successes: 318
+Failures: 12
 
-Candidate 3: Accuracy = 0.8455, Failures = 51, Successes = 279
+Candidate 3: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.8455
-Failures: 51
-Successes: 279
+Candidate: 1
+Modified CPTs: ['CVP']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 84.55 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 279
-Failures: 51
+Successes: 318
+Failures: 12
 
-Accuracy did not improve. Need improvement from 97.58% 
+Accuracy did not improve. Need improvement from 96.36% 
 Removed 1 record(s) with bn_number=3
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 96.36 %
+Total: 330
+Successes: 318
+Failures: 12
+
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 96.36 %
+Total: 330
+Successes: 318
+Failures: 12
+
+Candidate 2: Accuracy = 0.9636, Failures = 12, Successes = 318
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
 ===================================================
 Accuracy: 96.06 %
 Total: 330
 Successes: 317
 Failures: 13
 
-Candidate 1: Accuracy = 0.9606, Failures = 13, Successes = 317
-
-===================================================
-Dataset: agentbn_train_subset_1.csv
-===================================================
-Accuracy: 93.94 %
-Total: 330
-Successes: 310
-Failures: 20
-
-Candidate 2: Accuracy = 0.9394, Failures = 20, Successes = 310
-
-===================================================
-Dataset: agentbn_train_subset_1.csv
-===================================================
-Accuracy: 94.55 %
-Total: 330
-Successes: 312
-Failures: 18
-
-Candidate 3: Accuracy = 0.9455, Failures = 18, Successes = 312
+Candidate 3: Accuracy = 0.9606, Failures = 13, Successes = 317
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9606
-Failures: 13
-Successes: 317
+Candidate: 1
+Modified CPTs: ['CVP']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 96.06 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 317
-Failures: 13
+Successes: 318
+Failures: 12
 Removed 1 record(s) with bn_number=3
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 84.55 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 279
-Failures: 51
+Successes: 318
+Failures: 12
 
-Candidate 1: Accuracy = 0.8455, Failures = 51, Successes = 279
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 80.0 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 264
-Failures: 66
+Successes: 318
+Failures: 12
 
-Candidate 2: Accuracy = 0.8000, Failures = 66, Successes = 264
+Candidate 2: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 87.88 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 290
-Failures: 40
+Successes: 318
+Failures: 12
 
-Candidate 3: Accuracy = 0.8788, Failures = 40, Successes = 290
+Candidate 3: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 3
-Accuracy: 0.8788
-Failures: 40
-Successes: 290
+Candidate: 1
+Modified CPTs: ['CVP']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 87.88 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 290
-Failures: 40
+Successes: 318
+Failures: 12
 Removed 1 record(s) with bn_number=3
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 80.0 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 264
-Failures: 66
+Successes: 318
+Failures: 12
 
-Candidate 1: Accuracy = 0.8000, Failures = 66, Successes = 264
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 84.55 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 279
-Failures: 51
+Successes: 318
+Failures: 12
 
-Candidate 2: Accuracy = 0.8455, Failures = 51, Successes = 279
+Candidate 2: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 88.48 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 292
-Failures: 38
+Successes: 318
+Failures: 12
 
-Candidate 3: Accuracy = 0.8848, Failures = 38, Successes = 292
+Candidate 3: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 3
-Accuracy: 0.8848
-Failures: 38
-Successes: 292
+Candidate: 1
+Modified CPTs: ['CVP']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 88.48 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 292
-Failures: 38
+Successes: 318
+Failures: 12
 
-No improvement after 3 retries. Selecting best retry candidate (accuracy=96.06%).
+No improvement after 3 retries. Selecting best retry candidate (accuracy=96.36%).
 Removed 1 record(s) with bn_number=3
-Continuing with retry candidate (accuracy=96.06%).
+Continuing with retry candidate (accuracy=96.36%).
 
-===== ITERATION 4 =====
+===== ITERATION 3 =====
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 96.06 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 317
-Failures: 13
+Successes: 318
+Failures: 12
 
 Activation trace saved to /home/shamim_ist/AgentBN/workspace/alarm/activation_trace.csv
 Failure parameter statistics saved to '/home/shamim_ist/AgentBN/workspace/alarm/failure_parameter_statistics.json'
@@ -1511,119 +1534,270 @@ Valid response received on attempt 1.
 
 ===================================================
 
-Accuracy: 96.06%
+Accuracy: 96.36%
 
 Workflow analysis for BN #3 stored in /home/shamim_ist/AgentBN/workspace/alarm/bn_analysis.json
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 96.67 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 319
-Failures: 11
+Successes: 318
+Failures: 12
 
-Candidate 1: Accuracy = 0.9667, Failures = 11, Successes = 319
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 94.24 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 311
-Failures: 19
+Successes: 318
+Failures: 12
 
-Candidate 2: Accuracy = 0.9424, Failures = 19, Successes = 311
+Candidate 2: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 94.55 %
+Accuracy: 95.15 %
 Total: 330
-Successes: 312
-Failures: 18
+Successes: 314
+Failures: 16
 
-Candidate 3: Accuracy = 0.9455, Failures = 18, Successes = 312
+Candidate 3: Accuracy = 0.9515, Failures = 16, Successes = 314
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9667
-Failures: 11
-Successes: 319
+Candidate: 1
+Modified CPTs: ['CVP']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 96.67 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 319
-Failures: 11
+Successes: 318
+Failures: 12
 
-Accuracy improved from 96.06% to 96.67%.
+Accuracy did not improve. Need improvement from 96.36% 
+Removed 1 record(s) with bn_number=4
+Valid response received on attempt 1.
+Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 76.06 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 251
-Failures: 79
+Successes: 318
+Failures: 12
+
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 318
+Failures: 12
+
+Candidate 2: Accuracy = 0.9636, Failures = 12, Successes = 318
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
-===================================================
-Accuracy: 97.58 %
-Total: 330
-Successes: 322
-Failures: 8
-
-===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
 Accuracy: 96.06 %
 Total: 330
 Successes: 317
 Failures: 13
 
+Candidate 3: Accuracy = 0.9606, Failures = 13, Successes = 317
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate: 1
+Modified CPTs: ['CVP']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
+
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 96.67 %
+Accuracy: 96.36 %
 Total: 330
-Successes: 319
-Failures: 11
+Successes: 318
+Failures: 12
+Removed 1 record(s) with bn_number=4
+Valid response received on attempt 1.
+Selected baseline BN: 1
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 96.36 %
+Total: 330
+Successes: 318
+Failures: 12
+
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 96.36 %
+Total: 330
+Successes: 318
+Failures: 12
+
+Candidate 2: Accuracy = 0.9636, Failures = 12, Successes = 318
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 96.36 %
+Total: 330
+Successes: 318
+Failures: 12
+
+Candidate 3: Accuracy = 0.9636, Failures = 12, Successes = 318
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate: 1
+Modified CPTs: ['CVP']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 96.36 %
+Total: 330
+Successes: 318
+Failures: 12
+Removed 1 record(s) with bn_number=4
+Valid response received on attempt 1.
+Selected baseline BN: 1
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 96.36 %
+Total: 330
+Successes: 318
+Failures: 12
+
+Candidate 1: Accuracy = 0.9636, Failures = 12, Successes = 318
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 96.36 %
+Total: 330
+Successes: 318
+Failures: 12
+
+Candidate 2: Accuracy = 0.9636, Failures = 12, Successes = 318
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 96.06 %
+Total: 330
+Successes: 317
+Failures: 13
+
+Candidate 3: Accuracy = 0.9606, Failures = 13, Successes = 317
+
+========================================
+BEST REFINEMENT CANDIDATE
+========================================
+Candidate: 1
+Modified CPTs: ['CVP']
+Accuracy: 0.9636
+Failures: 12
+Successes: 318
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 96.36 %
+Total: 330
+Successes: 318
+Failures: 12
+
+No improvement after 3 retries. Selecting best retry candidate (accuracy=96.36%).
+Removed 1 record(s) with bn_number=4
+Continuing with retry candidate (accuracy=96.36%).
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 79.09 %
+Total: 330
+Successes: 261
+Failures: 69
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 96.36 %
+Total: 330
+Successes: 318
+Failures: 12
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 96.36 %
+Total: 330
+Successes: 318
+Failures: 12
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 96.36 %
+Total: 330
+Successes: 318
+Failures: 12
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 96.36 %
+Total: 330
+Successes: 318
+Failures: 12
 
 
-Best BN Number: 2
-Best BN Accuracy: 0.9757575757575757
+Best BN Number: 4
+Best BN Accuracy: 0.9636363636363636
 Saved CPT identity comparison to /home/shamim_ist/AgentBN/workspace/alarm/cpt_comparison_analysis.json
-BN number: 2
+BN number: 4
 Agent change verdict: good
 Expected changed CPTs: ['HYPOVOLEMIA', 'LVEDVOLUME']
 Agent changed CPTs: ['CVP', 'LVEDVOLUME']
 Unexpected changed CPTs: ['CVP']
-{'bn_number': 2, 'agent_changed_cpt_count': 2, 'agent_changed_cpts': ['CVP', 'LVEDVOLUME'], 'agent_change_report': {'verdict': 'good', 'total_cpts': 37, 'expected_changed_count': 2, 'expected_changed_cpts': ['HYPOVOLEMIA', 'LVEDVOLUME'], 'agent_changed_count': 2, 'agent_changed_cpts': ['CVP', 'LVEDVOLUME'], 'matched_expected_count': 1, 'matched_expected_cpts': ['LVEDVOLUME'], 'missed_expected_count': 1, 'missed_expected_cpts': ['HYPOVOLEMIA'], 'unexpected_changed_count': 1, 'unexpected_changed_cpts': ['CVP'], 'unflawed_cpt_count': 35, 'untouched_unflawed_count': 34, 'untouched_unflawed_cpts': ['ANAPHYLAXIS', 'ARTCO2', 'BP', 'CATECHOL', 'CO', 'DISCONNECT', 'ERRCAUTER', 'ERRLOWOUTPUT', 'EXPCO2', 'FIO2', 'HISTORY', 'HR', 'HRBP', 'HREKG', 'HRSAT', 'INSUFFANESTH', 'INTUBATION', 'KINKEDTUBE', 'LVFAILURE', 'MINVOL', 'MINVOLSET', 'PAP', 'PCWP', 'PRESS', 'PULMEMBOLUS', 'PVSAT', 'SAO2', 'SHUNT', 'STROKEVOLUME', 'TPR', 'VENTALV', 'VENTLUNG', 'VENTMACH', 'VENTTUBE'], 'expected_change_recall': 0.5, 'unexpected_change_rate': 0.0286, 'unflawed_preservation_rate': 0.9714}}
+{'bn_number': 4, 'agent_changed_cpt_count': 2, 'agent_changed_cpts': ['CVP', 'LVEDVOLUME'], 'agent_change_report': {'verdict': 'good', 'total_cpts': 37, 'expected_changed_count': 2, 'expected_changed_cpts': ['HYPOVOLEMIA', 'LVEDVOLUME'], 'agent_changed_count': 2, 'agent_changed_cpts': ['CVP', 'LVEDVOLUME'], 'matched_expected_count': 1, 'matched_expected_cpts': ['LVEDVOLUME'], 'missed_expected_count': 1, 'missed_expected_cpts': ['HYPOVOLEMIA'], 'unexpected_changed_count': 1, 'unexpected_changed_cpts': ['CVP'], 'unflawed_cpt_count': 35, 'untouched_unflawed_count': 34, 'untouched_unflawed_cpts': ['ANAPHYLAXIS', 'ARTCO2', 'BP', 'CATECHOL', 'CO', 'DISCONNECT', 'ERRCAUTER', 'ERRLOWOUTPUT', 'EXPCO2', 'FIO2', 'HISTORY', 'HR', 'HRBP', 'HREKG', 'HRSAT', 'INSUFFANESTH', 'INTUBATION', 'KINKEDTUBE', 'LVFAILURE', 'MINVOL', 'MINVOLSET', 'PAP', 'PCWP', 'PRESS', 'PULMEMBOLUS', 'PVSAT', 'SAO2', 'SHUNT', 'STROKEVOLUME', 'TPR', 'VENTALV', 'VENTLUNG', 'VENTMACH', 'VENTTUBE'], 'expected_change_recall': 0.5, 'unexpected_change_rate': 0.0286, 'unflawed_preservation_rate': 0.9714}}
 ======================================================================
-CVP                            0.00449209
-  Column 0:
-    Flawed : [0.95 0.04 0.01]
-    Prop   : [0.97  0.025 0.005]
-    GT     : [0.95 0.04 0.01]
+CVP                            0.00324566
   Column 2:
     Flawed : [0.01 0.29 0.7 ]
-    Prop   : [0.005 0.245 0.75 ]
+    Prop   : [0.03 0.27 0.7 ]
     GT     : [0.01 0.29 0.7 ]
 ----------------------------------------------------------------------
 HYPOVOLEMIA                    0.07144859
@@ -1647,16 +1821,12 @@ LVEDVOLUME                     0.48551537
     GT     : [0.05 0.9  0.05]
 ----------------------------------------------------------------------
 ======================================================================
-Overall Average CPT KL = 0.00834151
+Overall Average CPT KL = 0.00832612
 ======================================================================
-CVP                            RMSE = 0.02403701
-  Column 0:
-    Flawed : [0.95 0.04 0.01]
-    Prop   : [0.97  0.025 0.005]
-    GT     : [0.95 0.04 0.01]
+CVP                            RMSE = 0.00942809
   Column 2:
     Flawed : [0.01 0.29 0.7 ]
-    Prop   : [0.005 0.245 0.75 ]
+    Prop   : [0.03 0.27 0.7 ]
     GT     : [0.01 0.29 0.7 ]
 ----------------------------------------------------------------------
 HYPOVOLEMIA                    RMSE = 0.12000000
@@ -1680,16 +1850,12 @@ LVEDVOLUME                     RMSE = 0.34522939
     GT     : [0.05 0.9  0.05]
 ----------------------------------------------------------------------
 ======================================================================
-Overall CPT RMSE = 0.04412567
+Overall CPT RMSE = 0.04405932
 ======================================================================
-CVP                            Hellinger = 0.02645844
-  Column 0:
-    Flawed : [0.95 0.04 0.01]
-    Prop   : [0.97  0.025 0.005]
-    GT     : [0.95 0.04 0.01]
+CVP                            Hellinger = 0.01782046
   Column 2:
     Flawed : [0.01 0.29 0.7 ]
-    Prop   : [0.005 0.245 0.75 ]
+    Prop   : [0.03 0.27 0.7 ]
     GT     : [0.01 0.29 0.7 ]
 ----------------------------------------------------------------------
 HYPOVOLEMIA                    Hellinger = 0.12491785
@@ -1713,7 +1879,7 @@ LVEDVOLUME                     Hellinger = 0.30886215
     GT     : [0.05 0.9  0.05]
 ----------------------------------------------------------------------
 ======================================================================
-Overall Average Hellinger = 0.00592486
+Overall Average Hellinger = 0.00581822
 ###------------------------------###
 
 Restart 1 finished.
@@ -1729,14 +1895,14 @@ Cleared: /home/shamim_ist/AgentBN/workspace/alarm/failure_parameter_statistics.j
 Cleared: /home/shamim_ist/AgentBN/workspace/alarm/diagnostic_report.json
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 76.06 %
+Accuracy: 79.09 %
 Total: 330
-Successes: 251
-Failures: 79
-Flawed BN Accuracy: 76.06%
-Initial Acceptance Threshold: 83.24%
+Successes: 261
+Failures: 69
+Flawed BN Accuracy: 79.09%
+Initial Acceptance Threshold: 85.36%
 
 Initial Generation Attempt 0
 
@@ -1747,73 +1913,74 @@ Valid response received on attempt 1.
 
 ===================================================
 
-Accuracy: 76.06%
+Accuracy: 79.09%
 
 Workflow analysis for BN #0 stored in /home/shamim_ist/AgentBN/workspace/alarm/bn_analysis.json
 Valid response received on attempt 1.
 Selected baseline BN: 0
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 83.94 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 277
+Failures: 53
 
-Candidate 1: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 1: Accuracy = 0.8394, Failures = 53, Successes = 277
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 93.64 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 309
-Failures: 21
+Successes: 312
+Failures: 18
 
-Candidate 2: Accuracy = 0.9364, Failures = 21, Successes = 309
+Candidate 2: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 93.03 %
+Accuracy: 83.94 %
 Total: 330
-Successes: 307
-Failures: 23
+Successes: 277
+Failures: 53
 
-Candidate 3: Accuracy = 0.9303, Failures = 23, Successes = 307
+Candidate 3: Accuracy = 0.8394, Failures = 53, Successes = 277
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9758
-Failures: 8
-Successes: 322
+Candidate: 2
+Modified CPTs: ['LVEDVOLUME']
+Accuracy: 0.9455
+Failures: 18
+Successes: 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
-Accuracy = 97.58%
+Successes: 312
+Failures: 18
+Accuracy = 94.55%
 Initial BN accepted.
-Accepted initial BN (97.58%).
+Accepted initial BN (94.55%).
 Removed workflow analysis for BN #0 from /home/shamim_ist/AgentBN/workspace/alarm/bn_analysis.json
 
 Initial BN generated
 
-===== ITERATION 2 =====
+===== ITERATION 1 =====
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
 Activation trace saved to /home/shamim_ist/AgentBN/workspace/alarm/activation_trace.csv
 Failure parameter statistics saved to '/home/shamim_ist/AgentBN/workspace/alarm/failure_parameter_statistics.json'
@@ -1822,220 +1989,224 @@ Valid response received on attempt 1.
 
 ===================================================
 
-Accuracy: 97.58%
+Accuracy: 94.55%
 
 Workflow analysis for BN #1 stored in /home/shamim_ist/AgentBN/workspace/alarm/bn_analysis.json
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-Candidate 1: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 1: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-Candidate 2: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 2: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-Candidate 3: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 3: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9758
-Failures: 8
-Successes: 322
+Candidate: 1
+Modified CPTs: ['CVP']
+Accuracy: 0.9455
+Failures: 18
+Successes: 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-Accuracy did not improve. Need improvement from 97.58% 
+Accuracy did not improve. Need improvement from 94.55% 
 Removed 1 record(s) with bn_number=2
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-Candidate 1: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 1: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.27 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 321
-Failures: 9
+Successes: 312
+Failures: 18
 
-Candidate 2: Accuracy = 0.9727, Failures = 9, Successes = 321
+Candidate 2: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 93.33 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 308
-Failures: 22
+Successes: 312
+Failures: 18
 
-Candidate 3: Accuracy = 0.9333, Failures = 22, Successes = 308
+Candidate 3: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9758
-Failures: 8
-Successes: 322
+Candidate: 1
+Modified CPTs: ['CVP']
+Accuracy: 0.9455
+Failures: 18
+Successes: 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 Removed 1 record(s) with bn_number=2
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-Candidate 1: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 1: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.27 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 321
-Failures: 9
+Successes: 312
+Failures: 18
 
-Candidate 2: Accuracy = 0.9727, Failures = 9, Successes = 321
+Candidate 2: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 93.33 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 308
-Failures: 22
+Successes: 312
+Failures: 18
 
-Candidate 3: Accuracy = 0.9333, Failures = 22, Successes = 308
+Candidate 3: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9758
-Failures: 8
-Successes: 322
+Candidate: 1
+Modified CPTs: ['CVP']
+Accuracy: 0.9455
+Failures: 18
+Successes: 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 Removed 1 record(s) with bn_number=2
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-Candidate 1: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 1: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 96.06 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 317
-Failures: 13
+Successes: 312
+Failures: 18
 
-Candidate 2: Accuracy = 0.9606, Failures = 13, Successes = 317
+Candidate 2: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 91.82 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 303
-Failures: 27
+Successes: 312
+Failures: 18
 
-Candidate 3: Accuracy = 0.9182, Failures = 27, Successes = 303
+Candidate 3: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9758
-Failures: 8
-Successes: 322
+Candidate: 1
+Modified CPTs: ['CVP']
+Accuracy: 0.9455
+Failures: 18
+Successes: 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-No improvement after 3 retries. Selecting best retry candidate (accuracy=97.58%).
+No improvement after 3 retries. Selecting best retry candidate (accuracy=94.55%).
 Removed 1 record(s) with bn_number=2
-Continuing with retry candidate (accuracy=97.58%).
+Continuing with retry candidate (accuracy=94.55%).
 
-===== ITERATION 3 =====
+===== ITERATION 2 =====
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
 Activation trace saved to /home/shamim_ist/AgentBN/workspace/alarm/activation_trace.csv
 Failure parameter statistics saved to '/home/shamim_ist/AgentBN/workspace/alarm/failure_parameter_statistics.json'
@@ -2044,220 +2215,224 @@ Valid response received on attempt 1.
 
 ===================================================
 
-Accuracy: 97.58%
+Accuracy: 94.55%
 
 Workflow analysis for BN #2 stored in /home/shamim_ist/AgentBN/workspace/alarm/bn_analysis.json
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-Candidate 1: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 1: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 96.06 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 317
-Failures: 13
+Successes: 312
+Failures: 18
 
-Candidate 2: Accuracy = 0.9606, Failures = 13, Successes = 317
+Candidate 2: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 95.15 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 314
-Failures: 16
+Successes: 312
+Failures: 18
 
-Candidate 3: Accuracy = 0.9515, Failures = 16, Successes = 314
+Candidate 3: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9758
-Failures: 8
-Successes: 322
+Candidate: 1
+Modified CPTs: ['CVP']
+Accuracy: 0.9455
+Failures: 18
+Successes: 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-Accuracy did not improve. Need improvement from 97.58% 
+Accuracy did not improve. Need improvement from 94.55% 
 Removed 1 record(s) with bn_number=3
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-Candidate 1: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 1: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-Candidate 2: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 2: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 95.15 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 314
-Failures: 16
+Successes: 312
+Failures: 18
 
-Candidate 3: Accuracy = 0.9515, Failures = 16, Successes = 314
+Candidate 3: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9758
-Failures: 8
-Successes: 322
+Candidate: 1
+Modified CPTs: ['CVP']
+Accuracy: 0.9455
+Failures: 18
+Successes: 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 Removed 1 record(s) with bn_number=3
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-Candidate 1: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 1: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.27 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 321
-Failures: 9
+Successes: 312
+Failures: 18
 
-Candidate 2: Accuracy = 0.9727, Failures = 9, Successes = 321
+Candidate 2: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 95.15 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 314
-Failures: 16
+Successes: 312
+Failures: 18
 
-Candidate 3: Accuracy = 0.9515, Failures = 16, Successes = 314
+Candidate 3: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9758
-Failures: 8
-Successes: 322
+Candidate: 1
+Modified CPTs: ['CVP']
+Accuracy: 0.9455
+Failures: 18
+Successes: 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 Removed 1 record(s) with bn_number=3
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-Candidate 1: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 1: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-Candidate 2: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 2: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-Candidate 3: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 3: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9758
-Failures: 8
-Successes: 322
+Candidate: 1
+Modified CPTs: ['CVP']
+Accuracy: 0.9455
+Failures: 18
+Successes: 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-No improvement after 3 retries. Selecting best retry candidate (accuracy=97.58%).
+No improvement after 3 retries. Selecting best retry candidate (accuracy=94.55%).
 Removed 1 record(s) with bn_number=3
-Continuing with retry candidate (accuracy=97.58%).
+Continuing with retry candidate (accuracy=94.55%).
 
-===== ITERATION 4 =====
+===== ITERATION 3 =====
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
 Activation trace saved to /home/shamim_ist/AgentBN/workspace/alarm/activation_trace.csv
 Failure parameter statistics saved to '/home/shamim_ist/AgentBN/workspace/alarm/failure_parameter_statistics.json'
@@ -2266,254 +2441,258 @@ Valid response received on attempt 1.
 
 ===================================================
 
-Accuracy: 97.58%
+Accuracy: 94.55%
 
 Workflow analysis for BN #3 stored in /home/shamim_ist/AgentBN/workspace/alarm/bn_analysis.json
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-Candidate 1: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 1: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.27 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 321
-Failures: 9
+Successes: 312
+Failures: 18
 
-Candidate 2: Accuracy = 0.9727, Failures = 9, Successes = 321
+Candidate 2: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 93.94 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 310
-Failures: 20
+Successes: 312
+Failures: 18
 
-Candidate 3: Accuracy = 0.9394, Failures = 20, Successes = 310
+Candidate 3: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9758
-Failures: 8
-Successes: 322
+Candidate: 1
+Modified CPTs: ['CVP']
+Accuracy: 0.9455
+Failures: 18
+Successes: 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-Accuracy did not improve. Need improvement from 97.58% 
+Accuracy did not improve. Need improvement from 94.55% 
 Removed 1 record(s) with bn_number=4
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-Candidate 1: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 1: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 96.06 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 317
-Failures: 13
+Successes: 312
+Failures: 18
 
-Candidate 2: Accuracy = 0.9606, Failures = 13, Successes = 317
+Candidate 2: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 91.82 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 303
-Failures: 27
+Successes: 312
+Failures: 18
 
-Candidate 3: Accuracy = 0.9182, Failures = 27, Successes = 303
+Candidate 3: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9758
-Failures: 8
-Successes: 322
+Candidate: 1
+Modified CPTs: ['CVP']
+Accuracy: 0.9455
+Failures: 18
+Successes: 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 Removed 1 record(s) with bn_number=4
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-Candidate 1: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 1: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-Candidate 2: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 2: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-Candidate 3: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 3: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9758
-Failures: 8
-Successes: 322
+Candidate: 1
+Modified CPTs: ['CVP']
+Accuracy: 0.9455
+Failures: 18
+Successes: 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 Removed 1 record(s) with bn_number=4
 Valid response received on attempt 1.
 Selected baseline BN: 1
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-Candidate 1: Accuracy = 0.9758, Failures = 8, Successes = 322
+Candidate 1: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 96.06 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 317
-Failures: 13
+Successes: 312
+Failures: 18
 
-Candidate 2: Accuracy = 0.9606, Failures = 13, Successes = 317
+Candidate 2: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 91.82 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 303
-Failures: 27
+Successes: 312
+Failures: 18
 
-Candidate 3: Accuracy = 0.9182, Failures = 27, Successes = 303
+Candidate 3: Accuracy = 0.9455, Failures = 18, Successes = 312
 
 ========================================
 BEST REFINEMENT CANDIDATE
 ========================================
-Candidate 1
-Accuracy: 0.9758
-Failures: 8
-Successes: 322
+Candidate: 1
+Modified CPTs: ['CVP']
+Accuracy: 0.9455
+Failures: 18
+Successes: 312
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
-No improvement after 3 retries. Selecting best retry candidate (accuracy=97.58%).
+No improvement after 3 retries. Selecting best retry candidate (accuracy=94.55%).
 Removed 1 record(s) with bn_number=4
-Continuing with retry candidate (accuracy=97.58%).
+Continuing with retry candidate (accuracy=94.55%).
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 76.06 %
+Accuracy: 79.09 %
 Total: 330
-Successes: 251
-Failures: 79
+Successes: 261
+Failures: 69
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
 ===================================================
-Dataset: agentbn_train_subset_1.csv
+Dataset: agentbn_train_subset_4.csv
 ===================================================
-Accuracy: 97.58 %
+Accuracy: 94.55 %
 Total: 330
-Successes: 322
-Failures: 8
+Successes: 312
+Failures: 18
 
 
 Best BN Number: 4
-Best BN Accuracy: 0.9757575757575757
+Best BN Accuracy: 0.9454545454545454
 Saved CPT identity comparison to /home/shamim_ist/AgentBN/workspace/alarm/cpt_comparison_analysis.json
 BN number: 4
 Agent change verdict: good
@@ -2522,15 +2701,169 @@ Agent changed CPTs: ['CVP', 'LVEDVOLUME']
 Unexpected changed CPTs: ['CVP']
 {'bn_number': 4, 'agent_changed_cpt_count': 2, 'agent_changed_cpts': ['CVP', 'LVEDVOLUME'], 'agent_change_report': {'verdict': 'good', 'total_cpts': 37, 'expected_changed_count': 2, 'expected_changed_cpts': ['HYPOVOLEMIA', 'LVEDVOLUME'], 'agent_changed_count': 2, 'agent_changed_cpts': ['CVP', 'LVEDVOLUME'], 'matched_expected_count': 1, 'matched_expected_cpts': ['LVEDVOLUME'], 'missed_expected_count': 1, 'missed_expected_cpts': ['HYPOVOLEMIA'], 'unexpected_changed_count': 1, 'unexpected_changed_cpts': ['CVP'], 'unflawed_cpt_count': 35, 'untouched_unflawed_count': 34, 'untouched_unflawed_cpts': ['ANAPHYLAXIS', 'ARTCO2', 'BP', 'CATECHOL', 'CO', 'DISCONNECT', 'ERRCAUTER', 'ERRLOWOUTPUT', 'EXPCO2', 'FIO2', 'HISTORY', 'HR', 'HRBP', 'HREKG', 'HRSAT', 'INSUFFANESTH', 'INTUBATION', 'KINKEDTUBE', 'LVFAILURE', 'MINVOL', 'MINVOLSET', 'PAP', 'PCWP', 'PRESS', 'PULMEMBOLUS', 'PVSAT', 'SAO2', 'SHUNT', 'STROKEVOLUME', 'TPR', 'VENTALV', 'VENTLUNG', 'VENTMACH', 'VENTTUBE'], 'expected_change_recall': 0.5, 'unexpected_change_rate': 0.0286, 'unflawed_preservation_rate': 0.9714}}
 ======================================================================
-CVP                            0.14756293
+CVP                            0.07343692
   Column 0:
     Flawed : [0.95 0.04 0.01]
-    Prop   : [0.97 0.03 0.  ]
+    Prop   : [0.96 0.04 0.  ]
+    GT     : [0.95 0.04 0.01]
+----------------------------------------------------------------------
+HYPOVOLEMIA                    0.07144859
+  Column 0:
+    Flawed : [0.08 0.92]
+    Prop   : [0.08 0.92]
+    GT     : [0.2 0.8]
+----------------------------------------------------------------------
+LVEDVOLUME                     0.54996765
+  Column 0:
+    Flawed : [0.65 0.33 0.02]
+    Prop   : [0.65 0.33 0.02]
     GT     : [0.95 0.04 0.01]
   Column 2:
-    Flawed : [0.01 0.29 0.7 ]
-    Prop   : [0.   0.28 0.72]
-    GT     : [0.01 0.29 0.7 ]
+    Flawed : [0.68 0.3  0.02]
+    Prop   : [0.68 0.3  0.02]
+    GT     : [0.98 0.01 0.01]
+  Column 3:
+    Flawed : [0.05 0.9  0.05]
+    Prop   : [0.85 0.14 0.01]
+    GT     : [0.05 0.9  0.05]
+----------------------------------------------------------------------
+======================================================================
+Overall Average CPT KL = 0.01025362
+======================================================================
+CVP                            RMSE = 0.00471405
+  Column 0:
+    Flawed : [0.95 0.04 0.01]
+    Prop   : [0.96 0.04 0.  ]
+    GT     : [0.95 0.04 0.01]
+----------------------------------------------------------------------
+HYPOVOLEMIA                    RMSE = 0.12000000
+  Column 0:
+    Flawed : [0.08 0.92]
+    Prop   : [0.08 0.92]
+    GT     : [0.2 0.8]
+----------------------------------------------------------------------
+LVEDVOLUME                     RMSE = 0.36143234
+  Column 0:
+    Flawed : [0.65 0.33 0.02]
+    Prop   : [0.65 0.33 0.02]
+    GT     : [0.95 0.04 0.01]
+  Column 2:
+    Flawed : [0.68 0.3  0.02]
+    Prop   : [0.68 0.3  0.02]
+    GT     : [0.98 0.01 0.01]
+  Column 3:
+    Flawed : [0.05 0.9  0.05]
+    Prop   : [0.85 0.14 0.01]
+    GT     : [0.05 0.9  0.05]
+----------------------------------------------------------------------
+======================================================================
+Overall CPT RMSE = 0.04607752
+======================================================================
+CVP                            Hellinger = 0.02360106
+  Column 0:
+    Flawed : [0.95 0.04 0.01]
+    Prop   : [0.96 0.04 0.  ]
+    GT     : [0.95 0.04 0.01]
+----------------------------------------------------------------------
+HYPOVOLEMIA                    Hellinger = 0.12491785
+  Column 0:
+    Flawed : [0.08 0.92]
+    Prop   : [0.08 0.92]
+    GT     : [0.2 0.8]
+----------------------------------------------------------------------
+LVEDVOLUME                     Hellinger = 0.31898684
+  Column 0:
+    Flawed : [0.65 0.33 0.02]
+    Prop   : [0.65 0.33 0.02]
+    GT     : [0.95 0.04 0.01]
+  Column 2:
+    Flawed : [0.68 0.3  0.02]
+    Prop   : [0.68 0.3  0.02]
+    GT     : [0.98 0.01 0.01]
+  Column 3:
+    Flawed : [0.05 0.9  0.05]
+    Prop   : [0.85 0.14 0.01]
+    GT     : [0.05 0.9  0.05]
+----------------------------------------------------------------------
+======================================================================
+Overall Average Hellinger = 0.00605625
+###------------------------------###
+
+Restart 2 finished.
+###------------------------------###
+Restart: 0
+BN keys: dict_keys(['edges', 'nodes'])
+Evaluating restart 0
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 96.36 %
+Total: 330
+Successes: 318
+Failures: 12
+Restart: 1
+BN keys: dict_keys(['edges', 'nodes'])
+Evaluating restart 1
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 96.36 %
+Total: 330
+Successes: 318
+Failures: 12
+Restart: 2
+BN keys: dict_keys(['edges', 'nodes'])
+Evaluating restart 2
+
+===================================================
+Dataset: agentbn_train_subset_4.csv
+===================================================
+Accuracy: 94.55 %
+Total: 330
+Successes: 312
+Failures: 18
+
+===================================
+BEST RESTART
+===================================
+Restart: 0
+Train Accuracy: 0.9636363636363636
+
+===================================================
+Dataset: /home/shamim_ist/AgentBN/datasets/alarm/combined_test_scenarios.csv
+===================================================
+Accuracy: 96.95 %
+Total: 328
+Successes: 318
+Failures: 10
+Test Accuracy: 0.9695121951219512
+Test Failures:      Scenario      Prediction  Confidence    Ground Truth                                                                   Posterior  Success
+18         19  No_Hypovolemia    0.875011     Hypovolemia  {'Hypovolemia': 0.12498884853564461, 'No_Hypovolemia': 0.8750111514643555}    False
+67         68  No_Hypovolemia    0.506365  No_Hypovolemia  {'Hypovolemia': 0.49363509966873087, 'No_Hypovolemia': 0.5063649003312692}    False
+72         73  No_Hypovolemia    0.876274     Hypovolemia   {'Hypovolemia': 0.1237261397917408, 'No_Hypovolemia': 0.8762738602082591}    False
+130       131  No_Hypovolemia    0.877601     Hypovolemia  {'Hypovolemia': 0.12239872294842792, 'No_Hypovolemia': 0.8776012770515721}    False
+160       161  No_Hypovolemia    0.567108  No_Hypovolemia  {'Hypovolemia': 0.43289181458623943, 'No_Hypovolemia': 0.5671081854137606}    False
+185       186  No_Hypovolemia    0.545561  No_Hypovolemia  {'Hypovolemia': 0.45443914038279354, 'No_Hypovolemia': 0.5455608596172065}    False
+221       222  No_Hypovolemia    0.563829  No_Hypovolemia  {'Hypovolemia': 0.43617137390866473, 'No_Hypovolemia': 0.5638286260913353}    False
+293       294  No_Hypovolemia    0.541709  No_Hypovolemia   {'Hypovolemia': 0.45829073846837304, 'No_Hypovolemia': 0.541709261531627}    False
+295       296  No_Hypovolemia    0.874233     Hypovolemia  {'Hypovolemia': 0.12576657775375788, 'No_Hypovolemia': 0.8742334222462421}    False
+324       325  No_Hypovolemia    0.502503  No_Hypovolemia  {'Hypovolemia': 0.49749675263019344, 'No_Hypovolemia': 0.5025032473698064}    False
+Stored final AgentBN for subset 4 in /home/shamim_ist/AgentBN/workspace/alarm/agentbn_subset_bns.jsonl
+Saved CPT identity comparison to /home/shamim_ist/AgentBN/workspace/alarm/cpt_comparison_analysis.json
+BN number: None
+Agent change verdict: good
+Expected changed CPTs: ['HYPOVOLEMIA', 'LVEDVOLUME']
+Agent changed CPTs: ['BP', 'LVEDVOLUME']
+Unexpected changed CPTs: ['BP']
+{'bn_number': None, 'agent_changed_cpt_count': 2, 'agent_changed_cpts': ['BP', 'LVEDVOLUME'], 'agent_change_report': {'verdict': 'good', 'total_cpts': 37, 'expected_changed_count': 2, 'expected_changed_cpts': ['HYPOVOLEMIA', 'LVEDVOLUME'], 'agent_changed_count': 2, 'agent_changed_cpts': ['BP', 'LVEDVOLUME'], 'matched_expected_count': 1, 'matched_expected_cpts': ['LVEDVOLUME'], 'missed_expected_count': 1, 'missed_expected_cpts': ['HYPOVOLEMIA'], 'unexpected_changed_count': 1, 'unexpected_changed_cpts': ['BP'], 'unflawed_cpt_count': 35, 'untouched_unflawed_count': 34, 'untouched_unflawed_cpts': ['ANAPHYLAXIS', 'ARTCO2', 'CATECHOL', 'CO', 'CVP', 'DISCONNECT', 'ERRCAUTER', 'ERRLOWOUTPUT', 'EXPCO2', 'FIO2', 'HISTORY', 'HR', 'HRBP', 'HREKG', 'HRSAT', 'INSUFFANESTH', 'INTUBATION', 'KINKEDTUBE', 'LVFAILURE', 'MINVOL', 'MINVOLSET', 'PAP', 'PCWP', 'PRESS', 'PULMEMBOLUS', 'PVSAT', 'SAO2', 'SHUNT', 'STROKEVOLUME', 'TPR', 'VENTALV', 'VENTLUNG', 'VENTMACH', 'VENTTUBE'], 'expected_change_recall': 0.5, 'unexpected_change_rate': 0.0286, 'unflawed_preservation_rate': 0.9714}}
+======================================================================
+BP                             0.01025906
+  Column 7:
+    Flawed : [0.05 0.2  0.75]
+    Prop   : [0.02 0.08 0.9 ]
+    GT     : [0.05 0.2  0.75]
 ----------------------------------------------------------------------
 HYPOVOLEMIA                    0.07144859
   Column 0:
@@ -2553,17 +2886,13 @@ LVEDVOLUME                     0.48551537
     GT     : [0.05 0.9  0.05]
 ----------------------------------------------------------------------
 ======================================================================
-Overall Average CPT KL = 0.01010781
+Overall Average CPT KL = 0.00866601
 ======================================================================
-CVP                            RMSE = 0.01154701
-  Column 0:
-    Flawed : [0.95 0.04 0.01]
-    Prop   : [0.97 0.03 0.  ]
-    GT     : [0.95 0.04 0.01]
-  Column 2:
-    Flawed : [0.01 0.29 0.7 ]
-    Prop   : [0.   0.28 0.72]
-    GT     : [0.01 0.29 0.7 ]
+BP                             RMSE = 0.03741657
+  Column 7:
+    Flawed : [0.05 0.2  0.75]
+    Prop   : [0.02 0.08 0.9 ]
+    GT     : [0.05 0.2  0.75]
 ----------------------------------------------------------------------
 HYPOVOLEMIA                    RMSE = 0.12000000
   Column 0:
@@ -2586,17 +2915,13 @@ LVEDVOLUME                     RMSE = 0.34522939
     GT     : [0.05 0.9  0.05]
 ----------------------------------------------------------------------
 ======================================================================
-Overall CPT RMSE = 0.04406535
+Overall CPT RMSE = 0.04461419
 ======================================================================
-CVP                            Hellinger = 0.04835807
-  Column 0:
-    Flawed : [0.95 0.04 0.01]
-    Prop   : [0.97 0.03 0.  ]
-    GT     : [0.95 0.04 0.01]
-  Column 2:
-    Flawed : [0.01 0.29 0.7 ]
-    Prop   : [0.   0.28 0.72]
-    GT     : [0.01 0.29 0.7 ]
+BP                             Hellinger = 0.01583179
+  Column 7:
+    Flawed : [0.05 0.2  0.75]
+    Prop   : [0.02 0.08 0.9 ]
+    GT     : [0.05 0.2  0.75]
 ----------------------------------------------------------------------
 HYPOVOLEMIA                    Hellinger = 0.12491785
   Column 0:
@@ -2619,41 +2944,8 @@ LVEDVOLUME                     Hellinger = 0.30886215
     GT     : [0.05 0.9  0.05]
 ----------------------------------------------------------------------
 ======================================================================
-Overall Average Hellinger = 0.00619523
+Overall Average Hellinger = 0.00618458
 ###------------------------------###
 
-Restart 2 finished.
+Pipeline finished.
 ###------------------------------###
-Restart: 0
-BN keys: dict_keys(['edges', 'nodes'])
-Evaluating restart 0
-
-===================================================
-Dataset: agentbn_train_subset_1.csv
-===================================================
-Accuracy: 97.58 %
-Total: 330
-Successes: 322
-Failures: 8
-Restart: 1
-BN keys: dict_keys(['edges', 'nodes'])
-Evaluating restart 1
-
-===================================================
-Dataset: agentbn_train_subset_1.csv
-===================================================
-Accuracy: 97.58 %
-Total: 330
-Successes: 322
-Failures: 8
-Restart: 2
-BN keys: dict_keys(['edges', 'nodes'])
-Evaluating restart 2
-
-===================================================
-Dataset: agentbn_train_subset_1.csv
-===================================================
-Accuracy: 97.58 %
-Total: 330
-Successes: 322
-Failures: 8

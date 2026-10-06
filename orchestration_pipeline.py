@@ -627,27 +627,6 @@ best_restart, best_restart_bn, train_accuracy, _ = (
     get_best_restart_bn(dataset_file=train_csv)
 )
 
-# ---------------------------------
-# STORE FINAL BN FOR THIS SUBSET
-# ---------------------------------
-if SUBSET_ID is not None:
-
-    record = {
-        "subset_id": SUBSET_ID,
-        "best_restart": best_restart,
-        "train_accuracy": train_accuracy,
-        "bn": best_restart_bn,
-    }
-
-    with open(AGENTBN_SUBSET_BN_FILE, "a", encoding="utf-8") as f:
-        f.write(json.dumps(record) + "\n")
-
-    print(
-        f"Stored final AgentBN for subset {SUBSET_ID} "
-        f"in {AGENTBN_SUBSET_BN_FILE}"
-    )
-
-
 print("\n===================================")
 print("BEST RESTART")
 print("===================================")
@@ -666,6 +645,29 @@ failures, successes, test_accuracy, _ = initial_run_evaluation(
 
 print("Test Accuracy:", test_accuracy)
 print("Test Failures:", failures)
+
+# ---------------------------------
+# STORE FINAL BN FOR THIS SUBSET
+# ---------------------------------
+
+if SUBSET_ID is not None:
+
+    record = {
+        "subset_id": SUBSET_ID,
+        "best_restart": best_restart,
+        "train_accuracy": train_accuracy,
+        "test_accuracy": test_accuracy,
+        "bn": best_restart_bn,
+    }
+
+    with open(AGENTBN_SUBSET_BN_FILE, "a", encoding="utf-8") as f:
+        f.write(json.dumps(record) + "\n")
+
+    print(
+        f"Stored final AgentBN for subset {SUBSET_ID} "
+        f"in {AGENTBN_SUBSET_BN_FILE}"
+    )
+
 
 final_output = compare_all_cpts(
     bn_number=None,

@@ -419,28 +419,72 @@ if __name__ == "__main__":
     flawed_bn = normalize_bn(read_json(FLAWED_BN_FILE))
 
     EM_ITERATIONS = 100
-    ORACLE_SIZE = 2
+    ORACLE_SIZE = 4
     NUM_SUBSETS = 4
 
     for subset_id in range(1, NUM_SUBSETS + 1):
 
-        prop_bn = normalize_bn(
-            get_bn(
-                BATCH_EM_BN_FILE,
-                bn_number=EM_ITERATIONS,
-                oracle_size=ORACLE_SIZE,
-                subset_id=subset_id,
+        # ---------------------------------
+        # LOAD AGENTBN FOR THIS SUBSET
+        # ---------------------------------
+
+        prop_bn = None
+
+        with open(
+            AGENTBN_SUBSET_BN_FILE,
+            "r",
+            encoding="utf-8"
+        ) as f:
+
+            for line in f:
+
+                if not line.strip():
+                    continue
+
+                record = json.loads(line)
+
+                if record.get("subset_id") == subset_id:
+                    prop_bn = normalize_bn(record["bn"])
+                    break
+
+        if prop_bn is None:
+            raise ValueError(
+                f"No AgentBN found for subset_id={subset_id}"
             )
-        )
+
+        # ---------------------------------
+        # VALIDATION
+        # ---------------------------------
 
         print("\n" + "=" * 60)
         print(
-            f"Validating Batch EM BN "
-            f"(iterations={EM_ITERATIONS}, "
-            f"oracle_size={ORACLE_SIZE}, "
-            f"subset_id={subset_id})"
+            f"Validating AgentBN "
+            f"(subset_id={subset_id})"
         )
         print("=" * 60)
+
+
+        # ---------------------------------
+        # LOAD Batch EM BN FOR THIS SUBSET
+        # ---------------------------------
+
+        # prop_bn = normalize_bn(
+        #     get_bn(
+        #         BATCH_EM_BN_FILE,
+        #         bn_number=EM_ITERATIONS,
+        #         oracle_size=ORACLE_SIZE,
+        #         subset_id=subset_id,
+        #     )
+        # )
+
+        # print("\n" + "=" * 60)
+        # print(
+        #     f"Validating Batch EM BN "
+        #     f"(iterations={EM_ITERATIONS}, "
+        #     f"oracle_size={ORACLE_SIZE}, "
+        #     f"subset_id={subset_id})"
+        # )
+        # print("=" * 60)
 
         compute_average_cpt_kl(
             gt_bn,

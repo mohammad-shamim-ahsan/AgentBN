@@ -50,13 +50,15 @@ def store_new_bn(
     overwrite=False,
     metadata=None,
 ):
+    
     record = {
         "bn_number": bn_number,
-        "bn": bn_new
     }
 
     if metadata is not None:
         record["metadata"] = metadata
+
+    record["bn"] = bn_new
 
     if overwrite and os.path.exists(filename):
         records = []

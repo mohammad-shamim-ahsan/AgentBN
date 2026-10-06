@@ -53,6 +53,8 @@ SCENARIO_GEN_PROMPT_FILE = PROMPT_DIR / "scenario_gen_prompt.txt"
 
 BN_ANALYSIS_FILE = WORKSPACE_DIR / "bn_analysis.json"
 
+AGENTBN_SUBSET_BN_FILE = WORKSPACE_DIR / "agentbn_subset_bns.jsonl"
+
 PROPOSED_BN_FILE = WORKSPACE_DIR / "last_proposed_bn.jsonl"
 
 RESTART_FINAL_BN_FILE = WORKSPACE_DIR / "restart_final_bns.jsonl"
@@ -235,7 +237,7 @@ else:
 MIN_CONFIDENCE = 0.50
 MIN_MARGIN = 0.20
 
-TARGET_ACCURACY = 0.98
+TARGET_ACCURACY = 0.99
 
 
 # ======================================================

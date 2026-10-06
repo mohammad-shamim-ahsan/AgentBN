@@ -4,39 +4,21 @@
         {
             "cpt": "CVP",
             "risk_level": "high_medium",
-            "number_of_failure_scenarios": 45,
-            "main_problem": "The LVEDVOLUME=HIGH column leaves substantial probability on NORMAL CVP, which can dilute the expected elevated-pressure signal. This parameter is activated only in failures, making it a focused and comparatively safe refinement target.",
+            "number_of_failure_scenarios": 17,
+            "main_problem": "The strongest localized evidence points to an overly rigid CVP entry under low LVEDVOLUME on a suspicious path. This parameter is activated in failures but never in successes, making it a focused refinement target with limited evidence of collateral disruption.",
             "suspicious_parameters": [
                 {
                     "rank": 1,
-                    "parameter": "Column 2 \u2192 NORMAL",
-                    "failure_weight": 45,
+                    "parameter": "Column 0 \u2192 HIGH",
+                    "failure_weight": 17,
                     "success_weight": 0,
-                    "failure_to_success_ratio": 45.0,
-                    "argmax_probability": 0.29,
-                    "recommended_adjustment": "decrease",
-                    "justification": "Given LVEDVOLUME=HIGH, NORMAL CVP appears too probable relative to the expected shift toward HIGH CVP. Its failure-only activation strongly suggests this probability is weakening propagation on the HYPOVOLEMIA\u2192LVEDVOLUME\u2192CVP path."
-                }
-            ]
-        },
-        {
-            "cpt": "STROKEVOLUME",
-            "risk_level": "high_medium",
-            "number_of_failure_scenarios": 79,
-            "main_problem": "The hypovolemia/no-LV-failure column appears to understate LOW stroke volume for a core physiological mechanism. Because this link sits upstream of CO and BP, a modest correction could address repeated failures along the cardiovascular path.",
-            "suspicious_parameters": [
-                {
-                    "rank": 1,
-                    "parameter": "Column 1 \u2192 LOW",
-                    "failure_weight": 79,
-                    "success_weight": 34,
-                    "failure_to_success_ratio": 2.32,
-                    "argmax_probability": 0.5,
-                    "recommended_adjustment": "increase",
-                    "justification": "For HYPOVOLEMIA=Hypovolemia and LVFAILURE=FALSE, LOW stroke volume is plausible and likely underweighted at 0.5. Increasing it should strengthen downstream low-CO/low-BP propagation without directly contradicting the path semantics."
+                    "failure_to_success_ratio": 17.0,
+                    "argmax_probability": 0.0,
+                    "recommended_adjustment": "slightly_increase",
+                    "justification": "For LVEDVOLUME=LOW, assigning zero probability to CVP=HIGH is physiologically too absolute and was flagged on the only suspicious path. A small increase would relax this hard exclusion while preserving the dominant expectation that CVP should usually be low when filling volume is low."
                 }
             ]
         }
     ],
-    "overall_summary": "The best-supported refinement space is concentrated in CVP and STROKEVOLUME. Other flagged parameters are either too entangled with upstream effects, too well supported by successful cases, or too semantically appropriate to justify inclusion in a minimal refinement search."
+    "overall_summary": "Only the CVP CPT is sufficiently supported for inclusion in the refinement search space. Other activated parameters are either on uncertain paths or are substantially shared with successful scenarios, so expanding the search beyond CVP is not well justified."
 }

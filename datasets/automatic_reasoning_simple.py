@@ -180,62 +180,63 @@ if __name__ == "__main__":
         4,
     )
 
-    # ============================================================
-    # Evaluate each independently learned Batch EM BN
-    # ============================================================
-    for learned_subset_id in range(1, 5):
+    # # ============================================================
+    # # Evaluate each independently learned Batch EM BN
+    # # ============================================================
+    # for learned_subset_id in range(1, 5):
 
-        print("\n" + "=" * 60)
-        print(
-            f"BN LEARNED FROM SUBSET "
-            f"{learned_subset_id}"
-        )
-        print("=" * 60)
+    #     print("\n" + "=" * 60)
+    #     print(
+    #         f"BN LEARNED FROM SUBSET "
+    #         f"{learned_subset_id}"
+    #     )
+    #     print("=" * 60)
 
-        # Load the BN learned from this subset
-        bn_json = get_bn(
-            BATCH_EM_BN_FILE,
-            bn_number=100,
-            oracle_size=2,
-            subset_id=learned_subset_id,
-        )
+    #     # Load the BN learned from this subset
+    #     bn_json = get_bn(
+    #         BATCH_EM_BN_FILE,
+    #         bn_number=100,
+    #         oracle_size=4,
+    #         subset_id=learned_subset_id,
+    #     )
 
-        # --------------------------------------------------------
-        # Evaluate on all training subsets
-        # --------------------------------------------------------
-        for eval_subset_id, subset_df in enumerate(
-            train_subsets,
-            start=1,
-        ):
+    #     # --------------------------------------------------------
+    #     # Evaluate on all training subsets
+    #     # --------------------------------------------------------
+    #     for eval_subset_id, subset_df in enumerate(
+    #         train_subsets,
+    #         start=1,
+    #     ):
 
-            failures, successes, accuracy, results = run_evaluation(
-                bn_json,
-                subset_df,
-            )
+    #         failures, successes, accuracy, results = run_evaluation(
+    #             bn_json,
+    #             subset_df,
+    #         )
 
-            if eval_subset_id == learned_subset_id:
-                label = "Own training"
-            else:
-                label = "Cross-training"
+    #         if eval_subset_id == learned_subset_id:
+    #             label = "Own training"
+    #         else:
+    #             label = "Cross-training"
 
-            print(
-                f"{label} subset "
-                f"{eval_subset_id}: "
-                f"{accuracy * 100:.2f}%"
-            )
+    #         print(
+    #             f"{label} subset "
+    #             f"{eval_subset_id}: "
+    #             f"{accuracy * 100:.2f}%"
+    #         )
 
-        # --------------------------------------------------------
-        # Evaluate on common held-out test set
-        # --------------------------------------------------------
-        failures, successes, accuracy, results = run_evaluation(
-            bn_json,
-            TEST_CSV,
-        )
+    #     # --------------------------------------------------------
+    #     # Evaluate on common held-out test set
+    #     # --------------------------------------------------------
+    #     failures, successes, accuracy, results = run_evaluation(
+    #         bn_json,
+    #         TEST_CSV,
+    #     )
 
-        print(
-            f"Held-out test: "
-            f"{accuracy * 100:.2f}%"
-        )
+    #     print(
+    #         f"Held-out test: "
+    #         f"{accuracy * 100:.2f}%"
+    #     )
+
 
     # # ============================================================
     # # Evaluate original flawed BN
@@ -273,4 +274,79 @@ if __name__ == "__main__":
     #     f"{accuracy * 100:.2f}%"
     # )
 
-    print("\nReasoning Completed.")
+
+    # ============================================================
+    # Evaluate each independently learned AgentBN
+    # ============================================================
+    for learned_subset_id in range(1, 5):
+
+        print("\n" + "=" * 60)
+        print(
+            f"AGENTBN LEARNED FROM SUBSET "
+            f"{learned_subset_id}"
+        )
+        print("=" * 60)
+
+        # --------------------------------------------------------
+        # Load AgentBN learned from this subset
+        # --------------------------------------------------------
+        bn_json = None
+
+        with open(
+            AGENTBN_SUBSET_BN_FILE,
+            "r",
+            encoding="utf-8"
+        ) as f:
+
+            for line in f:
+
+                if not line.strip():
+                    continue
+
+                record = json.loads(line)
+
+                if record.get("subset_id") == learned_subset_id:
+                    bn_json = record["bn"]
+                    break
+
+        if bn_json is None:
+            raise ValueError(
+                f"No AgentBN found for subset_id={learned_subset_id}"
+            )
+
+        # --------------------------------------------------------
+        # Evaluate on all training subsets
+        # --------------------------------------------------------
+        for eval_subset_id, subset_df in enumerate(
+            train_subsets,
+            start=1,
+        ):
+
+            failures, successes, accuracy, results = run_evaluation(
+                bn_json,
+                subset_df,
+            )
+
+            if eval_subset_id == learned_subset_id:
+                label = "Own training"
+            else:
+                label = "Cross-training"
+
+            print(
+                f"{label} subset "
+                f"{eval_subset_id}: "
+                f"{accuracy * 100:.2f}%"
+            )
+
+        # --------------------------------------------------------
+        # Evaluate on common held-out test set
+        # --------------------------------------------------------
+        failures, successes, accuracy, results = run_evaluation(
+            bn_json,
+            TEST_CSV,
+        )
+
+        print(
+            f"Held-out test: "
+            f"{accuracy * 100:.2f}%"
+        )

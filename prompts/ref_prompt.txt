@@ -8,18 +8,21 @@ The following information is provided:
 1. Domain context:
 {full_context}
 
-2. Selected baseline BN for refinement:
+2. Number of CPTs requiring refinement:
+{num_cpts_to_refine}
+
+3. Selected baseline BN for refinement:
 {baseline_bn}
 
-3. Analysis record of the selected baseline BN:
+4. Analysis record of the selected baseline BN:
 {analysis_record}
 
-4. Oracle-provided relevant nodes:
+5. Oracle-provided relevant nodes:
 {oracle}
 
 The oracle identifies BN nodes relevant to the current reasoning and decision-making task. Use these nodes ONLY as focused structural guidance when reasoning about parameter modifications, including their dependencies, causal paths, and effects on the target prediction.
 
-The oracle does not expand the refinement search space. The CPTs that may be modified are determined exclusively by the "cpt_danger_report" and the fallback rule below.
+The oracle does not expand the refinement search space except when the "cpt_danger_report" contains fewer than {num_cpts_to_refine} CPTs. In that case, oracle-identified nodes define the allowable additional CPTs under the fallback rule below.
 
 ---------------------------------------------------
 SUCCESS AND FAILURE DEFINITION
@@ -42,27 +45,31 @@ Therefore, a scenario is considered a failure if any one of the following condit
 
 The selected baseline BN has already been determined by the workflow.
 
+The number of CPTs requiring refinement is known: {num_cpts_to_refine}, but their identities are unknown.
+
 The "cpt_danger_report" is produced by the refinement recommendation stage and defines the allowable CPT refinement search space.
 
-If "reported_risk_level" is not "none", only CPTs listed in "dangerous_cpts" may be modified. Every other CPT must remain identical to the selected baseline BN.
+If "reported_risk_level" is not "none", only CPTs listed in "dangerous_cpts" may be modified, provided that the report contains at least {num_cpts_to_refine} CPTs. Every other CPT must remain identical to the selected baseline BN, except under the insufficient-CPT fallback rule below.
 
 If "reported_risk_level" is "none", the recommendation stage could not identify any individual CPT with sufficient evidence for targeted refinement. This does not imply that the baseline BN is correct.
 
 Only in this case, if the baseline BN still contains failure scenarios, use CPTs corresponding to the oracle-identified nodes ({oracle}) as a fallback refinement search space. Prefer minimal, well-justified modifications.
 
-When "reported_risk_level" is not "none", the reported CPTs define the allowable refinement search space. A refinement candidate may modify one or more of the reported CPTs; it is not required to modify all of them. Use any "recommended_adjustment" directions as guidance, not as prescribed probability values.
+If "reported_risk_level" is not "none" but "dangerous_cpts" contains fewer than {num_cpts_to_refine} CPTs, use the reported CPTs as primary guidance and independently identify additional plausible CPTs from the oracle-identified nodes ({oracle}), based on the domain context, BN semantics, and recorded failure and success scenarios.
+
+Use any "recommended_adjustment" directions as guidance, not as prescribed probability values.
 
 The graph structure, nodes, edges, states, parent lists, and `parent_state_order` are FIXED and must remain unchanged.
 
 Generate 3 independent refinement candidates.
 
-Each candidate represents one complete BN refinement hypothesis and may modify one or more allowable CPTs.
+Each candidate represents one complete BN refinement hypothesis and must modify exactly {num_cpts_to_refine} allowable CPTs.
 
 The candidates should represent distinct refinement strategies rather than minor numerical variations.
 
 For each candidate, determine the parameter modifications using the "cpt_danger_report", domain context, BN semantics, and the recorded failure and success scenarios.
 
-Prefer the smallest set of modifications that corrects the recorded failure scenarios while preserving the recorded success scenarios.
+Prefer the smallest set of parameter modifications within the selected CPTs that corrects the recorded failure scenarios while preserving the recorded success scenarios.
 
 Each candidate will be evaluated independently by a deterministic evaluation pipeline, and the best-performing candidate will be selected for the next iteration.
 
@@ -72,7 +79,6 @@ Each candidate will be evaluated independently by a deterministic evaluation pip
 Any modified CPT must remain a valid conditional probability table.
 
 Specifically:
-
 - Every column represents a probability distribution over the child states.
 - Every probability must lie within [0, 1].
 - Every column must sum to exactly 1.
@@ -80,11 +86,13 @@ Specifically:
 ---
 ## OUTPUT REQUIREMENT
 
-Return 3 refinement candidates.
+Return 3 refinement candidates, each modifying exactly {num_cpts_to_refine} CPTs.
 
 Return ONLY valid JSON.
 
 Do NOT return the complete Bayesian Network.
+
+The JSON structure below is illustrative. The "modified_cpts" array must contain exactly {num_cpts_to_refine} CPT entries for each candidate, regardless of the number of entries shown in the example.
 
 The output must follow this structure exactly:
 {{

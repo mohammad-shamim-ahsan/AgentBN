@@ -3,25 +3,41 @@
     "parameter_statistics": {
         "CO": [
             {
-                "column": 7,
-                "state": "HIGH",
-                "argmax_probability": 0.95,
-                "failure_weight": 17,
-                "success_weight": 200
-            },
-            {
                 "column": 6,
                 "state": "LOW",
                 "argmax_probability": 0.8,
+                "failure_weight": 21,
+                "success_weight": 309
+            }
+        ],
+        "BP": [
+            {
+                "column": 1,
+                "state": "HIGH",
+                "argmax_probability": 0.02,
+                "failure_weight": 13,
+                "success_weight": 103
+            },
+            {
+                "column": 1,
+                "state": "LOW",
+                "argmax_probability": 0.95,
                 "failure_weight": 4,
-                "success_weight": 109
+                "success_weight": 111
+            },
+            {
+                "column": 1,
+                "state": "NORMAL",
+                "argmax_probability": 0.03,
+                "failure_weight": 4,
+                "success_weight": 95
             }
         ],
         "STROKEVOLUME": [
             {
                 "column": 3,
-                "state": "NORMAL",
-                "argmax_probability": 0.9,
+                "state": "LOW",
+                "argmax_probability": 0.8,
                 "failure_weight": 17,
                 "success_weight": 200
             },
@@ -29,54 +45,6 @@
                 "column": 1,
                 "state": "LOW",
                 "argmax_probability": 0.5,
-                "failure_weight": 4,
-                "success_weight": 109
-            }
-        ],
-        "LVEDVOLUME": [
-            {
-                "column": 3,
-                "state": "LOW",
-                "argmax_probability": 0.93,
-                "failure_weight": 17,
-                "success_weight": 200
-            },
-            {
-                "column": 1,
-                "state": "HIGH",
-                "argmax_probability": 0.9,
-                "failure_weight": 4,
-                "success_weight": 109
-            }
-        ],
-        "CVP": [
-            {
-                "column": 0,
-                "state": "HIGH",
-                "argmax_probability": 0.0,
-                "failure_weight": 17,
-                "success_weight": 0
-            },
-            {
-                "column": 2,
-                "state": "LOW",
-                "argmax_probability": 0.01,
-                "failure_weight": 4,
-                "success_weight": 0
-            }
-        ],
-        "PCWP": [
-            {
-                "column": 0,
-                "state": "NORMAL",
-                "argmax_probability": 0.04,
-                "failure_weight": 17,
-                "success_weight": 117
-            },
-            {
-                "column": 2,
-                "state": "HIGH",
-                "argmax_probability": 0.95,
                 "failure_weight": 4,
                 "success_weight": 109
             }
@@ -97,27 +65,52 @@
                 "success_weight": 109
             }
         ],
-        "BP": [
+        "PCWP": [
             {
-                "column": 7,
+                "column": 0,
+                "state": "NORMAL",
+                "argmax_probability": 0.04,
+                "failure_weight": 17,
+                "success_weight": 117
+            },
+            {
+                "column": 2,
                 "state": "HIGH",
+                "argmax_probability": 0.95,
+                "failure_weight": 4,
+                "success_weight": 109
+            }
+        ],
+        "LVEDVOLUME": [
+            {
+                "column": 3,
+                "state": "LOW",
                 "argmax_probability": 0.75,
-                "failure_weight": 13,
-                "success_weight": 68
+                "failure_weight": 17,
+                "success_weight": 200
             },
             {
                 "column": 1,
-                "state": "LOW",
-                "argmax_probability": 0.98,
+                "state": "HIGH",
+                "argmax_probability": 0.9,
                 "failure_weight": 4,
-                "success_weight": 34
+                "success_weight": 109
+            }
+        ],
+        "CVP": [
+            {
+                "column": 0,
+                "state": "HIGH",
+                "argmax_probability": 0.01,
+                "failure_weight": 17,
+                "success_weight": 0
             },
             {
-                "column": 7,
-                "state": "NORMAL",
-                "argmax_probability": 0.2,
+                "column": 2,
+                "state": "LOW",
+                "argmax_probability": 0.005,
                 "failure_weight": 4,
-                "success_weight": 55
+                "success_weight": 0
             }
         ]
     }

@@ -234,6 +234,26 @@ else:
 # EVALUATION HYPERPARAMTERS
 # ======================================================
 
+if BENCHMARK == "der":
+    NUM_CPTS_TO_REFINE = 2
+
+elif BENCHMARK == "lung_cancer":
+    NUM_CPTS_TO_REFINE = 1
+
+elif BENCHMARK == "alarm":
+    if FLAWED_BN_FILE.name == "flawed_BN_0.json":
+        NUM_CPTS_TO_REFINE = 2
+    
+    elif FLAWED_BN_FILE.name == "flawed_BN_1.json":
+        NUM_CPTS_TO_REFINE = 3
+    
+    else:
+        raise ValueError(f"Unknown flawed BN: {FLAWED_BN_FILE.name}")
+
+else:
+    raise ValueError(f"Unknown benchmark: {BENCHMARK}")
+
+
 MIN_CONFIDENCE = 0.50
 MIN_MARGIN = 0.20
 

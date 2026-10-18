@@ -3,9 +3,9 @@
     "dangerous_cpts": [
         {
             "cpt": "CVP",
-            "risk_level": "high_medium",
-            "number_of_failure_scenarios": 17,
-            "main_problem": "The strongest localized evidence points to an overly rigid CVP entry under low LVEDVOLUME on a suspicious path. This parameter is activated in failures but never in successes, making it a focused refinement target with limited evidence of collateral disruption.",
+            "risk_level": "high",
+            "number_of_failure_scenarios": 21,
+            "main_problem": "The suspicious evidence is concentrated on the HYPOVOLEMIA\u2192LVEDVOLUME\u2192CVP path, where CVP entries are activated only in failures and are physiologically discordant with the corresponding LVEDVOLUME states. This makes CVP the clearest refinement target with relatively low risk of disrupting successful behavior.",
             "suspicious_parameters": [
                 {
                     "rank": 1,
@@ -13,12 +13,50 @@
                     "failure_weight": 17,
                     "success_weight": 0,
                     "failure_to_success_ratio": 17.0,
-                    "argmax_probability": 0.0,
-                    "recommended_adjustment": "slightly_increase",
-                    "justification": "For LVEDVOLUME=LOW, assigning zero probability to CVP=HIGH is physiologically too absolute and was flagged on the only suspicious path. A small increase would relax this hard exclusion while preserving the dominant expectation that CVP should usually be low when filling volume is low."
+                    "argmax_probability": 0.01,
+                    "recommended_adjustment": "decrease",
+                    "justification": "When LVEDVOLUME=LOW, HIGH CVP is strongly inconsistent with the expected filling-pressure relationship. Its activation is exclusive to failures, so reducing this already small probability is well supported."
+                },
+                {
+                    "rank": 2,
+                    "parameter": "Column 2 \u2192 LOW",
+                    "failure_weight": 4,
+                    "success_weight": 0,
+                    "failure_to_success_ratio": 4.0,
+                    "argmax_probability": 0.005,
+                    "recommended_adjustment": "decrease",
+                    "justification": "When LVEDVOLUME=HIGH, LOW CVP is physiologically mismatched and appears only in failures. Further suppressing this rare but harmful assignment is a targeted refinement."
+                }
+            ]
+        },
+        {
+            "cpt": "LVEDVOLUME",
+            "risk_level": "medium",
+            "number_of_failure_scenarios": 21,
+            "main_problem": "LVEDVOLUME contains a semantically questionable column under hypovolemia, but the same entries are also heavily activated in successes, so the evidence is mixed. It is still a reasonable secondary search-space candidate because it sits immediately upstream of the suspicious CVP behavior and may be contributing to mispropagation.",
+            "suspicious_parameters": [
+                {
+                    "rank": 1,
+                    "parameter": "Column 1 \u2192 HIGH",
+                    "failure_weight": 4,
+                    "success_weight": 109,
+                    "failure_to_success_ratio": 0.04,
+                    "argmax_probability": 0.9,
+                    "recommended_adjustment": "decrease",
+                    "justification": "This column corresponds to HYPOVOLEMIA=Hypovolemia and LVFAILURE=FALSE, where assigning HIGH LVEDVOLUME with probability 0.9 is directionally counter to expected reduced filling. The strong success overlap argues for cautious rather than aggressive refinement."
+                },
+                {
+                    "rank": 2,
+                    "parameter": "Column 3 \u2192 LOW",
+                    "failure_weight": 17,
+                    "success_weight": 200,
+                    "failure_to_success_ratio": 0.09,
+                    "argmax_probability": 0.75,
+                    "recommended_adjustment": "slightly_decrease",
+                    "justification": "This entry is less clearly faulty because LOW LVEDVOLUME under No_Hypovolemia and no LV failure can still occur, and it is common in successes. If included, only a mild decrease is justified to avoid harming currently successful inferences."
                 }
             ]
         }
     ],
-    "overall_summary": "Only the CVP CPT is sufficiently supported for inclusion in the refinement search space. Other activated parameters are either on uncertain paths or are substantially shared with successful scenarios, so expanding the search beyond CVP is not well justified."
+    "overall_summary": "CVP is the only strongly supported refinement target because its suspicious parameters are exclusive to failures and physiologically inconsistent. LVEDVOLUME is a weaker but still defensible secondary candidate due to its upstream role and one semantically problematic column, allowing the search space to cover at least two plausibly relevant CPTs."
 }

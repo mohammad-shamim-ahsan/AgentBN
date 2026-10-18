@@ -47,7 +47,7 @@ OUTPUT_SCHEMA = """
 """
 
 
-def validate_refinement_response(response):
+def validate_refinement_response(response, num_cpts_to_refine=NUM_CPTS_TO_REFINE):
     """
     Perform top-level format verification.
 
@@ -74,6 +74,17 @@ def validate_refinement_response(response):
             "'candidates' must contain exactly 3 refinement candidates."
         )
 
+    for candidate in response_json["candidates"]:
+        if not isinstance(candidate, dict):
+            raise ValueError("Each candidate must be an object.")
+        modified = candidate.get("modified_cpts")
+        if not isinstance(modified, list) or len(modified) != num_cpts_to_refine:
+            raise ValueError(
+                f"Each candidate must contain exactly {num_cpts_to_refine} modified CPTs."
+            )
+        names = [item.get("name") if isinstance(item, dict) else None for item in modified]
+        if any(not isinstance(name, str) or not name for name in names) or len(set(names)) != len(names):
+            raise ValueError("Modified CPT names must be nonempty and distinct.")
     return response_json
 
 
@@ -158,7 +169,8 @@ def generate_refined_cpt_patch(
             "oracle",
             "target_node",
             "min_confidence",
-            "min_margin"
+            "min_margin",
+            "num_cpts_to_refine"
         ],
         template=read_file(REF_PROMPT_FILE)
     )
@@ -173,7 +185,8 @@ def generate_refined_cpt_patch(
         oracle=json.dumps(oracle, indent=2),
         target_node=TARGET_NODE,
         min_confidence=MIN_CONFIDENCE,
-        min_margin=MIN_MARGIN
+        min_margin=MIN_MARGIN,
+        num_cpts_to_refine=NUM_CPTS_TO_REFINE
     )
 
     last_response = None
@@ -194,7 +207,8 @@ def generate_refined_cpt_patch(
 
         try:
             response_json = validate_refinement_response(
-                response
+                response,
+                num_cpts_to_refine=NUM_CPTS_TO_REFINE
             )
 
             print(
@@ -226,7 +240,7 @@ def generate_refined_cpt_patch(
         repair_prompt = f"""
 Your previous response was generated for a Bayesian Network refinement task.
 
-The response violates the required JSON format.
+The response violates the required JSON format or CPT-count constraint.
 
 Validation error:
 {last_error}
@@ -234,17 +248,15 @@ Validation error:
 Previous response:
 {last_response}
 
-Your task is ONLY to repair the formatting.
+Your task is to repair the formatting and enforce exactly {NUM_CPTS_TO_REFINE} distinct modified CPTs per candidate.
 
 Do NOT:
-- modify any candidate;
-- modify any CPT;
-- modify any probability;
+- change probability values of retained CPTs;
 - modify candidate IDs;
 - add or remove candidates;
 - change any Bayesian Network content.
 
-Repair only the JSON syntax and structure so that the response conforms to the required output format.
+Repair the JSON syntax and ensure exactly {NUM_CPTS_TO_REFINE} distinct modified CPTs per candidate. Preserve the original CPT content where possible; select allowable CPTs if additions are needed.
 
 The required output format is:
 
@@ -263,7 +275,8 @@ Return ONLY the repaired valid JSON.
         try:
 
             response_json = validate_refinement_response(
-                repaired_response
+                repaired_response,
+                num_cpts_to_refine=NUM_CPTS_TO_REFINE
             )
 
             print(
@@ -408,7 +421,6 @@ def generate_and_select_best_candidate(
 
 
 ### -----------------------------
-
 if __name__ == "__main__":
 
     new_bn = generate_and_select_best_candidate(
@@ -420,4 +432,3 @@ if __name__ == "__main__":
     )
 
     store_new_bn(2, new_bn)
-    

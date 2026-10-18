@@ -10,7 +10,7 @@
             ],
             "path_assessment": "uncertain",
             "parameter_assessments": [],
-            "path_summary": "The activated parameters on this hemodynamic path are largely semantically consistent with the expected effect of hypovolemia on stroke volume, cardiac output, and blood pressure. The failure associations are not clearly disproportionate relative to successes, so the path does not provide clear localization evidence."
+            "path_summary": "The activated parameters on this hemodynamic path are largely directionally consistent with the physiology of reduced volume leading to reduced stroke volume, lower cardiac output, and lower blood pressure. Although several activations are failure-associated, they also occur often in successes, so the evidence does not clearly isolate a faulty CPT on this path."
         },
         {
             "path_id": "P2",
@@ -25,14 +25,64 @@
                     "cpt": "CVP",
                     "column": 0,
                     "state": "HIGH",
-                    "argmax_probability": 0.0,
+                    "argmax_probability": 0.01,
                     "failure_weight": 17,
                     "success_weight": 0,
                     "assessment": "suspicious",
-                    "justification": "This entry corresponds to LVEDVOLUME=LOW, where assigning essentially zero probability to CVP=HIGH is very rigid and may be too restrictive given physiologic variability. Its activation only in failures and never in successes makes it a plausible contributor on this path."
+                    "justification": "This column corresponds to LVEDVOLUME=LOW, where HIGH CVP is semantically unlikely, so the small probability is not itself implausible; however, its repeated activation only in failures suggests this parameter may be implicated in erroneous propagation on this path rather than merely reflecting normal behavior."
+                },
+                {
+                    "cpt": "LVEDVOLUME",
+                    "column": 3,
+                    "state": "LOW",
+                    "argmax_probability": 0.75,
+                    "failure_weight": 17,
+                    "success_weight": 200,
+                    "assessment": "uncertain",
+                    "justification": "This column corresponds to HYPOVOLEMIA=No_Hypovolemia and LVFAILURE=FALSE, under which LOW LVEDVOLUME is directionally plausible only as a minority outcome and may be somewhat aggressive. Still, the parameter is activated far more often in successes than failures, weakening the case that it is itself faulty."
+                },
+                {
+                    "cpt": "HYPOVOLEMIA",
+                    "column": 0,
+                    "state": "No_Hypovolemia",
+                    "argmax_probability": 0.92,
+                    "failure_weight": 17,
+                    "success_weight": 200,
+                    "assessment": "uncertain",
+                    "justification": "The prior favoring No_Hypovolemia is clinically reasonable, but because this root parameter is repeatedly active in both failures and successes, its failure association is not specific. It may contribute indirectly by making low-filling explanations harder to reach, but the evidence is not decisive."
+                },
+                {
+                    "cpt": "CVP",
+                    "column": 2,
+                    "state": "LOW",
+                    "argmax_probability": 0.005,
+                    "failure_weight": 4,
+                    "success_weight": 0,
+                    "assessment": "suspicious",
+                    "justification": "This column corresponds to LVEDVOLUME=HIGH, where LOW CVP is strongly discordant with the expected filling-pressure relationship, and its activation appears only in failures. Even though the probability is tiny, the exclusive failure association makes it a plausible contributor when this pathway is used."
+                },
+                {
+                    "cpt": "LVEDVOLUME",
+                    "column": 1,
+                    "state": "HIGH",
+                    "argmax_probability": 0.9,
+                    "failure_weight": 4,
+                    "success_weight": 109,
+                    "assessment": "uncertain",
+                    "justification": "This column corresponds to HYPOVOLEMIA=Hypovolemia and LVFAILURE=FALSE, and assigning HIGH LVEDVOLUME with very high probability is semantically counter to the expected effect of hypovolemia on ventricular filling. However, because the same parameter is also activated frequently in successes, the statistics alone do not clearly identify it as the source of failure."
+                },
+                {
+                    "cpt": "HYPOVOLEMIA",
+                    "column": 0,
+                    "state": "Hypovolemia",
+                    "argmax_probability": 0.08,
+                    "failure_weight": 4,
+                    "success_weight": 109,
+                    "assessment": "uncertain",
+                    "justification": "A low prior for Hypovolemia is not inherently unreasonable, and this parameter is much more common in successes than failures. Its role here is therefore more likely contextual than directly diagnostic of a defective CPT entry."
                 }
             ],
-            "path_summary": "Most of the path is physiologically coherent, but the CVP CPT contains an activated extreme entry under low LVEDVOLUME that is uniquely associated with failures. This makes the path suspicious."
+            "path_summary": "This path contains CVP parameters that are activated exclusively in failures, including states that are physiologically mismatched to the corresponding LVEDVOLUME conditions. The LVEDVOLUME entries provide mixed evidence, with one semantically questionable column but substantial activation in successes."
         },
         {
             "path_id": "P3",
@@ -43,8 +93,8 @@
             ],
             "path_assessment": "uncertain",
             "parameter_assessments": [],
-            "path_summary": "The activated parameters on this filling-pressure path are broadly compatible with the expected effect of hypovolemia via low LVEDVOLUME on PCWP. Although one PCWP entry appears in failures, it is also common in successes, so the evidence is not strong enough to localize a fault here."
+            "path_summary": "The PCWP parameters are directionally consistent with LVEDVOLUME as a filling-pressure surrogate, and the failure-associated activations also occur often in successes. One LVEDVOLUME entry is semantically questionable under hypovolemia, but the available evidence does not clearly make this path a distinct source of repeated error."
         }
     ],
-    "overall_summary": "Across the provided paths, the clearest localized concern is on the HYPOVOLEMIA\u2192LVEDVOLUME\u2192CVP path, specifically an extreme CVP parameter under low LVEDVOLUME. The other paths appear mostly semantically consistent, with failure statistics that are not sufficiently distinctive for stronger localization."
+    "overall_summary": "Most activated parameters are physiologically coherent and heavily shared between failures and successes, limiting localization confidence. The clearest path-level concern is on HYPOVOLEMIA\u2192LVEDVOLUME\u2192CVP, where CVP entries are activated only in failures and appear most plausibly associated with the observed inference failures."
 }

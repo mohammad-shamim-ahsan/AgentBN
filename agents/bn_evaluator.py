@@ -1196,7 +1196,11 @@ You are given:
 
 {json.dumps(statistics_json, indent=2)}
 
-4. Path-wise diagnostic report produced by the diagnostic agent.
+4. Number of CPTs requiring refinement.
+
+{NUM_CPTS_TO_REFINE}
+
+5. Path-wise diagnostic report produced by the diagnostic agent.
 
 {json.dumps(diagnostic_report, indent=2)}
 
@@ -1225,7 +1229,7 @@ Refinement recommendation procedure:
 
 3. Use the complete BN, parameter statistics, and domain semantics to distinguish parameters whose own probability assignments plausibly contribute to the failures from those whose behavior may primarily reflect upstream effects.
 
-4. Recommend the smallest well-supported set of parameters that can plausibly address the observed failures while preserving successful inference behavior.
+4. Recommend well-supported parameters that can plausibly address the observed failures while preserving successful inference behavior. Do not unnecessarily restrict the number of recommended CPTs.
 
 5. For each selected parameter, determine the direction of refinement based on the BN semantics, CPT configuration, path-wise diagnostic evidence, and observed failure behavior:
    - increase
@@ -1241,12 +1245,22 @@ Refinement recommendation procedure:
 
 The risk level represents the strength of evidence that modifying parameters in that CPT is appropriate for correcting the observed inference failures while minimizing disruption to successful inference behavior.
 
-Construct the refinement search space using this priority:
+Construct the refinement search space using the following principles:
 
-- If HIGH-risk CPTs exist, report all HIGH-risk CPTs.
-- Otherwise, if HIGH_MEDIUM-risk CPTs exist, report all HIGH_MEDIUM-risk CPTs.
-- Otherwise, report the strongest MEDIUM-risk CPTs.
-- Return "none" if no CPT is sufficiently supported for refinement.
+1. Prioritize CPTs according to their assessed risk levels:
+   HIGH > HIGH_MEDIUM > MEDIUM > LOW.
+
+2. Include all HIGH-risk CPTs, followed by HIGH_MEDIUM-risk and MEDIUM-risk CPTs as needed.
+
+3. The refinement search space must contain at least {NUM_CPTS_TO_REFINE} CPTs whenever sufficient diagnostic evidence is available.
+
+4. The known number of CPTs requiring refinement does not reveal their identities. Use the diagnostic evidence, parameter statistics, BN structure, and domain semantics to determine which CPTs should be recommended.
+
+5. Do not recommend CPTs solely to satisfy the required count when the available evidence does not support their inclusion.
+
+6. If fewer than {NUM_CPTS_TO_REFINE} CPTs can be reasonably supported, report the supported CPTs and explicitly explain the limitation in "overall_summary".
+
+7. Return "none" only when no CPT can be reasonably supported for refinement.
 
 Return ONLY valid JSON.
 

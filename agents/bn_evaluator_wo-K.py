@@ -505,33 +505,54 @@ def generate_failure_parameter_statistics(
     return output
 
 
-REFINEMENT_RECOMMENDATION_SCHEMA = """
+DANGER_REPORT_SCHEMA = """
 {
-  "cpt_recommendations": [
+  "reported_risk_level": "high | high_medium | medium | none",
+
+  "dangerous_cpts": [
     {
       "cpt": "",
-      "candidate_parameters": [
+
+      "risk_level": "high | high_medium | medium | low",
+
+      "number_of_failure_scenarios": 0,
+
+      "main_problem": "Brief explanation in 1-2 sentences."
+
+      "suspicious_parameters": [
         {
-          "column": 0,
-          "state": "",
-          "current_probability": 0.0,
-          "direction": "increase | decrease",
+          "rank": 1,
+
+          "parameter": "Column X → ChildState",
+
+          "failure_weight": 0,
+
+          "success_weight": 0,
+
+          "failure_to_success_ratio": 0.0,
+
+          "argmax_probability": 0.0,
+
+          "recommended_adjustment":
+              "increase | decrease | slightly_increase | slightly_decrease",
+
           "justification": "Brief justification in 1-2 sentences."
         }
-      ],
-      "cpt_summary": "Brief justification for refining this CPT."
+      ]
     }
   ],
-  "overall_summary": "Brief overall refinement recommendation."
+
+  "overall_summary": "Brief overall summary in 1-2 sentences."
 }
 """
 
 
-def validate_refinement_recommendation(response):
+def validate_danger_report(response):
     report = json.loads(response)
 
     required_fields = [
-        "cpt_recommendations",
+        "reported_risk_level",
+        "dangerous_cpts",
         "overall_summary"
     ]
 
@@ -544,7 +565,7 @@ def validate_refinement_recommendation(response):
     return report
 
 
-def validate_path_diagnostic_report(response):
+def validate_diagnostic_report(response):
     report = json.loads(response)
 
     required_fields = [
@@ -561,21 +582,299 @@ def validate_path_diagnostic_report(response):
     return report
 
 
-def validate_cpt_localizations(response):
-    report = json.loads(response)
+# def generate_cpt_danger_report(
+#     bn_json,
+#     statistics_json,
+#     paths,
+#     bn_number=None,
+#     temperature=0.3,
+#     oracle = None
+# ):
 
-    required_fields = [
-        "cpt_localizations",
-        "overall_summary"
-    ]
+#     # ==================================================
+#     # PREPARATION
+#     # ==================================================
+    
+#     if (
+#         bn_number is not None
+#         and statistics_json.get("bn_number") != bn_number
+#     ):
+#         statistics_json = {
+#             "bn_number": bn_number,
+#             "parameter_statistics": {},
+#             # "common_failure_columns": {},
+#             # "common_activation_patterns": []
+#         }
 
-    for field in required_fields:
-        if field not in report:
-            raise ValueError(
-                f"Missing required field '{field}'."
-            )
+#     context = read_file(CONTEXT_AGENT_FILE)
 
-    return report
+#     prompt = f"""
+# You are analyzing deterministic Bayesian Network (BN) parameter statistics to identify CPTs that are plausible contributors to repeated incorrect predictions.
+
+# You are given:
+
+# 1. Domain context.
+
+# {context}
+
+# 2. The complete Bayesian Network.
+
+# {json.dumps(bn_json, indent=2)}
+
+# 3. Failure parameter statistics.
+
+# {json.dumps(statistics_json, indent=2)}
+
+# 4. Oracle-provided relevant nodes.
+
+# {oracle}
+
+# Oracle constraint:
+
+# - ONLY CPTs corresponding to oracle-identified nodes may be considered as candidates.
+# - The oracle defines candidate eligibility; it does not imply that an eligible CPT is problematic.
+# - Use the complete BN to understand dependencies, semantics, and reasoning paths among the relevant nodes, but do not introduce candidates outside the oracle.
+
+# Definitions:
+
+# - column: Activated CPT column (parent-state configuration).
+# - state: Selected child state obtained by deterministic forward propagation using the argmax rule.
+# - argmax_probability: Probability assigned to the selected child state.
+# - failure_weight: Number of unique FAILURE scenarios activating the same CPT parameter (CPT, column, state).
+# - success_weight: Number of unique SUCCESS scenarios activating the same CPT parameter.
+
+# Reasoning principles:
+
+# 1. Restrict candidate analysis to {oracle}-identified CPTs.
+
+# 2. Treat the deterministic {statistics_json} as evidence of association, not proof that a CPT requires modification.
+
+# 3. Evaluate each candidate CPT holistically using its parameter statistics, BN structure, domain semantics, and role in the reasoning path.
+
+# 4. Consider "failure_weight" and "success_weight" fields jointly, located in the {statistics_json} file. Give greater concern to parameters disproportionately associated with failures rather than those frequently activated in both failures and successes.
+
+# 5. Use "argmax_probability" as supporting evidence, not as a standalone criterion.
+
+# 6. Distinguish CPTs whose behavior may primarily reflect upstream activations from CPTs whose own probability assignments plausibly contribute to the failures.
+
+# 7. Report CPTs as refinement candidates only when the available evidence reasonably supports their contribution to repeated incorrect predictions.
+
+# Your task:
+
+# 1. Evaluate every oracle-eligible candidate CPT.
+
+# 2. Assign each supported candidate one risk level:
+#    - HIGH
+#    - HIGH_MEDIUM
+#    - MEDIUM
+#    - LOW
+
+#    The risk level should reflect the strength of evidence that the CPT's own probability assignments contribute to repeated incorrect predictions.
+
+# 3. Construct the refinement search space using this priority:
+#    - If HIGH-risk CPTs exist, report all HIGH-risk CPTs.
+#    - Otherwise, if HIGH_MEDIUM-risk CPTs exist, report all HIGH_MEDIUM-risk CPTs.
+#    - Otherwise, report the strongest MEDIUM-risk CPTs.
+#    - Return "none" if no CPT is sufficiently supported.
+
+# If no CPT is sufficiently supported for refinement, return "none".
+
+# Return ONLY valid JSON.
+
+# Output format:
+
+# {{
+#   "reported_risk_level":  "high | high_medium | medium | none",
+
+#   "dangerous_cpts": [
+#     {{
+#       "cpt": "",
+
+#       "risk_level": "high | high_medium | medium | low",
+
+#       "number_of_failure_scenarios": 0,
+
+#       "main_problem": "Briefly explain why this CPT is considered a plausible contributor to repeated incorrect predictions based on the deterministic statistics, the BN structure, and the domain semantics.",
+
+#       "suspicious_parameters": [
+#         {{
+#           "rank": 1,
+
+#           "parameter": "Column X → ChildState",
+
+#           "failure_weight": 0,
+
+#           "success_weight": 0,
+
+#           "failure_to_success_ratio": 0.0,
+
+#           "argmax_probability": 0.0,
+
+#           "recommended_adjustment":
+#               "increase | decrease | slightly_increase | slightly_decrease",
+
+#           "justification": ""
+#         }}
+#       ]
+#     }}
+#   ],
+
+#   "overall_summary": ""
+# }}
+
+# If no CPT is selected for the refinement search space, return:
+
+# {{
+#     "reported_risk_level": "none",
+#     "dangerous_cpts": [],
+#     "overall_summary": "No individual CPT could be confidently localized as a refinement candidate based on the available evidence."
+# }}
+# """
+
+#     response = llm(prompt, temperature=temperature)
+
+#     last_response = None
+#     last_error = None
+
+#     # ==================================================
+#     # STAGE 1
+#     # Retry the original evaluation prompt
+#     # ==================================================
+#     for attempt in range(1, MAX_FORMAT_RETRIES + 1):
+
+#         if attempt > 1:
+#             response = llm(
+#                 prompt,
+#                 temperature=temperature
+#             )
+
+#         last_response = response
+
+#         try:
+
+#             report = validate_danger_report(
+#                 response
+#             )
+
+#             print(
+#                 f"Valid danger report received on attempt {attempt}."
+#             )
+
+#             with open(
+#                 DANGER_REPORT_FILE,
+#                 "w",
+#                 encoding="utf-8"
+#             ) as f:
+#                 json.dump(report, f, indent=4)
+
+#             return report
+
+#         except (json.JSONDecodeError, ValueError) as error:
+
+#             last_error = error
+
+#             print(
+#                 f"[Format Retry "
+#                 f"{attempt}/{MAX_FORMAT_RETRIES}] "
+#                 f"{error}"
+#             )
+
+#     # ==================================================
+#     # STAGE 2
+#     # Repair the formatting of the final invalid response
+#     # ==================================================
+#     for repair_attempt in range(1, MAX_REPAIR_RETRIES + 1):
+
+#         repair_prompt = f"""
+# Your previous response was generated for a Bayesian Network evaluation task.
+
+# The response violates the required JSON format.
+
+# Validation error:
+# {last_error}
+
+# Previous response:
+# {last_response}
+
+# Your task is ONLY to repair the JSON formatting.
+
+# Do NOT:
+# - modify any reported risk level;
+# - modify any CPT;
+# - modify any suspicious parameter;
+# - modify any probability;
+# - modify any recommendation;
+# - modify any explanation;
+# - add or remove any field;
+# - change the Bayesian Network evaluation content in any way.
+
+# Repair only the JSON syntax and structure so that the response conforms to the required output format.
+
+# The required output format is:
+
+# {DANGER_REPORT_SCHEMA}
+
+# Return ONLY the repaired JSON.
+#     """
+
+#         repaired_response = llm(
+#             repair_prompt,
+#             temperature=0.0
+#         )
+
+#         last_response = repaired_response
+
+#         try:
+
+#             report = validate_danger_report(
+#                 repaired_response
+#             )
+
+#             print(
+#                 f"Response successfully repaired "
+#                 f"on attempt {repair_attempt}."
+#             )
+
+#             with open(
+#                 DANGER_REPORT_FILE,
+#                 "w",
+#                 encoding="utf-8"
+#             ) as f:
+#                 json.dump(report, f, indent=4)
+
+#             return report
+
+#         except (json.JSONDecodeError, ValueError) as error:
+
+#             last_error = error
+
+#             print(
+#                 f"[Repair Retry "
+#                 f"{repair_attempt}/{MAX_REPAIR_RETRIES}] "
+#                 f"{error}"
+#             )
+
+#     # ==================================================
+#     # Final fallback
+#     # ==================================================
+#     report = {
+#         "reported_risk_level": "none",
+#         "dangerous_cpts": [],
+#         "overall_summary": (
+#             "Unable to obtain a valid JSON response after "
+#             "format verification and repair."
+#         ),
+#         "raw_response": str(last_response)
+#     }
+
+#     with open(
+#         DANGER_REPORT_FILE,
+#         "w",
+#         encoding="utf-8"
+#     ) as f:
+#         json.dump(report, f, indent=4)
+
+#     return report
 
 
 def run_llm_with_retry_and_repair(
@@ -712,7 +1011,7 @@ Return ONLY the repaired JSON.
     )
 
 
-PATH_DIAGNOSTIC_REPORT_SCHEMA = """
+DIAGNOSTIC_REPORT_SCHEMA = """
 {
   "path_diagnostics": [
     {
@@ -726,7 +1025,27 @@ PATH_DIAGNOSTIC_REPORT_SCHEMA = """
 
       "path_assessment": "suspicious | uncertain | consistent",
 
-      "path_summary": "Brief path-level justification in 1-2 sentences."
+      "parameter_assessments": [
+        {
+          "cpt": "",
+
+          "column": 0,
+
+          "state": "",
+
+          "argmax_probability": 0.0,
+
+          "failure_weight": 0,
+
+          "success_weight": 0,
+
+          "assessment": "suspicious | uncertain | consistent",
+
+          "justification": "Brief justification in 1-2 sentences."
+        }
+      ],
+
+      "path_summary": "Brief path-level summary in 1-2 sentences."
     }
   ],
 
@@ -734,8 +1053,7 @@ PATH_DIAGNOSTIC_REPORT_SCHEMA = """
 }
 """
 
-
-def generate_path_diagnostic_report(
+def generate_cpt_diagnostic_report(
     bn_json,
     statistics_json,
     paths,
@@ -744,14 +1062,17 @@ def generate_path_diagnostic_report(
 ):
 
     prompt = f"""
-You are performing path-wise diagnosis of Bayesian Network (BN) paths associated with repeated incorrect predictions.
+You are performing path-wise diagnosis of Bayesian Network (BN) parameters associated with repeated incorrect predictions.
 
-Your role is PATH DIAGNOSIS ONLY.
+Your role is DIAGNOSIS AND LOCALIZATION ONLY.
 
-Your task is to determine whether each provided path contains evidence of problematic BN parameter behavior.
+You must identify activated CPT parameters that are plausible contributors to the observed inference failures.
 
-Classify each provided path as suspicious, uncertain, or consistent.
-Do not perform CPT/parameter localization or refinement recommendation.
+You must NOT:
+- decide the final refinement search space;
+- recommend parameter adjustments;
+- prioritize one suspicious CPT over another for refinement;
+- propose probability changes.
 
 You are given:
 
@@ -791,132 +1112,55 @@ Path-wise analysis procedure:
 
 For EACH provided path:
 
-1. Examine the CPTs corresponding to nodes on the path and their deterministic parameter statistics.
+1. Examine the CPTs corresponding to nodes on that path.
 
-2. Use the complete BN structure and domain context to interpret the CPT probabilities, parent-state configurations, and relationships among variables along the path.
+2. Restrict diagnostic candidates to nodes that are present on the current path. Nodes outside the current path may be used only as contextual information for interpreting CPT columns and BN dependencies.
 
-3. Consider:
-   - whether the CPT behavior along the path is consistent with the expected relationships among the variables;
-   - how the observed behavior is associated with failures versus successes;
-   - whether the evidence collectively suggests problematic parameter behavior somewhere along the path.
+3. For each eligible CPT, examine every parameter entry provided in the deterministic parameter statistics.
 
-4. Classify the overall path as:
-   - suspicious: reasonable evidence of problematic CPT behavior contributing to incorrect inference;
+4. Use the complete BN structure to interpret the meaning (not values) of the CPT column , including the corresponding parent-state configuration.
+
+5. Evaluate whether each parameter is a plausible contributor to the repeated incorrect predictions using THREE sources of evidence:
+
+   A. Local semantic evidence
+      - Determine whether the probability assigned to the child state is reasonable given the activated parent-state configuration and domain semantics.
+      - Use argmax_probability as supporting evidence, not as a standalone criterion.
+
+   B. Path-level evidence
+      - Consider whether the parameter's behavior is consistent with the expected relationships among variables along the complete path.
+      - Distinguish a parameter whose own probability assignment appears problematic from one whose activation may merely reflect upstream behavior.
+
+   C. Statistical evidence
+      - Consider failure_weight and success_weight jointly.
+      - Greater concern is warranted when a parameter is disproportionately associated with failures.
+      - Frequent activation in both failures and successes weakens evidence that the parameter itself is faulty.
+      - Treat these statistics as association, not proof.
+
+6. Classify the overall path as:
+   - suspicious: one or more parameters have reasonable evidence of contributing to the incorrect inference;
    - uncertain: the available evidence does not support a clear conclusion;
-   - consistent: the CPT behavior along the path appears reasonable given the available evidence.
+   - consistent: the parameters on the path appear reasonable and consistent with the domain semantics and available evidence.
 
-Do not localize the problem to individual CPTs or parameters. CPT localization will be performed in a separate stage.
+7. Report parameters according to the overall path assessment:
+   - For a suspicious path, report parameters assessed as suspicious or uncertain.
+   - For an uncertain or consistent path, return an empty "parameter_assessments" list.
 
+8. Keep "path_summary" brief for uncertain and consistent paths.
+
+Do not report parameters assessed as consistent.
+
+   
 Return ONLY valid JSON.
 
 Required output format:
 
-{PATH_DIAGNOSTIC_REPORT_SCHEMA}
+{DIAGNOSTIC_REPORT_SCHEMA}
 """
 
     return run_llm_with_retry_and_repair(
         prompt=prompt,
-        validator=validate_path_diagnostic_report,
-        schema=PATH_DIAGNOSTIC_REPORT_SCHEMA,
-        temperature=temperature
-    )
-
-
-CPT_LOCALIZATION_SCHEMA = """
-{
-  "cpt_localizations": [
-    {
-      "cpt": "",
-      "assessment": "suspicious | uncertain",
-      "justification": "Brief justification in 1-2 sentences."
-    }
-  ],
-  "overall_summary": "Brief overall summary of the CPT-localization findings in 1-2 sentences."
-}
-"""
-
-
-def generate_cpt_localization_report(
-    bn_json,
-    statistics_json,
-    path_diagnostic_report,
-    context,
-    temperature=0.3
-):
-
-    prompt = f"""
-You are performing CPT localization in a Bayesian Network (BN) whose paths have already undergone path-wise diagnosis.
-
-Your role is CPT LOCALIZATION ONLY.
-
-A separate path-diagnosis stage has already classified each path as suspicious, uncertain, or consistent.
-
-Your task is to identify candidate flawed CPTs by jointly investigating the suspicious paths.
-Do not make refinement recommendations or propose parameter changes.
-
-You are given:
-
-1. Domain context.
-
-{context}
-
-2. The complete Bayesian Network.
-
-{json.dumps(bn_json, indent=2)}
-
-3. Deterministic parameter statistics.
-
-{json.dumps(statistics_json, indent=2)}
-
-4. Path-diagnostic report produced by the path-diagnosis stage.
-
-{json.dumps(path_diagnostic_report, indent=2)}
-
-
-Definitions:
-
-- column: An activated CPT column corresponding to a particular parent-state configuration.
-
-- state: The child state associated with the parameter.
-
-- argmax_probability: The probability assigned to the selected child state.
-
-- failure_weight: Number of unique FAILURE scenarios activating the same CPT parameter (CPT, column, state).
-
-- success_weight: Number of unique SUCCESS scenarios activating the same CPT parameter.
-
-
-CPT-localization procedure:
-
-1. Identify candidate CPTs corresponding to nodes on the diagnosed paths.
-
-2. For each candidate CPT, examine:
-   - its CPT probabilities and parent-state configurations;
-   - its deterministic parameter statistics;
-   - its position relative to the observed inference failures;
-   - BN structure and domain context.
-
-3. Consider whether abnormal behavior at a downstream CPT may instead result from problematic behavior at an upstream CPT.
-
-4. Classify each candidate CPT as:
-   - suspicious: reasonable evidence that the CPT may contribute to the observed failures;
-   - uncertain: some evidence exists, but it is insufficient for a clear conclusion;
-   - consistent: the CPT appears reasonable given the available evidence.
-
-5. Report only suspicious CPTs.
-
-Do not make refinement recommendations or propose CPT changes.
-
-Return ONLY valid JSON.
-
-Required output format:
-{CPT_LOCALIZATION_SCHEMA}
-"""
-
-    return run_llm_with_retry_and_repair(
-        prompt=prompt,
-        validator=validate_cpt_localizations,
-        schema=CPT_LOCALIZATION_SCHEMA,
+        validator=validate_diagnostic_report,
+        schema=DIAGNOSTIC_REPORT_SCHEMA,
         temperature=temperature
     )
 
@@ -924,21 +1168,19 @@ Required output format:
 def generate_cpt_refinement_recommendation(
     bn_json,
     statistics_json,
-    path_diagnostic_report,
-    cpt_localization_report,
+    diagnostic_report,
     context,
     temperature=0.3
 ):
 
     prompt = f"""
-You are performing refinement recommendation for a Bayesian Network (BN) after path diagnosis and CPT localization have already been completed.
+You are performing refinement recommendation for a Bayesian Network (BN) after a separate path-wise diagnostic analysis has already been completed.
 
 Your role is REFINEMENT RECOMMENDATION.
 
-The path-diagnosis stage has identified candidate suspicious paths.
-The CPT-localization stage has identified candidate flawed CPTs.
+The diagnostic agent has already evaluated CPT parameters within individual diagnostic paths. It reports only parameters assessed as suspicious, while each path is classified as suspicious, uncertain, or consistent.
 
-Your task is to perform deeper analysis of the candidate CPTs, determine which CPTs should actually be included in the refinement search space, and identify candidate parameters for each selected CPT.
+Your task is to determine which of the diagnosed CPT parameters should actually be recommended for inclusion in the refinement search space.
 
 You are given:
 
@@ -954,13 +1196,9 @@ You are given:
 
 {json.dumps(statistics_json, indent=2)}
 
-4. Path-diagnostic report.
+4. Path-wise diagnostic report produced by the diagnostic agent.
 
-{json.dumps(path_diagnostic_report, indent=2)}
-
-5. CPT-localization report.
-
-{json.dumps(cpt_localization_report, indent=2)}
+{json.dumps(diagnostic_report, indent=2)}
 
 
 Definitions:
@@ -975,50 +1213,60 @@ Definitions:
 
 - success_weight: Number of unique SUCCESS scenarios activating the same CPT parameter.
 
+- path assessment: The overall diagnostic assessment of a path as suspicious, uncertain, or consistent.
 
-Refinement-recommendation procedure:
+- suspicious parameter: A CPT parameter reported by the diagnostic agent because there is positive evidence that its own probability assignment plausibly contributes to the observed inference failures.
 
-1. Examine the candidate CPTs identified by the CPT-localization stage.
+Refinement recommendation procedure:
 
-2. Analyze each candidate CPT in greater detail using:
-   - the complete CPT and its parent-state configurations;
-   - deterministic parameter statistics;
-   - path-diagnostic evidence;
-   - CPT-localization evidence;
-   - BN structure and domain context.
+1. Consider parameters reported on suspicious paths as refinement candidates. Treat parameters assessed as suspicious as primary candidates and parameters assessed as uncertain as secondary candidates.
 
-3. Determine whether each candidate CPT has sufficient evidence to warrant refinement.
-   Candidate CPTs may be excluded if deeper analysis does not support refinement.
+2. Evaluate all candidates jointly across paths using the diagnostic evidence, failure_weight, success_weight, BN structure, and domain semantics. Do not automatically recommend a primary or secondary candidate. Repeated suspicion and disproportionate association with failures strengthen the case for refinement, while uncertainty and substantial association with successful scenarios weaken it.
 
-4. For each CPT selected for refinement, identify the candidate parameters that may require modification.
+3. Use the complete BN, parameter statistics, and domain semantics to distinguish parameters whose own probability assignments plausibly contribute to the failures from those whose behavior may primarily reflect upstream effects.
 
-5. For each candidate parameter, report:
-   - column;
-   - state;
-   - current probability;
-   - recommended adjustment direction: increase or decrease;
-   - brief justification.
+4. Recommend the smallest well-supported set of parameters that can plausibly address the observed failures while preserving successful inference behavior.
 
-Recommend the smallest well-supported set of CPTs and parameters needed for refinement.
+5. For each selected parameter, determine the direction of refinement based on the BN semantics, CPT configuration, path-wise diagnostic evidence, and observed failure behavior:
+   - increase
+   - decrease
+   - slightly_increase
+   - slightly_decrease
+
+6. Group selected parameters by CPT and assign each selected CPT one risk level:
+   - HIGH
+   - HIGH_MEDIUM
+   - MEDIUM
+   - LOW
+
+The risk level represents the strength of evidence that modifying parameters in that CPT is appropriate for correcting the observed inference failures while minimizing disruption to successful inference behavior.
+
+Construct the refinement search space using this priority:
+
+- If HIGH-risk CPTs exist, report all HIGH-risk CPTs.
+- Otherwise, if HIGH_MEDIUM-risk CPTs exist, report all HIGH_MEDIUM-risk CPTs.
+- Otherwise, report the strongest MEDIUM-risk CPTs.
+- Return "none" if no CPT is sufficiently supported for refinement.
 
 Return ONLY valid JSON.
 
 Required output format:
 
-{REFINEMENT_RECOMMENDATION_SCHEMA}
+{DANGER_REPORT_SCHEMA}
 
 If no CPT is sufficiently supported for refinement, return:
 
 {{
-  "cpt_recommendations": [],
-  "overall_summary": "No CPT could be sufficiently supported as a refinement candidate based on the available evidence."
+  "reported_risk_level": "none",
+  "dangerous_cpts": [],
+  "overall_summary": "No individual CPT could be sufficiently supported as a refinement candidate based on the combined diagnostic, statistical, structural, and semantic evidence."
 }}
 """
 
     response = run_llm_with_retry_and_repair(
         prompt=prompt,
-        validator=validate_refinement_recommendation,
-        schema=REFINEMENT_RECOMMENDATION_SCHEMA,
+        validator=validate_danger_report,
+        schema=DANGER_REPORT_SCHEMA,
         temperature=temperature
     )
 
@@ -1057,7 +1305,7 @@ def get_diagnostic_paths(paths, statistics_json):
     return unique_paths
 
 
-def generate_cpt_refinement_report(
+def generate_cpt_danger_report(
     bn_json,
     statistics_json,
     paths,
@@ -1065,8 +1313,8 @@ def generate_cpt_refinement_report(
     temperature=0.3
 ):
     """
-    Orchestrates the three-stage path diagnosis, CPT localization,
-    and refinement recommendation process.
+    Orchestrates the two-stage CPT diagnosis and refinement
+    recommendation process.
     """
 
     # --------------------------------------------------
@@ -1090,9 +1338,9 @@ def generate_cpt_refinement_report(
 
     # ==================================================
     # AGENT 1
-    # Path diagnosis
+    # Path-wise CPT diagnosis
     # ==================================================
-    path_diagnostic_report = generate_path_diagnostic_report(
+    diagnostic_report = generate_cpt_diagnostic_report(
         bn_json=bn_json,
         statistics_json=statistics_json,
         paths=diagnostic_paths,
@@ -1100,53 +1348,39 @@ def generate_cpt_refinement_report(
         temperature=temperature
     )
 
+    # --------------------------------------------------
+    # Save diagnostic report for monitoring
+    # --------------------------------------------------
     with open(
-        PATH_DIAGNOSTIC_REPORT_FILE,
+        DIAGNOSTIC_REPORT_FILE,
         "w",
         encoding="utf-8"
     ) as f:
-        json.dump(path_diagnostic_report, f, indent=4)
+        json.dump(diagnostic_report, f, indent=4)
 
     # ==================================================
     # AGENT 2
-    # CPT localization
-    # ==================================================
-    cpt_localization_report = generate_cpt_localization_report(
-        bn_json=bn_json,
-        statistics_json=statistics_json,
-        path_diagnostic_report=path_diagnostic_report,
-        context=context,
-        temperature=temperature
-    )
-
-    with open(
-        CPT_LOCALIZATION_REPORT_FILE,
-        "w",
-        encoding="utf-8"
-    ) as f:
-        json.dump(cpt_localization_report, f, indent=4)
-
-    # ==================================================
-    # AGENT 3
     # Refinement recommendation
     # ==================================================
-    refinement_recommendation = generate_cpt_refinement_recommendation(
+    danger_report = generate_cpt_refinement_recommendation(
         bn_json=bn_json,
         statistics_json=statistics_json,
-        path_diagnostic_report=path_diagnostic_report,
-        cpt_localization_report=cpt_localization_report,
+        diagnostic_report=diagnostic_report,
         context=context,
         temperature=temperature
     )
 
+    # --------------------------------------------------
+    # Save final danger report
+    # --------------------------------------------------
     with open(
-        REFINEMENT_RECOMMENDATION_FILE,
+        DANGER_REPORT_FILE,
         "w",
         encoding="utf-8"
     ) as f:
-        json.dump(refinement_recommendation, f, indent=4)
+        json.dump(danger_report, f, indent=4)
 
-    return refinement_recommendation
+    return danger_report
 
 
 ### -----------------------------
@@ -1208,9 +1442,9 @@ def run_evaluation(bn_json, bn_number=None, temperature=0.3, dataset_file=None):
     )
 
     # --------------------------------------------------
-    # Step 5: LLM refinement analysis
+    # Step 5: LLM danger report
     # --------------------------------------------------
-    refinement_recommendation = generate_cpt_refinement_report(
+    cpt_danger_report = generate_cpt_danger_report(
         bn_json=bn_json,
         statistics_json=parameter_statistics,
         paths=path_list,
@@ -1236,7 +1470,7 @@ def run_evaluation(bn_json, bn_number=None, temperature=0.3, dataset_file=None):
         "failure_count": len(failures),
         "success_count": len(successes),
         "accuracy": accuracy,
-        "refinement_recommendation": refinement_recommendation,
+        "cpt_danger_report": cpt_danger_report,
     }
 
 
@@ -1248,8 +1482,9 @@ def store_analysis(bn_number, evaluation_output):
         "failure_count": evaluation_output["failure_count"],
         "success_count": evaluation_output["success_count"],
         "accuracy": evaluation_output["accuracy"],
-        "refinement_recommendation":
-            evaluation_output["refinement_recommendation"]
+        "cpt_danger_report":
+            evaluation_output["cpt_danger_report"]
+
     }
 
     with open(
@@ -1257,12 +1492,13 @@ def store_analysis(bn_number, evaluation_output):
         "a",
         encoding="utf-8"
     ) as f:
+
         f.write(json.dumps(record) + "\n")
 
     print(
         f"\nWorkflow analysis for BN #{bn_number} "
         f"stored in {BN_ANALYSIS_FILE}"
-    ) 
+    )
 
 
 ### ------------------------------MAIN--------------------------------------
@@ -1280,3 +1516,4 @@ if __name__ == "__main__":
     evaluation_output = run_evaluation(bn_json, bn_number=bn_number, temperature=0.3)
 
     store_analysis(bn_number, evaluation_output)
+    

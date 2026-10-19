@@ -2,6 +2,7 @@ from langchain_core.prompts import PromptTemplate
 
 import json
 import copy
+import math
 
 from utils.bn_io import *
 from utils.json_utils import *
@@ -48,43 +49,37 @@ OUTPUT_SCHEMA = """
 
 
 def validate_refinement_response(response, num_cpts_to_refine=NUM_CPTS_TO_REFINE):
-    """
-    Perform top-level format verification.
-
-    Returns:
-        Parsed JSON object if valid.
-
-    Raises:
-        json.JSONDecodeError
-        ValueError
-    """
+    """Validate the generated CPT patches."""
     response_json = json.loads(response)
 
-    if not isinstance(response_json, dict):
-        raise ValueError("The top-level JSON value must be an object.")
+    candidates = response_json["candidates"]
 
-    if "candidates" not in response_json:
-        raise ValueError("Missing required top-level field: 'candidates'.")
+    if len(candidates) != 3:
+        raise ValueError("Expected exactly 3 candidates.")
 
-    if not isinstance(response_json["candidates"], list):
-        raise ValueError("'candidates' must be a list.")
+    for candidate in candidates:
+        modified = candidate["modified_cpts"]
 
-    if len(response_json["candidates"]) != 3:
-        raise ValueError(
-            "'candidates' must contain exactly 3 refinement candidates."
-        )
+        if len(modified) != num_cpts_to_refine:
+            raise ValueError(f"Expected exactly {num_cpts_to_refine} CPT patches.")
 
-    for candidate in response_json["candidates"]:
-        if not isinstance(candidate, dict):
-            raise ValueError("Each candidate must be an object.")
-        modified = candidate.get("modified_cpts")
-        if not isinstance(modified, list) or len(modified) != num_cpts_to_refine:
-            raise ValueError(
-                f"Each candidate must contain exactly {num_cpts_to_refine} modified CPTs."
-            )
-        names = [item.get("name") if isinstance(item, dict) else None for item in modified]
-        if any(not isinstance(name, str) or not name for name in names) or len(set(names)) != len(names):
-            raise ValueError("Modified CPT names must be nonempty and distinct.")
+        names = [item["name"] for item in modified]
+
+        if len(names) != len(set(names)):
+            raise ValueError("Duplicate CPT names.")
+
+        for item in modified:
+            values = item["cpt"]["values"]
+
+            for row in values:
+                for p in row:
+                    if isinstance(p, bool) or not isinstance(p, (int, float)) or not math.isfinite(p) or not 0 <= p <= 1:
+                        raise ValueError(f"Invalid probability in {item['name']}")
+
+            for column in zip(*values):
+                if not math.isclose(sum(column), 1.0, abs_tol=1e-6, rel_tol=0):
+                    raise ValueError(f"Invalid CPT column in {item['name']}")
+
     return response_json
 
 
@@ -129,6 +124,38 @@ CPT DANGER REPORT:
 """
 
 
+def get_baseline_modified_cpts(original_bn, baseline_bn):
+    original_lookup = {
+        node["name"]: node["cpt"]["values"]
+        for node in original_bn["nodes"]
+    }
+
+    return [
+        node["name"]
+        for node in baseline_bn["nodes"]
+        if node["cpt"]["values"] != original_lookup[node["name"]]
+    ]
+
+
+def integrate_modified_cpts(original_bn, patch):
+    refined_bn = copy.deepcopy(original_bn)
+
+    node_lookup = {
+        node["name"]: node
+        for node in refined_bn["nodes"]
+    }
+
+    for item in patch.get("modified_cpts", []):
+        name = item["name"]
+
+        if name not in node_lookup:
+            raise ValueError(f"Modified CPT node not found in BN: {name}")
+
+        node_lookup[name]["cpt"] = copy.deepcopy(item["cpt"])
+
+    return refined_bn
+
+
 def generate_refined_cpt_patch(
     full_context,
     proposed_bn_filename=PROPOSED_BN_FILE,
@@ -148,6 +175,17 @@ def generate_refined_cpt_patch(
         best_bn_number,
         proposed_bn_filename
     )
+
+    with open(FLAWED_BN_FILE, "r") as f:
+        original_bn = json.load(f)
+
+    baseline_modified_cpts = get_baseline_modified_cpts(
+        original_bn,
+        baseline_bn
+    )
+
+    print("Baseline modified CPTs:", baseline_modified_cpts)
+    print("Baseline modified CPT count:", len(baseline_modified_cpts))
 
     analysis_record = get_analysis_record(
         best_bn_number,
@@ -170,7 +208,8 @@ def generate_refined_cpt_patch(
             "target_node",
             "min_confidence",
             "min_margin",
-            "num_cpts_to_refine"
+            "num_cpts_to_refine",
+            "baseline_modified_cpts",
         ],
         template=read_file(REF_PROMPT_FILE)
     )
@@ -186,7 +225,8 @@ def generate_refined_cpt_patch(
         target_node=TARGET_NODE,
         min_confidence=MIN_CONFIDENCE,
         min_margin=MIN_MARGIN,
-        num_cpts_to_refine=NUM_CPTS_TO_REFINE
+        num_cpts_to_refine=NUM_CPTS_TO_REFINE,
+        baseline_modified_cpts=json.dumps(baseline_modified_cpts),
     )
 
     last_response = None
@@ -240,7 +280,7 @@ def generate_refined_cpt_patch(
         repair_prompt = f"""
 Your previous response was generated for a Bayesian Network refinement task.
 
-The response violates the required JSON format or CPT-count constraint.
+The response violates the required JSON format, CPT-count constraint, or CPT validity requirements.
 
 Validation error:
 {last_error}
@@ -248,15 +288,14 @@ Validation error:
 Previous response:
 {last_response}
 
-Your task is to repair the formatting and enforce exactly {NUM_CPTS_TO_REFINE} distinct modified CPTs per candidate.
+Your task is to repair the response while ensuring:
+- Exactly 3 independent refinement candidates.
+- Each candidate's modified_cpts array must contain exactly
+  {NUM_CPTS_TO_REFINE} distinct CPTs representing its complete
+  global refinement set.
 
-Do NOT:
-- change probability values of retained CPTs;
-- modify candidate IDs;
-- add or remove candidates;
-- change any Bayesian Network content.
-
-Repair the JSON syntax and ensure exactly {NUM_CPTS_TO_REFINE} distinct modified CPTs per candidate. Preserve the original CPT content where possible; select allowable CPTs if additions are needed.
+Preserve valid CPT values and candidate IDs wherever possible.
+Do not change the BN structure, nodes, edges, states, or parent lists.
 
 The required output format is:
 
@@ -311,27 +350,6 @@ Return ONLY the repaired valid JSON.
     )
 
 
-def integrate_modified_cpts(baseline_bn, patch):
-    refined_bn = copy.deepcopy(baseline_bn)
-
-    node_lookup = {
-        node["name"]: node
-        for node in refined_bn["nodes"]
-    }
-
-    modified_cpts = patch.get("modified_cpts", [])
-
-    for item in modified_cpts:
-        name = item["name"]
-
-        if name not in node_lookup:
-            raise ValueError(f"Modified CPT node not found in BN: {name}")
-
-        node_lookup[name]["cpt"] = item["cpt"]
-
-    return refined_bn
-
-
 def generate_and_select_best_candidate(
     full_context,
     proposed_bn_filename=PROPOSED_BN_FILE,
@@ -359,10 +377,12 @@ def generate_and_select_best_candidate(
 
     candidate_results = []
 
-    for candidate in candidates:
+    with open(FLAWED_BN_FILE, "r") as f:
+        original_bn = json.load(f)
 
+    for candidate in candidates:
         refined_bn = integrate_modified_cpts(
-            baseline_bn,
+            original_bn,
             candidate
         )
 
@@ -421,8 +441,8 @@ def generate_and_select_best_candidate(
 
 
 ### -----------------------------
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     new_bn = generate_and_select_best_candidate(
         full_context=CONTEXT_AGENT_FILE,
         proposed_bn_filename=PROPOSED_BN_FILE,

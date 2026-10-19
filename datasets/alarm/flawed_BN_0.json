@@ -291,8 +291,8 @@
     {
       "name": "HYPOVOLEMIA",
       "states": [
-        "Hypovolemia",
-        "No_Hypovolemia"
+        "TRUE",
+        "FALSE"
       ],
       "cpt": {
         "values": [
@@ -319,8 +319,8 @@
       "cpt": {
         "parent_state_order": {
           "HYPOVOLEMIA": [
-            "Hypovolemia",
-            "No_Hypovolemia"
+            "TRUE",
+            "FALSE"
           ],
           "LVFAILURE": [
             "TRUE",
@@ -380,8 +380,8 @@
       "cpt": {
         "parent_state_order": {
           "HYPOVOLEMIA": [
-            "Hypovolemia",
-            "No_Hypovolemia"
+            "TRUE",
+            "FALSE"
           ],
           "LVFAILURE": [
             "TRUE",

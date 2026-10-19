@@ -1,0 +1,27 @@
+### Structural Categories and Selection Rules for Cross-Target Evaluation
+
+1. **Direct Neighbor:** Select an eligible parent or child of the primary target (T1) with the highest node degree.
+
+2. **Indirectly Connected:** Compute the median shortest-path distance from T1 among all eligible nodes excluding direct neighbors. If the median falls between two distances, use the smaller value. Select an unselected eligible node at that distance. If none remains, select the unselected eligible node whose distance is closest to the median, preferring the smaller distance in a tie.
+
+3. **Shared Descendant:** Select an eligible node sharing the largest number of descendants with T1, measured by the intersection of their descendant sets.
+
+4. **Hub Node:** Select the eligible node with the highest degree in the BN.
+
+5. **Peripheral Node:** Select an eligible degree-1 node that has not already been selected.
+
+6. **Distant Node:** Select the eligible node with the greatest shortest-path distance from T1.
+
+7. **Multi-Evidence Parent:** Select an eligible node that is a direct parent of at least two evidence nodes. Among qualifying nodes, select the one with the lowest undirected degree.
+
+### General Selection Principles
+
+- **Candidate eligibility:** Exclude T1 and all evidence nodes from cross-target selection.
+- **Structural calculations:** Always use the complete original BN, including T1, evidence nodes, and previously selected targets, when computing graph distances, degrees, and descendant relationships.
+- **Structural basis:** Use the undirected BN skeleton for distances and degrees, and the directed BN for parent–child and descendant relationships.
+- **Distinct targets:** Select one distinct node per category, following the listed order. Previously selected targets are excluded from subsequent candidate selection but remain part of all structural calculations.
+- **Reproducibility:** Break remaining ties alphabetically by node name.
+- **Unavailable categories:** Skip a category if no eligible, unselected candidate satisfies its requirements. For Rule 2, apply its specified distance fallback before skipping.
+- **Independence:** Select targets using only the original BN structure and the specified evidence-node set, without considering inference accuracy or refinement results.
+- **Generalizability:** Apply the same selection procedure across different BNs.
+- **Output:** Report each selected node, its structural category, and a concise justification with relevant structural measurements.

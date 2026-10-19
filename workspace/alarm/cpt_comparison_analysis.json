@@ -1,10 +1,9 @@
 {
   "bn_number": null,
-  "agent_changed_cpt_count": 3,
+  "agent_changed_cpt_count": 2,
   "agent_changed_cpts": [
     "CVP",
-    "LVEDVOLUME",
-    "STROKEVOLUME"
+    "LVEDVOLUME"
   ],
   "agent_change_report": {
     "verdict": "good",
@@ -14,11 +13,10 @@
       "HYPOVOLEMIA",
       "LVEDVOLUME"
     ],
-    "agent_changed_count": 3,
+    "agent_changed_count": 2,
     "agent_changed_cpts": [
       "CVP",
-      "LVEDVOLUME",
-      "STROKEVOLUME"
+      "LVEDVOLUME"
     ],
     "matched_expected_count": 1,
     "matched_expected_cpts": [
@@ -28,13 +26,12 @@
     "missed_expected_cpts": [
       "HYPOVOLEMIA"
     ],
-    "unexpected_changed_count": 2,
+    "unexpected_changed_count": 1,
     "unexpected_changed_cpts": [
-      "CVP",
-      "STROKEVOLUME"
+      "CVP"
     ],
     "unflawed_cpt_count": 35,
-    "untouched_unflawed_count": 33,
+    "untouched_unflawed_count": 34,
     "untouched_unflawed_cpts": [
       "ANAPHYLAXIS",
       "ARTCO2",
@@ -64,6 +61,7 @@
       "PVSAT",
       "SAO2",
       "SHUNT",
+      "STROKEVOLUME",
       "TPR",
       "VENTALV",
       "VENTLUNG",
@@ -71,7 +69,7 @@
       "VENTTUBE"
     ],
     "expected_change_recall": 0.5,
-    "unexpected_change_rate": 0.0571,
-    "unflawed_preservation_rate": 0.9429
+    "unexpected_change_rate": 0.0286,
+    "unflawed_preservation_rate": 0.9714
   }
 }

@@ -86,18 +86,13 @@ def build_return_object(best_bn_number, baseline_bn, response_json):
 
 
 def format_analysis_record(record):
-    refinement_recommendation = record.get(
-        "refinement_recommendation",
-        {}
-    )
+    cpt_report = record.get("cpt_danger_report", {})
 
-    if isinstance(refinement_recommendation, str):
+    if isinstance(cpt_report, str):
         try:
-            refinement_recommendation = json.loads(
-                refinement_recommendation
-            )
+            cpt_report = json.loads(cpt_report)
         except Exception:
-            refinement_recommendation = {}
+            cpt_report = {}
 
     return f"""
 BN NUMBER:
@@ -112,8 +107,14 @@ SUCCESS COUNT:
 ACCURACY:
 {record.get("accuracy", "unknown")}
 
-REFINEMENT RECOMMENDATION:
-{json.dumps(refinement_recommendation, indent=2)}
+FAILURE SCENARIOS:
+{record.get("failure_scenarios_text", "No failure scenarios available.")}
+
+SUCCESS SCENARIOS:
+{record.get("success_scenarios_text", "No success scenarios available.")}
+
+CPT DANGER REPORT:
+{json.dumps(cpt_report, indent=2)}
 """
 
 
@@ -334,7 +335,7 @@ def generate_and_select_best_candidate(
         proposed_bn_filename=proposed_bn_filename,
         bn_analysis_filename=bn_analysis_filename,
         temperature=temperature,
-        oracle=relevant_nodes
+        oracle= relevant_nodes
     )
 
     best_bn_number = refinement_output["best_bn_number"]
@@ -361,6 +362,7 @@ def generate_and_select_best_candidate(
 
         candidate_results.append({
             "candidate_id": candidate["candidate_id"],
+            "patch": candidate,
             "bn": refined_bn,
             "accuracy": accuracy,
             "failure_count": len(failures),
@@ -375,12 +377,6 @@ def generate_and_select_best_candidate(
             f"Successes = {len(successes)}"
         )
 
-        print("Patch:")
-        print(json.dumps(
-            candidate.get("modified_cpts", []),
-            indent=2
-        ))
-
     best_candidate = min(
         candidate_results,
         key=lambda x: (
@@ -392,7 +388,8 @@ def generate_and_select_best_candidate(
     print("\n========================================")
     print("BEST REFINEMENT CANDIDATE")
     print("========================================")
-    print(f"Candidate {best_candidate['candidate_id']}")
+    print(f"Candidate: {best_candidate['candidate_id']}")
+    print(f"Modified CPTs: {[x['name'] for x in best_candidate['patch']['modified_cpts']]}")
     print(f"Accuracy: {best_candidate['accuracy']:.4f}")
     print(f"Failures: {best_candidate['failure_count']}")
     print(f"Successes: {best_candidate['success_count']}")
@@ -411,10 +408,11 @@ def generate_and_select_best_candidate(
 
 
 ### -----------------------------
+
 if __name__ == "__main__":
-    
+
     new_bn = generate_and_select_best_candidate(
-        full_context=read_file(CONTEXT_AGENT_FILE),
+        full_context=CONTEXT_AGENT_FILE,
         proposed_bn_filename=PROPOSED_BN_FILE,
         bn_analysis_filename=BN_ANALYSIS_FILE,
         train_csv=TRAIN_CSV,
@@ -422,3 +420,4 @@ if __name__ == "__main__":
     )
 
     store_new_bn(2, new_bn)
+    

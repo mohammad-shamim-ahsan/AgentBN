@@ -8,16 +8,19 @@ The following information is provided:
 1. Domain context:
 {full_context}
 
-2. Number of CPTs requiring refinement:
+2. Global number of CPTs requiring refinement:
 {num_cpts_to_refine}
 
-3. Selected baseline BN for refinement:
+3. CPTs already modified in the selected baseline BN relative to the original deployed BN:
+{baseline_modified_cpts}
+
+4. Selected baseline BN for refinement:
 {baseline_bn}
 
-4. Analysis record of the selected baseline BN:
+5. Analysis record of the selected baseline BN:
 {analysis_record}
 
-5. Oracle-provided relevant nodes:
+6. Oracle-provided relevant nodes:
 {oracle}
 
 The oracle identifies BN nodes relevant to the current reasoning and decision-making task. Use these nodes ONLY as focused structural guidance when reasoning about parameter modifications, including their dependencies, causal paths, and effects on the target prediction.
@@ -34,22 +37,20 @@ A scenario is considered successful only if all of the following conditions are 
 2. The posterior probability of the predicted root cause is at least {min_confidence}; and
 3. The difference between the posterior probability of the predicted root cause and that of the second most probable root cause is at least {min_margin}.
 
-Therefore, a scenario is considered a failure if any one of the following conditions holds:
-
-1. The predicted root cause does not match the "Ground Truth";
-2. The posterior probability of the predicted root cause is less than {min_confidence}; or
-3. The difference between the posterior probabilities of the most probable and the second most probable root causes is less than {min_margin}.
+A scenario is considered a failure if any of the above conditions is not satisfied.
 
 ---
 ## REFINEMENT TASK
 
 The selected baseline BN has already been determined by the workflow.
 
-The number of CPTs requiring refinement is known: {num_cpts_to_refine}, but their identities are unknown.
+The total number of CPTs requiring refinement is known: {num_cpts_to_refine}, but their identities are unknown. This is a global constraint relative to the original deployed BN, not a per-iteration constraint.
+
+The selected baseline BN may already contain refined CPTs, as indicated by {baseline_modified_cpts}. Consider these previously modified CPTs when selecting CPTs for further refinement.
 
 The "cpt_danger_report" is produced by the refinement recommendation stage and defines the allowable CPT refinement search space.
 
-If "reported_risk_level" is not "none", only CPTs listed in "dangerous_cpts" may be modified, provided that the report contains at least {num_cpts_to_refine} CPTs. Every other CPT must remain identical to the selected baseline BN, except under the insufficient-CPT fallback rule below.
+If "reported_risk_level" is not "none", only CPTs listed in "dangerous_cpts" may be modified, provided that the report contains at least {num_cpts_to_refine} CPTs.
 
 If "reported_risk_level" is "none", the recommendation stage could not identify any individual CPT with sufficient evidence for targeted refinement. This does not imply that the baseline BN is correct.
 
@@ -59,15 +60,17 @@ If "reported_risk_level" is not "none" but "dangerous_cpts" contains fewer than 
 
 Use any "recommended_adjustment" directions as guidance, not as prescribed probability values.
 
-The graph structure, nodes, edges, states, parent lists, and `parent_state_order` are FIXED and must remain unchanged.
+The proposed CPTs must preserve the original "parent_state_order" and CPT dimensions.
 
 Generate 3 independent refinement candidates.
 
-Each candidate represents one complete BN refinement hypothesis and must modify exactly {num_cpts_to_refine} allowable CPTs.
+Each candidate represents one complete BN refinement hypothesis and must specify exactly {num_cpts_to_refine} distinct CPTs as its global refinement set.
+
+Previously modified CPTs may be retained with their current values, further refined, or excluded from a candidate, subject to the allowable refinement search space.
 
 The candidates should represent distinct refinement strategies rather than minor numerical variations.
 
-For each candidate, determine the parameter modifications using the "cpt_danger_report", domain context, BN semantics, and the recorded failure and success scenarios.
+For each candidate, determine the parameter modifications using the selected baseline BN, "cpt_danger_report", domain context, BN semantics, and the recorded failure and success scenarios.
 
 Prefer the smallest set of parameter modifications within the selected CPTs that corrects the recorded failure scenarios while preserving the recorded success scenarios.
 
@@ -92,7 +95,9 @@ Return ONLY valid JSON.
 
 Do NOT return the complete Bayesian Network.
 
-The JSON structure below is illustrative. The "modified_cpts" array must contain exactly {num_cpts_to_refine} CPT entries for each candidate, regardless of the number of entries shown in the example.
+The JSON structure below is illustrative. The "modified_cpts" array represents the complete set of CPTs selected for refinement relative to the original deployed BN, not merely CPTs changed during the current refinement iteration.
+
+Each candidate must contain exactly {num_cpts_to_refine} distinct CPT entries.
 
 The output must follow this structure exactly:
 {{

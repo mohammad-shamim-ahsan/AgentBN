@@ -29,7 +29,6 @@ BASELINE_RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 GROUND_TRUTH_BN_FILE = DATASET_DIR / "BN_gt.json"
 
 FLAWED_BN_FILE = DATASET_DIR / "flawed_BN_0.json"   
-# FLAWED_BN_FILE = DATASET_DIR / "flawed_BN_1.json"   
 
 TRAIN_CSV = DATASET_DIR / "combined_train_scenarios.csv"
 
@@ -179,6 +178,17 @@ elif BENCHMARK == "alarm":
         "CVP",
         "PCWP",
     }
+
+    # Targets for cross-target evaluation (Experiment A)
+    CROSS_TARGET_NODES = [
+        "LVEDVOLUME",   # Direct neighbor
+        "PVSAT",        # Indirectly connected
+        "LVFAILURE",    # Shared descendant
+        "VENTLUNG",     # Hub node
+        "ANAPHYLAXIS",  # Peripheral node
+        "MINVOLSET",    # Distant node
+        "ERRCAUTER",    # Multi-Evidence Parent node
+    ]
 
     TARGET_NODES_FOR_VALIDATION = {
         "HISTORY",

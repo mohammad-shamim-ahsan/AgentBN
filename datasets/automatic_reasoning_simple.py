@@ -31,7 +31,7 @@ def load_bn(filename):
 # Step 4: Batch Evaluation
 # ============================================================
 
-def call_bn_inference(model, df):
+def call_bn_inference(model, df, target_node=TARGET_NODE):
 
     results = []
 
@@ -56,12 +56,12 @@ def call_bn_inference(model, df):
 
         result = run_inference(
             model,
-            query=TARGET_NODE,
+            query=target_node,
             evidence=evidence
         )
 
         pred_idx = np.argmax(result.values)
-        pred_state = result.state_names[TARGET_NODE][pred_idx]
+        pred_state = result.state_names[target_node][pred_idx]
         confidence = result.values[pred_idx]
 
         probs = sorted(result.values, reverse=True)
@@ -72,7 +72,7 @@ def call_bn_inference(model, df):
         posterior_probs = {
             state: float(prob)
             for state, prob in zip(
-                result.state_names[TARGET_NODE],
+                result.state_names[target_node],
                 result.values
             )
         }
@@ -100,18 +100,19 @@ def call_bn_inference(model, df):
 # Step 5: Run Evaluation
 # ============================================================
 
-def run_evaluation(bn_json, dataset_file):
+def run_evaluation(bn_json, dataset_file, target_node=TARGET_NODE):
 
     model = build_model(bn_json)
 
     if isinstance(dataset_file, pd.DataFrame):
         df = dataset_file.copy()
     else:
-        df = pd.read_csv(dataset_file)
+        df = pd.read_csv(dataset_file, dtype={"Ground Truth": str})
+        # df["Ground Truth"] = df["Ground Truth"].str.upper()
         
     df.columns = df.columns.str.strip()
 
-    results = call_bn_inference(model, df)
+    results = call_bn_inference(model, df, target_node=target_node)
 
     results_df = pd.DataFrame(results)
 
@@ -145,29 +146,27 @@ def run_evaluation(bn_json, dataset_file):
 # ============================================================
 # MAIN
 # ============================================================
+
 if __name__ == "__main__":
+
     print(f"BENCHMARK = {BENCHMARK!r}")
 
     DATASET_DIR = Path("datasets") / BENCHMARK
-
-    # INITIAL_SCENARIOS_FILE = DATASET_DIR / "Scenarios.csv"
-    # FINAL_OUTPUT_FILE = DATASET_DIR / "final_validated_dataset.csv"
 
     TRAIN_CSV = DATASET_DIR / "combined_train_scenarios.csv"
     TEST_CSV = DATASET_DIR / "combined_test_scenarios.csv"
     
     GT_BN_FILE = DATASET_DIR / "BN_gt.json"
     FLAWED_BN_FILE = DATASET_DIR / "flawed_BN_0.json"
-
-    # bn_json = load_bn(FLAWED_BN_FILE) ### --- change manually
-
-    # failures, successes, accuracy, results = run_evaluation(bn_json, TEST_CSV) ### --- change manually
     
     # # ============================================================
     # # Batch EM evaluation
     # # ============================================================
     
-    full_train_data = pd.read_csv(TRAIN_CSV)
+    full_train_data = pd.read_csv(
+        TRAIN_CSV,
+        dtype={"Ground Truth": str}
+    )
 
     # Must exactly match batch_em.py
     full_train_data = full_train_data.sample(
@@ -180,66 +179,86 @@ if __name__ == "__main__":
         4,
     )
 
+    # ============================================================
+    # Step X: Evaluate each independently learned Batch EM BN
+    # ============================================================
+    for learned_subset_id in range(1, 5):
+
+        print("\n" + "=" * 60)
+        print(
+            f"EM BN LEARNED FROM SUBSET "
+            f"{learned_subset_id}"
+        )
+        print("=" * 60)
+
+        # Load the BN learned from this subset
+        bn_json = get_bn(
+            BATCH_EM_BN_FILE,
+            bn_number=100,
+            oracle_size=0,
+            subset_id=learned_subset_id,
+        )
+
+        # --------------------------------------------------------
+        # Evaluate on all training subsets
+        # --------------------------------------------------------
+        for eval_subset_id, subset_df in enumerate(
+            train_subsets,
+            start=1,
+        ):
+
+            failures, successes, accuracy, results = run_evaluation(
+                bn_json,
+                subset_df,
+            )
+
+            if eval_subset_id == learned_subset_id:
+                label = "Own training"
+            else:
+                label = "Cross-training"
+
+            print(
+                f"{label} subset "
+                f"{eval_subset_id}: "
+                f"{accuracy * 100:.2f}%"
+            )
+
+        # --------------------------------------------------------
+        # Evaluate on common held-out test set
+        # --------------------------------------------------------
+        failures, successes, accuracy, results = run_evaluation(
+            bn_json,
+            TEST_CSV,
+        )
+
+        print(
+            f"Held-out test: "
+            f"{accuracy * 100:.2f}%"
+        )
+
+        # --------------------------------------------------------
+        # Evaluate on cross-target test datasets
+        # --------------------------------------------------------
+        for target_index, target in enumerate(CROSS_TARGET_NODES, start=2):
+
+            cross_target_csv = (
+                DATASET_DIR / f"combined_test_scenarios_t{target_index}.csv"
+            )
+
+            failures, successes, accuracy, results = run_evaluation(
+                bn_json,
+                cross_target_csv,
+                target_node=target,
+            )
+
+            print(
+                f"Cross-target T{target_index} ({target}): "
+                f"{accuracy * 100:.2f}%"
+            )
+
+
     # # ============================================================
-    # # Evaluate each independently learned Batch EM BN
-    # # ============================================================
-    # for learned_subset_id in range(1, 5):
-
-    #     print("\n" + "=" * 60)
-    #     print(
-    #         f"BN LEARNED FROM SUBSET "
-    #         f"{learned_subset_id}"
-    #     )
-    #     print("=" * 60)
-
-    #     # Load the BN learned from this subset
-    #     bn_json = get_bn(
-    #         BATCH_EM_BN_FILE,
-    #         bn_number=100,
-    #         oracle_size=4,
-    #         subset_id=learned_subset_id,
-    #     )
-
-    #     # --------------------------------------------------------
-    #     # Evaluate on all training subsets
-    #     # --------------------------------------------------------
-    #     for eval_subset_id, subset_df in enumerate(
-    #         train_subsets,
-    #         start=1,
-    #     ):
-
-    #         failures, successes, accuracy, results = run_evaluation(
-    #             bn_json,
-    #             subset_df,
-    #         )
-
-    #         if eval_subset_id == learned_subset_id:
-    #             label = "Own training"
-    #         else:
-    #             label = "Cross-training"
-
-    #         print(
-    #             f"{label} subset "
-    #             f"{eval_subset_id}: "
-    #             f"{accuracy * 100:.2f}%"
-    #         )
-
-    #     # --------------------------------------------------------
-    #     # Evaluate on common held-out test set
-    #     # --------------------------------------------------------
-    #     failures, successes, accuracy, results = run_evaluation(
-    #         bn_json,
-    #         TEST_CSV,
-    #     )
-
-    #     print(
-    #         f"Held-out test: "
-    #         f"{accuracy * 100:.2f}%"
-    #     )
-
-
-    # # ============================================================
-    # # Evaluate original flawed BN
+    # # Step Y: Evaluate original flawed BN
     # # ============================================================
     
     # print("\n" + "=" * 60)
@@ -274,9 +293,26 @@ if __name__ == "__main__":
     #     f"{accuracy * 100:.2f}%"
     # )
 
+    # # ============================================================
+    # # Evaluate original flawed BN on cross-target test datasets
+    # # ============================================================
+
+    # for target_index, target in enumerate(CROSS_TARGET_NODES, start=2):
+    #     cross_target_csv = DATASET_DIR / f"combined_test_scenarios_t{target_index}.csv"
+
+    #     failures, successes, accuracy, results = run_evaluation(
+    #         flawed_bn_json,
+    #         cross_target_csv,
+    #         target_node=target,
+    #     )
+
+    #     print(
+    #         f"Cross-target T{target_index} ({target}): "
+    #         f"{accuracy * 100:.2f}%"
+    #     )
 
     # ============================================================
-    # Evaluate each independently learned AgentBN
+    # Step Z: Evaluate each independently learned AgentBN
     # ============================================================
     for learned_subset_id in range(1, 5):
 
@@ -350,3 +386,23 @@ if __name__ == "__main__":
             f"Held-out test: "
             f"{accuracy * 100:.2f}%"
         )
+
+        # --------------------------------------------------------
+        # Evaluate on cross-target test datasets
+        # --------------------------------------------------------
+        for target_index, target in enumerate(CROSS_TARGET_NODES, start=2):
+
+            cross_target_csv = (
+                DATASET_DIR / f"combined_test_scenarios_t{target_index}.csv"
+            )
+
+            failures, successes, accuracy, results = run_evaluation(
+                bn_json,
+                cross_target_csv,
+                target_node=target,
+            )
+
+            print(
+                f"Cross-target T{target_index} ({target}): "
+                f"{accuracy * 100:.2f}%"
+            )

@@ -2,29 +2,45 @@
 
 set -o pipefail
 
-BENCHMARK="${1:?Usage: $0 <alarm|der|lung_cancer>}"
+BENCHMARK="${1:?Usage: $0 <alarm|der|lung_cancer> <reasoning|validation>}"
+MODE="${2:?Usage: $0 <alarm|der|lung_cancer> <reasoning|validation>}"
 
 case "$BENCHMARK" in
     alarm|der|lung_cancer)
         ;;
     *)
         echo "Error: Invalid benchmark '$BENCHMARK'"
-        echo "Usage: $0 <alarm|der|lung_cancer>"
         exit 1
         ;;
 esac
 
-SCRIPT="datasets/automatic_reasoning_simple.py"
+case "$MODE" in
+    reasoning)
+        SCRIPT="datasets/automatic_reasoning_simple.py"
+        ;;
+    validation)
+        SCRIPT="evaluation/bn_validator.py"
+        ;;
+    *)
+        echo "Error: Invalid mode '$MODE'"
+        echo "Usage: $0 <alarm|der|lung_cancer> <reasoning|validation>"
+        exit 1
+        ;;
+esac
+
 LOG_DIR="logs/$BENCHMARK"
 
 mkdir -p "$LOG_DIR"
 
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
-LOG_FILE="$LOG_DIR/evaluation_$TIMESTAMP.log"
+LOG_FILE="$LOG_DIR/${MODE}_$TIMESTAMP.log"
 
 echo "Benchmark: $BENCHMARK"
+echo "Mode: $MODE"
+echo "Script: $SCRIPT"
 echo "Log file: $LOG_FILE"
 
+PYTHONPATH="$PWD${PYTHONPATH:+:$PYTHONPATH}" \
 python3 -u "$SCRIPT" > "$LOG_FILE" 2>&1
 
 echo "Exit status: $?"

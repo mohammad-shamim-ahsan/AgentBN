@@ -261,24 +261,24 @@ def compute_average_cpt_kl(gt_bn, prop_bn, target_nodes=None, flawed_bn=normaliz
             total_kl += kl
             total_columns += 1
 
-        flawed_values = np.asarray(
-            flawed_bn[name]["cpt"]["values"],
-            dtype=float
-        )
+    #     flawed_values = np.asarray(
+    #         flawed_bn[name]["cpt"]["values"],
+    #         dtype=float
+    #     )
         
-        if node_kl > EPS:
-            print(f"{name:<30} {node_kl / gt_values.shape[1]:.8f}")
+    #     if node_kl > EPS:
+    #         print(f"{name:<30} {node_kl / gt_values.shape[1]:.8f}")
 
-            for col in range(gt_values.shape[1]):
-                if not np.allclose(gt_values[:, col], prop_values[:, col]):
-                    print(f"  Column {col}:")
-                    print(f"    Flawed : {flawed_values[:, col]}")
-                    print(f"    Prop   : {prop_values[:, col]}")
-                    print(f"    GT     : {gt_values[:, col]}")
+    #         for col in range(gt_values.shape[1]):
+    #             if not np.allclose(gt_values[:, col], prop_values[:, col]):
+    #                 print(f"  Column {col}:")
+    #                 print(f"    Flawed : {flawed_values[:, col]}")
+    #                 print(f"    Prop   : {prop_values[:, col]}")
+    #                 print(f"    GT     : {gt_values[:, col]}")
 
-            print("-" * 70)
+    #         print("-" * 70)
 
-    print("=" * 70)
+    # print("=" * 70)
 
     avg_kl = total_kl / total_columns
 
@@ -310,24 +310,24 @@ def compute_average_cpt_rmse(gt_bn, prop_bn, target_nodes=None, flawed_bn=normal
         total_squared_error += np.sum((gt_values - prop_values) ** 2)
         total_parameters += gt_values.size
 
-        flawed_values = np.asarray(
-            flawed_bn[name]["cpt"]["values"],
-            dtype=float
-        )
+        # flawed_values = np.asarray(
+        #     flawed_bn[name]["cpt"]["values"],
+        #     dtype=float
+        # )
 
-        if node_rmse > EPS:
-            print(f"{name:<30} RMSE = {node_rmse:.8f}")
+    #     if node_rmse > EPS:
+    #         print(f"{name:<30} RMSE = {node_rmse:.8f}")
 
-            for col in range(gt_values.shape[1]):
-                if not np.allclose(gt_values[:, col], prop_values[:, col]):
-                    print(f"  Column {col}:")
-                    print(f"    Flawed : {flawed_values[:, col]}")
-                    print(f"    Prop   : {prop_values[:, col]}")
-                    print(f"    GT     : {gt_values[:, col]}")
+    #         for col in range(gt_values.shape[1]):
+    #             if not np.allclose(gt_values[:, col], prop_values[:, col]):
+    #                 print(f"  Column {col}:")
+    #                 print(f"    Flawed : {flawed_values[:, col]}")
+    #                 print(f"    Prop   : {prop_values[:, col]}")
+    #                 print(f"    GT     : {gt_values[:, col]}")
 
-            print("-" * 70)
+    #         print("-" * 70)
 
-    print("=" * 70)
+    # print("=" * 70)
 
     overall_rmse = np.sqrt(total_squared_error / total_parameters)
 
@@ -372,24 +372,24 @@ def compute_average_cpt_hellinger(gt_bn, prop_bn, target_nodes=None, flawed_bn=n
             total += h
             total_columns += 1
 
-        flawed_values = np.asarray(
-            flawed_bn[name]["cpt"]["values"],
-            dtype=float
-        )
+    #     flawed_values = np.asarray(
+    #         flawed_bn[name]["cpt"]["values"],
+    #         dtype=float
+    #     )
         
-        if node_total > EPS:
-            print(f"{name:<30} Hellinger = {node_total / gt_values.shape[1]:.8f}")
+    #     if node_total > EPS:
+    #         print(f"{name:<30} Hellinger = {node_total / gt_values.shape[1]:.8f}")
 
-            for col in range(gt_values.shape[1]):
-                if not np.allclose(gt_values[:, col], prop_values[:, col]):
-                    print(f"  Column {col}:")
-                    print(f"    Flawed : {flawed_values[:, col]}")
-                    print(f"    Prop   : {prop_values[:, col]}")
-                    print(f"    GT     : {gt_values[:, col]}")
+    #         for col in range(gt_values.shape[1]):
+    #             if not np.allclose(gt_values[:, col], prop_values[:, col]):
+    #                 print(f"  Column {col}:")
+    #                 print(f"    Flawed : {flawed_values[:, col]}")
+    #                 print(f"    Prop   : {prop_values[:, col]}")
+    #                 print(f"    GT     : {gt_values[:, col]}")
 
-            print("-" * 70)
+    #         print("-" * 70)
 
-    print("=" * 70)
+    # print("=" * 70)
 
     overall = total / total_columns
 
@@ -404,31 +404,33 @@ if __name__ == "__main__":
 
     train_csv=TRAIN_CSV
 
-    # best_bn_number, best_bn_accuracy = get_best_bn_number(
-    #     PROPOSED_BN_FILE, train_csv=train_csv
-    # )
-
-    # print("Best BN Number:", best_bn_number)
-    # print("Best BN Accuracy:", best_bn_accuracy)
-
-    # final_output = compare_all_cpts(bn_number=best_bn_number)
-    # print(final_output)
-
     gt_bn = normalize_bn(read_json(GROUND_TRUTH_BN_FILE))
-    # prop_bn = normalize_bn(get_bn(PROPOSED_BN_FILE, bn_number=best_bn_number))
     flawed_bn = normalize_bn(read_json(FLAWED_BN_FILE))
 
     EM_ITERATIONS = 100
-    ORACLE_SIZE = 4
+    ORACLE_SIZE = 0
     NUM_SUBSETS = 4
 
     for subset_id in range(1, NUM_SUBSETS + 1):
 
         # ---------------------------------
-        # LOAD AGENTBN FOR THIS SUBSET
+        # LOAD Batch EM BN FOR THIS SUBSET
         # ---------------------------------
 
-        prop_bn = None
+        em_bn = normalize_bn(
+            get_bn(
+                BATCH_EM_BN_FILE,
+                bn_number=EM_ITERATIONS,
+                oracle_size=ORACLE_SIZE,
+                subset_id=subset_id,
+            )
+        )
+
+        # ---------------------------------
+        # LOAD AgentBN FOR THIS SUBSET
+        # ---------------------------------
+
+        agent_bn = None
 
         with open(
             AGENTBN_SUBSET_BN_FILE,
@@ -444,65 +446,47 @@ if __name__ == "__main__":
                 record = json.loads(line)
 
                 if record.get("subset_id") == subset_id:
-                    prop_bn = normalize_bn(record["bn"])
+                    agent_bn = normalize_bn(record["bn"])
                     break
 
-        if prop_bn is None:
+        if agent_bn is None:
             raise ValueError(
                 f"No AgentBN found for subset_id={subset_id}"
             )
 
         # ---------------------------------
-        # VALIDATION
+        # VALIDATE BOTH METHODS
         # ---------------------------------
 
-        print("\n" + "=" * 60)
-        print(
-            f"Validating AgentBN "
-            f"(subset_id={subset_id})"
-        )
-        print("=" * 60)
+        for method_name, prop_bn in [
+            ("Batch EM", em_bn),
+            ("AgentBN", agent_bn),
+        ]:
 
+            print("\n" + "=" * 60)
+            print(
+                f"Validating {method_name} "
+                f"(subset_id={subset_id})"
+            )
+            print("=" * 60)
 
-        # ---------------------------------
-        # LOAD Batch EM BN FOR THIS SUBSET
-        # ---------------------------------
+            compute_average_cpt_kl(
+                gt_bn,
+                prop_bn,
+                target_nodes=None,
+                flawed_bn=flawed_bn,
+            )
 
-        # prop_bn = normalize_bn(
-        #     get_bn(
-        #         BATCH_EM_BN_FILE,
-        #         bn_number=EM_ITERATIONS,
-        #         oracle_size=ORACLE_SIZE,
-        #         subset_id=subset_id,
-        #     )
-        # )
+            compute_average_cpt_rmse(
+                gt_bn,
+                prop_bn,
+                target_nodes=None,
+                flawed_bn=flawed_bn,
+            )
 
-        # print("\n" + "=" * 60)
-        # print(
-        #     f"Validating Batch EM BN "
-        #     f"(iterations={EM_ITERATIONS}, "
-        #     f"oracle_size={ORACLE_SIZE}, "
-        #     f"subset_id={subset_id})"
-        # )
-        # print("=" * 60)
-
-        compute_average_cpt_kl(
-            gt_bn,
-            prop_bn,
-            target_nodes=None,
-            flawed_bn=flawed_bn,
-        )
-
-        compute_average_cpt_rmse(
-            gt_bn,
-            prop_bn,
-            target_nodes=None,
-            flawed_bn=flawed_bn,
-        )
-
-        compute_average_cpt_hellinger(
-            gt_bn,
-            prop_bn,
-            target_nodes=None,
-            flawed_bn=flawed_bn,
-        )
+            compute_average_cpt_hellinger(
+                gt_bn,
+                prop_bn,
+                target_nodes=None,
+                flawed_bn=flawed_bn,
+            )

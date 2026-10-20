@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import json
 
 
 # ======================================================
@@ -179,16 +180,16 @@ elif BENCHMARK == "alarm":
         "PCWP",
     }
 
-    # Targets for cross-target evaluation (Experiment A)
-    CROSS_TARGET_NODES = [
-        "LVEDVOLUME",   # Direct neighbor
-        "PVSAT",        # Indirectly connected
-        "LVFAILURE",    # Shared descendant
-        "VENTLUNG",     # Hub node
-        "ANAPHYLAXIS",  # Peripheral node
-        "MINVOLSET",    # Distant node
-        "ERRCAUTER",    # Multi-Evidence Parent node
-    ]
+    # # Targets for cross-target evaluation (Experiment A)
+    # CROSS_TARGET_NODES = [
+    #     "LVEDVOLUME",   # Direct neighbor
+    #     "PVSAT",        # Indirectly connected
+    #     "LVFAILURE",    # Shared descendant
+    #     "VENTLUNG",     # Hub node
+    #     "ANAPHYLAXIS",  # Peripheral node
+    #     "MINVOLSET",    # Distant node
+    #     "ERRCAUTER",    # Multi-Evidence Parent node
+    # ]
 
     TARGET_NODES_FOR_VALIDATION = {
         "HISTORY",
@@ -238,6 +239,23 @@ elif BENCHMARK == "alarm":
 
 else:
     raise ValueError(f"Unknown experiment: {BENCHMARK}") 
+
+
+# ======================================================
+# CROSS-TARGET NODES
+# ======================================================
+
+with open(GROUND_TRUTH_BN_FILE, "r") as f:
+    bn_json = json.load(f)
+
+CROSS_TARGET_NODES = [
+    node["name"]
+    for node in bn_json["nodes"]
+    if node["name"] not in EVIDENCE_NODES
+    and node["name"] != TARGET_NODE
+]
+
+print(f"Number of cross-target nodes: {len(CROSS_TARGET_NODES)}")
 
 
 # ======================================================

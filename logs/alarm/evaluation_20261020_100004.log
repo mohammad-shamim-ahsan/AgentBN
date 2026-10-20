@@ -1,0 +1,978 @@
+/home/shamim_ist/hugging_face_venv/lib/python3.12/site-packages/pgmpy/estimators/__init__.py:4: FutureWarning: `pgmpy.estimators.StructureScore` is deprecated and will be removed in a future release. Use `pgmpy.structure_score` instead.
+  from .StructureScore import (
+Number of cross-target nodes: 29
+BENCHMARK = 'alarm'
+/home/shamim_ist/hugging_face_venv/lib/python3.12/site-packages/numpy/_core/fromnumeric.py:57: FutureWarning: 'DataFrame.swapaxes' is deprecated and will be removed in a future version. Please use 'DataFrame.transpose' instead.
+  return bound(*args, **kwds)
+
+============================================================
+EM BN LEARNED FROM SUBSET 1
+============================================================
+
+Accuracy: 100.0 %
+Own training subset 1: 100.00%
+
+Accuracy: 100.0 %
+Cross-training subset 2: 100.00%
+
+Accuracy: 100.0 %
+Cross-training subset 3: 100.00%
+
+Accuracy: 100.0 %
+Cross-training subset 4: 100.00%
+
+Accuracy: 100.0 %
+Held-out test: 100.00%
+
+Accuracy: 99.2 %
+Cross-target T2 (HISTORY): 99.20%
+
+Accuracy: 87.08 %
+Cross-target T3 (LVEDVOLUME): 87.08%
+
+Accuracy: 97.72 %
+Cross-target T4 (LVFAILURE): 97.72%
+
+Accuracy: 89.81 %
+Cross-target T5 (STROKEVOLUME): 89.81%
+
+Accuracy: 81.51 %
+Cross-target T6 (ERRLOWOUTPUT): 81.51%
+
+Accuracy: 75.56 %
+Cross-target T7 (ERRCAUTER): 75.56%
+
+Accuracy: 100.0 %
+Cross-target T8 (INSUFFANESTH): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T9 (ANAPHYLAXIS): 100.00%
+
+Accuracy: 57.77 %
+Cross-target T10 (TPR): 57.77%
+
+Accuracy: 100.0 %
+Cross-target T11 (KINKEDTUBE): 100.00%
+
+Accuracy: 86.66 %
+Cross-target T12 (MINVOL): 86.66%
+
+Accuracy: 100.0 %
+Cross-target T13 (FIO2): 100.00%
+
+Accuracy: 89.97 %
+Cross-target T14 (PVSAT): 89.97%
+
+Accuracy: 86.82 %
+Cross-target T15 (SAO2): 86.82%
+
+Accuracy: 100.0 %
+Cross-target T16 (PAP): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T17 (PULMEMBOLUS): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T18 (SHUNT): 100.00%
+
+Accuracy: 98.15 %
+Cross-target T19 (INTUBATION): 98.15%
+
+Accuracy: 55.98 %
+Cross-target T20 (PRESS): 55.98%
+
+Accuracy: 100.0 %
+Cross-target T21 (DISCONNECT): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T22 (MINVOLSET): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T23 (VENTMACH): 100.00%
+
+Accuracy: 77.28 %
+Cross-target T24 (VENTTUBE): 77.28%
+
+Accuracy: 89.73 %
+Cross-target T25 (VENTLUNG): 89.73%
+
+Accuracy: 83.03 %
+Cross-target T26 (VENTALV): 83.03%
+
+Accuracy: 85.77 %
+Cross-target T27 (ARTCO2): 85.77%
+
+Accuracy: 83.92 %
+Cross-target T28 (CATECHOL): 83.92%
+
+Accuracy: 59.93 %
+Cross-target T29 (HR): 59.93%
+
+Accuracy: 52.86 %
+Cross-target T30 (CO): 52.86%
+Macro cross-target accuracy: 87.54%
+Weighted cross-target accuracy: 89.06%
+
+============================================================
+EM BN LEARNED FROM SUBSET 2
+============================================================
+
+Accuracy: 100.0 %
+Cross-training subset 1: 100.00%
+
+Accuracy: 100.0 %
+Own training subset 2: 100.00%
+
+Accuracy: 100.0 %
+Cross-training subset 3: 100.00%
+
+Accuracy: 100.0 %
+Cross-training subset 4: 100.00%
+
+Accuracy: 100.0 %
+Held-out test: 100.00%
+
+Accuracy: 99.71 %
+Cross-target T2 (HISTORY): 99.71%
+
+Accuracy: 87.08 %
+Cross-target T3 (LVEDVOLUME): 87.08%
+
+Accuracy: 99.31 %
+Cross-target T4 (LVFAILURE): 99.31%
+
+Accuracy: 89.27 %
+Cross-target T5 (STROKEVOLUME): 89.27%
+
+Accuracy: 87.25 %
+Cross-target T6 (ERRLOWOUTPUT): 87.25%
+
+Accuracy: 76.93 %
+Cross-target T7 (ERRCAUTER): 76.93%
+
+Accuracy: 100.0 %
+Cross-target T8 (INSUFFANESTH): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T9 (ANAPHYLAXIS): 100.00%
+
+Accuracy: 62.83 %
+Cross-target T10 (TPR): 62.83%
+
+Accuracy: 100.0 %
+Cross-target T11 (KINKEDTUBE): 100.00%
+
+Accuracy: 65.55 %
+Cross-target T12 (MINVOL): 65.55%
+
+Accuracy: 100.0 %
+Cross-target T13 (FIO2): 100.00%
+
+Accuracy: 90.42 %
+Cross-target T14 (PVSAT): 90.42%
+
+Accuracy: 88.52 %
+Cross-target T15 (SAO2): 88.52%
+
+Accuracy: 100.0 %
+Cross-target T16 (PAP): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T17 (PULMEMBOLUS): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T18 (SHUNT): 100.00%
+
+Accuracy: 98.09 %
+Cross-target T19 (INTUBATION): 98.09%
+
+Accuracy: 55.98 %
+Cross-target T20 (PRESS): 55.98%
+
+Accuracy: 100.0 %
+Cross-target T21 (DISCONNECT): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T22 (MINVOLSET): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T23 (VENTMACH): 100.00%
+
+Accuracy: 87.84 %
+Cross-target T24 (VENTTUBE): 87.84%
+
+Accuracy: 63.4 %
+Cross-target T25 (VENTLUNG): 63.40%
+
+Accuracy: 73.91 %
+Cross-target T26 (VENTALV): 73.91%
+
+Accuracy: 66.16 %
+Cross-target T27 (ARTCO2): 66.16%
+
+Accuracy: 60.06 %
+Cross-target T28 (CATECHOL): 60.06%
+
+Accuracy: 52.7 %
+Cross-target T29 (HR): 52.70%
+
+Accuracy: 46.61 %
+Cross-target T30 (CO): 46.61%
+Macro cross-target accuracy: 84.54%
+Weighted cross-target accuracy: 86.60%
+
+============================================================
+EM BN LEARNED FROM SUBSET 3
+============================================================
+
+Accuracy: 100.0 %
+Cross-training subset 1: 100.00%
+
+Accuracy: 100.0 %
+Cross-training subset 2: 100.00%
+
+Accuracy: 100.0 %
+Own training subset 3: 100.00%
+
+Accuracy: 100.0 %
+Cross-training subset 4: 100.00%
+
+Accuracy: 100.0 %
+Held-out test: 100.00%
+
+Accuracy: 97.42 %
+Cross-target T2 (HISTORY): 97.42%
+
+Accuracy: 87.08 %
+Cross-target T3 (LVEDVOLUME): 87.08%
+
+Accuracy: 96.0 %
+Cross-target T4 (LVFAILURE): 96.00%
+
+Accuracy: 76.7 %
+Cross-target T5 (STROKEVOLUME): 76.70%
+
+Accuracy: 84.35 %
+Cross-target T6 (ERRLOWOUTPUT): 84.35%
+
+Accuracy: 68.7 %
+Cross-target T7 (ERRCAUTER): 68.70%
+
+Accuracy: 100.0 %
+Cross-target T8 (INSUFFANESTH): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T9 (ANAPHYLAXIS): 100.00%
+
+Accuracy: 48.21 %
+Cross-target T10 (TPR): 48.21%
+
+Accuracy: 100.0 %
+Cross-target T11 (KINKEDTUBE): 100.00%
+
+Accuracy: 59.41 %
+Cross-target T12 (MINVOL): 59.41%
+
+Accuracy: 100.0 %
+Cross-target T13 (FIO2): 100.00%
+
+Accuracy: 51.72 %
+Cross-target T14 (PVSAT): 51.72%
+
+Accuracy: 53.05 %
+Cross-target T15 (SAO2): 53.05%
+
+Accuracy: 100.0 %
+Cross-target T16 (PAP): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T17 (PULMEMBOLUS): 100.00%
+
+Accuracy: 99.88 %
+Cross-target T18 (SHUNT): 99.88%
+
+Accuracy: 95.35 %
+Cross-target T19 (INTUBATION): 95.35%
+
+Accuracy: 55.98 %
+Cross-target T20 (PRESS): 55.98%
+
+Accuracy: 100.0 %
+Cross-target T21 (DISCONNECT): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T22 (MINVOLSET): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T23 (VENTMACH): 100.00%
+
+Accuracy: 49.41 %
+Cross-target T24 (VENTTUBE): 49.41%
+
+Accuracy: 53.37 %
+Cross-target T25 (VENTLUNG): 53.37%
+
+Accuracy: 32.03 %
+Cross-target T26 (VENTALV): 32.03%
+
+Accuracy: 59.97 %
+Cross-target T27 (ARTCO2): 59.97%
+
+Accuracy: 66.69 %
+Cross-target T28 (CATECHOL): 66.69%
+
+Accuracy: 57.32 %
+Cross-target T29 (HR): 57.32%
+
+Accuracy: 63.55 %
+Cross-target T30 (CO): 63.55%
+Macro cross-target accuracy: 77.80%
+Weighted cross-target accuracy: 81.07%
+
+============================================================
+EM BN LEARNED FROM SUBSET 4
+============================================================
+
+Accuracy: 100.0 %
+Cross-training subset 1: 100.00%
+
+Accuracy: 100.0 %
+Cross-training subset 2: 100.00%
+
+Accuracy: 100.0 %
+Cross-training subset 3: 100.00%
+
+Accuracy: 100.0 %
+Own training subset 4: 100.00%
+
+Accuracy: 100.0 %
+Held-out test: 100.00%
+
+Accuracy: 91.8 %
+Cross-target T2 (HISTORY): 91.80%
+
+Accuracy: 87.08 %
+Cross-target T3 (LVEDVOLUME): 87.08%
+
+Accuracy: 90.12 %
+Cross-target T4 (LVFAILURE): 90.12%
+
+Accuracy: 80.0 %
+Cross-target T5 (STROKEVOLUME): 80.00%
+
+Accuracy: 82.96 %
+Cross-target T6 (ERRLOWOUTPUT): 82.96%
+
+Accuracy: 44.76 %
+Cross-target T7 (ERRCAUTER): 44.76%
+
+Accuracy: 100.0 %
+Cross-target T8 (INSUFFANESTH): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T9 (ANAPHYLAXIS): 100.00%
+
+Accuracy: 60.44 %
+Cross-target T10 (TPR): 60.44%
+
+Accuracy: 100.0 %
+Cross-target T11 (KINKEDTUBE): 100.00%
+
+Accuracy: 67.68 %
+Cross-target T12 (MINVOL): 67.68%
+
+Accuracy: 100.0 %
+Cross-target T13 (FIO2): 100.00%
+
+Accuracy: 88.51 %
+Cross-target T14 (PVSAT): 88.51%
+
+Accuracy: 91.34 %
+Cross-target T15 (SAO2): 91.34%
+
+Accuracy: 100.0 %
+Cross-target T16 (PAP): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T17 (PULMEMBOLUS): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T18 (SHUNT): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T19 (INTUBATION): 100.00%
+
+Accuracy: 83.76 %
+Cross-target T20 (PRESS): 83.76%
+
+Accuracy: 100.0 %
+Cross-target T21 (DISCONNECT): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T22 (MINVOLSET): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T23 (VENTMACH): 100.00%
+
+Accuracy: 98.73 %
+Cross-target T24 (VENTTUBE): 98.73%
+
+Accuracy: 72.31 %
+Cross-target T25 (VENTLUNG): 72.31%
+
+Accuracy: 70.53 %
+Cross-target T26 (VENTALV): 70.53%
+
+Accuracy: 68.25 %
+Cross-target T27 (ARTCO2): 68.25%
+
+Accuracy: 64.18 %
+Cross-target T28 (CATECHOL): 64.18%
+
+Accuracy: 58.88 %
+Cross-target T29 (HR): 58.88%
+
+Accuracy: 56.55 %
+Cross-target T30 (CO): 56.55%
+Macro cross-target accuracy: 84.75%
+Weighted cross-target accuracy: 86.49%
+
+============================================================
+ORIGINAL FLAWED BN
+============================================================
+
+Accuracy: 76.06 %
+Training subset 1: 76.06%
+
+Accuracy: 75.15 %
+Training subset 2: 75.15%
+
+Accuracy: 75.45 %
+Training subset 3: 75.45%
+
+Accuracy: 79.09 %
+Training subset 4: 79.09%
+
+Accuracy: 76.22 %
+Held-out test: 76.22%
+
+Accuracy: 100.0 %
+Cross-target T2 (HISTORY): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T3 (LVEDVOLUME): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T4 (LVFAILURE): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T5 (STROKEVOLUME): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T6 (ERRLOWOUTPUT): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T7 (ERRCAUTER): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T8 (INSUFFANESTH): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T9 (ANAPHYLAXIS): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T10 (TPR): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T11 (KINKEDTUBE): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T12 (MINVOL): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T13 (FIO2): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T14 (PVSAT): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T15 (SAO2): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T16 (PAP): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T17 (PULMEMBOLUS): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T18 (SHUNT): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T19 (INTUBATION): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T20 (PRESS): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T21 (DISCONNECT): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T22 (MINVOLSET): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T23 (VENTMACH): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T24 (VENTTUBE): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T25 (VENTLUNG): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T26 (VENTALV): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T27 (ARTCO2): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T28 (CATECHOL): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T29 (HR): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T30 (CO): 100.00%
+Original BN macro cross-target accuracy: 100.00%
+Original BN weighted cross-target accuracy: 100.00%
+
+============================================================
+AGENTBN LEARNED FROM SUBSET 1
+============================================================
+
+Accuracy: 97.27 %
+Own training subset 1: 97.27%
+
+Accuracy: 96.36 %
+Cross-training subset 2: 96.36%
+
+Accuracy: 96.67 %
+Cross-training subset 3: 96.67%
+
+Accuracy: 96.36 %
+Cross-training subset 4: 96.36%
+
+Accuracy: 96.95 %
+Held-out test: 96.95%
+
+Accuracy: 100.0 %
+Cross-target T2 (HISTORY): 100.00%
+
+Accuracy: 70.12 %
+Cross-target T3 (LVEDVOLUME): 70.12%
+
+Accuracy: 99.66 %
+Cross-target T4 (LVFAILURE): 99.66%
+
+Accuracy: 91.49 %
+Cross-target T5 (STROKEVOLUME): 91.49%
+
+Accuracy: 99.94 %
+Cross-target T6 (ERRLOWOUTPUT): 99.94%
+
+Accuracy: 99.0 %
+Cross-target T7 (ERRCAUTER): 99.00%
+
+Accuracy: 100.0 %
+Cross-target T8 (INSUFFANESTH): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T9 (ANAPHYLAXIS): 100.00%
+
+Accuracy: 94.02 %
+Cross-target T10 (TPR): 94.02%
+
+Accuracy: 100.0 %
+Cross-target T11 (KINKEDTUBE): 100.00%
+
+Accuracy: 99.92 %
+Cross-target T12 (MINVOL): 99.92%
+
+Accuracy: 100.0 %
+Cross-target T13 (FIO2): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T14 (PVSAT): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T15 (SAO2): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T16 (PAP): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T17 (PULMEMBOLUS): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T18 (SHUNT): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T19 (INTUBATION): 100.00%
+
+Accuracy: 99.64 %
+Cross-target T20 (PRESS): 99.64%
+
+Accuracy: 100.0 %
+Cross-target T21 (DISCONNECT): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T22 (MINVOLSET): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T23 (VENTMACH): 100.00%
+
+Accuracy: 99.92 %
+Cross-target T24 (VENTTUBE): 99.92%
+
+Accuracy: 99.76 %
+Cross-target T25 (VENTLUNG): 99.76%
+
+Accuracy: 99.64 %
+Cross-target T26 (VENTALV): 99.64%
+
+Accuracy: 100.0 %
+Cross-target T27 (ARTCO2): 100.00%
+
+Accuracy: 99.42 %
+Cross-target T28 (CATECHOL): 99.42%
+
+Accuracy: 99.22 %
+Cross-target T29 (HR): 99.22%
+
+Accuracy: 90.06 %
+Cross-target T30 (CO): 90.06%
+Macro cross-target accuracy: 97.99%
+Weighted cross-target accuracy: 98.16%
+
+============================================================
+AGENTBN LEARNED FROM SUBSET 2
+============================================================
+
+Accuracy: 97.58 %
+Cross-training subset 1: 97.58%
+
+Accuracy: 96.67 %
+Own training subset 2: 96.67%
+
+Accuracy: 96.97 %
+Cross-training subset 3: 96.97%
+
+Accuracy: 96.36 %
+Cross-training subset 4: 96.36%
+
+Accuracy: 96.95 %
+Held-out test: 96.95%
+
+Accuracy: 100.0 %
+Cross-target T2 (HISTORY): 100.00%
+
+Accuracy: 70.12 %
+Cross-target T3 (LVEDVOLUME): 70.12%
+
+Accuracy: 99.66 %
+Cross-target T4 (LVFAILURE): 99.66%
+
+Accuracy: 84.52 %
+Cross-target T5 (STROKEVOLUME): 84.52%
+
+Accuracy: 99.44 %
+Cross-target T6 (ERRLOWOUTPUT): 99.44%
+
+Accuracy: 99.0 %
+Cross-target T7 (ERRCAUTER): 99.00%
+
+Accuracy: 100.0 %
+Cross-target T8 (INSUFFANESTH): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T9 (ANAPHYLAXIS): 100.00%
+
+Accuracy: 88.32 %
+Cross-target T10 (TPR): 88.32%
+
+Accuracy: 100.0 %
+Cross-target T11 (KINKEDTUBE): 100.00%
+
+Accuracy: 99.75 %
+Cross-target T12 (MINVOL): 99.75%
+
+Accuracy: 100.0 %
+Cross-target T13 (FIO2): 100.00%
+
+Accuracy: 98.85 %
+Cross-target T14 (PVSAT): 98.85%
+
+Accuracy: 99.61 %
+Cross-target T15 (SAO2): 99.61%
+
+Accuracy: 100.0 %
+Cross-target T16 (PAP): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T17 (PULMEMBOLUS): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T18 (SHUNT): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T19 (INTUBATION): 100.00%
+
+Accuracy: 99.64 %
+Cross-target T20 (PRESS): 99.64%
+
+Accuracy: 100.0 %
+Cross-target T21 (DISCONNECT): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T22 (MINVOLSET): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T23 (VENTMACH): 100.00%
+
+Accuracy: 99.92 %
+Cross-target T24 (VENTTUBE): 99.92%
+
+Accuracy: 98.64 %
+Cross-target T25 (VENTLUNG): 98.64%
+
+Accuracy: 99.36 %
+Cross-target T26 (VENTALV): 99.36%
+
+Accuracy: 99.84 %
+Cross-target T27 (ARTCO2): 99.84%
+
+Accuracy: 99.42 %
+Cross-target T28 (CATECHOL): 99.42%
+
+Accuracy: 99.22 %
+Cross-target T29 (HR): 99.22%
+
+Accuracy: 86.97 %
+Cross-target T30 (CO): 86.97%
+Macro cross-target accuracy: 97.32%
+Weighted cross-target accuracy: 97.63%
+
+============================================================
+AGENTBN LEARNED FROM SUBSET 3
+============================================================
+
+Accuracy: 98.48 %
+Cross-training subset 1: 98.48%
+
+Accuracy: 97.88 %
+Cross-training subset 2: 97.88%
+
+Accuracy: 98.18 %
+Own training subset 3: 98.18%
+
+Accuracy: 98.18 %
+Cross-training subset 4: 98.18%
+
+Accuracy: 98.17 %
+Held-out test: 98.17%
+
+Accuracy: 100.0 %
+Cross-target T2 (HISTORY): 100.00%
+
+Accuracy: 70.12 %
+Cross-target T3 (LVEDVOLUME): 70.12%
+
+Accuracy: 99.66 %
+Cross-target T4 (LVFAILURE): 99.66%
+
+Accuracy: 93.87 %
+Cross-target T5 (STROKEVOLUME): 93.87%
+
+Accuracy: 99.94 %
+Cross-target T6 (ERRLOWOUTPUT): 99.94%
+
+Accuracy: 99.0 %
+Cross-target T7 (ERRCAUTER): 99.00%
+
+Accuracy: 100.0 %
+Cross-target T8 (INSUFFANESTH): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T9 (ANAPHYLAXIS): 100.00%
+
+Accuracy: 95.77 %
+Cross-target T10 (TPR): 95.77%
+
+Accuracy: 100.0 %
+Cross-target T11 (KINKEDTUBE): 100.00%
+
+Accuracy: 99.92 %
+Cross-target T12 (MINVOL): 99.92%
+
+Accuracy: 100.0 %
+Cross-target T13 (FIO2): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T14 (PVSAT): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T15 (SAO2): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T16 (PAP): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T17 (PULMEMBOLUS): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T18 (SHUNT): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T19 (INTUBATION): 100.00%
+
+Accuracy: 99.64 %
+Cross-target T20 (PRESS): 99.64%
+
+Accuracy: 100.0 %
+Cross-target T21 (DISCONNECT): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T22 (MINVOLSET): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T23 (VENTMACH): 100.00%
+
+Accuracy: 99.92 %
+Cross-target T24 (VENTTUBE): 99.92%
+
+Accuracy: 99.92 %
+Cross-target T25 (VENTLUNG): 99.92%
+
+Accuracy: 99.82 %
+Cross-target T26 (VENTALV): 99.82%
+
+Accuracy: 100.0 %
+Cross-target T27 (ARTCO2): 100.00%
+
+Accuracy: 99.49 %
+Cross-target T28 (CATECHOL): 99.49%
+
+Accuracy: 99.22 %
+Cross-target T29 (HR): 99.22%
+
+Accuracy: 91.64 %
+Cross-target T30 (CO): 91.64%
+Macro cross-target accuracy: 98.20%
+Weighted cross-target accuracy: 98.33%
+
+============================================================
+AGENTBN LEARNED FROM SUBSET 4
+============================================================
+
+Accuracy: 97.58 %
+Cross-training subset 1: 97.58%
+
+Accuracy: 96.67 %
+Cross-training subset 2: 96.67%
+
+Accuracy: 96.97 %
+Cross-training subset 3: 96.97%
+
+Accuracy: 96.36 %
+Own training subset 4: 96.36%
+
+Accuracy: 96.95 %
+Held-out test: 96.95%
+
+Accuracy: 100.0 %
+Cross-target T2 (HISTORY): 100.00%
+
+Accuracy: 70.12 %
+Cross-target T3 (LVEDVOLUME): 70.12%
+
+Accuracy: 99.66 %
+Cross-target T4 (LVFAILURE): 99.66%
+
+Accuracy: 91.03 %
+Cross-target T5 (STROKEVOLUME): 91.03%
+
+Accuracy: 99.33 %
+Cross-target T6 (ERRLOWOUTPUT): 99.33%
+
+Accuracy: 97.69 %
+Cross-target T7 (ERRCAUTER): 97.69%
+
+Accuracy: 100.0 %
+Cross-target T8 (INSUFFANESTH): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T9 (ANAPHYLAXIS): 100.00%
+
+Accuracy: 88.96 %
+Cross-target T10 (TPR): 88.96%
+
+Accuracy: 100.0 %
+Cross-target T11 (KINKEDTUBE): 100.00%
+
+Accuracy: 99.92 %
+Cross-target T12 (MINVOL): 99.92%
+
+Accuracy: 100.0 %
+Cross-target T13 (FIO2): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T14 (PVSAT): 100.00%
+
+Accuracy: 99.8 %
+Cross-target T15 (SAO2): 99.80%
+
+Accuracy: 100.0 %
+Cross-target T16 (PAP): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T17 (PULMEMBOLUS): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T18 (SHUNT): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T19 (INTUBATION): 100.00%
+
+Accuracy: 99.64 %
+Cross-target T20 (PRESS): 99.64%
+
+Accuracy: 100.0 %
+Cross-target T21 (DISCONNECT): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T22 (MINVOLSET): 100.00%
+
+Accuracy: 100.0 %
+Cross-target T23 (VENTMACH): 100.00%
+
+Accuracy: 99.92 %
+Cross-target T24 (VENTTUBE): 99.92%
+
+Accuracy: 99.76 %
+Cross-target T25 (VENTLUNG): 99.76%
+
+Accuracy: 99.54 %
+Cross-target T26 (VENTALV): 99.54%
+
+Accuracy: 99.84 %
+Cross-target T27 (ARTCO2): 99.84%
+
+Accuracy: 99.36 %
+Cross-target T28 (CATECHOL): 99.36%
+
+Accuracy: 98.72 %
+Cross-target T29 (HR): 98.72%
+
+Accuracy: 88.25 %
+Cross-target T30 (CO): 88.25%
+Macro cross-target accuracy: 97.64%
+Weighted cross-target accuracy: 97.88%

@@ -254,3 +254,49 @@ for target_index, target in enumerate(CROSS_TARGET_NODES, start=2):
     cross_df["Scenario #"] = range(1, len(cross_df) + 1)
     cross_df.to_csv(cross_target_csv, index=False)
     print(f"{cross_target_csv.name}: {len(cross_df)}")
+
+
+# ============================================================
+# Combine all cross-target test datasets
+# ============================================================
+cross_target_dfs = []
+
+for target_index, target in enumerate(CROSS_TARGET_NODES, start=2):
+
+    cross_target_csv = (
+        DATASET_DIR / f"combined_test_scenarios_t{target_index}.csv"
+    )
+
+    df = pd.read_csv(
+        cross_target_csv,
+        dtype=str,
+        keep_default_na=False,
+    )
+
+    df["Target"] = target
+    cross_target_dfs.append(df)
+
+combined_cross_df = pd.concat(
+    cross_target_dfs,
+    ignore_index=True
+)
+
+# Regenerate global scenario IDs
+combined_cross_df = combined_cross_df.drop(
+    columns=["Scenario #"]
+)
+
+combined_cross_df.insert(
+    0, "Scenario #", range(1, len(combined_cross_df) + 1)
+)
+
+combined_cross_csv = (
+    DATASET_DIR / "combined_cross_target_test_scenarios.csv"
+)
+
+combined_cross_df.to_csv(combined_cross_csv, index=False)
+
+print(
+    f"{combined_cross_csv.name}: "
+    f"{len(combined_cross_df)} scenarios"
+)

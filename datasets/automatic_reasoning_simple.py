@@ -159,10 +159,10 @@ if __name__ == "__main__":
     GT_BN_FILE = DATASET_DIR / "BN_gt.json"
     FLAWED_BN_FILE = DATASET_DIR / "flawed_BN_0.json"
     
-    # # ============================================================
-    # # Batch EM evaluation
-    # # ============================================================
     
+    # # ============================================================
+    # # Evaluation
+    # # ============================================================
     full_train_data = pd.read_csv(
         TRAIN_CSV,
         dtype={"Ground Truth": str}
@@ -237,8 +237,12 @@ if __name__ == "__main__":
         )
 
         # --------------------------------------------------------
-        # Evaluate on cross-target test datasets
+        # Evaluate individual, macro, and weighted cross-target accuracy
         # --------------------------------------------------------
+        total_successes = 0
+        total_scenarios = 0
+        target_accuracies = []
+
         for target_index, target in enumerate(CROSS_TARGET_NODES, start=2):
 
             cross_target_csv = (
@@ -256,60 +260,116 @@ if __name__ == "__main__":
                 f"{accuracy * 100:.2f}%"
             )
 
+            if len(results) > 0:
+                target_accuracies.append(accuracy)
+                total_successes += len(successes)
+                total_scenarios += len(results)
 
-    # # ============================================================
-    # # Step Y: Evaluate original flawed BN
-    # # ============================================================
-    
-    # print("\n" + "=" * 60)
-    # print("ORIGINAL FLAWED BN")
-    # print("=" * 60)
+        macro_accuracy = (
+            sum(target_accuracies) / len(target_accuracies)
+            if target_accuracies else 0.0
+        )
 
-    # flawed_bn_json = load_bn(FLAWED_BN_FILE)
+        weighted_accuracy = (
+            total_successes / total_scenarios
+            if total_scenarios > 0 else 0.0
+        )
 
-    # # Evaluate on all four training/refinement subsets
-    # for subset_id, subset_df in enumerate(
-    #     train_subsets,
-    #     start=1,
-    # ):
-    #     failures, successes, accuracy, results = run_evaluation(
-    #         flawed_bn_json,
-    #         subset_df,
-    #     )
+        print(
+            f"Macro cross-target accuracy: "
+            f"{macro_accuracy * 100:.2f}%"
+        )
 
-    #     print(
-    #         f"Training subset {subset_id}: "
-    #         f"{accuracy * 100:.2f}%"
-    #     )
+        print(
+            f"Weighted cross-target accuracy: "
+            f"{weighted_accuracy * 100:.2f}%"
+        )
 
-    # # Evaluate on common held-out test set
-    # failures, successes, accuracy, results = run_evaluation(
-    #     flawed_bn_json,
-    #     TEST_CSV,
-    # )
 
-    # print(
-    #     f"Held-out test: "
-    #     f"{accuracy * 100:.2f}%"
-    # )
+    # ============================================================
+    # Step Y: Evaluate original flawed BN
+    # ============================================================
+    print("\n" + "=" * 60)
+    print("ORIGINAL FLAWED BN")
+    print("=" * 60)
 
-    # # ============================================================
-    # # Evaluate original flawed BN on cross-target test datasets
-    # # ============================================================
+    flawed_bn_json = load_bn(FLAWED_BN_FILE)
 
-    # for target_index, target in enumerate(CROSS_TARGET_NODES, start=2):
-    #     cross_target_csv = DATASET_DIR / f"combined_test_scenarios_t{target_index}.csv"
+    # Evaluate on all four training/refinement subsets
+    for subset_id, subset_df in enumerate(
+        train_subsets,
+        start=1,
+    ):
+        failures, successes, accuracy, results = run_evaluation(
+            flawed_bn_json,
+            subset_df,
+        )
 
-    #     failures, successes, accuracy, results = run_evaluation(
-    #         flawed_bn_json,
-    #         cross_target_csv,
-    #         target_node=target,
-    #     )
+        print(
+            f"Training subset {subset_id}: "
+            f"{accuracy * 100:.2f}%"
+        )
 
-    #     print(
-    #         f"Cross-target T{target_index} ({target}): "
-    #         f"{accuracy * 100:.2f}%"
-    #     )
+    # Evaluate on common held-out test set
+    failures, successes, accuracy, results = run_evaluation(
+        flawed_bn_json,
+        TEST_CSV,
+    )
+
+    print(
+        f"Held-out test: "
+        f"{accuracy * 100:.2f}%"
+    )
+
+    # ============================================================
+    # Evaluate original deployed BN on cross-target test datasets
+    # ============================================================
+    total_successes = 0
+    total_scenarios = 0
+    target_accuracies = []
+
+    for target_index, target in enumerate(CROSS_TARGET_NODES, start=2):
+
+        cross_target_csv = (
+            DATASET_DIR / f"combined_test_scenarios_t{target_index}.csv"
+        )
+
+        failures, successes, accuracy, results = run_evaluation(
+            flawed_bn_json,
+            cross_target_csv,
+            target_node=target,
+        )
+
+        print(
+            f"Cross-target T{target_index} ({target}): "
+            f"{accuracy * 100:.2f}%"
+        )
+
+        if len(results) > 0:
+            target_accuracies.append(accuracy)
+            total_successes += len(successes)
+            total_scenarios += len(results)
+
+    macro_accuracy = (
+        sum(target_accuracies) / len(target_accuracies)
+        if target_accuracies else 0.0
+    )
+
+    weighted_accuracy = (
+        total_successes / total_scenarios
+        if total_scenarios > 0 else 0.0
+    )
+
+    print(
+        f"Original BN macro cross-target accuracy: "
+        f"{macro_accuracy * 100:.2f}%"
+    )
+
+    print(
+        f"Original BN weighted cross-target accuracy: "
+        f"{weighted_accuracy * 100:.2f}%"
+    )
+
 
     # ============================================================
     # Step Z: Evaluate each independently learned AgentBN
@@ -386,10 +446,14 @@ if __name__ == "__main__":
             f"Held-out test: "
             f"{accuracy * 100:.2f}%"
         )
+        
+        # --------------------------------------------------------
+        # Evaluate individual, macro, and weighted cross-target accuracy
+        # --------------------------------------------------------
+        total_successes = 0
+        total_scenarios = 0
+        target_accuracies = []
 
-        # --------------------------------------------------------
-        # Evaluate on cross-target test datasets
-        # --------------------------------------------------------
         for target_index, target in enumerate(CROSS_TARGET_NODES, start=2):
 
             cross_target_csv = (
@@ -406,3 +470,21 @@ if __name__ == "__main__":
                 f"Cross-target T{target_index} ({target}): "
                 f"{accuracy * 100:.2f}%"
             )
+
+            if len(results) > 0:
+                target_accuracies.append(accuracy)
+                total_successes += len(successes)
+                total_scenarios += len(results)
+
+        macro_accuracy = (
+            sum(target_accuracies) / len(target_accuracies)
+            if target_accuracies else 0.0
+        )
+
+        weighted_accuracy = (
+            total_successes / total_scenarios
+            if total_scenarios > 0 else 0.0
+        )
+
+        print(f"Macro cross-target accuracy: {macro_accuracy * 100:.2f}%")
+        print(f"Weighted cross-target accuracy: {weighted_accuracy * 100:.2f}%")

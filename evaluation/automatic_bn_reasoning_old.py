@@ -24,7 +24,9 @@ def run_evaluation(bn_json, dataset_file):
 
     model = build_model(bn_json)
 
-    df = pd.read_csv(dataset_file)
+    df = pd.read_csv(dataset_file, dtype=str, keep_default_na=False)
+    df["Scenario #"] = df["Scenario #"].astype(int)
+
     df.columns = df.columns.str.strip()
 
     results = call_bn_inference(model, df)
@@ -56,7 +58,9 @@ def run_evaluation_2(bn_json, dataset_file):
 
     model = build_model(bn_json)
 
-    df = pd.read_csv(dataset_file)
+    df = pd.read_csv(dataset_file, dtype=str, keep_default_na=False)
+    df["Scenario #"] = df["Scenario #"].astype(int)
+
     df.columns = df.columns.str.strip()
 
     results = call_bn_inference(model, df)

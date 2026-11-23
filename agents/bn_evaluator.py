@@ -413,81 +413,9 @@ def generate_failure_parameter_statistics(
         if params
     }
 
-    # ----------------------------------------------
-    # Store JSON
-    # ----------------------------------------------
     output = {
-        "parameter_statistics": results,
-        "common_failure_columns": common_failure_columns
-    }
-
-    # --------------------------------------------------
-    # Discover common activation patterns
-    # --------------------------------------------------
-    from collections import defaultdict
-
-    pattern_map = defaultdict(list)
-
-    scenarios = sorted(common_failure_columns.keys())
-
-    for i in range(len(scenarios)):
-        s1 = scenarios[i]
-
-        for j in range(i + 1, len(scenarios)):
-            s2 = scenarios[j]
-
-            common = {}
-
-            for cpt in common_failure_columns[s1]:
-
-                if cpt not in common_failure_columns[s2]:
-                    continue
-
-                if (
-                    common_failure_columns[s1][cpt]["column"]
-                    ==
-                    common_failure_columns[s2][cpt]["column"]
-                ):
-
-                    common[cpt] = (
-                        common_failure_columns[s1][cpt]["column"]
-                    )
-
-            if len(common) >= 2:
-                key = tuple(sorted(common.items()))
-                pattern_map[key].extend([s1, s2])
-
-    
-    # --------------------------------------------------
-    # Convert to JSON-friendly format
-    # --------------------------------------------------
-    common_activation_patterns = []
-
-    for pattern, scenarios in pattern_map.items():
-
-        common_activation_patterns.append({
-
-            "pattern": {
-                cpt: column
-                for cpt, column in pattern
-            },
-
-            "failure_scenarios": sorted(
-                list(set(scenarios))
-            )
-
-        })
-
-    output = {
-
         "bn_number": bn_number,
-
         "parameter_statistics": results,
-
-        # "common_failure_columns": common_failure_columns,
-
-        # "common_activation_patterns":
-        #     common_activation_patterns
     }
 
     with open(
@@ -1404,7 +1332,7 @@ def run_evaluation(bn_json, bn_number=None, temperature=0.3, dataset_file=None):
     if dataset_file is None:
         dataset_file = TRAIN_CSV
     
-    df = pd.read_csv(dataset_file)
+    df = pd.read_csv(dataset_file, dtype=str, keep_default_na=False)
     
     # --------------------------------------------------
     # Step 1: Build BN model

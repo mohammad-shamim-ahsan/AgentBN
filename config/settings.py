@@ -75,6 +75,8 @@ ORACLE_FILE = WORKSPACE_DIR / "oracle_nodes.json"
 
 FAILED_LLM_RESPONSE_FILE = WORKSPACE_DIR / "failed_llm_response.json"
 
+TOKEN_USAGE_FILE = WORKSPACE_DIR / "token_usage.json"
+
 
 # ======================================================
 # BASELINES RESULTS

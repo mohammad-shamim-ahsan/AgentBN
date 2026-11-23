@@ -50,6 +50,7 @@ from config.settings import *
 from utils.json_utils import *
 from utils.bn_io import *
 from utils.file_utils import *
+from utils.llm import *
 
 from evaluation.automatic_bn_reasoning_old import run_evaluation as initial_run_evaluation
 from agents.bn_evaluator import run_evaluation, store_analysis
@@ -263,7 +264,7 @@ test_csv = TEST_CSV
 
 if SUBSET_ID is not None:
 
-    full_train_data = pd.read_csv(TRAIN_CSV)
+    full_train_data = pd.read_csv(TRAIN_CSV, dtype=str, keep_default_na=False)
 
     # EXACTLY reproduce Batch EM split
     full_train_data = full_train_data.sample(
@@ -335,6 +336,8 @@ restart_count = 0
 # ----------------------------------------
 # Main orchestration loop
 # ----------------------------------------
+
+save_token_usage()
 
 agent_context = CONTEXT_AGENT_FILE # agent_context = read_file(CONTEXT_AGENT_FILE)
 

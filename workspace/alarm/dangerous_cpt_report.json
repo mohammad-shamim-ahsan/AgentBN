@@ -1,24 +1,72 @@
 {
-    "reported_risk_level": "medium",
+    "reported_risk_level": "high_medium",
     "dangerous_cpts": [
         {
             "cpt": "CVP",
-            "risk_level": "high_medium",
-            "number_of_failure_scenarios": 5,
-            "main_problem": "The strongest evidence is concentrated in the LVEDVOLUME=HIGH column of CVP, where CVP=LOW is assigned a hard zero despite appearing only in failures. This makes the CPT overly rigid and plausibly prevents the network from accommodating atypical or noisy low-CVP observations under high filling states.",
+            "risk_level": "high",
+            "number_of_failure_scenarios": 66,
+            "main_problem": "The clearest failure-localized evidence is concentrated in the CVP CPT on the suspicious HYPOVOLEMIA\u2192LVEDVOLUME\u2192CVP path. Its problematic entries are highly rigid, activated repeatedly in failures, and never activated in successes, making this CPT the strongest refinement target.",
             "suspicious_parameters": [
                 {
                     "rank": 1,
-                    "parameter": "Column 2 \u2192 LOW",
-                    "failure_weight": 5,
+                    "parameter": "Column 2 \u2192 NORMAL",
+                    "failure_weight": 45,
                     "success_weight": 0,
-                    "failure_to_success_ratio": 5.0,
-                    "argmax_probability": 0.0,
+                    "failure_to_success_ratio": 45.0,
+                    "argmax_probability": 0.02,
                     "recommended_adjustment": "increase",
-                    "justification": "This parameter is failure-specific in the available evidence and the hard zero is the clearest localized modeling risk on any diagnosed path. A modest increase would soften an implausibly deterministic exclusion while preserving the overall tendency for high LVEDVOLUME to produce non-low CVP."
+                    "justification": "When LVEDVOLUME=HIGH, assigning CVP=NORMAL only 0.02 is extremely restrictive. Because this parameter is activated often in failures and never in successes, allowing more normal CVP mass under high filling volume is well supported."
+                },
+                {
+                    "rank": 2,
+                    "parameter": "Column 0 \u2192 HIGH",
+                    "failure_weight": 17,
+                    "success_weight": 0,
+                    "failure_to_success_ratio": 17.0,
+                    "argmax_probability": 0.0,
+                    "recommended_adjustment": "slightly_increase",
+                    "justification": "When LVEDVOLUME=LOW, CVP=HIGH is structurally impossible in the current CPT. Although physiologically uncommon, a small nonzero probability could reduce brittleness in failure cases without strongly disrupting the intended low-volume interpretation."
+                },
+                {
+                    "rank": 3,
+                    "parameter": "Column 2 \u2192 LOW",
+                    "failure_weight": 4,
+                    "success_weight": 0,
+                    "failure_to_success_ratio": 4.0,
+                    "argmax_probability": 0.0,
+                    "recommended_adjustment": "slightly_increase",
+                    "justification": "This zero-probability entry for CVP=LOW given LVEDVOLUME=HIGH has weaker support than the other CVP parameters, but it still appears only in failures. If CVP is refined, this parameter is a reasonable secondary relaxation target."
+                }
+            ]
+        },
+        {
+            "cpt": "BP",
+            "risk_level": "medium",
+            "number_of_failure_scenarios": 35,
+            "main_problem": "BP shows some failure-associated imbalance in the deterministic statistics, especially for CO=NORMAL and TPR=LOW, but the corresponding path was judged uncertain and the CPT is downstream of multiple upstream hemodynamic influences. This makes BP a secondary, lower-confidence refinement candidate rather than a clearly localized source.",
+            "suspicious_parameters": [
+                {
+                    "rank": 1,
+                    "parameter": "Column 1 \u2192 LOW",
+                    "failure_weight": 23,
+                    "success_weight": 15,
+                    "failure_to_success_ratio": 1.53,
+                    "argmax_probability": 0.98,
+                    "recommended_adjustment": "slightly_decrease",
+                    "justification": "For CO=NORMAL and TPR=LOW, BP=LOW is almost deterministic at 0.98. Since this entry appears somewhat more in failures than successes, a modest reduction could soften an overly rigid hypotensive mapping while preserving the expected effect of low resistance."
+                },
+                {
+                    "rank": 2,
+                    "parameter": "Column 1 \u2192 NORMAL",
+                    "failure_weight": 12,
+                    "success_weight": 28,
+                    "failure_to_success_ratio": 0.43,
+                    "argmax_probability": 0.01,
+                    "recommended_adjustment": "slightly_increase",
+                    "justification": "This complements the previous BP adjustment by restoring a small amount of probability mass to BP=NORMAL under CO=NORMAL and TPR=LOW. The support is mixed, so any change should be conservative."
                 }
             ]
         }
     ],
-    "overall_summary": "Only the CVP CPT is well supported for refinement, with concentrated failure-specific evidence on the LVEDVOLUME=HIGH \u2192 CVP=LOW entry. Although 2 CPTs are said to require refinement, the current diagnostic evidence does not reasonably support adding a second CPT without risking unnecessary disruption to parameters that are common in successful cases."
+    "overall_summary": "CVP is the only strongly supported refinement target, with concentrated failure-only evidence on a path already assessed as suspicious. A second CPT is only weakly supported; BP is included as a medium-risk secondary search target because its statistics suggest possible over-rigidity, but the evidence is substantially less localized than for CVP."
 }

@@ -84,6 +84,8 @@ TOKEN_USAGE_FILE = WORKSPACE_DIR / "token_usage.json"
 
 BATCH_EM_BN_FILE = BASELINE_RESULTS_DIR / "batch_em_bn.jsonl"
 
+SENSITIVITY_BN_FILE = BASELINE_RESULTS_DIR / "sensitivity_analysis_bn.jsonl"
+
 
 # ======================================================
 # EXPERIMENT SETTINGS
@@ -228,16 +230,14 @@ elif BENCHMARK == "alarm":
 
     if FLAWED_BN_FILE.name == "flawed_BN_0.json":
         EXPECTED_CHANGED_CPTS = {
-            "HYPOVOLEMIA",
-            "LVEDVOLUME",
+            "PCWP",
+            "VENTLUNG",
         }
 
-    # elif FLAWED_BN_FILE.name == "flawed_BN_1.json":
-    #     EXPECTED_CHANGED_CPTS = {
-    #         "HYPOVOLEMIA",
-    #         "LVEDVOLUME",
-    #         "TPR",
-    #     }
+        # EXPECTED_CHANGED_CPTS = {
+        #     "HYPOVOLEMIA",
+        #     "LVEDVOLUME",
+        # }
 
 else:
     raise ValueError(f"Unknown experiment: {BENCHMARK}") 

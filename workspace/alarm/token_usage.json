@@ -1,7 +1,7 @@
 {
-  "model": "gpt-5.4",
-  "api_calls": 80,
-  "input_tokens": 936321,
-  "output_tokens": 101273,
-  "total_tokens": 1037594
+  "model": "gpt-5.5",
+  "api_calls": 48,
+  "input_tokens": 575067,
+  "output_tokens": 141758,
+  "total_tokens": 716825
 }

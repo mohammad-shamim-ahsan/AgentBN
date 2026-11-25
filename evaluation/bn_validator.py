@@ -398,11 +398,11 @@ def compute_average_cpt_hellinger(gt_bn, prop_bn, target_nodes=None, flawed_bn=n
     return overall
 
 
-### ------------------------------
+# ------------------------------
 
 if __name__ == "__main__":
 
-    train_csv=TRAIN_CSV
+    train_csv = TRAIN_CSV
 
     gt_bn = normalize_bn(read_json(GROUND_TRUTH_BN_FILE))
     flawed_bn = normalize_bn(read_json(FLAWED_BN_FILE))
@@ -411,7 +411,35 @@ if __name__ == "__main__":
     ORACLE_SIZE = 0
     NUM_SUBSETS = 4
 
-    for subset_id in range(1, NUM_SUBSETS + 1):
+    SENSITIVITY_BN_FILE = (
+        Path("baselines/results") / BENCHMARK / "sensitivity_analysis_bn.jsonl"
+    )
+
+    # ---------------------------------
+    # LOAD SENSITIVITY ANALYSIS BNs
+    # ---------------------------------
+
+    sensitivity_by_subset = {}
+
+    with open(
+        SENSITIVITY_BN_FILE,
+        "r",
+        encoding="utf-8"
+    ) as f:
+
+        for line in f:
+
+            if not line.strip():
+                continue
+
+            record = json.loads(line)
+            subset_id = record["metadata"]["subset_id"]
+
+            sensitivity_by_subset[subset_id] = normalize_bn(
+                record["bn"]
+            )
+
+    for subset_id in range(2, NUM_SUBSETS + 1):
 
         # ---------------------------------
         # LOAD Batch EM BN FOR THIS SUBSET
@@ -455,12 +483,24 @@ if __name__ == "__main__":
             )
 
         # ---------------------------------
-        # VALIDATE BOTH METHODS
+        # LOAD SENSITIVITY ANALYSIS BN
         # ---------------------------------
 
+        sensitivity_bn = sensitivity_by_subset.get(subset_id)
+
+        if sensitivity_bn is None:
+            raise ValueError(
+                f"No sensitivity analysis BN found "
+                f"for subset_id={subset_id}"
+            )
+
+        # ---------------------------------
+        # VALIDATE ALL THREE METHODS
+        # ---------------------------------
         for method_name, prop_bn in [
             ("Batch EM", em_bn),
             ("AgentBN", agent_bn),
+            ("Sensitivity Analysis", sensitivity_bn),
         ]:
 
             print("\n" + "=" * 60)

@@ -23,7 +23,7 @@ parser.add_argument(
 parser.add_argument(
     "--subset",
     type=int,
-    choices=[1, 2, 3, 4],
+    choices=[2, 3, 4],
     default=None,
     help="Run AgentBN on one of four deterministic training subsets."
 )

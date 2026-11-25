@@ -288,67 +288,88 @@ if __name__ == "__main__":
                 # Keep first matching record, as in the original AgentBN loop.
                 agentbn_by_subset.setdefault(record["subset_id"], record["bn"])
 
-    # ============================================================
-    # 1. BATCH EM: each independently learned BN
-    # ============================================================
-    for learned_subset_id in range(1, 5):
-        print("\n" + "=" * 60)
-        print(f"EM BN LEARNED FROM SUBSET {learned_subset_id}")
-        print("=" * 60)
-
-        bn_json = get_bn(
-            BATCH_EM_BN_FILE,
-            bn_number=100,
-            oracle_size=0,
-            subset_id=learned_subset_id,
-        )
-
-        evaluate_training_subsets(bn_json, train_subsets, learned_subset_id)
-        evaluate_held_out(bn_json, TEST_CSV)
-
-        print("\nExperiment A: secondary targets")
-        evaluate_cross_targets(bn_json, CROSS_TARGET_NODES, DATASET_DIR)
-
-        print("\nExperiment B: secondary targets")
-        evaluate_cross_targets(
-            bn_json, CROSS_TARGET_NODES_B, DATASET_DIR, suffix="_exp_b"
-        )
-
-        print("\nExperiment B: primary target")
-        evaluate_primary_b(bn_json, PRIMARY_CSV_B, "Batch EM")
-
-    # ============================================================
-    # 2. ORIGINAL DEPLOYED BN
-    # ============================================================
-    print("\n" + "=" * 60)
-    print("ORIGINAL DEPLOYED BN")
-    print("=" * 60)
-
-    flawed_bn_json = load_bn(FLAWED_BN_FILE)
-    evaluate_training_subsets(flawed_bn_json, train_subsets)
-    evaluate_held_out(flawed_bn_json, TEST_CSV)
-
-    print("\nExperiment A: secondary targets")
-    evaluate_cross_targets(
-        flawed_bn_json, CROSS_TARGET_NODES, DATASET_DIR, label="Original BN "
+    
+    # ------------------------------------------------------------
+    # Load sensitivity analysis models, indexed by learned subset
+    # ------------------------------------------------------------
+    SENSITIVITY_BN_FILE = (
+        Path("baselines/results") / BENCHMARK / "sensitivity_analysis_bn.jsonl"
     )
 
-    print("\nExperiment B: secondary targets")
-    evaluate_cross_targets(
-        flawed_bn_json,
-        CROSS_TARGET_NODES_B,
-        DATASET_DIR,
-        suffix="_exp_b",
-        label="Original BN ",
-    )
+    sensitivity_by_subset = {}
+    with open(SENSITIVITY_BN_FILE, "r", encoding="utf-8") as f:
+        for line in f:
+            if not line.strip():
+                continue
 
-    print("\nExperiment B: primary target")
-    evaluate_primary_b(flawed_bn_json, PRIMARY_CSV_B, "Original BN")
+            record = json.loads(line)
+            subset_id = record["metadata"]["subset_id"]
+            sensitivity_by_subset[subset_id] = record["bn"]
+
+    print("Loaded sensitivity subsets:", sorted(sensitivity_by_subset))
+
+
+    # # ============================================================
+    # # 1. BATCH EM: each independently learned BN
+    # # ============================================================
+    # for learned_subset_id in range(2, 5):
+    #     print("\n" + "=" * 60)
+    #     print(f"EM BN LEARNED FROM SUBSET {learned_subset_id}")
+    #     print("=" * 60)
+
+    #     bn_json = get_bn(
+    #         BATCH_EM_BN_FILE,
+    #         bn_number=100,
+    #         oracle_size=0,
+    #         subset_id=learned_subset_id,
+    #     )
+
+    #     evaluate_training_subsets(bn_json, train_subsets, learned_subset_id)
+    #     evaluate_held_out(bn_json, TEST_CSV)
+
+    #     print("\nExperiment A: secondary targets")
+    #     evaluate_cross_targets(bn_json, CROSS_TARGET_NODES, DATASET_DIR)
+
+    #     print("\nExperiment B: secondary targets")
+    #     evaluate_cross_targets(
+    #         bn_json, CROSS_TARGET_NODES_B, DATASET_DIR, suffix="_exp_b"
+    #     )
+
+    #     print("\nExperiment B: primary target")
+    #     evaluate_primary_b(bn_json, PRIMARY_CSV_B, "Batch EM")
+
+    # # ============================================================
+    # # 2. ORIGINAL DEPLOYED BN
+    # # ============================================================
+    # print("\n" + "=" * 60)
+    # print("ORIGINAL DEPLOYED BN")
+    # print("=" * 60)
+
+    # flawed_bn_json = load_bn(FLAWED_BN_FILE)
+    # evaluate_training_subsets(flawed_bn_json, train_subsets)
+    # evaluate_held_out(flawed_bn_json, TEST_CSV)
+
+    # print("\nExperiment A: secondary targets")
+    # evaluate_cross_targets(
+    #     flawed_bn_json, CROSS_TARGET_NODES, DATASET_DIR, label="Original BN "
+    # )
+
+    # print("\nExperiment B: secondary targets")
+    # evaluate_cross_targets(
+    #     flawed_bn_json,
+    #     CROSS_TARGET_NODES_B,
+    #     DATASET_DIR,
+    #     suffix="_exp_b",
+    #     label="Original BN ",
+    # )
+
+    # print("\nExperiment B: primary target")
+    # evaluate_primary_b(flawed_bn_json, PRIMARY_CSV_B, "Original BN")
 
     # ============================================================
     # 3. AGENTBN: each independently learned BN
     # ============================================================
-    for learned_subset_id in range(1, 5):
+    for learned_subset_id in range(2, 5):
         print("\n" + "=" * 60)
         print(f"AGENTBN LEARNED FROM SUBSET {learned_subset_id}")
         print("=" * 60)
@@ -372,3 +393,36 @@ if __name__ == "__main__":
 
         print("\nExperiment B: primary target")
         evaluate_primary_b(bn_json, PRIMARY_CSV_B, "AgentBN")
+
+    
+    # # ============================================================
+    # # 4. SENSITIVITY ANALYSIS: each independently refined BN
+    # # ============================================================
+    # for learned_subset_id in range(2, 5):
+    #     print("\n" + "=" * 60)
+    #     print(f"SENSITIVITY ANALYSIS BN LEARNED FROM SUBSET {learned_subset_id}")
+    #     print("=" * 60)
+
+    #     bn_json = sensitivity_by_subset.get(learned_subset_id)
+
+    #     if bn_json is None:
+    #         raise ValueError(
+    #             f"No sensitivity analysis BN found for "
+    #             f"subset_id={learned_subset_id}"
+    #         )
+
+    #     evaluate_training_subsets(bn_json, train_subsets, learned_subset_id)
+    #     evaluate_held_out(bn_json, TEST_CSV)
+
+    #     print("\nExperiment A: secondary targets")
+    #     evaluate_cross_targets(
+    #         bn_json, CROSS_TARGET_NODES, DATASET_DIR
+    #     )
+
+    #     print("\nExperiment B: secondary targets")
+    #     evaluate_cross_targets(
+    #         bn_json, CROSS_TARGET_NODES_B, DATASET_DIR, suffix="_exp_b"
+    #     )
+
+    #     print("\nExperiment B: primary target")
+    #     evaluate_primary_b(bn_json, PRIMARY_CSV_B, "Sensitivity Analysis")

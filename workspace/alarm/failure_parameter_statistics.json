@@ -1,80 +1,73 @@
 {
-    "bn_number": 3,
+    "bn_number": 0,
     "parameter_statistics": {
-        "CVP": [
+        "STROKEVOLUME": [
             {
-                "column": 2,
-                "state": "NORMAL",
-                "argmax_probability": 0.02,
-                "failure_weight": 45,
-                "success_weight": 0
-            },
-            {
-                "column": 0,
-                "state": "HIGH",
-                "argmax_probability": 0.0,
-                "failure_weight": 17,
-                "success_weight": 0
-            },
-            {
-                "column": 2,
+                "column": 1,
                 "state": "LOW",
-                "argmax_probability": 0.0,
-                "failure_weight": 4,
-                "success_weight": 0
+                "argmax_probability": 0.5,
+                "failure_weight": 59,
+                "success_weight": 57
+            },
+            {
+                "column": 3,
+                "state": "NORMAL",
+                "argmax_probability": 0.9,
+                "failure_weight": 11,
+                "success_weight": 203
             }
         ],
-        "PCWP": [
+        "HYPOVOLEMIA": [
             {
-                "column": 2,
-                "state": "HIGH",
-                "argmax_probability": 0.95,
-                "failure_weight": 49,
-                "success_weight": 64
+                "column": 0,
+                "state": "TRUE",
+                "argmax_probability": 0.2,
+                "failure_weight": 59,
+                "success_weight": 57
             },
             {
                 "column": 0,
-                "state": "NORMAL",
-                "argmax_probability": 0.04,
-                "failure_weight": 17,
-                "success_weight": 117
+                "state": "FALSE",
+                "argmax_probability": 0.8,
+                "failure_weight": 11,
+                "success_weight": 203
             }
         ],
         "BP": [
             {
                 "column": 1,
-                "state": "LOW",
-                "argmax_probability": 0.98,
-                "failure_weight": 23,
-                "success_weight": 15
-            },
-            {
-                "column": 1,
                 "state": "NORMAL",
                 "argmax_probability": 0.01,
-                "failure_weight": 12,
-                "success_weight": 28
+                "failure_weight": 16,
+                "success_weight": 14
             },
             {
-                "column": 7,
-                "state": "HIGH",
-                "argmax_probability": 0.75,
-                "failure_weight": 13,
-                "success_weight": 68
+                "column": 1,
+                "state": "LOW",
+                "argmax_probability": 0.98,
+                "failure_weight": 28,
+                "success_weight": 26
             },
             {
                 "column": 1,
                 "state": "HIGH",
                 "argmax_probability": 0.01,
-                "failure_weight": 14,
-                "success_weight": 21
+                "failure_weight": 15,
+                "success_weight": 17
             },
             {
                 "column": 7,
                 "state": "NORMAL",
                 "argmax_probability": 0.2,
-                "failure_weight": 4,
-                "success_weight": 55
+                "failure_weight": 5,
+                "success_weight": 71
+            },
+            {
+                "column": 7,
+                "state": "HIGH",
+                "argmax_probability": 0.75,
+                "failure_weight": 6,
+                "success_weight": 67
             }
         ],
         "CO": [
@@ -82,15 +75,15 @@
                 "column": 6,
                 "state": "LOW",
                 "argmax_probability": 0.8,
-                "failure_weight": 49,
-                "success_weight": 64
+                "failure_weight": 59,
+                "success_weight": 57
             },
             {
                 "column": 7,
                 "state": "HIGH",
                 "argmax_probability": 0.95,
-                "failure_weight": 17,
-                "success_weight": 200
+                "failure_weight": 11,
+                "success_weight": 203
             }
         ],
         "LVEDVOLUME": [
@@ -98,47 +91,54 @@
                 "column": 1,
                 "state": "HIGH",
                 "argmax_probability": 0.9,
-                "failure_weight": 49,
-                "success_weight": 64
-            },
-            {
-                "column": 3,
-                "state": "LOW",
-                "argmax_probability": 0.88,
-                "failure_weight": 17,
-                "success_weight": 200
-            }
-        ],
-        "STROKEVOLUME": [
-            {
-                "column": 1,
-                "state": "LOW",
-                "argmax_probability": 0.5,
-                "failure_weight": 49,
-                "success_weight": 64
+                "failure_weight": 59,
+                "success_weight": 57
             },
             {
                 "column": 3,
                 "state": "NORMAL",
                 "argmax_probability": 0.9,
-                "failure_weight": 17,
-                "success_weight": 200
+                "failure_weight": 11,
+                "success_weight": 203
             }
         ],
-        "HYPOVOLEMIA": [
+        "PCWP": [
             {
-                "column": 0,
-                "state": "TRUE",
-                "argmax_probability": 0.08,
-                "failure_weight": 49,
-                "success_weight": 64
+                "column": 2,
+                "state": "HIGH",
+                "argmax_probability": 0.75,
+                "failure_weight": 59,
+                "success_weight": 57
             },
             {
-                "column": 0,
-                "state": "FALSE",
-                "argmax_probability": 0.92,
-                "failure_weight": 17,
-                "success_weight": 200
+                "column": 1,
+                "state": "NORMAL",
+                "argmax_probability": 0.75,
+                "failure_weight": 11,
+                "success_weight": 105
+            }
+        ],
+        "CVP": [
+            {
+                "column": 2,
+                "state": "NORMAL",
+                "argmax_probability": 0.29,
+                "failure_weight": 54,
+                "success_weight": 1
+            },
+            {
+                "column": 1,
+                "state": "HIGH",
+                "argmax_probability": 0.01,
+                "failure_weight": 11,
+                "success_weight": 0
+            },
+            {
+                "column": 2,
+                "state": "LOW",
+                "argmax_probability": 0.01,
+                "failure_weight": 5,
+                "success_weight": 0
             }
         ]
     }

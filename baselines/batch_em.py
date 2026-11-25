@@ -457,7 +457,7 @@ def update_bn_json_from_model(
 # ==================================================
 for subset_id, subset_df in enumerate(
     train_subsets,
-    start=1,
+    start=2,
 ):
 
     print("\n" + "=" * 60)
@@ -820,7 +820,7 @@ for subset_id, subset_df in enumerate(
         bn_number=EM_MAX_ITER,
         bn_new=learned_bn_json,
         filename=BATCH_EM_BN_FILE,
-        overwrite=(subset_id == 1),
+        overwrite=(subset_id == 2),
         metadata={
             "subset_id": subset_id,
             "train_size": len(train_data),
@@ -922,12 +922,12 @@ print("ALL BATCH EM SUBSETS FINISHED")
 print("=" * 60)
 
 print(
-    f"Training subsets: {NUM_SUBSETS}"
+    f"Training subsets: {NUM_SUBSETS - 1}"
 )
 
 print(
     f"Total training scenarios: "
-    f"{len(full_train_data)}"
+    f"{sum(len(subset) for subset in train_subsets[1:])}"
 )
 
 print(
@@ -939,7 +939,7 @@ print("\nMapping:")
 
 for subset_id, subset in enumerate(
     train_subsets,
-    start=1,
+    start=2,
 ):
     print(
         f"  bn_number={EM_MAX_ITER}, "

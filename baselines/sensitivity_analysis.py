@@ -10,17 +10,20 @@ import pandas as pd
 from utils.pgmpy_tool import build_model, run_inference
 from utils.bn_io import store_new_bn
 from pgmpy.inference import VariableElimination
-from config.settings import BENCHMARK, TARGET_NODE
+from config.settings import *
+from itertools import product
+import copy
 
 DATA_DIR = Path('datasets') / BENCHMARK
 BN_FILE = DATA_DIR / 'flawed_BN_0.json'
 SCENARIOS_FILE = DATA_DIR / 'combined_train_scenarios.csv'
-OUTPUT_FILE = Path('results') / BENCHMARK / 'sensitivity_analysis_bn.jsonl'
+OUTPUT_FILE = SENSITIVITY_BN_FILE
 QUERY_STATE = 'TRUE'
 NUM_SUBSETS = 4
 SENSITIVITY_FRACTION = 0.25  # Sample from each learning subset; retain all cases for learning.
 SPLIT_SEED = 42
 DELTA = 0.2
+K = 2  # Maximum number of distinct CPTs allowed to be refined
 MAX_ITERATIONS = None  # None means stop only when no new parameters qualify.
 PRIOR_PSEUDOCOUNT = 1.0  # Uniform Dirichlet baseline, plus prior-data counts.
 EPS = 1e-12
@@ -81,20 +84,41 @@ def three_point_sensitivity(model, node, column, state_index, evidence):
         model.add_cpds(original_cpd)
 
     p0, phalf, p1 = p
-    if max(p) - min(p) < EPS:
+
+    if not np.all(np.isfinite(p)):
+        print(f"Nonfinite posterior: {node}, "
+            f"column={column}, state={state_index}")
+        print(f"x={x}, p0={p0}, phalf={phalf}, p1={p1}")
+        print(f"Evidence: {evidence}", flush=True)
+        return float('nan')
+
+    if max(p) - min(p) < np.finfo(float).eps:
         return 0.0
+    
     # From p(t) = (alpha*t + beta)/(gamma*t + 1):
     # phalf*(gamma+2) = alpha + 2*beta
     # p1*(gamma+1) = alpha + beta
     # Thus gamma = (2*phalf - p0 - p1)/(p1 - phalf)
-    if abs(p1 - phalf) < EPS:
+    if abs(p1 - phalf) < np.finfo(float).eps:
+        print(f"Unstable gamma: {node}, "
+            f"column={column}, state={state_index}")
+        print(f"x={x}, p0={p0}, phalf={phalf}, p1={p1}")
+        print(f"Evidence: {evidence}", flush=True)
         return float('nan')
+    
     beta = p0
     gamma = (2.0 * phalf - p0 - p1) / (p1 - phalf)
     alpha = p1 * (gamma + 1.0) - beta
     denominator = (gamma * x + 1.0) ** 2
+    
     if denominator < EPS:
+        print(f"Near-zero denominator: {node}, "
+            f"column={column}, state={state_index}")
+        print(f"x={x}, p0={p0}, phalf={phalf}, p1={p1}")
+        print(f"gamma={gamma}, denominator={denominator}")
+        print(f"Evidence: {evidence}", flush=True)
         return float('nan')
+    
     return float((alpha - beta * gamma) / denominator)
 
 
@@ -110,14 +134,23 @@ def calculate_importance(model, scenarios):
                 x = float(table[state_index, column])
                 if x >= 1.0 - EPS:
                     continue
-                derivatives = [
-                    three_point_sensitivity(model, node, column, state_index, e)
-                    for e in scenarios
-                ]
-                if not np.all(np.isfinite(derivatives)):
-                    raise ArithmeticError(
-                        f'Nonfinite sensitivity for {node}, column={column}, state={state_index}'
+                
+                derivatives = []
+                for scenario_idx, evidence in enumerate(scenarios):
+                    derivative = three_point_sensitivity(
+                        model, node, column, state_index, evidence
                     )
+
+                    if not np.isfinite(derivative):
+                        raise ArithmeticError(
+                            f"Nonfinite sensitivity for {node}, "
+                            f"column={column}, state={state_index}, "
+                            f"scenario={scenario_idx}, x={x}, "
+                            f"evidence={evidence}"
+                        )
+
+                    derivatives.append(derivative)
+
                 rows.append({
                     'node': node,
                     'column': column,
@@ -128,6 +161,7 @@ def calculate_importance(model, scenarios):
                     'num_scenarios': len(scenarios),
                 })
         print(f'Completed CPT: {node}', flush=True)
+    
     return pd.DataFrame(rows).sort_values('importance', ascending=False)
 
 
@@ -137,7 +171,6 @@ def compute_expected_counts(model, inference, train_data, variable):
     train_data contains observed columns, including TARGET_NODE obtained
     by renaming the Ground Truth column.
     """
-    from itertools import product
 
     cpd = model.get_cpds(variable)
     variable_states = cpd.state_names[variable]
@@ -204,43 +237,79 @@ def prepare_em_data(df, model):
     return data
 
 
-def refine_selected(model, selected, prior_data, train_data):
+def estimate_prior_hyperparameters(model, prior_data):
+    inference = VariableElimination(model)
+    priors = {}
+
+    for node in model.nodes():
+        prior_counts = compute_expected_counts(
+            model, inference, prior_data, node
+        )
+
+        if not np.isclose(prior_counts.sum(), len(prior_data)):
+            raise ValueError(f"Prior expected-count mismatch for {node}")
+
+        priors[node] = PRIOR_PSEUDOCOUNT + prior_counts
+
+    return priors
+
+
+def refine_selected(model, selected, priors, train_data):
     """Apply Equation (4) to selected meta parameters, covarying other states.
 
-    Shared subset 1 provides alpha=1+expected prior counts. Training data
-    provide N=expected training counts. Nonselected CPT columns are untouched.
+    Fixed Dirichlet hyperparameters are estimated from subset 1
+    using the original deployed BN. Expected training counts are
+    computed using the current BN. Nonselected CPT columns are untouched.
     """
     selected_by_node = {}
     for row in selected.itertuples(index=False):
-        selected_by_node.setdefault(row.node, {}).setdefault(int(row.column), set()).add(row.state)
+        selected_by_node.setdefault(row.node, {}).setdefault(
+            int(row.column), set()
+        ).add(row.state)
 
     # Reuse the same E-step inference object for all selected CPT families.
     inference = VariableElimination(model)
     updates = []
+
     for node, columns in selected_by_node.items():
         cpd = model.get_cpds(node)
         original = cpd.get_values().copy()
-        prior_counts = compute_expected_counts(model, inference, prior_data, node)
-        data_counts = compute_expected_counts(model, inference, train_data, node)
-        if not np.isclose(prior_counts.sum(), len(prior_data)):
-            raise ValueError(f"Prior expected-count mismatch for {node}")
+
+        data_counts = compute_expected_counts(
+            model, inference, train_data, node
+        )
+
         if not np.isclose(data_counts.sum(), len(train_data)):
             raise ValueError(f"Training expected-count mismatch for {node}")
-        alpha = PRIOR_PSEUDOCOUNT + prior_counts
-        estimates = (alpha + data_counts) / (alpha + data_counts).sum(axis=0, keepdims=True)
+
+        alpha = priors[node]
+        estimates = (alpha + data_counts) / (
+            alpha + data_counts
+        ).sum(axis=0, keepdims=True)
+
         updated = original.copy()
         states = cpd.state_names[node]
+
         for col, selected_states in columns.items():
-            chosen = [i for i, state in enumerate(states) if state in selected_states]
-            others = [i for i in range(len(states)) if i not in chosen]
+            chosen = [
+                i for i, state in enumerate(states)
+                if state in selected_states
+            ]
+            others = [
+                i for i in range(len(states))
+                if i not in chosen
+            ]
+
             if not others:
                 # All states in a column were selected: use the full update.
                 updated[:, col] = estimates[:, col]
                 continue
+
             chosen_total = float(estimates[chosen, col].sum())
             updated[chosen, col] = estimates[chosen, col]
             remainder = max(0.0, 1.0 - chosen_total)
             old_other_total = float(original[others, col].sum())
+
             if old_other_total > EPS:
                 updated[others, col] = (
                     original[others, col] * remainder / old_other_total
@@ -249,14 +318,20 @@ def refine_selected(model, selected, prior_data, train_data):
                 # Proportional covariation is undefined for zero remainder mass.
                 # Use posterior proportions among nonselected states instead.
                 posterior_other_total = float(estimates[others, col].sum())
+
                 if posterior_other_total <= EPS:
-                    raise ArithmeticError(f'Cannot normalize {node} column {col}')
+                    raise ArithmeticError(
+                        f'Cannot normalize {node} column {col}'
+                    )
+
                 updated[others, col] = (
                     estimates[others, col] * remainder / posterior_other_total
                 )
+
         new_cpd = cpd.copy()
         new_cpd.values = updated.reshape(cpd.values.shape)
         updates.append(new_cpd)
+
     # Apply simultaneously, as in the Batch EM M-step.
     for new_cpd in updates:
         model.add_cpds(new_cpd)
@@ -283,10 +358,16 @@ def main():
     print(f'Prior dataset: subset 1 ({len(prior_df)} scenarios)', flush=True)
     print('Learning datasets: subsets 2, 3, 4', flush=True)
 
+    deployed_model = build_model(bn_json)
+    prior_data = prepare_em_data(prior_df, deployed_model)
+
+    priors = estimate_prior_hyperparameters(
+        deployed_model, prior_data
+    )
+
     for subset_id in range(2, NUM_SUBSETS + 1):
         subset_df = train_subsets[subset_id - 1]
-        model = build_model(bn_json)  # Independent restart from deployed BN.
-        prior_data = prepare_em_data(prior_df, model)
+        model = build_model(bn_json)
         train_data = prepare_em_data(subset_df, model)
 
         # Fixed, reproducible 25% sample for sensitivity; its observations
@@ -297,6 +378,7 @@ def main():
         )
         scenarios = load_scenarios(sensitivity_df, model)
         refined = set()
+        refined_cpts = set()
         iteration = 0
         print(f'\n=== Learning subset {subset_id}/{NUM_SUBSETS}: '
               f'{len(prior_data)} shared prior cases (subset 1), '
@@ -307,17 +389,41 @@ def main():
             if MAX_ITERATIONS is not None and iteration >= MAX_ITERATIONS:
                 print('Reached configured iteration limit.', flush=True)
                 break
+            
             importance = calculate_importance(model, scenarios)
-            selected = importance[importance['importance'] > DELTA]
-            selected = selected[
-                ~selected.apply(
-                    lambda r: (r['node'], int(r['column']), r['state']) in refined,
-                    axis=1,
-                )
-            ].copy()
-            if selected.empty:
-                print('No new important parameters; stopping.', flush=True)
+
+            # Select parameters exceeding the importance threshold.
+            eligible = importance[importance['importance'] > DELTA]
+
+            # Remaining budget for new CPTs.
+            remaining_budget = K - len(refined_cpts)
+
+            # Rank previously unrefined CPTs by maximum parameter importance.
+            new_cpt_importance = (
+                eligible[~eligible['node'].isin(refined_cpts)]
+                .groupby('node')['importance']
+                .max()
+                .sort_values(ascending=False)
+            )
+
+            # Admit new CPTs within the remaining budget.
+            new_cpts = set(
+                new_cpt_importance.head(remaining_budget).index
+            )
+
+            # Previously refined CPTs do not consume additional budget.
+            allowed_cpts = refined_cpts | new_cpts
+
+            # Select eligible parameters within allowed CPTs.
+            selected = eligible[eligible['node'].isin(allowed_cpts)]
+
+            if selected.empty or all(
+                (r.node, int(r.column), r.state) in refined
+                for r in selected.itertuples(index=False)
+            ):
+                print('No new eligible parameters; stopping.', flush=True)
                 break
+            
             iteration += 1
             print(f'Iteration {iteration}: selected {len(selected)} parameters '
                   f'across {selected.node.nunique()} CPTs', flush=True)
@@ -325,14 +431,26 @@ def main():
             for r in selected.itertuples(index=False):
                 print(f'  {r.node} | column={r.column} | state={r.state} '
                       f'| importance={r.importance:.6g}', flush=True)
-            refine_selected(model, selected, prior_data, train_data)
+            
+            refine_selected(model, selected, priors, train_data)
             model.check_model()
-            refined.update((r.node, int(r.column), r.state)
-                           for r in selected.itertuples(index=False))
+            refined.update(
+                (r.node, int(r.column), r.state)
+                for r in selected.itertuples(index=False)
+            )
+
+            refined_cpts.update(selected['node'].unique())
+
+            assert len(refined_cpts) <= K
+
+            print(
+                f'Cumulative refined CPTs ({len(refined_cpts)}/{K}): '
+                f'{", ".join(sorted(refined_cpts))}',
+                flush=True
+            )
 
         # Store all final models in one file, using the same project utility
         # and record metadata convention as batch_em.py.
-        import copy
         refined_bn_json = copy.deepcopy(bn_json)
         for node in refined_bn_json['nodes']:
             node['cpt']['values'] = model.get_cpds(node['name']).get_values().tolist()
@@ -351,6 +469,9 @@ def main():
                 'sensitivity_fraction': SENSITIVITY_FRACTION,
                 'iterations': iteration,
                 'threshold': DELTA,
+                'cpt_budget': K,
+                'num_refined_cpts': len(refined_cpts),
+                'refined_cpts': sorted(refined_cpts),
             },
         )
         print(f'Saved refined BN for subset {subset_id}: {OUTPUT_FILE}', flush=True)
@@ -358,5 +479,6 @@ def main():
     print('\nAll three independent refinement runs (subsets 2–4) completed.', flush=True)
 
 
+#-------------------------------------------------------------------------
 if __name__ == '__main__':
     main()

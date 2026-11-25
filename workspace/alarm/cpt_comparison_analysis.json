@@ -1,44 +1,43 @@
 {
-  "bn_number": null,
+  "bn_number": 4,
   "agent_changed_cpt_count": 2,
   "agent_changed_cpts": [
-    "LVEDVOLUME",
-    "STROKEVOLUME"
+    "CVP",
+    "LVEDVOLUME"
   ],
   "agent_change_report": {
-    "verdict": "good",
+    "verdict": "poor",
     "total_cpts": 37,
     "expected_changed_count": 2,
     "expected_changed_cpts": [
-      "HYPOVOLEMIA",
-      "LVEDVOLUME"
+      "PCWP",
+      "VENTLUNG"
     ],
     "agent_changed_count": 2,
     "agent_changed_cpts": [
-      "LVEDVOLUME",
-      "STROKEVOLUME"
-    ],
-    "matched_expected_count": 1,
-    "matched_expected_cpts": [
+      "CVP",
       "LVEDVOLUME"
     ],
-    "missed_expected_count": 1,
+    "matched_expected_count": 0,
+    "matched_expected_cpts": [],
+    "missed_expected_count": 2,
     "missed_expected_cpts": [
-      "HYPOVOLEMIA"
+      "PCWP",
+      "VENTLUNG"
     ],
-    "unexpected_changed_count": 1,
+    "unexpected_changed_count": 2,
     "unexpected_changed_cpts": [
-      "STROKEVOLUME"
+      "CVP",
+      "LVEDVOLUME"
     ],
     "unflawed_cpt_count": 35,
-    "untouched_unflawed_count": 34,
+    "untouched_unflawed_count": 33,
     "untouched_unflawed_cpts": [
       "ANAPHYLAXIS",
       "ARTCO2",
       "BP",
       "CATECHOL",
       "CO",
-      "CVP",
       "DISCONNECT",
       "ERRCAUTER",
       "ERRLOWOUTPUT",
@@ -49,6 +48,7 @@
       "HRBP",
       "HREKG",
       "HRSAT",
+      "HYPOVOLEMIA",
       "INSUFFANESTH",
       "INTUBATION",
       "KINKEDTUBE",
@@ -56,20 +56,19 @@
       "MINVOL",
       "MINVOLSET",
       "PAP",
-      "PCWP",
       "PRESS",
       "PULMEMBOLUS",
       "PVSAT",
       "SAO2",
       "SHUNT",
+      "STROKEVOLUME",
       "TPR",
       "VENTALV",
-      "VENTLUNG",
       "VENTMACH",
       "VENTTUBE"
     ],
-    "expected_change_recall": 0.5,
-    "unexpected_change_rate": 0.0286,
-    "unflawed_preservation_rate": 0.9714
+    "expected_change_recall": 0.0,
+    "unexpected_change_rate": 0.0571,
+    "unflawed_preservation_rate": 0.9429
   }
 }
